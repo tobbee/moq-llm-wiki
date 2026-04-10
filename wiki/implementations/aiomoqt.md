@@ -18,8 +18,9 @@ Python async implementation of MOQ Transport, using aiopquic for the QUIC transp
 
 ## Draft Support
 
-- Draft-14 (current, as of 2026-03-23)
-- Draft-16 in progress
+- **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16)
+- Latest release: v0.6.2
+- Interop tested against 6 relay implementations across both drafts
 
 ## Related Projects
 

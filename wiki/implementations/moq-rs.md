@@ -19,9 +19,11 @@ Cloudflare's Rust implementation of MOQ Transport. Provides both relay and clien
 
 ## Draft Support
 
-- **main branch**: draft-14
+- **main branch**: draft-14 (explicitly stated in README)
+- **draft-07 branch**: Cloudflare's current production deployment
 - **PR #131**: draft-16 (by Manish)
-- **Latest**: draft-17 + [[qmux]] support (as of 2026-03-17)
+- **Luke Curley's fork**: draft-17 + [[qmux]] support (as of 2026-03-17)
+- Historical branches: draft-04, 05, 06, 07
 
 ## Public Infrastructure
 

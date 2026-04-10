@@ -15,6 +15,11 @@ status: current
 
 JavaScript/browser implementation of MOQ Transport, enabling browser-based publishing and subscribing via WebTransport.
 
+## Draft Support
+
+- **Main branch**: draft-14 (code pins to `Control.Version.DRAFT_14`)
+- Historical branches for draft-04, 06, 07
+
 ## Use Cases
 
 - Browser-based media publishing

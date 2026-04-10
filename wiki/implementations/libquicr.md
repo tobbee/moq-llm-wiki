@@ -21,7 +21,10 @@ Cisco's C++ MOQ Transport implementation with recently open-sourced Go bindings.
 
 ## Draft Support
 
-- Draft-16 compatible (Go bindings, as of 2026-03-25)
+- **C++ library (libquicr)**: draft-16 (ALPN `moqt-16`, code defines version `0xff00010`)
+- **Go bindings (quicr-go)**: draft-16 via libquicr
+- Tags exist for `draft-14` and `draft-16`
+- README still references draft-04 but code is current to draft-16
 - Provides chat-like examples using subscribe namespace for participant discovery
 - Basic clock example included
 

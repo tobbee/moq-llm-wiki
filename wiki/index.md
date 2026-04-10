@@ -51,7 +51,26 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
 - [[eyevinn-moq]] - Eyevinn's Go transport + JS player (draft-14)
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
+- [[imquic]] - Meetecho's C library, also supports RoQ (draft-16/17)
+- [[quiche-moq]] - Rust implementation on quiche (draft-07-13, 16)
+- [[shaka-player]] - Google's media player with experimental MSF support (draft-14)
 - [[interop-runner]] - Standardized cross-implementation test framework
+
+### Draft Version Support Summary
+
+| Implementation | Language | Draft Version(s) |
+|----------------|----------|-------------------|
+| [[moq-rs]] | Rust | 14 (main), 07 (production) |
+| [[moq-js]] | TypeScript | 14 |
+| [[moxygen]] | C++ | 14, 15, 16 |
+| [[libquicr]] / quicr-go | C++ / Go | 16 |
+| [[aiomoqt]] | Python | 14 + 16 (dual) |
+| [[eyevinn-moq]] | Go / JS | 14 |
+| [[moqtail]] | Rust/TS | 14 |
+| [[imquic]] | C | 16, 17 |
+| [[quiche-moq]] | Rust | 07-13, 16 |
+| [[shaka-player]] | JavaScript | 14 (experimental) |
+| [[xquic-moq]] | C | 14 |
 
 ## People & Organizations
 

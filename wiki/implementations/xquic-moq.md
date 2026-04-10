@@ -15,6 +15,10 @@ status: current
 
 Alibaba's XQUIC-based MOQ relay implementation. Passed all tests on the [[interop-runner]] and has been merged into the interop test matrix.
 
+## Draft Support
+
+- Draft-14 (interop runner target at time of testing)
+
 ## Status
 
 - Available for public interop testing (announced 2026-03-13)
