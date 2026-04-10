@@ -58,19 +58,19 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 
 ### Draft Version Support Summary
 
-| Implementation | Language | Draft Version(s) |
-|----------------|----------|-------------------|
-| [[moq-rs]] | Rust | 14 (main), 07 (production) |
-| [[moq-js]] | TypeScript | 14 |
-| [[moxygen]] | C++ | 14, 15, 16 |
-| [[libquicr]] / quicr-go | C++ / Go | 16 |
-| [[aiomoqt]] | Python | 14 + 16 (dual) |
-| [[eyevinn-moq]] | Go / JS | 14 |
-| [[moqtail]] | Rust/TS | 14 |
-| [[imquic]] | C | 16, 17 |
-| [[quiche-moq]] | Rust | 07-13, 16 |
-| [[shaka-player]] | JavaScript | 14 (experimental) |
-| [[xquic-moq]] | C | 14 |
+| Implementation | Language | Draft Version(s) | GitHub |
+|----------------|----------|-------------------|--------|
+| [[moq-rs]] | Rust | 14 (main), 07 (prod) | [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) |
+| [[moq-js]] | TypeScript | 14 | [video-dev/moq-js](https://github.com/video-dev/moq-js) |
+| [[moxygen]] | C++ | 14, 15, 16 | Meta (closed source) |
+| [[libquicr]] / quicr-go | C++ / Go | 16 | [quicr/libquicr](https://github.com/quicr/libquicr), [Quicr/quicr-go](https://github.com/Quicr/quicr-go) |
+| [[aiomoqt]] | Python | 14 + 16 (dual) | [gmarzot/aiomoqt](https://github.com/gmarzot/aiomoqt) |
+| [[eyevinn-moq]] | Go / JS | 14 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player) |
+| [[moqtail]] | Rust/TS | 14 | [moqtail/moqtail](https://github.com/moqtail/moqtail) |
+| [[imquic]] | C | 16, 17 | [meetecho/imquic](https://github.com/meetecho/imquic) |
+| [[quiche-moq]] | Rust | 07-13, 16 | [birneee/quiche_moq](https://github.com/birneee/quiche_moq) |
+| [[shaka-player]] | JavaScript | 14 (experimental) | [shaka-project/shaka-player](https://github.com/shaka-project/shaka-player) |
+| [[xquic-moq]] | C | 14 | Alibaba (see [[interop-runner]]) |
 
 ## People & Organizations
 
