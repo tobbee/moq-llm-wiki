@@ -50,6 +50,7 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
 - [[eyevinn-moq]] - Eyevinn's Go transport + JS player (draft-14)
+- [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
 - [[interop-runner]] - Standardized cross-implementation test framework
 
 ## People & Organizations
