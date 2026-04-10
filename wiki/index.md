@@ -29,6 +29,12 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 - [[qmux]] - QUIC multiplexing over TCP for fallback transport
 - [[track-properties]] - Object and track metadata system
 
+## Design Debates
+
+- [[switch-abr]] - SWITCH message for client-side ABR (most debated open issue)
+- [[joining-fetch-dissent]] - Competing proposals for joining live streams
+- [[open-issues-analysis]] - Full evaluation of all open issues (April 2026)
+
 ## Media & Streaming
 
 - [[media-packaging]] - LOC vs CMAF container approaches
@@ -61,6 +67,10 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 - [[discussions-2026-03]] - March 2026 discussions (IETF 125 Shenzhen)
 - [[discussions-2026-02]] - February 2026 discussions (Boulder Interim + Hackathon)
 - [[discussions-2026-01]] - January 2026 discussions (draft-16 release)
+
+## Meetings
+
+- [[interim-meetings]] - Interim meeting schedule and links to notes/recordings
 
 ## Interop
 

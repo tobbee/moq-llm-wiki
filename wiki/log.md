@@ -9,6 +9,27 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-10 - GitHub issues/PRs analysis, SWITCH status, interim schedule
+
+**Operation**: Analysis + Ingest
+**Sources**:
+- GitHub: All open issues across moq-transport (48), msf (49), loc (9), secure-objects (8), privacy-pass (2), cmsf (4)
+- GitHub: All open PRs across moq-transport (17), msf (3)
+- IETF datatracker API: Interim meeting schedule through June 2026
+- AI minutes index: ietfminutes.org
+
+**Pages created**: switch-abr.md, joining-fetch-dissent.md, open-issues-analysis.md, interim-meetings.md
+**Pages updated**: index.md
+
+**Key findings**:
+- 48 open transport issues, 17 open PRs - Joining Fetch and SWITCH are biggest debates
+- SWITCH (#1354) has 39 comments, most discussed open issue
+- Next interim is April 13 with REWIND slides
+- Properties Type collision (#1550) is a cross-draft bug needing coordinated fix
+- Request ID validation (#1459) is an implementation blocker labeled BLOCKED
+
+---
+
 ## 2026-04-10 - Ingest full Slack history (Jan 12 - Apr 10) and interop matrix
 
 **Operation**: Ingest
