@@ -55,12 +55,13 @@ MSF defines how media is organized into MOQT tracks:
 
 ## Recent PRs
 
-- **PR #152** (Merged) - Clarify MSF URL construction and fragment parameters
+- **PR #152** (Merged Apr 9) - Clarify MSF URL construction and fragment parameters
 - **PR #143** (Merged) - Break the monolith table into separate tables and sections
-- **PR #141** (Merged) - Add support for InitTracks
+- **PR #141** (Merged Apr 9) - Add support for InitTracks
 - **PR #133** (Open) - Add SCTE-35 support and CEA-608/708 accessibility fields
+- **PR #124** (Merged Apr 9) - Clarify first object in event and media timeline track
 - **PR #122** (Open) - Initial text on zapping
-- **PR #121** (Merged) - Pub tracks, logs and metrics
+- **PR #121** (Merged Apr 9) - Pub tracks, logs and metrics
 
 ## Incomplete Sections
 

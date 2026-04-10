@@ -9,6 +9,26 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-10 - Wiki update: OpenMOQ repos, MSF PR coverage
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: Messages through 2026-04-10 (no new activity since last update)
+- GitHub: moq-transport, msf, loc — checked for new issues/PRs
+- GitHub: tobbee/moq-llm-wiki issue #1 ("Add OpenMOQ")
+- Mailing list: No new threads since last update
+- IETF Datatracker: No new draft versions
+- Interop runner: Unchanged — 93 tests, 19 pass / 62 fail / 12 skip (draft-16 target)
+
+**Pages updated**: openmoq.md (added moqx relay context, playa player, moqxr description), moq-msf.md (added merged PR #124)
+
+**Key findings**:
+- Wiki issue #1 requested adding OpenMOQ repos: moqx (server/relay) not yet public — openmoq/moxygen fork serves as buffer repo; red5pro/moq-playa (player) not yet public; mondain/moqxr already listed but description enriched
+- MSF had PR #124 (clarify first object in event/media timeline track) merged Apr 9, not previously captured
+- No new IETF drafts, mailing list threads, or interop runner changes since last update
+
+---
+
 ## 2026-04-10 - Wiki update: mailing list, interop runner, discussion enrichment
 
 **Operation**: Update

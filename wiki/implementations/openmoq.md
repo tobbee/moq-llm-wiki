@@ -38,9 +38,10 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 
 ## Repositories
 
-### openmoq/moxygen
+### openmoq/moxygen (moqx)
 - **GitHub**: [openmoq/moxygen](https://github.com/openmoq/moxygen)
-- Fork of Meta's [[moxygen]] relay
+- Fork of Meta's [[moxygen]] relay, serving as the buffer repo for the planned **moqx** server/relay
+- C++
 - Updated: 2026-04-10
 
 ### openmoq/moq-relay-test
@@ -50,8 +51,13 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 
 ### mondain/moqxr
 - **GitHub**: [mondain/moqxr](https://github.com/mondain/moqxr)
-- Origin Publisher for OpenMOQ
+- Origin Publisher, Contribution, and Ingest CLI for OpenMOQ
+- C++
 - Updated: 2026-04-10
+
+### red5pro/moq-playa (planned)
+- Player component for OpenMOQ
+- Not yet publicly available (as of 2026-04-10)
 
 ## Goals
 
