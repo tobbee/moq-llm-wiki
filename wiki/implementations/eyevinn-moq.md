@@ -51,13 +51,10 @@ The stack covers the full media pipeline:
 
 ## Interop
 
-Currently on draft-14, which has the widest interop support. Compatible with:
-- [[moq-rs]] (main branch)
-- [[moxygen]] (Meta relay)
-- [[xquic-moq]] (Alibaba)
-- Cloudflare edge relays at `draft-14.cloudflare.mediaoverquic.com:443`
+No proper interop testing with other MOQ relay implementations has been done yet. The only cross-implementation testing so far is:
+- [[shaka-player]] POC (by Alvaro Velad at Atème) subscribing to moqlivemock publisher (mlmpub)
 
-See [[interop-endpoints]] for public relay endpoints.
+Currently on draft-14. Potential interop partners on draft-14 include [[moq-rs]], [[moxygen]], [[xquic-moq]], and Cloudflare edge relays. See [[interop-endpoints]] for public relay endpoints.
 
 ## Related
 
