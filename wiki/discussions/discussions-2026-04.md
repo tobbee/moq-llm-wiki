@@ -53,8 +53,29 @@ See [[track-properties]].
 - PR #141 (Merged) - Add support for InitTracks
 - Issue #153 - `initTrack` does not work
 
+### PUBLISH_DONE and Subgroup FIN Handling (Mar 31)
+[[alan-frindell]] asked relay implementers: "How do you handle the case where you receive a PUBLISH_DONE but some subgroups have not received a FIN? What will the downstream subscriber(s) see?" Options discussed: timer-based cleanup (preferred by [[suhas-nandakumar]]), RESET_STREAM_AT, or resetting streams.
+
+## Mailing List Highlights
+
+### Consensus Call on draft-17 (Mar 24 → Apr 10)
+[[martin-duke]] issued a consensus call on the mailing list (2026-03-24) for changes in draft-17. Discussion continued through April 10 with responses from Martin Duke.
+
+### 7-Byte Varint Encoding Debate (Mar 19 → Apr 7)
+Multi-week discussion on the mailing list about the new varint encoding in draft-17. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, Christian Huitema. Key issue: whether to allow the 7-byte encoding (6 leading ones) which was marked invalid in the initial spec. Resolved with PR #1595 (merged Apr 9) allowing 7-byte varint and non-minimal encodings.
+
+### Agenda for Virtual Interim 13 - April 13 (Apr 9)
+Magnus Westerlund posted the agenda. Key topic: REWIND slides and discussion of [[joining-fetch]] alternatives. See [[interim-meetings]].
+
+### Minutes for March 30 Virtual Interim (Apr 9)
+Magnus Westerlund posted the minutes for interim-2026-moq-12. Included discussion of SUBSCRIBE_NAMESPACE split.
+
+### Weekly GitHub Digest (Apr 5)
+Automated summary of moq-wg repository activity.
+
 ## Key Themes
 
 1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind, and Join Filters
 2. **Wire format refinement** - Varint encoding, delta encoding, property parsing
 3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho
+4. **Consensus process** - draft-17 consensus call active on mailing list

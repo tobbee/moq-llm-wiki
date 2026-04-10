@@ -64,10 +64,43 @@ Lucas Pardue updated his PR to quiche for MOQ qlog support: [cloudflare/quiche#1
 ### Issue Milestone (Mar 15)
 [[alan-frindell]]: "There are now fewer than 100 open issues in the moq-transport repo."
 
+### Shaka Player v5.0.5 Update (Mar 11)
+Daiki Matsui announced Shaka Player's MOQT support updated from draft-11 to draft-14. See [[shaka-player]].
+
+### Luke Curley Blog Post (Mar 10)
+[[luke-curley]] published a blog post about a security camera use case: [On a Boat](https://moq.dev/blog/on-a-boat/)
+
+### New Varint Encoding Bugs (Mar 3)
+[[lorenzo-miniero]] found issues with the new MoQ varint examples in draft-17. [[alan-frindell]] confirmed example 4 has a bug (`0xdd7f3e7d` should decode to 1,933,118, not 494,878,333). Alan shared a Python reference implementation and validated it with Claude. Lorenzo confirmed only the `0xdd7f3e7d` example was broken.
+
+## Mailing List Highlights
+
+### Consensus Call on draft-17 (Mar 24)
+[[martin-duke]] initiated a consensus call on draft-17 changes. Thread received responses through April 10.
+
+### The 7-Byte MOQT Varint Encoding (Mar 19 → Apr 7)
+Major mailing list thread about the new varint encoding format. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, Christian Huitema. Debated whether to allow the previously-invalid 7-byte encoding. Result: PR #1595 allowing 7-byte varints and non-minimal encodings.
+
+### MoQ Charter and QMUX (Mar 20-23)
+Magnus Westerlund, Lucas Pardue, [[luke-curley]], and [[suhas-nandakumar]] discussed whether [[qmux]] fits within MOQ's charter scope.
+
+### Presence/Notifications Protocol (Mar 30)
+Phillip Hallam-Baker posted about presence/notifications protocol design for MOQ.
+
+### MOQPACK Compression (Mar 20)
+[[alan-frindell]] commented on MOQPACK (QPACK-like compression for MOQT).
+
+### Draft Minutes for IETF 125 (Mar 23)
+Magnus Westerlund posted draft minutes for the MOQ sessions at IETF 125 Shenzhen.
+
+### LOC-02 Published (Mar 15)
+I-D Action announcement: draft-ietf-moq-loc-02.txt published.
+
 ## Key Themes
 
 1. **IETF 125 hackathon** drove significant interop progress
 2. **QMux** emerged as important for Safari/TCP fallback
-3. **Wire format details** (properties, encoding) consumed significant discussion
+3. **Wire format details** (properties, encoding, varint) consumed significant discussion
 4. **New implementations** joining the ecosystem (Go, Python)
 5. **Tooling** improving (qlog, interop runner, AI minutes)
+6. **Consensus process** - draft-17 consensus call initiated

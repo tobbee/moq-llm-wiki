@@ -11,7 +11,7 @@ status: current
 
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
-| **interim-2026-moq-13** | **2026-04-13** | REWIND slides (Joining Fetch alternatives) |
+| **interim-2026-moq-13** | **2026-04-13** | REWIND slides (Joining Fetch alternatives). Agenda posted by Magnus Westerlund (Apr 9). Martin Duke responded on mailing list. |
 | **interim-2026-moq-14** | **2026-04-27** | |
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
@@ -26,7 +26,7 @@ Note: moq-08 through moq-11 are numbered lower but scheduled later - these appea
 
 | Meeting | Date | Notes |
 |---------|------|-------|
-| interim-2026-moq-12 | 2026-03-30 | Post-IETF 125 |
+| interim-2026-moq-12 | 2026-03-30 | Post-IETF 125. Minutes posted by Magnus Westerlund (Apr 9). Included SUBSCRIBE_NAMESPACE split discussion. |
 | IETF 125 Shenzhen | 2026-03-14 | 2 WG sessions |
 | interim-2026-moq-07 | 2026-02-23 | |
 | interim-2026-moq-05/06 | 2026-02-10 | Boulder interim (2 sessions) |

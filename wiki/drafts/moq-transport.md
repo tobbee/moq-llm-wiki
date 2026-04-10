@@ -82,6 +82,14 @@ Draft-17 uses ALPN strings for version negotiation:
 - [[moq-secure-objects]] - E2E encryption for MOQT
 - [[moq-privacy-pass]] - Authentication for MOQT
 
+## Mailing List
+
+### Consensus Call on draft-17 (March 2026)
+[[martin-duke]] initiated a consensus call on the mailing list (2026-03-24) for draft-17 changes. The thread received responses through April 10, 2026.
+
+### 7-Byte Varint Encoding Debate
+Multi-week mailing list thread (March 19 - April 7) about the new varint format introduced in draft-17. The 7-byte encoding (6 leading ones) was initially marked invalid. Discussion among [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, and Christian Huitema led to PR #1595 allowing 7-byte varint and non-minimal encodings.
+
 ## External Links
 - [GitHub repo](https://github.com/moq-wg/moq-transport)
 - [Latest HTML](https://moq-wg.github.io/moq-transport/draft-ietf-moq-transport.html)

@@ -14,9 +14,10 @@ public/
 .quartz-cache/
 prof/
 
-# Update logs
-scripts/update.log
+# Local scripts (personal paths, update logs)
+scripts/
 
 # OS
 .DS_Store
 Thumbs.db
+scripts/
