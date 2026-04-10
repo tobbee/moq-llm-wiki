@@ -1,0 +1,13 @@
+# Obsidian (per-vault config is personal)
+wiki/.obsidian/
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/plugins/
+.obsidian/themes/
+.trash/
+*.canvas
+wiki/Untitled*
+
+# OS
+.DS_Store
+Thumbs.db
