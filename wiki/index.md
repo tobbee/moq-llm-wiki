@@ -8,6 +8,9 @@ status: current
 # MOQ Wiki Index
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
+Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
+
+> **Suggest content**: [File an issue](https://github.com/tobbee/moq-llm-wiki/issues/new) on the wiki repo to request coverage of a topic, implementation, or discussion. It will be picked up by the next automated update.
 
 ## IETF Drafts
 
