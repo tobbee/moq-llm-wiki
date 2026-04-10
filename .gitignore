@@ -8,6 +8,12 @@ wiki/.obsidian/
 *.canvas
 wiki/Untitled*
 
+# Quartz build
+node_modules/
+public/
+.quartz-cache/
+prof/
+
 # OS
 .DS_Store
 Thumbs.db

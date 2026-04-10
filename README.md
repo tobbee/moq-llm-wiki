@@ -1,5 +1,7 @@
 # MOQ LLM Wiki
 
+**[Browse the wiki online](https://tobbee.github.io/moq-llm-wiki/)**
+
 An LLM-maintained wiki tracking the [Media over QUIC (MOQ)](https://datatracker.ietf.org/group/moq/about/)
 protocol ecosystem, following the [Karpathy LLM wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
 
@@ -23,9 +25,15 @@ wiki/             # LLM-maintained markdown pages
 CLAUDE.md         # Schema: conventions and workflows for LLM maintenance
 ```
 
+## Website
+
+The wiki is published as a website using [Quartz](https://quartz.jzhao.xyz/) with
+interactive graph view, full-text search, backlinks, and tag navigation.
+Deployed automatically to GitHub Pages on push.
+
 ## Obsidian
 
-The `wiki/` folder is structured as an [Obsidian](https://obsidian.md/) vault
+The `wiki/` folder is also structured as an [Obsidian](https://obsidian.md/) vault
 with `[[wikilinks]]` cross-references and YAML frontmatter. Open the repo root
 in Obsidian to browse the wiki with full link navigation.
 
