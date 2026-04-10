@@ -9,6 +9,30 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-10 - Wiki update: mailing list, interop runner, discussion enrichment
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: Messages through 2026-04-10
+- GitHub: moq-transport (issues/PRs), msf (issues/PRs), loc (issues/PRs)
+- Mailing list: https://mailarchive.ietf.org/arch/browse/moq/ (threads through Apr 10)
+- IETF Datatracker: No new draft versions (still at transport-17, msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00)
+- Interop runner: 93 tests, 19-22 pass / 59-62 fail / 12 skip (draft-16 target)
+
+**Pages created**: interop-runner.md
+**Pages updated**: discussions-2026-04.md, discussions-2026-03.md, interim-meetings.md, moq-transport.md
+
+**Key findings**:
+- Mailing list had active threads not previously captured: consensus call on draft-17 (Mar 24 → Apr 10), 7-byte varint debate (Mar 19 → Apr 7), MoQ charter and QMUX scope, Presence/Notifications proposal
+- 7-byte varint debate resolved with PR #1595 (merged Apr 9)
+- Virtual interim 12 (Mar 30) minutes posted, interim 13 (Apr 13) agenda posted with REWIND discussion
+- PUBLISH_DONE / subgroup FIN handling question raised by Alan Frindell (Mar 31)
+- New varint encoding example bug found and acknowledged (Mar 3)
+- Luke Curley published security camera blog post (Mar 10)
+- No new draft versions published since last update
+
+---
+
 ## 2026-04-10 - GitHub issues/PRs analysis, SWITCH status, interim schedule
 
 **Operation**: Analysis + Ingest
