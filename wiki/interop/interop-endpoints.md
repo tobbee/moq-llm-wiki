@@ -42,6 +42,31 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 |----------|-------|-----------|-------|
 | `47.96.89.233:4433` | 14 | QUIC only | Passed all interop runner tests |
 
+## Martin Duke (quiche-moq)
+
+| Endpoint | Draft | Transport | Notes |
+|----------|-------|-----------|-------|
+| `quichemoq.dev:443` | 16 | QUIC + WebTransport | 41/41 conformance tests passed (Feb 2026) |
+
+## MOQtail
+
+| Endpoint | Draft | Transport | Notes |
+|----------|-------|-----------|-------|
+| `relay.moqtail.dev` | 14 | WebTransport | Zafer Gurel's relay |
+
+## Akamai
+
+| Endpoint | Draft | Transport | Notes |
+|----------|-------|-----------|-------|
+| `moq-test.akaleapi.net` | - | - | Test tools |
+| `moq-test-beta.akaleapi.net` | - | - | Beta version |
+
+## Lorenzo Miniero (imquic)
+
+| Endpoint | Draft | Transport | Notes |
+|----------|-------|-----------|-------|
+| `lminiero.it:9000` | 16, 17 | QUIC + WebTransport | Supports v16-v17 (v14 dropped) |
+
 ## Related
 
 - [[interop-runner]] - Automated test framework

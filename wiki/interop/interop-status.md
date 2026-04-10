@@ -29,9 +29,25 @@ Current state of cross-implementation interoperability testing.
 - **[[eyevinn-moq]]**: Go transport + JS CMSF player
 - **Cloudflare edge relays**: Anycast at `draft-14.cloudflare.mediaoverquic.com:443`
 
-## Interop Runner
+## Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) provides automated cross-implementation testing with 10+ implementations.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-10): **19 passed / 62 failed / 12 skipped** out of 93 total.
+
+Implementations in the matrix:
+1. moq-dev-js
+2. moq-dev-rs
+3. moq-rs
+4. moq-rs-draft-16
+5. moxygen
+6. xquic
+7. imquic ([[lorenzo-miniero]])
+8. libquicr
+9. moqtail
+10. quiche-moq ([[martin-duke]])
+
+Target version is draft-16. Best results: moq-dev-rs <-> libquicr (6/6), moq-dev-rs <-> moxygen (6/6), moq-rs-draft-16 <-> moxygen (12 pass).
+
+Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<DATE>_<TIME>/report.html`
 
 ## Known Interop Issues
 

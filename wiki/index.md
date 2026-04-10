@@ -59,6 +59,8 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 
 - [[discussions-2026-04]] - April 2026 discussions
 - [[discussions-2026-03]] - March 2026 discussions (IETF 125 Shenzhen)
+- [[discussions-2026-02]] - February 2026 discussions (Boulder Interim + Hackathon)
+- [[discussions-2026-01]] - January 2026 discussions (draft-16 release)
 
 ## Interop
 

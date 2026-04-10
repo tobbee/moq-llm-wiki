@@ -9,6 +9,25 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-10 - Ingest full Slack history (Jan 12 - Apr 10) and interop matrix
+
+**Operation**: Ingest
+**Sources**:
+- Slack #moq: Complete history from 2026-01-12 through 2026-04-10
+- Interop runner matrix: https://englishm.github.io/moq-interop-runner/
+
+**Pages created**: discussions-2026-01.md, discussions-2026-02.md
+**Pages updated**: index.md, interop-status.md (added matrix details), interop-endpoints.md (added quiche-moq, moqtail, akamai, imquic), eyevinn-moq.md (media support details)
+
+**Key findings**:
+- 10 implementations in the interop runner matrix
+- Draft-16 published Jan 14, draft-17 published Mar 3
+- Boulder interim hackathon (Feb 9-12) drove major interop progress
+- Eyevinn moqlivemock announced with HEVC, Opus, AC-3, subtitles (Jan 27)
+- Shaka Player v5.0.5 updated to draft-14 support
+
+---
+
 ## 2026-04-10 - Add draft-14 and Eyevinn implementations
 
 **Operation**: Ingest

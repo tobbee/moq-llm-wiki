@@ -36,6 +36,19 @@ The stack covers the full media pipeline:
 - **moqlivemock** - Publisher/subscriber test tool using moqtransport
 - **warp-player** - Browser-based player using [[moq-cmsf]] with MSE for playback
 
+## Media Support (as of Jan 2026)
+
+- **Video**: H.264, HEVC
+- **Audio**: AAC, Opus, AC-3
+- **Subtitles**: wvtt, stpp (live, not yet in warp-player)
+- **Sync**: Wall-clock synchronized - group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
+- **Catalog**: Via SUBSCRIBE (no FETCH support yet)
+
+## Demo
+
+- Online demo: `moqlivemock.demo.osaas.io`
+- Shaka-player POC by Alvaro Velad (Atème) works with moqlivemock including subtitle display
+
 ## Interop
 
 Currently on draft-14, which has the widest interop support. Compatible with:
