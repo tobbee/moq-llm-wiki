@@ -66,6 +66,13 @@ status: current | outdated | archived
 4. Update relevant entity/concept/interop pages
 5. Append to `wiki/log.md`
 
+### Ingest Mailing List
+1. Fetch recent threads from https://mailarchive.ietf.org/arch/browse/moq/
+2. Look for consensus calls, new proposals, meeting agendas, and weekly GitHub digests
+3. Summarize key threads in `wiki/discussions/`
+4. Update relevant pages
+5. Append to `wiki/log.md`
+
 ### Ingest GitHub Activity
 1. Check repos under `moq-wg/` org: moq-transport, msf, loc, secure-objects, privacy-pass, cmsf, catalog-format
 2. Review open issues and recent PRs
@@ -82,10 +89,29 @@ status: current | outdated | archived
 
 - **IETF Datatracker**: https://datatracker.ietf.org/group/moq/documents/
 - **GitHub org**: https://github.com/moq-wg/
-- **Slack**: `#moq` channel in quicdev workspace
+- **Slack**: `#moq` channel in quicdev workspace (C046V0QF3CK)
+- **Mailing List**: https://mailarchive.ietf.org/arch/browse/moq/ (moq@ietf.org)
 - **AI Minutes**: https://ietfminutes.org/minutes/wg/moq.html
 - **Interop Runner**: https://englishm.github.io/moq-interop-runner/
 - **Interop Guide**: https://doc.moq.dev/concept/standard/interop.html
+
+## Update Workflow
+
+To update the wiki, run Claude Code in this repo and say "update the wiki".
+This will trigger a check of all sources:
+
+1. **Slack** - Read latest messages from #moq (and related channels)
+2. **GitHub** - Check new issues, PRs, and commits on moq-wg repos
+3. **Mailing List** - Fetch recent threads from the IETF archive
+4. **IETF Drafts** - Check datatracker for new draft versions
+5. **Interop Runner** - Check latest test results
+
+The update should:
+- Add new discussion entries for the current month
+- Update draft pages if new versions are published
+- Update implementation pages if version support changed
+- Update interop status if new results are available
+- Append all changes to `wiki/log.md`
 
 ## Focus Areas
 - Media-related aspects (codecs, containers, streaming formats)
