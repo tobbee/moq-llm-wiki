@@ -66,7 +66,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 |----------------|----------|-------------------|--------|
 | [[moq-rs]] | Rust | 14 (main), 07 (prod) | [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) |
 | [[moq-js]] | TypeScript | 14 | [video-dev/moq-js](https://github.com/video-dev/moq-js) |
-| [[moxygen]] | C++ | 14, 15, 16 | Meta (closed source) |
+| [[moxygen]] | C++ | 14, 15, 16 | [facebookexperimental/moxygen](https://github.com/facebookexperimental/moxygen) |
 | [[libquicr]] / quicr-go | C++ / Go | 16 | [quicr/libquicr](https://github.com/quicr/libquicr), [Quicr/quicr-go](https://github.com/Quicr/quicr-go) |
 | [[aiomoqt]] | Python | 14 + 16 (dual) | [gmarzot/aiomoqt](https://github.com/gmarzot/aiomoqt) |
 | [[eyevinn-moq]] | Go / JS | 14 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |

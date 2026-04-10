@@ -10,11 +10,12 @@ status: current
 **Language**: C++ (mvfst-based)
 **Organization**: Meta
 **Maintainer**: [[alan-frindell]], Joseph Beshay
+**GitHub**: [facebookexperimental/moxygen](https://github.com/facebookexperimental/moxygen)
 **Relay endpoint**: `fb.mvfst.net`
 
 ## Overview
 
-Meta's C++ MOQ relay implementation built on their mvfst QUIC library. Primarily a relay implementation rather than a full publisher/subscriber SDK.
+Meta's open-source C++ MOQ implementation built on their mvfst QUIC library. Includes relay, client, and protocol library. [[openmoq|OpenMOQ]] maintains a fork ([openmoq/moxygen](https://github.com/openmoq/moxygen)) as a buffer repo for their planned moqx server.
 
 ## Draft Support
 
