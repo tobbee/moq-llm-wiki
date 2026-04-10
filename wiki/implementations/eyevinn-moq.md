@@ -42,6 +42,7 @@ The stack covers the full media pipeline:
 - **Audio**: AAC, Opus, AC-3
 - **Subtitles**: wvtt, stpp (live, not yet in warp-player)
 - **Sync**: Wall-clock synchronized - group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
+- **Encryption**: Common Encryption (CENC) with Widevine and FairPlay DRM support
 - **Catalog**: Via SUBSCRIBE (no FETCH support yet)
 
 ## Demo
