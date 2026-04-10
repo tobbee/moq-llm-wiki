@@ -65,7 +65,7 @@ A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 | [[moxygen]] | C++ | 14, 15, 16 | Meta (closed source) |
 | [[libquicr]] / quicr-go | C++ / Go | 16 | [quicr/libquicr](https://github.com/quicr/libquicr), [Quicr/quicr-go](https://github.com/Quicr/quicr-go) |
 | [[aiomoqt]] | Python | 14 + 16 (dual) | [gmarzot/aiomoqt](https://github.com/gmarzot/aiomoqt) |
-| [[eyevinn-moq]] | Go / JS | 14 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player) |
+| [[eyevinn-moq]] | Go / JS | 14 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |
 | [[moqtail]] | Rust/TS | 14 | [moqtail/moqtail](https://github.com/moqtail/moqtail) |
 | [[imquic]] | C | 16, 17 | [meetecho/imquic](https://github.com/meetecho/imquic) |
 | [[quiche-moq]] | Rust | 07-13, 16 | [birneee/quiche_moq](https://github.com/birneee/quiche_moq) |
