@@ -9,6 +9,14 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-11 - Fix broken interop-runner links (issue #2)
+
+**Operation**: Maintenance
+**Changes**:
+- Removed duplicate `wiki/implementations/interop-runner.md` (content already covered by `wiki/interop/interop-runner.md`)
+- Moved `[[interop-runner]]` listing from Implementations to Interop section in `wiki/index.md`
+- All `[[interop-runner]]` wikilinks now resolve unambiguously
+
 ## 2026-04-11 - Wiki update: new transport issue/PR, MSF initTrack debate
 
 **Operation**: Update

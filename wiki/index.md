@@ -59,7 +59,6 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[quiche-moq]] - Rust implementation on quiche (draft-07-13, 16)
 - [[shaka-player]] - Google's media player with experimental MSF support (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
-- [[interop-runner]] - Standardized cross-implementation test framework
 
 ### Draft Version Support Summary
 
@@ -99,5 +98,6 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 ## Interop
 
+- [[interop-runner]] - Standardized cross-implementation test framework
 - [[interop-status]] - Current interop testing status across implementations
 - [[interop-endpoints]] - Public relay endpoints for testing
