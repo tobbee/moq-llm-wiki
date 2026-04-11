@@ -62,6 +62,7 @@ MSF defines how media is organized into MOQT tracks:
 - **PR #124** (Merged Apr 9) - Clarify first object in event and media timeline track
 - **PR #122** (Open) - Initial text on zapping
 - **PR #121** (Merged Apr 9) - Pub tracks, logs and metrics
+- **PR #118** (Open) - Add details of authorization flows
 
 ## Incomplete Sections
 

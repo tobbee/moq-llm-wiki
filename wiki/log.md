@@ -9,6 +9,30 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-11 - Wiki update: new transport issue/PR, MSF initTrack debate
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: No new messages since Feb 11 (channel quiet)
+- Slack #moq-rs, #moq-js, #libquicr: No substantive new activity
+- GitHub: moq-transport, msf, loc — checked for new issues/PRs since Apr 10
+- Mailing list: No new threads since last update
+- IETF Datatracker: No new draft versions (still at transport-17, msf-00, loc-02, etc.)
+- Interop runner: Unchanged — 93 tests, 19 pass / 62 fail / 12 skip (draft-16 target)
+- tobbee/moq-llm-wiki: No open issues
+
+**Pages updated**: discussions-2026-04.md, moq-transport.md, joining-fetch-dissent.md, moq-msf.md
+
+**Key findings**:
+- New transport issue #1603 by Martin Duke: questions whether required-request-id is needed for all request types (suggests limiting to REQUEST_UPDATE and FETCH only)
+- New transport PR #1604 by Martin Duke: implements #1602 proposal to move Joining FETCH onto SUBSCRIBE/PUBLISH stream; Alan Frindell reviewed noting shared parameter state constraints
+- Transport PR #1540 (coalescing REQUEST_UPDATE processing, merged Apr 9) was missed in previous update, now captured
+- Transport PR #1562 (Session-Level Tracks reserved namespace) updated Apr 10, now listed as open PR
+- MSF PR #118 (authorization flows) updated Apr 10, now listed in MSF page
+- MSF issue #153 (initTrack synchronization problem) expanded with Victor Vasiliev's analysis favoring removal of initTrack feature
+
+---
+
 ## 2026-04-11 - Add draft-frindell-moq-moqpack-00
 
 **Operation**: Ingest

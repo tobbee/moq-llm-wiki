@@ -31,6 +31,7 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 
 ## Latest Developments
 
+- **PR #1604** (Apr 10) - [[martin-duke]] implements the #1602 proposal to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. [[alan-frindell]] reviewed, noting subscriber priority cannot differ between fetch and subscription.
 - **#1602** (Apr 9) - [[martin-duke]] proposes moving Joining Fetch to SUBSCRIBE/PUBLISH stream, eliminating race conditions
 - **#1601** (Closed) - Race condition in current design
 - Restriction requiring "largest object" subscribes was removed

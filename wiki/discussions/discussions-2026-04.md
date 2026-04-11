@@ -35,13 +35,16 @@ See [[track-properties]].
 - PR #1595 - Allow 7-byte varint and non-minimal encodings
 - PR #1590 - Subscription filters are a Param
 - PR #1583 - Allow publisher to reopen subgroup after REQUEST_UPDATE fwd 0->1
+- PR #1540 - Allow coalescing REQUEST_UPDATE processing
 
 **New Issues**:
+- #1603 - What is the use case for required-request-id
 - #1602 - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
 - #1601 (Closed) - Joining FETCH session errors race condition
 - #1600 (Closed) - Can the same Track be published multiple times into different namespaces?
 
 **Open PRs under review**:
+- PR #1604 - Joining FETCH with subscription (implements #1602)
 - PR #1596 - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - PR #1593 - Allow framing single Objects without Subgroup ID
 - PR #1591 - Add flow control for Subscriptions
@@ -51,7 +54,8 @@ See [[track-properties]].
 ### moq-wg/msf
 - PR #152 (Merged) - Clarify MSF URL construction and fragment parameters
 - PR #141 (Merged) - Add support for InitTracks
-- Issue #153 - `initTrack` does not work
+- PR #121 (Merged) - Pub tracks, logs and metrics
+- Issue #153 - `initTrack` does not work (vasilvv reports synchronization problem; favors removing initTrack entirely)
 
 ### PUBLISH_DONE and Subgroup FIN Handling (Mar 31)
 [[alan-frindell]] asked relay implementers: "How do you handle the case where you receive a PUBLISH_DONE but some subgroups have not received a FIN? What will the downstream subscriber(s) see?" Options discussed: timer-based cleanup (preferred by [[suhas-nandakumar]]), RESET_STREAM_AT, or resetting streams.
@@ -73,9 +77,16 @@ Magnus Westerlund posted the minutes for interim-2026-moq-12. Included discussio
 ### Weekly GitHub Digest (Apr 5)
 Automated summary of moq-wg repository activity.
 
+### Required-Request-ID Debate (Apr 10)
+[[martin-duke]] filed issue #1603 questioning whether `required-request-id` is needed for all request types. He argues only REQUEST_UPDATE and FETCH genuinely need it, and maintaining state for all request IDs creates unnecessary overhead. [[alan-frindell]] countered that QUIC's maximum bidirectional streams naturally bound the state.
+
+### Joining FETCH Redesign (Apr 10)
+[[martin-duke]] opened PR #1604 implementing the proposal from issue #1602 to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. He noted it was "much spicier than expected" due to parameter state sharing. [[alan-frindell]] reviewed and flagged that subscriber priority cannot differ between fetch and subscription under this model.
+
 ## Key Themes
 
-1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind, and Join Filters
+1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind, and Join Filters; PR #1604 proposes a concrete redesign
 2. **Wire format refinement** - Varint encoding, delta encoding, property parsing
 3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho
 4. **Consensus process** - draft-17 consensus call active on mailing list
+5. **Protocol overhead** - Debate on whether required-request-id adds unnecessary complexity

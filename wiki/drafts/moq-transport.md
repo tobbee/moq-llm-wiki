@@ -42,9 +42,10 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-## Active Issues (as of 2026-04-10)
+## Active Issues (as of 2026-04-11)
 
 ### Design Issues
+- **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
 - **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
 - **#1598** - Why PUBLISH_OK not REQUEST_OK? (Needs PR, Editorial & Minor Design)
 - **#1585** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
@@ -54,11 +55,13 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1550** - Properties Type collision between moq-16 and loc-01
 
 ### Open PRs
+- **PR #1604** - Joining FETCH with subscription (implements #1602)
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme
 - **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses
+- **PR #1562** - RFC: Add Session-Level Tracks reserved namespace
 
 ### Recently Merged
 - **PR #1599** - Move normative text on Track Alias
@@ -68,6 +71,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **PR #1583** - Allow publisher to reopen subgroup after REQUEST_UPDATE fwd 0->1
 - **PR #1577** - Clarify Joining Fetch ordering with Forward State transitions
 - **PR #1576** - Add Track Properties to REQUEST_OK
+- **PR #1540** - Allow coalescing REQUEST_UPDATE processing
 
 ## ALPN Negotiation
 
