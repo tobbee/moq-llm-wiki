@@ -18,9 +18,9 @@ The interop runner automates testing between MOQ implementations, publishing res
 
 ## Registered Implementations (as of April 2026)
 
-1. **moq-dev-js** - [[luke-curley]]'s JavaScript implementation
-2. **moq-dev-rs** - [[luke-curley]]'s Rust implementation
-3. **moq-rs** - [[moq-rs|Cloudflare moq-rs]] (draft-14)
+1. **moq-dev-js** - [[moq-dev|moq-dev/moq]] JavaScript/Hang player ([[luke-curley]])
+2. **moq-dev-rs** - [[moq-dev|moq-dev/moq]] Rust ([[luke-curley]])
+3. **moq-rs** - [[moq-rs|cloudflare/moq-rs]] (draft-14)
 4. **moq-rs-draft-16** - Cloudflare moq-rs (draft-16 branch)
 5. **moxygen** - [[moxygen|Meta's C++ relay]]
 6. **xquic** - [[xquic-moq|Alibaba's XQUIC]]

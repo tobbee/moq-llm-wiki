@@ -47,9 +47,10 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 ## Implementations
 
-- [[moq-rs]] - Cloudflare's Rust implementation
+- [[moq-dev]] - Luke Curley's Rust+TypeScript monorepo (moq-lite + Hang player)
+- [[moq-rs]] - Cloudflare's IETF-aligned Rust implementation (cloudflare/moq-rs)
+- [[moq-js]] - IETF-aligned JavaScript/browser library (video-dev/moq-js)
 - [[moxygen]] - Meta's C++ relay (mvfst-based)
-- [[moq-js]] - JavaScript/browser implementation
 - [[libquicr]] - Cisco's C++ library with Go bindings
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
@@ -64,6 +65,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 | Implementation | Language | Draft Version(s) | GitHub |
 |----------------|----------|-------------------|--------|
+| [[moq-dev]] | Rust + TS | moq-lite + IETF shims (14-17) | [moq-dev/moq](https://github.com/moq-dev/moq) |
 | [[moq-rs]] | Rust | 14 (main), 07 (prod) | [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) |
 | [[moq-js]] | TypeScript | 14 | [video-dev/moq-js](https://github.com/video-dev/moq-js) |
 | [[moxygen]] | C++ | 14, 15, 16 | [facebookexperimental/moxygen](https://github.com/facebookexperimental/moxygen) |

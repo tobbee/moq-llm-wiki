@@ -1,28 +1,33 @@
 ---
 title: "moq-rs (Cloudflare)"
-tags: [implementation, rust, cloudflare]
-date: 2026-04-10
+tags: [implementation, rust, cloudflare, ietf]
+date: 2026-04-11
 status: current
 ---
 
-# moq-rs
+# moq-rs (Cloudflare)
 
 **Language**: Rust
 **Organization**: Cloudflare
-**Maintainer**: [[luke-curley]], Mike English
-**GitHub**: [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs)
-**Slack**: #moq-rs (C09CG9V7A2Y)
+**Maintainer**: Mike English (@englishm)
+**GitHub**: [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) (was englishm/moq-rs)
+**Slack**: #moq-rs (C09CG9V7A2Y) — shared channel, covers both this and [[moq-dev]]
 
 ## Overview
 
-Cloudflare's Rust implementation of MOQ Transport. Provides both relay and client functionality. One of the most active implementations in the ecosystem.
+Cloudflare's Rust implementation of IETF MoQ Transport. Provides both relay and client functionality, strictly following the IETF MoQ working group specifications. One of the most active implementations in the ecosystem.
+
+## History
+
+This codebase was originally created by [[luke-curley]] (kixelated/moq-rs). Mike English contributed to the early design and helped with the initial Go → Rust translation. When Luke diverged from strict IETF WG spec support in favor of his own moq-lite protocol, Mike forked and maintained an IETF-aligned version as `englishm/moq-rs` (created 2024-10-15). The project was later transferred to Cloudflare as `cloudflare/moq-rs`.
+
+The two projects are now considered **sibling implementations** — neither is upstream of the other. See [[moq-dev]] for Luke's original project.
 
 ## Draft Support
 
-- **main branch**: draft-14 (explicitly stated in README)
+- **main branch**: draft-14 (IETF WG spec)
 - **draft-07 branch**: Cloudflare's current production deployment
 - **PR #131**: draft-16 (by Manish)
-- **Luke Curley's fork**: draft-17 + [[qmux]] support (as of 2026-03-17)
 - Historical branches: draft-04, 05, 06, 07
 
 ## Public Infrastructure
@@ -38,12 +43,12 @@ Cloudflare's Rust implementation of MOQ Transport. Provides both relay and clien
 
 ## Interop
 
-- Registered in [[interop-runner]]
-- v17 interop achieved with [[lorenzo-miniero]]'s implementation (2026-04-01)
-- Luke runs `cdn.moq.dev/anon` for browser pub/sub testing
+- Registered in [[interop-runner]] as **moq-rs** (draft-14) and **moq-rs-draft-16**
+- moq-rs-draft-16 <-> [[moxygen]]: 12 pass in interop runner
 
 ## Related
 
-- [[moq-js]] - JavaScript companion project
+- [[moq-dev]] - Luke Curley's original project (moq-dev/moq), sibling implementation
+- [[moq-js]] - IETF-aligned JavaScript companion (video-dev/moq-js)
 - [[interop-status]] - Cross-implementation testing
 - [[interop-endpoints]] - Full endpoint listing

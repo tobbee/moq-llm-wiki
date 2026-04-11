@@ -1,36 +1,46 @@
 ---
-title: "moq-js"
-tags: [implementation, javascript, browser]
-date: 2026-04-10
+title: "moq-js (video-dev)"
+tags: [implementation, javascript, browser, ietf]
+date: 2026-04-11
 status: current
 ---
 
-# moq-js
+# moq-js (video-dev)
 
 **Language**: JavaScript/TypeScript
+**Organization**: video-dev
+**Maintainer**: Mike English (@englishm), community
 **GitHub**: [video-dev/moq-js](https://github.com/video-dev/moq-js)
 **Slack**: #moq-js (C09BZ7KH0BZ)
+**Discord**: [video-dev Discord](https://discord.gg/FCYF3p99mr)
 
 ## Overview
 
-JavaScript/browser implementation of MOQ Transport, enabling browser-based publishing and subscribing via WebTransport.
+IETF-aligned JavaScript/browser implementation of MoQ Transport, enabling browser-based publishing and subscribing via WebTransport. Client-side only — requires a MoQ relay such as [[moq-rs]] for operation.
+
+## History
+
+Created 2024-10-15, the same day as [[moq-rs]] (cloudflare/moq-rs). Both were born out of the period when [[luke-curley]] was not going to support the IETF WG specs in his original `kixelated/moq-js`. The video-dev version started from Luke's codebase but diverged to follow the IETF MoQ working group specifications. Luke's original `kixelated/moq-js` was archived in June 2025 and its functionality was absorbed into [[moq-dev]] as the Hang player (a total rewrite).
+
+The two JS projects are now **separate implementations** — video-dev/moq-js follows IETF WG specs, while moq-dev/moq's JS packages implement Luke's moq-lite/Hang protocol.
 
 ## Draft Support
 
-- **Main branch**: draft-14 (code pins to `Control.Version.DRAFT_14`)
-- Historical branches for draft-04, 06, 07
+- **Main branch**: draft-14 (IETF WG spec)
+- PR #64: draft-14 implementation with publisher and player (merged 2026-02-17)
 
 ## Use Cases
 
 - Browser-based media publishing
 - Browser-based media consumption
-- Testing and demos via `cdn.moq.dev`
+- Provides `<video-moq>` web component and `Player` class for custom UIs
 
-## Interop
+## Top Contributors
 
-Part of the v17 interop demonstrated by [[luke-curley]] (2026-04-01): "Rust publisher, JS subscriber, so that counts as two interops"
+kixelated (historical), englishm, JoaquinBCh, itzmanish, Manuel-Barrabino
 
 ## Related
 
-- [[moq-rs]] - Rust companion project (same ecosystem)
+- [[moq-rs]] - IETF-aligned Rust companion (cloudflare/moq-rs)
+- [[moq-dev]] - Luke Curley's project with Hang player (moq-dev/moq, different JS codebase)
 - [[interop-runner]] - Testing framework

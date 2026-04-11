@@ -30,7 +30,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 ## Interop
 
 - Registered in [[interop-runner]] matrix
-- First v17 interop achieved with [[moq-rs]] / [[moq-js]] (2026-04-01)
+- First v17 interop achieved with [[moq-dev]] (moq-dev/moq, Rust publisher + JS subscriber) (2026-04-01)
 - Active interop testing at IETF 125 Shenzhen and Boulder hackathon
 
 ## Related

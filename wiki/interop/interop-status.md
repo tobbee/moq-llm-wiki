@@ -12,8 +12,8 @@ Current state of cross-implementation interoperability testing.
 ## Latest Interop Results
 
 ### Draft-17
-- **[[moq-rs]] <-> [[lorenzo-miniero]]'s impl**: First v17 interop working (2026-04-01). Rust publisher, JS subscriber. "Still a few things to iron out."
-- **Daiki Matsui's impl <-> `cdn.moq.dev`**: Working (2026-03-23). Browser pub -> relay -> browser sub.
+- **[[moq-dev]] <-> [[lorenzo-miniero]]'s [[imquic]]**: First v17 interop working (2026-04-01). Rust publisher, JS subscriber. "Still a few things to iron out."
+- **Daiki Matsui's impl <-> [[moq-dev]] (`cdn.moq.dev`)**: Working (2026-03-23). Browser pub -> relay -> browser sub.
 
 ### Draft-16
 - **[[moq-rs]]**: PR #131 branch
@@ -45,7 +45,7 @@ Implementations in the matrix:
 9. moqtail
 10. quiche-moq ([[martin-duke]])
 
-Target version is draft-16. Best results: moq-dev-rs <-> libquicr (6/6), moq-dev-rs <-> moxygen (6/6), moq-rs-draft-16 <-> moxygen (12 pass).
+Target version is draft-16. Best results: [[moq-dev]] moq-dev-rs <-> libquicr (6/6), [[moq-dev]] moq-dev-rs <-> moxygen (6/6), [[moq-rs]] moq-rs-draft-16 <-> moxygen (12 pass).
 
 Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<DATE>_<TIME>/report.html`
 

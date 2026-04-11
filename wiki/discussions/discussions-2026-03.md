@@ -42,7 +42,7 @@ Significant discussion about [[qmux]] ALPN negotiation:
 [[lorenzo-miniero]] raised parsing confusion about Track Properties in request messages (no explicit length prefix). Generated a 20-reply thread that led to spec clarification. See [[track-properties]].
 
 ### Draft-17 Interop Testing (Mar 17-23)
-[[luke-curley]] released initial draft-17 support - 74 replies in the thread. Daiki Matsui tested against `cdn.moq.dev/anon` and reported several questions about relay behavior:
+[[luke-curley]] released initial draft-17 support in [[moq-dev]] - 74 replies in the thread. Daiki Matsui tested against `cdn.moq.dev/anon` and reported several questions about relay behavior:
 1. Relay sends SUBSCRIBE_NAMESPACE back after PUBLISH_NAMESPACE
 2. DOES_NOT_EXIST reply causes session drop
 3. Relay keeps sending PUBLISH_NAMESPACE for other namespaces

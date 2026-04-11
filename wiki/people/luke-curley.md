@@ -8,11 +8,11 @@ status: current
 # Luke Curley
 
 **Slack**: @Luke Curley (U046XL3642Y)
-**Role**: Creator of [[moq-rs]], active implementer, interop testing leader
+**Role**: Creator of [[moq-dev]] (moq-dev/moq), active implementer, interop testing leader
 
 ## Contributions
 
-- Creator and maintainer of moq-rs (Rust MOQ implementation)
+- Creator of the original moq-rs (now [[moq-dev]]), which also spawned [[moq-rs]] (Cloudflare) and [[moq-js]] (video-dev) as sibling forks
 - Runs public interop infrastructure at `cdn.moq.dev`
 - Author of [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) - CMAF compression proposal
 - Created the qmux library for TCP fallback

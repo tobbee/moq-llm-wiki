@@ -28,7 +28,7 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 | `fb.mvfst.net:9449` | 16 | QUIC + QMux TLS/TCP | [[qmux]] enabled |
 | `wss://fb.mvfst.net:9450` | 16 | WebSocket -> TLS | Proxy via websocat |
 
-## Luke Curley ([[moq-rs]])
+## Luke Curley ([[moq-dev]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|

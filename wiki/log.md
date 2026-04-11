@@ -9,6 +9,35 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-11 - Split moq-rs/moq-js into separate implementation pages
+
+**Operation**: Restructure
+**Sources**:
+- Slack #moq: Mike English's clarification (2026-04-11) about the relationship between cloudflare/moq-rs, moq-dev/moq, and video-dev/moq-js
+- GitHub API: Repo metadata for all four projects
+
+**Context**: Mike English explained that cloudflare/moq-rs (was englishm/moq-rs) and moq-dev/moq (was kixelated/moq-rs) are "sibling" implementations that both started from Luke Curley's original codebase but are now independent. Similarly, video-dev/moq-js and the JS in moq-dev/moq are separate codebases. The forks were born when Luke was not going to support the IETF WG specs directly. Luke's Hang player is a total rewrite, not derived from the old moq-js.
+
+**Pages created**: wiki/implementations/moq-dev.md (moq-dev/moq — Luke Curley's Rust+TS monorepo with moq-lite + Hang)
+**Pages updated**:
+- moq-rs.md — Clarified as Cloudflare's IETF-aligned fork; added history section; updated maintainer to Mike English
+- moq-js.md — Clarified as video-dev's IETF-aligned JS; added history section
+- index.md — Added moq-dev/moq to implementations list and draft support table
+- luke-curley.md — Updated references from [[moq-rs]] to [[moq-dev]]
+- interop-endpoints.md — Fixed Luke Curley entry to reference [[moq-dev]]
+- interop-status.md — Fixed v17 interop to reference [[moq-dev]] instead of [[moq-rs]]
+- interop-runner.md — Updated wikilinks for moq-dev-rs and moq-dev-js entries
+- imquic.md — Fixed v17 interop reference to [[moq-dev]]
+
+**Timeline**:
+- 2022-06-29: kixelated/moq-rs created (Luke Curley's original)
+- 2023-05-24: kixelated/moq-js created (companion JS library)
+- 2024-10-15: englishm/moq-rs and video-dev/moq-js created (IETF-aligned forks)
+- 2025-06-20: kixelated/moq-js archived ("Moved to kixelated/moq")
+- Now: kixelated/moq-rs → moq-dev/moq (monorepo), englishm/moq-rs → cloudflare/moq-rs
+
+---
+
 ## 2026-04-11 - Fix broken interop-runner links (issue #2)
 
 **Operation**: Maintenance

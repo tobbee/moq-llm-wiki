@@ -16,10 +16,10 @@ Major live interop testing at Google's Boulder office:
 
 - [[martin-duke]]'s quiche-moq relay at `quichemoq.dev` passed [[alan-frindell]]'s conformance test: 41/41 tests passed for draft-16 WebTransport
 - [[suhas-nandakumar]]: 4-5 simulcast video tracks published and received over draft-16, tested with both [[moxygen]] and quiche relay
-- [[luke-curley]]: Rust publisher to JS subscriber working through Martin's relay
-- MOQtail (Zafer Gurel): Successfully published namespace, subscribed to tracks, got objects with both [[moq-rs]] and [[moxygen]]
+- [[luke-curley]]: [[moq-dev]] Rust publisher to JS subscriber working through Martin's relay
+- MOQtail (Zafer Gurel): Successfully published namespace, subscribed to tracks, got objects with both [[moq-rs]] (cloudflare/moq-rs) and [[moxygen]]
 - [[lorenzo-miniero]]: Testing v16 relay against other implementations
-- [[moq-rs]] draft-16 branch: 4/6 interop tests passing against Google's draft-16 relay
+- [[moq-rs]] (cloudflare/moq-rs) draft-16 branch: 4/6 interop tests passing against Google's draft-16 relay
 - Akamai test tools: `moq-test.akaleapi.net` and beta version at `moq-test-beta.akaleapi.net`
 
 ### Interop Runner Launch
