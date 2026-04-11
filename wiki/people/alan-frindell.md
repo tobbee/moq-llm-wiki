@@ -15,6 +15,7 @@ status: current
 
 - Co-editor of draft-ietf-moq-transport (all versions)
 - Author of [Join Subscription Filters](https://afrind.github.io/draft-frindell-moq-join-filters/draft-frindell-moq-join-filters.html) proposal
+- Author of [[moq-moqpack]] - QPACK compression for MOQT control messages (draft-00, March 2026)
 - Maintains the moxygen relay at `fb.mvfst.net`
 - Very active in Slack #moq, frequently clarifying protocol semantics
 - Created the #moq Slack channel (2022-10-17)

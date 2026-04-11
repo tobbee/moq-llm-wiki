@@ -9,6 +9,25 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-11 - Add draft-frindell-moq-moqpack-00
+
+**Operation**: Ingest
+**Sources**:
+- IETF Datatracker: https://datatracker.ietf.org/doc/draft-frindell-moq-moqpack/
+- Full text: draft-frindell-moq-moqpack-00.txt (1792 lines)
+
+**Pages created**: wiki/drafts/moq-moqpack.md
+**Pages updated**: index.md (added to drafts table), alan-frindell.md (added as author)
+
+**Key findings**:
+- New individual submission by Alan Frindell (Meta), published 2026-03-02
+- Proposes QPACK-based compression for MOQT control messages to reduce overhead from repeated values (auth tokens, track names)
+- Uses flag bit 0x40 on message types to signal compressed format
+- Designed for compatibility with existing QPACK libraries
+- Not yet adopted by the MOQ working group
+
+---
+
 ## 2026-04-10 - Wiki update: OpenMOQ repos, MSF PR coverage
 
 **Operation**: Update

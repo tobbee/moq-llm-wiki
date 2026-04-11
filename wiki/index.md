@@ -22,6 +22,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-secure-objects]] | draft-00 | Active | End-to-end authenticated encryption for MOQT objects |
 | [[moq-privacy-pass]] | draft-02 | Active | Privacy-preserving authentication via Privacy Pass tokens |
 | [[moq-cmsf]] | draft-00 | Active | CMAF-compliant extension of MSF |
+| [[moq-moqpack]] | draft-00 | Active | QPACK compression for MOQT control messages (individual) |
 
 ## Protocol Concepts
 
