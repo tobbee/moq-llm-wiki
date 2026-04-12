@@ -25,10 +25,10 @@ Google's open-source media player with experimental MOQ Transport support via MS
 ## History
 
 - Daiki Matsui updated MOQT support from draft-11 to draft-14 in Shaka Player v5.0.5 (announced 2026-03-11)
-- Alvaro Velad (Atème) built a POC that works with [[eyevinn-moq|moqlivemock]] including subtitle display
+- Alvaro Velad (Atème) built a POC that works with [[moqlivemock]] including subtitle display
 
 ## Related
 
-- [[eyevinn-moq]] - Works with moqlivemock publisher
+- [[moqlivemock]] - Works with moqlivemock publisher
 - [[moq-msf]] - Streaming format used
 - [[moq-cmsf]] - CMAF format support

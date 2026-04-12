@@ -9,6 +9,45 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-12 - Rename Eyevinn MOQ Stack to moqlivemock, major update
+
+**Operation**: Update + Rename
+**Sources**: User (maintainer) provided updated feature list; GitHub repos checked for versions.
+
+**File renamed**: `wiki/implementations/eyevinn-moq.md` -> `wiki/implementations/moqlivemock.md`
+**Pages updated**: moqlivemock.md (full rewrite), index.md (renamed + updated draft versions), interop-status.md (renamed + added draft-16), shaka-player.md (updated wikilinks), discussions-2026-01.md (updated wikilink)
+
+**Key changes**:
+- Renamed from "Eyevinn MOQ Stack" to "moqlivemock" (the central component)
+- Draft support upgraded from draft-14 only to **draft-14 and draft-16** with ALPN negotiation
+- Catalog now supports both **FETCH and SUBSCRIBE**
+- Content protection documented with three namespace modes: clear (`cmsf/clear`), commercial DRM (`cmsf/drm-{scheme}`), and ClearKey/ECCP (`cmsf/eccp-{scheme}`)
+- All repos at v0.7.0+ (moqtransport v0.7.0, moqlivemock v0.7.0, warp-player v0.7.1)
+- All `[[eyevinn-moq]]` wikilinks updated to `[[moqlivemock]]`
+
+---
+
+## 2026-04-12 - Add draft-cenzano-moq-media-interop-03
+
+**Operation**: Ingest
+**Sources**:
+- HTML: https://afrind.github.io/draft-cenzano-media-interop/draft-cenzano-moq-media-interop.html
+- IETF Datatracker: https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/
+
+**Pages created**: wiki/drafts/moq-media-interop.md
+**Pages updated**: index.md (added to drafts table), alan-frindell.md (added as co-author), media-packaging.md (added Media Interop section), interop-status.md (added media wire format interop section)
+
+**Key findings**:
+- Individual submission by Jorge Cenzano-Ferret and Alan Frindell (both Meta), currently at version 03
+- Defines concrete media wire format over LOC for H.264 video, Opus audio, AAC-LC audio, and UTF-8 text
+- Uses MOQT extension headers (0x0A, 0x15, 0x0D, 0x0F, 0x11, 0x13) for media metadata
+- Supports mid-stream encoding parameter changes
+- **Expires 2026-04-23** — needs monitoring for renewal. If not renewed, the draft lapses.
+- Not adopted by the MOQ working group (individual submission)
+- Documents the wire format used by moxygen and LOC-based media interop
+
+---
+
 ## 2026-04-12 - Fix moq-rs production draft version, add doc.moq.dev
 
 **Operation**: Correction + Enhancement

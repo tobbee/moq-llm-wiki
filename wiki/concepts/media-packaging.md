@@ -33,6 +33,17 @@ Used via **[[moq-cmsf]]** (draft-ietf-moq-cmsf-00)
 
 [[luke-curley]] proposed [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) (2026-03-18) as a way to compress CMAF containers, potentially bridging the gap between LOC's low overhead and CMAF's compatibility. His comment: "it's kinda gross, but maybe it's enough to bridge the gap between LOC and CMAF so we don't have a container split based on the use-case."
 
+## Media Interop (Concrete Wire Format)
+
+**[[moq-media-interop]]** (draft-cenzano-moq-media-interop-03, individual, expires 2026-04-23)
+
+- Defines a concrete media wire format on top of LOC
+- Covers H.264 video (AVCC), Opus audio, AAC-LC audio, and UTF-8 text
+- Uses MOQT extension headers for metadata (PTS, DTS, timebase, wallclock)
+- Supports mid-stream encoding parameter changes
+- Authored by Jorge Cenzano-Ferret and [[alan-frindell]] at Meta
+- Documents the wire format used by [[moxygen]]
+
 ## Current State
 
 Both approaches coexist within [[moq-msf]]:
@@ -54,5 +65,6 @@ Both approaches coexist within [[moq-msf]]:
 
 - [[moq-loc]] - LOC specification
 - [[moq-cmsf]] - CMAF via MSF
+- [[moq-media-interop]] - Concrete wire format for LOC media
 - [[moq-msf]] - Parent streaming format
 - [[adaptive-bitrate]] - ABR works with both approaches

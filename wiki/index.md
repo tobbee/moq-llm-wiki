@@ -23,6 +23,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-privacy-pass]] | draft-02 | Active | Privacy-preserving authentication via Privacy Pass tokens |
 | [[moq-cmsf]] | draft-00 | Active | CMAF-compliant extension of MSF |
 | [[moq-moqpack]] | draft-00 | Active | QPACK compression for MOQT control messages (individual) |
+| [[moq-media-interop]] | draft-03 | Active (expires Apr 23) | Media wire format over LOC for H.264/Opus/AAC (individual) |
 
 ## Protocol Concepts
 
@@ -54,7 +55,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[libquicr]] - Cisco's C++ library with Go bindings
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
-- [[eyevinn-moq]] - Eyevinn's Go transport + JS player (draft-14)
+- [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player (draft-14/16, DRM)
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
 - [[imquic]] - Meetecho's C library, also supports RoQ (draft-16/17)
 - [[quiche-moq]] - Rust implementation on quiche (draft-07-13, 16)
@@ -71,7 +72,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moxygen]] | C++ | 14, 15, 16 | [facebookexperimental/moxygen](https://github.com/facebookexperimental/moxygen) |
 | [[libquicr]] / quicr-go | C++ / Go | 16 | [quicr/libquicr](https://github.com/quicr/libquicr), [Quicr/quicr-go](https://github.com/Quicr/quicr-go) |
 | [[aiomoqt]] | Python | 14 + 16 (dual) | [gmarzot/aiomoqt](https://github.com/gmarzot/aiomoqt) |
-| [[eyevinn-moq]] | Go / JS | 14 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |
+| [[moqlivemock]] | Go / JS | 14, 16 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |
 | [[moqtail]] | Rust/TS | 14 | [moqtail/moqtail](https://github.com/moqtail/moqtail) |
 | [[imquic]] | C | 16, 17 | [meetecho/imquic](https://github.com/meetecho/imquic) |
 | [[quiche-moq]] | Rust | 07-13, 16 | [birneee/quiche_moq](https://github.com/birneee/quiche_moq) |

@@ -26,7 +26,7 @@ Current state of cross-implementation interoperability testing.
 - **[[xquic-moq]]**: Passed all interop runner tests
 - **[[moq-rs]]**: Main branch
 - **[[moxygen]]**: Supported
-- **[[eyevinn-moq]]**: Go transport + JS CMSF player
+- **[[moqlivemock]]**: Go transport + JS CMSF player (draft-14 and draft-16)
 - **Cloudflare edge relays**: Anycast at `draft-14.cloudflare.mediaoverquic.com:443`
 
 ## Interop Runner Matrix
@@ -58,7 +58,12 @@ Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<
 - **Track Properties parsing** - Different implementations handle the length prefix differently (see [[track-properties]])
 - **PUBLISH_NAMESPACE behavior** - Relay behavior around namespace announcements confuses some implementations (Daiki Matsui's report, 2026-03-23)
 
+## Media Wire Format Interop
+
+**[[moq-media-interop]]** (draft-cenzano-moq-media-interop-03) defines the concrete media wire format used for LOC-based media interop. It specifies how H.264 video, Opus/AAC-LC audio, and text are packaged into MOQT objects with extension headers. This is the format used by Meta's [[moxygen]] relay and is relevant for any LOC-based interop testing. The draft expires 2026-04-23 — check [datatracker](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/) for renewal.
+
 ## Related
 
 - [[interop-endpoints]] - Public relay endpoints
 - [[interop-runner]] - Automated test framework
+- [[moq-media-interop]] - Media wire format specification for LOC interop
