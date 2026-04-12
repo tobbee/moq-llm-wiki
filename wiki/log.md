@@ -9,6 +9,22 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+## 2026-04-12 - Add London interim details
+
+**Operation**: Update
+**Sources**: IETF Datatracker (interim-2026-moq-08 through moq-11 session pages)
+
+**Pages updated**: interim-meetings.md, discussions-2026-04.md
+
+**Key changes**:
+- Added London interim details: County Hall / The Riverside Building, Belvedere Road, London SE1 7PB
+- June 11 (moq-08): 2 sessions (hackathon/interop day)
+- June 12 (moq-09, moq-10 at 08:30 UTC, moq-11 at 12:30 UTC): 3 working sessions
+- Remote participation via Meetecho (details TBD)
+- Explained numbering: moq-08 through moq-11 registered on datatracker before the virtual interims
+
+---
+
 ## 2026-04-12 - Rename Eyevinn MOQ Stack to moqlivemock, major update
 
 **Operation**: Update + Rename

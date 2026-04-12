@@ -89,6 +89,11 @@ Automated summary of moq-wg repository activity.
 ### Interop Runner Expansion (Apr 12)
 The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results: 21 pass / 70 fail / 14 skip. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
 
+## Upcoming
+
+### London In-Person Interim (June 11-12)
+Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere Road, London SE1 7PB. June 11 has 2 sessions (likely hackathon/interop), June 12 has 3 working sessions. Similar format to the [[discussions-2026-02|Boulder interim]]. See [[interim-meetings]] for details.
+
 ## Key Themes
 
 1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Interim 13 (Apr 13) has REWIND slides.
@@ -96,3 +101,4 @@ The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx
 3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results
 4. **Wire format refinement** - Varint encoding, delta encoding, property parsing
 5. **Consensus process** - draft-17 consensus call active on mailing list
+6. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions

@@ -15,12 +15,19 @@ status: current
 | **interim-2026-moq-14** | **2026-04-27** | |
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
-| **interim-2026-moq-08** | **2026-06-11** | 2 sessions (likely hackathon) |
-| **interim-2026-moq-09** | **2026-06-12** | |
-| **interim-2026-moq-10** | **2026-06-12** | |
-| **interim-2026-moq-11** | **2026-06-12** | 3 sessions same day |
+| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day) |
+| **interim-2026-moq-09** | **2026-06-12** | London interim |
+| **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim |
+| **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim |
 
-Note: moq-08 through moq-11 are numbered lower but scheduled later - these appear to be IETF 126 sessions.
+### London Interim (June 11-12)
+
+In-person interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB**. Four sessions across two days, similar in format to the [[discussions-2026-02|Boulder interim]] in February.
+
+- **June 11** (moq-08): 2 sessions — likely hackathon/interop day
+- **June 12** (moq-09, moq-10, moq-11): 3 working sessions (moq-10 at 08:30 UTC, moq-11 at 12:30 UTC)
+- **Remote participation**: Meetecho (details TBD)
+- Note: moq-08 through moq-11 are numbered lower but scheduled later because they were registered on the datatracker before the virtual interims.
 
 ## Past 2026 Meetings
 
