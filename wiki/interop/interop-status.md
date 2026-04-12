@@ -1,7 +1,7 @@
 ---
 title: "Interop Status"
 tags: [interop, testing, status]
-date: 2026-04-10
+date: 2026-04-12
 status: current
 ---
 
@@ -31,21 +31,24 @@ Current state of cross-implementation interoperability testing.
 
 ## Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-10): **19 passed / 62 failed / 12 skipped** out of 93 total.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-12): **21 passed / 70 failed / 14 skipped** out of 105 total.
 
-Implementations in the matrix:
-1. moq-dev-js
-2. moq-dev-rs
-3. moq-rs
-4. moq-rs-draft-16
-5. moxygen
-6. xquic
-7. imquic ([[lorenzo-miniero]])
-8. libquicr
-9. moqtail
-10. quiche-moq ([[martin-duke]])
+Implementations in the matrix (11):
+1. moq-dev-js (client)
+2. moq-dev-rs (client + relay)
+3. moq-rs (client + relay, draft-14)
+4. moq-rs-draft-16 (client + relay)
+5. moxygen (client + relay)
+6. xquic (client + relay)
+7. imquic (relay, [[lorenzo-miniero]])
+8. libquicr (relay)
+9. moqtail (relay)
+10. quiche-moq (relay, [[martin-duke]])
+11. **moqx** (relay, [[openmoq|OpenMOQ]]'s moxygen fork) — **new since Apr 10**
 
-Target version is draft-16. Best results: [[moq-dev]] moq-dev-rs <-> libquicr (6/6), [[moq-dev]] moq-dev-rs <-> moxygen (6/6), [[moq-rs]] moq-rs-draft-16 <-> moxygen (12 pass).
+Target version is draft-16. Version distribution: 48 tests at draft-16, 8 at draft-17, 49 at draft-14.
+
+Best results: moq-rs-draft-16 self-test (all pass), moq-dev-js <-> moqx (6/6), moq-rs-draft-16 <-> moqx (5-6/6), moq-rs-draft-16 <-> moxygen (5-6/6), moq-rs-draft-16 <-> imquic (5-6/6), moq-rs self-test (all pass), moq-rs <-> moqx (all pass).
 
 Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<DATE>_<TIME>/report.html`
 

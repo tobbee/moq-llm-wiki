@@ -1,7 +1,7 @@
 ---
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
-date: 2026-04-10
+date: 2026-04-12
 status: current
 ---
 
@@ -28,6 +28,7 @@ The interop runner automates testing between MOQ implementations, publishing res
 8. **libquicr** - [[libquicr|Cisco's C++ library]]
 9. **moqtail** - [[moqtail|Zafer Gurel's Rust/TS implementation]]
 10. **quiche-moq** - [[martin-duke]]'s Rust implementation
+11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (added Apr 2026)
 
 ## Current Target
 
@@ -37,18 +38,23 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| April 2026 | 93 | 19-22 | 59-62 | 12 |
+| April 12, 2026 | 105 | 21 | 70 | 14 |
+| Early April 2026 | 93 | 19-22 | 59-62 | 12 |
 | Mid-March 2026 | 93-97 | 24-25 | ~60 | 12 |
 | Early March 2026 | 71 | 18-22 | varies | varies |
 | February 2026 (draft-14) | 11-14 | 9-10 | 2-5 | varies |
 
-Transition from draft-14 to draft-16 target occurred in mid-February 2026, which temporarily reduced pass rates as implementations updated.
+The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, adding new client-relay pairs. Transition from draft-14 to draft-16 target occurred in mid-February 2026, which temporarily reduced pass rates as implementations updated.
 
 ## Best Performing Pairs
 
-- **moq-dev-rs <-> libquicr**: 6/6 pass
-- **moq-dev-rs <-> moxygen**: 6/6 pass
-- **moq-rs-draft-16 <-> moxygen**: 12 pass
+- **moq-rs-draft-16 <-> moq-rs-draft-16**: All tests pass (self-test)
+- **moq-dev-js <-> moqx**: 6/6 pass
+- **moq-rs-draft-16 <-> moqx**: 5-6/6 pass
+- **moq-rs-draft-16 <-> moxygen**: 5-6/6 pass
+- **moq-rs-draft-16 <-> imquic**: 5-6/6 pass
+- **moq-rs <-> moq-rs**: All tests pass (self-test, draft-14)
+- **moq-rs <-> moqx**: All tests pass (draft-14)
 
 ## Getting Started
 

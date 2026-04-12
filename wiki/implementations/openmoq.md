@@ -1,7 +1,7 @@
 ---
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
-date: 2026-04-10
+date: 2026-04-12
 status: current
 ---
 
@@ -43,6 +43,7 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - Fork of Meta's [[moxygen]] relay, serving as the buffer repo for the planned **moqx** server/relay
 - C++
 - Updated: 2026-04-10
+- **Now in the [[interop-runner]]** (added Apr 2026): strong results as a relay — moq-dev-js <-> moqx 6/6, moq-rs-draft-16 <-> moqx 5-6/6, moq-rs <-> moqx all pass
 
 ### openmoq/moq-relay-test
 - **GitHub**: [openmoq/moq-relay-test](https://github.com/openmoq/moq-relay-test)

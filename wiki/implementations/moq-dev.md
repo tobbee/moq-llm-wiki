@@ -1,7 +1,7 @@
 ---
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
-date: 2026-04-11
+date: 2026-04-12
 status: current
 ---
 
@@ -11,6 +11,7 @@ status: current
 **Maintainer**: [[luke-curley]]
 **GitHub**: [moq-dev/moq](https://github.com/moq-dev/moq) (was kixelated/moq-rs → kixelated/moq)
 **Website**: [moq.dev](https://moq.dev)
+**Documentation**: [doc.moq.dev](https://doc.moq.dev/)
 **Slack**: #moq-rs (C09CG9V7A2Y) — shared channel, covers both this and [[moq-rs]]
 
 ## Overview

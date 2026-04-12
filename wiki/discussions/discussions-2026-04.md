@@ -1,7 +1,7 @@
 ---
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
-date: 2026-04-10
+date: 2026-04-12
 status: current
 ---
 
@@ -77,16 +77,22 @@ Magnus Westerlund posted the minutes for interim-2026-moq-12. Included discussio
 ### Weekly GitHub Digest (Apr 5)
 Automated summary of moq-wg repository activity.
 
-### Required-Request-ID Debate (Apr 10)
-[[martin-duke]] filed issue #1603 questioning whether `required-request-id` is needed for all request types. He argues only REQUEST_UPDATE and FETCH genuinely need it, and maintaining state for all request IDs creates unnecessary overhead. [[alan-frindell]] countered that QUIC's maximum bidirectional streams naturally bound the state.
+### Required-Request-ID Debate (Apr 10-11)
+[[martin-duke]] filed issue #1603 questioning whether `required-request-id` is needed for all request types. He argues only REQUEST_UPDATE and FETCH genuinely need it, and maintaining state for all request IDs creates unnecessary overhead and enables a malicious client to maximize state by using every other request ID. [[alan-frindell]] countered that QUIC's maximum bidirectional streams naturally bound the state, but Martin questioned whether stream IDs are actually bound to request IDs. Ian Swett (Apr 11) noted that **stream IDs in WebTransport and some QUIC implementations aren't exposed to the application**, and that `required-request-id` was added to achieve "feature parity" with the single control stream model but "it was never clear exactly what functionality this provided." Ian also expressed that Joining FETCH's dependency on another Request is one reason he dislikes it.
 
 ### Joining FETCH Redesign (Apr 10)
 [[martin-duke]] opened PR #1604 implementing the proposal from issue #1602 to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. He noted it was "much spicier than expected" due to parameter state sharing. [[alan-frindell]] reviewed and flagged that subscriber priority cannot differ between fetch and subscription under this model.
 
+### Subscribe Rewind draft-02 Published (Apr 2)
+[[martin-duke]]'s [draft-duke-moq-subscribe-rewind-02](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/) was published April 2. The "Rewind" subscription filter allows subscribers to request past groups using SUBSCRIBE semantics (multiple streams, best-effort) rather than FETCH semantics (single stream, complete). This is a key topic for the interim-13 meeting on Apr 13.
+
+### Interop Runner Expansion (Apr 12)
+The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results: 21 pass / 70 fail / 14 skip. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
+
 ## Key Themes
 
-1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind, and Join Filters; PR #1604 proposes a concrete redesign
-2. **Wire format refinement** - Varint encoding, delta encoding, property parsing
-3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho
-4. **Consensus process** - draft-17 consensus call active on mailing list
-5. **Protocol overhead** - Debate on whether required-request-id adds unnecessary complexity
+1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Interim 13 (Apr 13) has REWIND slides.
+2. **Protocol overhead** - Growing consensus that required-request-id may be unnecessary; Ian Swett supports simplification
+3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results
+4. **Wire format refinement** - Varint encoding, delta encoding, property parsing
+5. **Consensus process** - draft-17 consensus call active on mailing list

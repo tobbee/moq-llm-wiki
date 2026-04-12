@@ -1,7 +1,7 @@
 ---
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
-date: 2026-04-11
+date: 2026-04-12
 status: current
 ---
 
@@ -25,8 +25,7 @@ The two projects are now considered **sibling implementations** — neither is u
 
 ## Draft Support
 
-- **main branch**: draft-14 (IETF WG spec)
-- **draft-07 branch**: Cloudflare's current production deployment
+- **main branch**: draft-14 (IETF WG spec) — current production deployment
 - **PR #131**: draft-16 (by Manish)
 - Historical branches: draft-04, 05, 06, 07
 

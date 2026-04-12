@@ -1,13 +1,46 @@
 ---
 title: Wiki Log
 tags: [log, maintenance]
-date: 2026-04-10
+date: 2026-04-12
 status: current
 ---
 
 # Wiki Log
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+## 2026-04-12 - Fix moq-rs production draft version, add doc.moq.dev
+
+**Operation**: Correction + Enhancement
+**Sources**:
+- Slack #moq thread (2026-04-11): Mike English noted moq-rs wiki page incorrectly listed draft-07 as Cloudflare's current production deployment — it's actually draft-14
+- Slack #moq thread (2026-04-11): Luke Curley pointed to [doc.moq.dev](https://doc.moq.dev/) as documentation for moq-dev/moq
+
+**Pages updated**:
+- moq-rs.md — Fixed draft support: production deployment is draft-14, not draft-07
+- moq-dev.md — Added doc.moq.dev as documentation link
+
+## 2026-04-12 - Wiki update: interop runner expansion, required-request-id debate, rewind-02
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: No new messages (channel quiet since Feb 11)
+- GitHub: moq-transport issues/PRs checked — #1603 has new comments from Ian Swett (Apr 11)
+- GitHub: msf, loc — no new activity since Apr 10
+- Mailing list: No new threads since last update
+- IETF Datatracker: No new WG draft versions; draft-duke-moq-subscribe-rewind-02 published Apr 2
+- Interop runner: Test count expanded from 93 to 105; moqx (OpenMOQ relay) added as 11th implementation
+- tobbee/moq-llm-wiki: No open issues
+
+**Pages updated**: interop-status.md, interop-runner.md, discussions-2026-04.md, joining-fetch-dissent.md, martin-duke.md, openmoq.md
+
+**Key findings**:
+- Interop runner expanded to 105 tests (was 93) with 21 pass / 70 fail / 14 skip. The growth is from moqx (OpenMOQ's moxygen fork) joining the matrix as an 11th relay. moqx shows strong results: 6/6 with moq-dev-js, 5-6/6 with moq-rs-draft-16.
+- Ian Swett commented on #1603 (Apr 11): required-request-id was added for "feature parity" with single control stream model but "it was never clear exactly what functionality this provided." Stream IDs in WebTransport aren't exposed to applications. He also expressed that Joining FETCH's dependency on another Request is a design concern.
+- draft-duke-moq-subscribe-rewind-02 published Apr 2 — refines the "Rewind" subscription filter for best-effort past group retrieval. Key topic for interim-13 meeting (Apr 13).
+- Virtual interim 13 is tomorrow (Apr 13) with REWIND slides on the agenda.
+
+---
 
 ## 2026-04-11 - Split moq-rs/moq-js into separate implementation pages
 
