@@ -32,7 +32,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 ## Protocol
 
-- **moq-lite**: Simplified transport protocol (Luke's own spec)
+- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite-04](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/))
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **IETF adapter shims**: Allow interop with IETF draft implementations (draft-14 through draft-17)
 

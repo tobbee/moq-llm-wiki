@@ -1,7 +1,7 @@
 ---
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
-date: 2026-04-10
+date: 2026-04-13
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -42,7 +42,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-## Active Issues (as of 2026-04-11)
+## Active Issues (as of 2026-04-13)
 
 ### Design Issues
 - **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
@@ -53,6 +53,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1581** - Request cancellation should be able to specify an error code
 - **#1578** - Bikeshed: `Largest Object` should be `Next Object`
 - **#1550** - Properties Type collision between moq-16 and loc-01
+- **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
 
 ### Open PRs
 - **PR #1604** - Joining FETCH with subscription (implements #1602)

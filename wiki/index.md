@@ -1,7 +1,7 @@
 ---
 title: MOQ Wiki Index
 tags: [index, navigation]
-date: 2026-04-10
+date: 2026-04-13
 status: current
 ---
 
@@ -24,6 +24,8 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-cmsf]] | draft-00 | Active | CMAF-compliant extension of MSF |
 | [[moq-moqpack]] | draft-00 | Active | QPACK compression for MOQT control messages (individual) |
 | [[moq-media-interop]] | draft-03 | Active (expires Apr 23) | Media wire format over LOC for H.264/Opus/AAC (individual) |
+| [[moq-lite]] | draft-04 | Active | Simplified transport protocol by Luke Curley (individual) |
+| [[moq-nmsf]] | draft-01 | Active | Neural Video Codec Packaging for MSF (individual) |
 
 ## Protocol Concepts
 

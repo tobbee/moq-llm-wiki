@@ -1,13 +1,38 @@
 ---
 title: Wiki Log
 tags: [log, maintenance]
-date: 2026-04-12
+date: 2026-04-13
 status: current
 ---
 
 # Wiki Log
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+## 2026-04-13 - Wiki update: add moq-lite and NMSF drafts, interop regression, #1405 resolution
+
+**Operation**: Update
+**Sources**:
+- GitHub: moq-transport issues/PRs checked — #1405 updated Apr 12 (Ian Swett inclined to close)
+- GitHub: msf — no new activity since Apr 10; loc — no new activity since Mar 23
+- Mailing list: Only weekly GitHub digest on Apr 12, no new substantive threads
+- IETF Datatracker: No new WG draft versions; two individual drafts added to wiki
+- Interop runner: Slight regression (21→20 pass, 70→71 fail)
+- tobbee/moq-llm-wiki: No open issues
+
+**Pages created**: wiki/drafts/moq-lite.md, wiki/drafts/moq-nmsf.md
+**Pages updated**: index.md, discussions-2026-04.md, interop-runner.md, interop-status.md, moq-transport.md, luke-curley.md, moq-dev.md
+
+**Key findings**:
+- **draft-lcurley-moq-lite-04** (Apr 9): Luke Curley's simplified transport protocol, now at version 04. Removes subgroups, object properties, datagrams, and 30+ message types from moq-transport. Pull-only, stream-based design. Individual submission, not WG-adopted. This is the spec behind moq-dev/moq.
+- **draft-herz-moq-nmsf-01** (Apr 7): Erik Herz (Vivoh) proposes extending MSF with Neural Video Codec packaging. Dual-track model (hyperprior + latent) for priority-aware delivery. Supports DCVC-RT, SSF, FVC, and other learned codecs. 18 pages, individual submission.
+- **Issue #1405** (Single Object Subgroup ID): Ian Swett commented Apr 12 that he's inclined to close with no action after PR #1593 saw no WG interest. Will put before WG to confirm.
+- **Interop runner**: Slight regression from 21 pass / 70 fail to 20 pass / 71 fail (105 tests, 14 skip unchanged). One test flipped from pass to fail.
+- **Virtual interim 13** happening today (Apr 13) with REWIND slides on agenda.
+- **draft-cenzano-moq-media-interop-03** expires in 10 days (Apr 23) — still monitoring for renewal.
+- Slack #moq: No new messages (channel quiet since Feb 11).
+
+---
 
 ## 2026-04-12 - Add London interim details
 

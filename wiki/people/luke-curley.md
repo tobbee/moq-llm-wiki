@@ -1,7 +1,7 @@
 ---
 title: "Luke Curley"
 tags: [person, implementer]
-date: 2026-04-10
+date: 2026-04-13
 status: current
 ---
 
@@ -13,6 +13,7 @@ status: current
 ## Contributions
 
 - Creator of the original moq-rs (now [[moq-dev]]), which also spawned [[moq-rs]] (Cloudflare) and [[moq-js]] (video-dev) as sibling forks
+- Author of [[moq-lite]] ([draft-lcurley-moq-lite-04](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)) — simplified transport protocol, now at version 04
 - Runs public interop infrastructure at `cdn.moq.dev`
 - Author of [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) - CMAF compression proposal
 - Created the qmux library for TCP fallback

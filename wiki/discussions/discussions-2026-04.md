@@ -1,7 +1,7 @@
 ---
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
-date: 2026-04-12
+date: 2026-04-13
 status: current
 ---
 
@@ -86,10 +86,25 @@ Automated summary of moq-wg repository activity.
 ### Subscribe Rewind draft-02 Published (Apr 2)
 [[martin-duke]]'s [draft-duke-moq-subscribe-rewind-02](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/) was published April 2. The "Rewind" subscription filter allows subscribers to request past groups using SUBSCRIBE semantics (multiple streams, best-effort) rather than FETCH semantics (single stream, complete). This is a key topic for the interim-13 meeting on Apr 13.
 
+### Single Object Subgroup ID Likely Closing (Apr 12)
+Ian Swett commented on issue #1405 (originally filed Dec 2025) proposing that single-object subgroups don't need a Subgroup ID. After PR #1593 (allow framing single objects without subgroup ID) saw limited WG interest, Ian wrote: "Discussion of the PR so far indicates we don't really want to bother with #1593. I'm inclined to close this issue with no action, but I'll put it before the WG to confirm." The related idea of simplifying prioritization (#1446) also lacked appetite.
+
 ### Interop Runner Expansion (Apr 12)
-The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results: 21 pass / 70 fail / 14 skip. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
+The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results as of Apr 13: 20 pass / 71 fail / 14 skip (slight regression from 21/70 on Apr 12). moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
+
+### Weekly GitHub Digest (Apr 12)
+Automated weekly summary of moq-wg repository activity posted to the mailing list.
+
+### New Individual Drafts on Datatracker
+
+Two individual drafts appeared on the IETF datatracker this period:
+- **[[moq-lite|draft-lcurley-moq-lite-04]]** (Apr 9) — [[luke-curley]]'s simplified transport protocol, now at version 04. Removes subgroups, object properties, datagrams, and 30+ message types from [[moq-transport]], using a pull-only, stream-based architecture. This is the spec behind the [[moq-dev]] implementation.
+- **[[moq-nmsf|draft-herz-moq-nmsf-01]]** (Apr 7) — Erik Herz (Vivoh) proposes extending [[moq-msf]] with a `nvc` packaging type for Neural Video Codecs. Uses a dual-track model (hyperprior + latent) for priority-aware delivery. Supports DCVC-RT, SSF, FVC, and other learned codecs.
 
 ## Upcoming
+
+### Virtual Interim 13 (Apr 13)
+Virtual interim happening today with REWIND slides and [[joining-fetch]] discussion on the agenda. See [[interim-meetings]].
 
 ### London In-Person Interim (June 11-12)
 Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere Road, London SE1 7PB. June 11 has 2 sessions (likely hackathon/interop), June 12 has 3 working sessions. Similar format to the [[discussions-2026-02|Boulder interim]]. See [[interim-meetings]] for details.
@@ -97,8 +112,9 @@ Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere R
 ## Key Themes
 
 1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Interim 13 (Apr 13) has REWIND slides.
-2. **Protocol overhead** - Growing consensus that required-request-id may be unnecessary; Ian Swett supports simplification
+2. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary (Ian Swett supports); single-object subgroup ID (#1405) likely closing with no action
 3. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results
 4. **Wire format refinement** - Varint encoding, delta encoding, property parsing
 5. **Consensus process** - draft-17 consensus call active on mailing list
-6. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
+6. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published
+7. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
