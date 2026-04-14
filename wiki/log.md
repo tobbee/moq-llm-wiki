@@ -1,13 +1,37 @@
 ---
 title: Wiki Log
 tags: [log, maintenance]
-date: 2026-04-13
+date: 2026-04-14
 status: current
 ---
 
 # Wiki Log
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+## 2026-04-14 - Wiki update: GraphQL mailing list thread, MSF authz merge, CARP origin, interop recovery
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: New messages Apr 13-14 (visa question for London interim, Hugo Björs joined)
+- GitHub: msf — PR #118 (authorization flows) merged Apr 13, issue #119 closed
+- GitHub: moq-transport — no new issues/PRs since Apr 13; loc — no new activity
+- Mailing list: New thread "Using MOQT for graphql subscriptions with draft-17 requires extensions" by Alan Frindell (Apr 13)
+- IETF Datatracker: No new WG draft versions; noted draft-law-moq-carp-00 (Nov 2025) as CMSF origin
+- Interop runner: Recovery to 21 pass / 70 fail / 14 skip (from 20/71/14 on Apr 13)
+- tobbee/moq-llm-wiki: No open issues
+
+**Pages updated**: discussions-2026-04.md, interop-runner.md, interop-status.md, moq-msf.md, moq-cmsf.md, will-law.md, alan-frindell.md, index.md
+
+**Key findings**:
+- **GraphQL subscriptions on MOQT** (mailing list, Apr 13): Alan Frindell argues draft-17's inflexible message parameters are a mistake. Key issues: 4KB track name limit forces query body into namespace/name; custom parameters require negotiation at every hop; 64KB control message size limit may be too small; no HTTP-like header forwarding for auth. Broader question about MOQT suitability for non-media use cases.
+- **MSF PR #118 merged** (Apr 13): Authorization flows documentation added to MSF spec by Suhas Nandakumar.
+- **CARP → CMSF lineage**: draft-law-moq-carp-00 ("CARP - a CMAF compliant implementation of WARP", Nov 2025) was adopted by the WG and became draft-ietf-moq-cmsf-00 (Dec 2025). Added history to CMSF page.
+- **Interop runner**: Recovered from 20/71 (Apr 13) back to 21/70 (Apr 14). One test flipped back to pass.
+- **draft-cenzano-moq-media-interop-03** expires in 9 days (Apr 23) — still no renewal.
+- Slack activity minimal: Aman Sharma asked about visa invitation for London interim; Hugo Björs joined #moq.
+
+---
 
 ## 2026-04-13 - Wiki update: add moq-lite and NMSF drafts, interop regression, #1405 resolution
 

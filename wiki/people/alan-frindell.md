@@ -23,9 +23,10 @@ status: current
 
 ## Recent Activity (March-April 2026)
 
-- Announced <100 open issues in moq-transport repo (2026-03-15)
-- Achieved 0-RTT subscribe with draft-16 + unidirectional control streams (2026-03-16)
+- Posted mailing list analysis of MOQT limitations for GraphQL subscriptions (2026-04-13) — argues draft-17 parameter inflexibility is a mistake
+- Confirmed Joining Fetch restriction removal (2026-04-09)
+- Clarified Track Properties parsing ambiguity (2026-04-01)
 - Led SUBSCRIBE_NAMESPACE split into SUBSCRIBE_NAMESPACE + SUBSCRIBE_TRACKS (2026-03-31)
 - Organized "Joining fetch dissenters" meeting (2026-03-22)
-- Clarified Track Properties parsing ambiguity (2026-04-01)
-- Confirmed Joining Fetch restriction removal (2026-04-09)
+- Achieved 0-RTT subscribe with draft-16 + unidirectional control streams (2026-03-16)
+- Announced <100 open issues in moq-transport repo (2026-03-15)

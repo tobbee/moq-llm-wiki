@@ -14,6 +14,7 @@ status: current
 ## Contributions
 
 - Author of MOQT Streaming Format (MSF)
+- Author of CARP (draft-law-moq-carp-00, Nov 2025) — adopted by WG as [[moq-cmsf]]
 - Author of CMSF (CMAF compliant MSF)
 - Organized MOQ dinner at IETF 125 in Shenzhen (2026-03-18)
 - Active in media format discussions

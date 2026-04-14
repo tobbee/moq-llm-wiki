@@ -35,6 +35,10 @@ CMSF bridges this by allowing CMAF content to flow through the same MSF infrastr
 
 See [[media-packaging]] for a full comparison.
 
+## History
+
+CMSF originated as **draft-law-moq-carp-00** ("CARP - a CMAF compliant implementation of WARP") submitted by [[will-law]] in November 2025. The draft was adopted by the MOQ working group and published as draft-ietf-moq-cmsf-00 in December 2025.
+
 ## Related
 
 - [[moq-msf]] - Base streaming format
