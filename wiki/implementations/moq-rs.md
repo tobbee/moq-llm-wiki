@@ -2,10 +2,9 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
+last_updated: 2026-04-14
 status: current
 ---
-
-# moq-rs (Cloudflare)
 
 **Language**: Rust
 **Organization**: Cloudflare
@@ -13,23 +12,23 @@ status: current
 **GitHub**: [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) (was englishm/moq-rs)
 **Slack**: #moq-rs (C09CG9V7A2Y) — shared channel, covers both this and [[moq-dev]]
 
-## Overview
+# Overview
 
 Cloudflare's Rust implementation of IETF MoQ Transport. Provides both relay and client functionality, strictly following the IETF MoQ working group specifications. One of the most active implementations in the ecosystem.
 
-## History
+# History
 
 This codebase was originally created by [[luke-curley]] (kixelated/moq-rs). Mike English contributed to the early design and helped with the initial Go → Rust translation. When Luke diverged from strict IETF WG spec support in favor of his own moq-lite protocol, Mike forked and maintained an IETF-aligned version as `englishm/moq-rs` (created 2024-10-15). The project was later transferred to Cloudflare as `cloudflare/moq-rs`.
 
 The two projects are now considered **sibling implementations** — neither is upstream of the other. See [[moq-dev]] for Luke's original project.
 
-## Draft Support
+# Draft Support
 
 - **main branch**: draft-14 (IETF WG spec) — current production deployment
 - **PR #131**: draft-16 (by Manish)
 - Historical branches: draft-04, 05, 06, 07
 
-## Public Infrastructure
+# Public Infrastructure
 
 - **Anycast relays**:
   - `draft-14.cloudflare.mediaoverquic.com:443` (draft-14)
@@ -40,12 +39,12 @@ The two projects are now considered **sibling implementations** — neither is u
 - All support raw QUIC and WebTransport on port 443
 - Interop relays have `--mlog-serve` for debugging: `/<connection-id>` over HTTPS
 
-## Interop
+# Interop
 
 - Registered in [[interop-runner]] as **moq-rs** (draft-14) and **moq-rs-draft-16**
 - moq-rs-draft-16 <-> [[moxygen]]: 12 pass in interop runner
 
-## Related
+# Related
 
 - [[moq-dev]] - Luke Curley's original project (moq-dev/moq), sibling implementation
 - [[moq-js]] - IETF-aligned JavaScript companion (video-dev/moq-js)

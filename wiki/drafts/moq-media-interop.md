@@ -2,11 +2,10 @@
 title: "MoQ Media Interop"
 tags: [draft, media, interop, loc, individual]
 date: 2026-04-12
+last_updated: 2026-04-14
 status: current
 expires: 2026-04-23
 ---
-
-# MoQ Media Interop
 
 **Draft**: draft-cenzano-moq-media-interop-03
 **Status**: Active Internet-Draft (individual submission, not WG-adopted)
@@ -17,32 +16,32 @@ expires: 2026-04-23
 **HTML**: [afrind.github.io](https://afrind.github.io/draft-cenzano-media-interop/draft-cenzano-moq-media-interop.html)
 **Repository**: [github.com/afrind/draft-cenzano-media-interop](https://github.com/afrind/draft-cenzano-media-interop)
 
-## Overview
+# Overview
 
 Specifies a concrete media wire format for sending video and audio over [[moq-loc|LOC]], targeting both live-streaming and video-conferencing use cases. Defines how to map H.264 video, Opus audio, AAC-LC audio, and UTF-8 text into MOQT objects using extension headers.
 
 A key feature is support for updating encoding parameters mid-stream (frame rate, resolution, codec) without interrupting transmission.
 
-## Track Naming
+# Track Naming
 
 - Publishers choose a namespace and announce it via MOQT
 - Media tracks follow naming convention `videoX` and `audioX` (X = integer starting at 0)
 - Multiple tracks in the same namespace share synchronized timestamps
 
-## Mapping to MOQT Object Model
+# Mapping to MOQT Object Model
 
 - **Video**: New groups begin at each IDR (keyframe); object 0 is always an IDR frame
 - **Audio**: New groups begin with each audio object
 - Both use single subgroups with standardized formats
 
-## Timestamps
+# Timestamps
 
 Two-component representation to avoid rounding errors:
 - Timestamp numerator (PTS, DTS, duration)
 - Timebase for conversion
 - Formula: `timestamp(seconds) = numerator ÷ timebase`
 
-## Extension Headers
+# Extension Headers
 
 Uses MOQT extension headers for media metadata:
 
@@ -55,7 +54,7 @@ Uses MOQT extension headers for media metadata:
 | 0x11 | UTF-8 Text | Sequence ID only |
 | 0x13 | Audio AAC-LC MPEG4 | Same fields as Opus header |
 
-## Supported Media Types
+# Supported Media Types
 
 | Value | Type | Payload Format |
 |-------|------|----------------|
@@ -64,21 +63,21 @@ Uses MOQT extension headers for media metadata:
 | 0x2 | UTF-8 Text | UTF-8 (RFC 3629) |
 | 0x3 | Audio AAC-LC in MPEG4 | raw_data_block() (ISO/IEC 14496-3:2009 §4.4.2.1) |
 
-## Relationship to Other Drafts
+# Relationship to Other Drafts
 
 - Builds on [[moq-loc]] for container format
 - Uses [[moq-transport]] extension headers for metadata
 - Complements [[moq-msf]] — MSF defines the streaming format framework; this draft defines a concrete media-level wire format on top of LOC
 - Alternative media packaging approach to [[moq-cmsf]] (CMAF-based)
 
-## Open Items (TODOs in draft)
+# Open Items (TODOs in draft)
 
 - Datagram forwarding preference and audio frame sizing
 - Negative timestamp handling for initial priming
 - Security considerations (currently empty)
 - Links to LOC specification documentation
 
-## Revision History
+# Revision History
 
 | Version | Notes |
 |---------|-------|
@@ -87,11 +86,11 @@ Uses MOQT extension headers for media metadata:
 | 01 | — |
 | 00 | Initial |
 
-## Expiration Watch
+# Expiration Watch
 
 **Expires 2026-04-23.** If not renewed by that date, the draft lapses. This is relevant because the draft documents the wire format used by Meta's [[moxygen]] relay and is referenced by implementations doing LOC-based media interop. Check the [datatracker page](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/) for renewal status.
 
-## Related
+# Related
 
 - [[moq-loc]] - Container format this builds on
 - [[moq-msf]] - Streaming format framework

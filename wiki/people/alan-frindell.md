@@ -2,16 +2,15 @@
 title: "Alan Frindell"
 tags: [person, meta, editor]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
-
-# Alan Frindell
 
 **Organization**: Meta
 **Slack**: @afrind (U68JLS6LV)
 **Role**: Editor of [[moq-transport]], primary relay implementer ([[moxygen]])
 
-## Contributions
+# Contributions
 
 - Co-editor of draft-ietf-moq-transport (all versions)
 - Author of [Join Subscription Filters](https://afrind.github.io/draft-frindell-moq-join-filters/draft-frindell-moq-join-filters.html) proposal
@@ -21,7 +20,7 @@ status: current
 - Very active in Slack #moq, frequently clarifying protocol semantics
 - Created the #moq Slack channel (2022-10-17)
 
-## Recent Activity (March-April 2026)
+# Recent Activity (March-April 2026)
 
 - Posted mailing list analysis of MOQT limitations for GraphQL subscriptions (2026-04-13) — argues draft-17 parameter inflexibility is a mistake
 - Confirmed Joining Fetch restriction removal (2026-04-09)

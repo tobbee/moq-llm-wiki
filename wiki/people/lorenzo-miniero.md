@@ -2,22 +2,21 @@
 title: "Lorenzo Miniero"
 tags: [person, meetecho, implementer]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
-
-# Lorenzo Miniero
 
 **Organization**: Meetecho
 **Slack**: @Lorenzo Miniero (U07UZ1DGHKK)
 **Role**: Implementer, Janus-based MOQ integration
 
-## Contributions
+# Contributions
 
 - Building MOQ support in Janus (WebRTC gateway)
 - Active interop tester
 - Raises implementation-level questions that improve spec clarity
 
-## Recent Activity (March-April 2026)
+# Recent Activity (March-April 2026)
 
 - Achieved first proper v17 interop with [[luke-curley]]'s stack (2026-04-01)
 - Reported Track Properties parsing confusion that led to spec clarification (2026-03-18) - 20-reply thread

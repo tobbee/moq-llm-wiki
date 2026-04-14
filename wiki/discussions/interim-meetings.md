@@ -2,12 +2,11 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
 
-# MOQ Interim Meetings
-
-## Upcoming Meetings
+# Upcoming Meetings
 
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
@@ -20,7 +19,7 @@ status: current
 | **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim |
 | **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim |
 
-### London Interim (June 11-12)
+## London Interim (June 11-12)
 
 In-person interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB**. Four sessions across two days, similar in format to the [[discussions-2026-02|Boulder interim]] in February.
 
@@ -29,7 +28,7 @@ In-person interim at **County Hall / The Riverside Building, Belvedere Road, Lon
 - **Remote participation**: Meetecho (details TBD)
 - Note: moq-08 through moq-11 are numbered lower but scheduled later because they were registered on the datatracker before the virtual interims.
 
-## Past 2026 Meetings
+# Past 2026 Meetings
 
 | Meeting | Date | Notes |
 |---------|------|-------|
@@ -41,7 +40,7 @@ In-person interim at **County Hall / The Riverside Building, Belvedere Road, Lon
 | interim-2026-moq-02 | 2026-01-26 | |
 | interim-2026-moq-01 | 2026-01-12 | |
 
-## Where to Find Notes
+# Where to Find Notes
 
 - **AI-generated minutes**: https://ietfminutes.org/minutes/wg/moq.html (all 2026 meetings through Mar 30)
 - **Official notes**: Linked from each meeting page on datatracker, e.g., https://datatracker.ietf.org/meeting/interim-2026-moq-13/session/moq
@@ -49,12 +48,12 @@ In-person interim at **County Hall / The Riverside Building, Belvedere Road, Lon
 - **Video recordings**: Via Meetecho player, linked from meeting pages
 - **Meeting materials/slides**: Linked from datatracker meeting pages
 
-## Datatracker Links
+# Datatracker Links
 
 - All MOQ meetings: https://datatracker.ietf.org/group/moq/meetings/
 - Specific meeting: `https://datatracker.ietf.org/meeting/interim-2026-moq-NN/session/moq`
 
-## Related
+# Related
 
 - [[discussions-2026-04]] - April discussions
 - [[discussions-2026-03]] - March discussions (IETF 125)

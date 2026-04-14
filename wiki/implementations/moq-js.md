@@ -2,10 +2,9 @@
 title: "moq-js (video-dev)"
 tags: [implementation, javascript, browser, ietf]
 date: 2026-04-11
+last_updated: 2026-04-14
 status: current
 ---
-
-# moq-js (video-dev)
 
 **Language**: JavaScript/TypeScript
 **Organization**: video-dev
@@ -14,32 +13,32 @@ status: current
 **Slack**: #moq-js (C09BZ7KH0BZ)
 **Discord**: [video-dev Discord](https://discord.gg/FCYF3p99mr)
 
-## Overview
+# Overview
 
 IETF-aligned JavaScript/browser implementation of MoQ Transport, enabling browser-based publishing and subscribing via WebTransport. Client-side only — requires a MoQ relay such as [[moq-rs]] for operation.
 
-## History
+# History
 
 Created 2024-10-15, the same day as [[moq-rs]] (cloudflare/moq-rs). Both were born out of the period when [[luke-curley]] was not going to support the IETF WG specs in his original `kixelated/moq-js`. The video-dev version started from Luke's codebase but diverged to follow the IETF MoQ working group specifications. Luke's original `kixelated/moq-js` was archived in June 2025 and its functionality was absorbed into [[moq-dev]] as the Hang player (a total rewrite).
 
 The two JS projects are now **separate implementations** — video-dev/moq-js follows IETF WG specs, while moq-dev/moq's JS packages implement Luke's moq-lite/Hang protocol.
 
-## Draft Support
+# Draft Support
 
 - **Main branch**: draft-14 (IETF WG spec)
 - PR #64: draft-14 implementation with publisher and player (merged 2026-02-17)
 
-## Use Cases
+# Use Cases
 
 - Browser-based media publishing
 - Browser-based media consumption
 - Provides `<video-moq>` web component and `Player` class for custom UIs
 
-## Top Contributors
+# Top Contributors
 
 kixelated (historical), englishm, JoaquinBCh, itzmanish, Manuel-Barrabino
 
-## Related
+# Related
 
 - [[moq-rs]] - IETF-aligned Rust companion (cloudflare/moq-rs)
 - [[moq-dev]] - Luke Curley's project with Hang player (moq-dev/moq, different JS codebase)

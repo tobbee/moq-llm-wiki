@@ -2,17 +2,16 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
+last_updated: 2026-04-14
 status: current
 ---
-
-# MOQ Wiki Index
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
 Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 > **Suggest content**: [File an issue](https://github.com/tobbee/moq-llm-wiki/issues/new) on the wiki repo to request coverage of a topic, implementation, or discussion. It will be picked up by the next automated update.
 
-## IETF Drafts
+# IETF Drafts
 
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
@@ -27,7 +26,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-lite]] | draft-04 | Active | Simplified transport protocol by Luke Curley (individual) |
 | [[moq-nmsf]] | draft-01 | Active | Neural Video Codec Packaging for MSF (individual) |
 
-## Protocol Concepts
+# Protocol Concepts
 
 - [[publish-subscribe]] - Core pub/sub model and message flow
 - [[relays]] - Relay architecture and CDN integration
@@ -36,19 +35,19 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[qmux]] - QUIC multiplexing over TCP for fallback transport
 - [[track-properties]] - Object and track metadata system
 
-## Design Debates
+# Design Debates
 
 - [[switch-abr]] - SWITCH message for client-side ABR (most debated open issue)
 - [[joining-fetch-dissent]] - Competing proposals for joining live streams
 - [[open-issues-analysis]] - Full evaluation of all open issues (April 2026)
 
-## Media & Streaming
+# Media & Streaming
 
 - [[media-packaging]] - LOC vs CMAF container approaches
 - [[adaptive-bitrate]] - ABR switching in MOQ
 - [[catalog-format]] - Track catalog and delta updates
 
-## Implementations
+# Implementations
 
 - [[moq-dev]] - Luke Curley's Rust+TypeScript monorepo (moq-lite + Hang player)
 - [[moq-rs]] - Cloudflare's IETF-aligned Rust implementation (cloudflare/moq-rs)
@@ -64,7 +63,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[shaka-player]] - Google's media player with experimental MSF support (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 
-### Draft Version Support Summary
+## Draft Version Support Summary
 
 | Implementation | Language | Draft Version(s) | GitHub |
 |----------------|----------|-------------------|--------|
@@ -81,7 +80,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[shaka-player]] | JavaScript | 14 (experimental) | [shaka-project/shaka-player](https://github.com/shaka-project/shaka-player) |
 | [[xquic-moq]] | C | 14 | Alibaba (see [[interop-runner]]) |
 
-## People & Organizations
+# People & Organizations
 
 - [[alan-frindell]] - Meta, editor of moq-transport
 - [[suhas-nandakumar]] - Cisco, editor of moq-transport, secure-objects, LOC
@@ -90,18 +89,18 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[lorenzo-miniero]] - Meetecho, Janus-based implementation
 - [[martin-duke]] - Google, rewind proposal
 
-## Active Discussions
+# Active Discussions
 
 - [[discussions-2026-04]] - April 2026 discussions
 - [[discussions-2026-03]] - March 2026 discussions (IETF 125 Shenzhen)
 - [[discussions-2026-02]] - February 2026 discussions (Boulder Interim + Hackathon)
 - [[discussions-2026-01]] - January 2026 discussions (draft-16 release)
 
-## Meetings
+# Meetings
 
 - [[interim-meetings]] - Interim meeting schedule and links to notes/recordings
 
-## Interop
+# Interop
 
 - [[interop-runner]] - Standardized cross-implementation test framework
 - [[interop-status]] - Current interop testing status across implementations

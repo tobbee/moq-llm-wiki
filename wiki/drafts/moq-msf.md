@@ -2,23 +2,22 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
 ---
 
-# MOQT Streaming Format (MSF)
-
 **draft-ietf-moq-msf-00** | 34 pages | Expires 2026-07-23
 
-## Authors
+# Authors
 - [[will-law]] (Akamai)
 
-## Abstract
+# Abstract
 
 MSF defines the streaming format for delivering media over [[moq-transport]]. It enables delivery of [[moq-loc]]-compliant media through bitstream fragmentation into independently transmittable objects. Replaces the earlier draft-ietf-moq-warp.
 
-## Key Features
+# Key Features
 
 - **Video and audio codec support**: Compatible with LOC packaging
 - **Catalog track**: Describes content characteristics via [[catalog-format]]
@@ -30,7 +29,7 @@ MSF defines the streaming format for delivering media over [[moq-transport]]. It
 - **[[adaptive-bitrate]]**: ABR switching between time-synchronized tracks
 - **Content encryption**: Integration with [[moq-secure-objects]]
 
-## Structure
+# Structure
 
 MSF defines how media is organized into MOQT tracks:
 1. **Catalog track** - JSON-based description of all available tracks
@@ -38,7 +37,7 @@ MSF defines how media is organized into MOQT tracks:
 3. **Timeline tracks** - Wall clock to media time mapping
 4. **Event tracks** - Timed metadata (SCTE-35, captions, etc.)
 
-## Active Issues (moq-wg/msf)
+# Active Issues (moq-wg/msf)
 
 - **#153** - `initTrack` does not work
 - **#150** - Wall clock is problematic
@@ -53,7 +52,7 @@ MSF defines how media is organized into MOQT tracks:
 - **#136** - No mechanism to delta update a track
 - **#135** - Delta updates are not generic
 
-## Recent PRs
+# Recent PRs
 
 - **PR #152** (Merged Apr 9) - Clarify MSF URL construction and fragment parameters
 - **PR #143** (Merged) - Break the monolith table into separate tables and sections
@@ -64,13 +63,13 @@ MSF defines how media is organized into MOQT tracks:
 - **PR #121** (Merged Apr 9) - Pub tracks, logs and metrics
 - **PR #118** (Merged Apr 13) - Add details of authorization flows
 
-## Incomplete Sections
+# Incomplete Sections
 
 The draft-00 marks several sections as ToDo:
 - Content protection details
 - Security considerations
 
-## Related
+# Related
 
 - [[moq-transport]] - Underlying transport protocol
 - [[moq-loc]] - Container format used by MSF
@@ -78,6 +77,6 @@ The draft-00 marks several sections as ToDo:
 - [[catalog-format]] - Catalog specification
 - [[media-packaging]] - Container format comparison
 
-## External Links
+# External Links
 - [GitHub repo](https://github.com/moq-wg/msf)
 - [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-msf/)

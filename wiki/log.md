@@ -2,14 +2,13 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
+last_updated: 2026-04-14
 status: current
 ---
 
-# Wiki Log
-
 Chronological record of all ingestions, queries, and maintenance operations.
 
-## 2026-04-14 - Wiki update: GraphQL mailing list thread, MSF authz merge, CARP origin, interop recovery
+# 2026-04-14 - Wiki update: GraphQL mailing list thread, MSF authz merge, CARP origin, interop recovery
 
 **Operation**: Update
 **Sources**:
@@ -33,7 +32,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-13 - Wiki update: add moq-lite and NMSF drafts, interop regression, #1405 resolution
+# 2026-04-13 - Wiki update: add moq-lite and NMSF drafts, interop regression, #1405 resolution
 
 **Operation**: Update
 **Sources**:
@@ -58,7 +57,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-12 - Add London interim details
+# 2026-04-12 - Add London interim details
 
 **Operation**: Update
 **Sources**: IETF Datatracker (interim-2026-moq-08 through moq-11 session pages)
@@ -74,7 +73,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-12 - Rename Eyevinn MOQ Stack to moqlivemock, major update
+# 2026-04-12 - Rename Eyevinn MOQ Stack to moqlivemock, major update
 
 **Operation**: Update + Rename
 **Sources**: User (maintainer) provided updated feature list; GitHub repos checked for versions.
@@ -92,7 +91,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-12 - Add draft-cenzano-moq-media-interop-03
+# 2026-04-12 - Add draft-cenzano-moq-media-interop-03
 
 **Operation**: Ingest
 **Sources**:
@@ -113,7 +112,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-12 - Fix moq-rs production draft version, add doc.moq.dev
+# 2026-04-12 - Fix moq-rs production draft version, add doc.moq.dev
 
 **Operation**: Correction + Enhancement
 **Sources**:
@@ -124,7 +123,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 - moq-rs.md — Fixed draft support: production deployment is draft-14, not draft-07
 - moq-dev.md — Added doc.moq.dev as documentation link
 
-## 2026-04-12 - Wiki update: interop runner expansion, required-request-id debate, rewind-02
+# 2026-04-12 - Wiki update: interop runner expansion, required-request-id debate, rewind-02
 
 **Operation**: Update
 **Sources**:
@@ -146,7 +145,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-11 - Split moq-rs/moq-js into separate implementation pages
+# 2026-04-11 - Split moq-rs/moq-js into separate implementation pages
 
 **Operation**: Restructure
 **Sources**:
@@ -175,7 +174,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-11 - Fix broken interop-runner links (issue #2)
+# 2026-04-11 - Fix broken interop-runner links (issue #2)
 
 **Operation**: Maintenance
 **Changes**:
@@ -183,7 +182,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 - Moved `[[interop-runner]]` listing from Implementations to Interop section in `wiki/index.md`
 - All `[[interop-runner]]` wikilinks now resolve unambiguously
 
-## 2026-04-11 - Wiki update: new transport issue/PR, MSF initTrack debate
+# 2026-04-11 - Wiki update: new transport issue/PR, MSF initTrack debate
 
 **Operation**: Update
 **Sources**:
@@ -207,7 +206,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-11 - Add draft-frindell-moq-moqpack-00
+# 2026-04-11 - Add draft-frindell-moq-moqpack-00
 
 **Operation**: Ingest
 **Sources**:
@@ -226,7 +225,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - Wiki update: OpenMOQ repos, MSF PR coverage
+# 2026-04-10 - Wiki update: OpenMOQ repos, MSF PR coverage
 
 **Operation**: Update
 **Sources**:
@@ -246,7 +245,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - Wiki update: mailing list, interop runner, discussion enrichment
+# 2026-04-10 - Wiki update: mailing list, interop runner, discussion enrichment
 
 **Operation**: Update
 **Sources**:
@@ -270,7 +269,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - GitHub issues/PRs analysis, SWITCH status, interim schedule
+# 2026-04-10 - GitHub issues/PRs analysis, SWITCH status, interim schedule
 
 **Operation**: Analysis + Ingest
 **Sources**:
@@ -291,7 +290,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - Ingest full Slack history (Jan 12 - Apr 10) and interop matrix
+# 2026-04-10 - Ingest full Slack history (Jan 12 - Apr 10) and interop matrix
 
 **Operation**: Ingest
 **Sources**:
@@ -310,7 +309,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - Add draft-14 and Eyevinn implementations
+# 2026-04-10 - Add draft-14 and Eyevinn implementations
 
 **Operation**: Ingest
 **Sources**:
@@ -322,7 +321,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-## 2026-04-10 - Initial Wiki Creation
+# 2026-04-10 - Initial Wiki Creation
 
 **Operation**: Full initial setup
 **Sources ingested**:

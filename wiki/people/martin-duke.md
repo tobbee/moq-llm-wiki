@@ -2,22 +2,21 @@
 title: "Martin Duke"
 tags: [person, google, contributor]
 date: 2026-04-12
+last_updated: 2026-04-14
 status: current
 ---
-
-# Martin Duke
 
 **Organization**: Google
 **Slack**: @Martin Duke (U68H1R612)
 **Role**: Contributor, author of Subscribe Rewind proposal
 
-## Contributions
+# Contributions
 
 - Author of [draft-duke-moq-subscribe-rewind](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/) (-02 published 2026-04-02) - "Rewind" subscription filter as alternative to [[joining-fetch]]
 - Active in protocol design discussions
 - Implementer of [[quiche-moq]] (in [[interop-runner]])
 
-## Recent Activity
+# Recent Activity
 
 - Published draft-duke-moq-subscribe-rewind-02 (2026-04-02)
 - Opened issue #1603 questioning required-request-id (2026-04-10)

@@ -2,18 +2,17 @@
 title: "Joining Fetch Dissent"
 tags: [concept, transport, design-debate]
 date: 2026-04-12
+last_updated: 2026-04-14
 status: current
 ---
 
-# Joining Fetch Dissent
-
 A cluster of open issues and competing proposals around how subscribers join a live stream mid-session. Tagged "Joining Fetch Dissent" on GitHub.
 
-## The Problem
+# The Problem
 
 When joining a live stream, a subscriber needs historical data (e.g., the latest keyframe) to start rendering. The current [[joining-fetch]] mechanism has been contentious, generating multiple alternative proposals.
 
-## Open Issues (tagged "Joining Fetch Dissent")
+# Open Issues (tagged "Joining Fetch Dissent")
 
 - **#1313** - Joining FETCH as separate control message creates edge cases and feature gaps (ianswett, Past Deadline)
 - **#1391** - Unclear how to use Joining FETCH with New Group Request (ianswett)
@@ -22,14 +21,14 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 - **#1039** - Simplifying joining at the latest available join point (wilaw)
 - **#1023** - Subgroups + DELIVERY_TIMEOUT = pathological FETCH (afrind, Past Deadline)
 
-## Competing Proposals
+# Competing Proposals
 
 1. **Current Joining Fetch** (in draft-17) - Separate FETCH alongside live SUBSCRIBE
 2. **PR #1362** - Prior Group Subscription Filter (ianswett) - Filter-based approach
 3. **Subscribe Rewind** ([[martin-duke]]) - Extend SUBSCRIBE with a Rewind subscription filter for best-effort past group retrieval ([draft-02 published Apr 2](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/))
 4. **Join Subscription Filters** ([[alan-frindell]]) - Filter-based join point selection. Alan says his is "more of an extension to Martin's."
 
-## Latest Developments
+# Latest Developments
 
 - **draft-duke-moq-subscribe-rewind-02** (Apr 2) - Updated Rewind draft published with refined subscription filter semantics
 - **PR #1604** (Apr 10) - [[martin-duke]] implements the #1602 proposal to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. [[alan-frindell]] reviewed, noting subscriber priority cannot differ between fetch and subscription.
@@ -39,7 +38,7 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 - Restriction requiring "largest object" subscribes was removed
 - **Interim moq-13** (Apr 13) has REWIND slides on the agenda
 
-## Related
+# Related
 
 - [[joining-fetch]] - Current mechanism
 - [[moq-transport]] - Protocol spec

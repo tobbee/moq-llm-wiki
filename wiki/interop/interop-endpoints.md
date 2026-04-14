@@ -2,14 +2,13 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
 
-# Public Interop Endpoints
-
 Public relay endpoints available for MOQ interop testing.
 
-## Cloudflare ([[moq-rs]])
+# Cloudflare ([[moq-rs]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
@@ -20,7 +19,7 @@ Public relay endpoints available for MOQ interop testing.
 
 Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connection-id>` over HTTPS.
 
-## Meta ([[moxygen]])
+# Meta ([[moxygen]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
@@ -28,7 +27,7 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 | `fb.mvfst.net:9449` | 16 | QUIC + QMux TLS/TCP | [[qmux]] enabled |
 | `wss://fb.mvfst.net:9450` | 16 | WebSocket -> TLS | Proxy via websocat |
 
-## Luke Curley ([[moq-dev]])
+# Luke Curley ([[moq-dev]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
@@ -36,38 +35,38 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 
 Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
-## Alibaba ([[xquic-moq]])
+# Alibaba ([[xquic-moq]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `47.96.89.233:4433` | 14 | QUIC only | Passed all interop runner tests |
 
-## Martin Duke (quiche-moq)
+# Martin Duke (quiche-moq)
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `quichemoq.dev:443` | 16 | QUIC + WebTransport | 41/41 conformance tests passed (Feb 2026) |
 
-## MOQtail
+# MOQtail
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `relay.moqtail.dev` | 14 | WebTransport | Zafer Gurel's relay |
 
-## Akamai
+# Akamai
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `moq-test.akaleapi.net` | - | - | Test tools |
 | `moq-test-beta.akaleapi.net` | - | - | Beta version |
 
-## Lorenzo Miniero (imquic)
+# Lorenzo Miniero (imquic)
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `lminiero.it:9000` | 16, 17 | QUIC + WebTransport | Supports v16-v17 (v14 dropped) |
 
-## Related
+# Related
 
 - [[interop-runner]] - Automated test framework
 - [[interop-status]] - Current interop state

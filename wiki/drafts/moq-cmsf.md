@@ -2,30 +2,29 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
 ---
 
-# CMSF - CMAF Compliant MOQT Streaming Format
-
 **draft-ietf-moq-cmsf-00** | 9 pages | Expires 2025-12-01
 
-## Authors
+# Authors
 - [[will-law]] (Akamai)
 
-## Abstract
+# Abstract
 
 CMSF extends [[moq-msf]] by introducing CMAF-packaged media support. It describes the syntax and semantics for adding CMAF-packaged media to MSF, enabling delivery of CMAF and LOC-compliant content over [[moq-transport]] while maintaining all existing MSF capabilities.
 
-## Relationship to MSF and LOC
+# Relationship to MSF and LOC
 
 - **[[moq-msf]]** is the base streaming format
 - **[[moq-loc]]** is the low-overhead container for interactive use
 - **CMSF** adds CMAF packaging for traditional OTT/broadcast workflows
 - All three work together: CMSF inherits MSF's catalog, timeline, ABR, and LOC support
 
-## Design Tension
+# Design Tension
 
 The MOQ ecosystem has two container philosophies:
 1. **LOC** - Minimal overhead, WebCodecs-native, optimized for real-time
@@ -35,16 +34,16 @@ CMSF bridges this by allowing CMAF content to flow through the same MSF infrastr
 
 See [[media-packaging]] for a full comparison.
 
-## History
+# History
 
 CMSF originated as **draft-law-moq-carp-00** ("CARP - a CMAF compliant implementation of WARP") submitted by [[will-law]] in November 2025. The draft was adopted by the MOQ working group and published as draft-ietf-moq-cmsf-00 in December 2025.
 
-## Related
+# Related
 
 - [[moq-msf]] - Base streaming format
 - [[moq-loc]] - Low overhead container
 - [[media-packaging]] - Container format discussion
 
-## External Links
+# External Links
 - [GitHub repo](https://github.com/moq-wg/cmsf)
 - [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/)

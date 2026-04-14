@@ -2,41 +2,40 @@
 title: "Publish/Subscribe Model"
 tags: [concept, transport, core]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
 
-# Publish/Subscribe Model
-
 The core messaging pattern of [[moq-transport]].
 
-## Overview
+# Overview
 
 MOQT uses a publish/subscribe model where:
 - **Publishers** produce media data and announce availability via PUBLISH_NAMESPACE
 - **Subscribers** express interest via SUBSCRIBE (for live data) or FETCH (for historical data)
 - **[[Relays]]** sit between publishers and subscribers, forwarding data and aggregating subscriptions
 
-## Message Flow
+# Message Flow
 
-### Publishing
+## Publishing
 1. Publisher opens session with relay
 2. Publisher sends `PUBLISH_NAMESPACE` to announce available namespaces
 3. Relay learns what content is available
 
-### Subscribing
+## Subscribing
 1. Subscriber opens session with relay
 2. Subscriber sends `SUBSCRIBE` with track namespace + track name
 3. Relay responds with `REQUEST_OK` (including [[track-properties]] as of draft-17)
 4. Publisher begins sending objects on data streams
 
-### Namespace Discovery (draft-17)
+## Namespace Discovery (draft-17)
 In draft-17, SUBSCRIBE_NAMESPACE was split into two distinct messages:
 - **SUBSCRIBE_NAMESPACE** - Gets namespace information (NAMESPACE/DONE)
 - **SUBSCRIBE_TRACKS** - Gets PUBLISH notifications
 
 Overlaps are not permitted among requests of the same type but are permitted with different types.
 
-## Key Messages
+# Key Messages
 
 | Message | Direction | Purpose |
 |---------|-----------|---------|
@@ -49,13 +48,13 @@ Overlaps are not permitted among requests of the same type but are permitted wit
 | SUBSCRIBE_NAMESPACE | Subscriber -> Relay | Discover available namespaces |
 | SUBSCRIBE_TRACKS | Subscriber -> Relay | Get PUBLISH notifications |
 
-## Active Design Questions
+# Active Design Questions
 
 - **Flow control for subscriptions** (PR #1591) - Should there be limits on active subscriptions?
 - **REQUEST_ERROR caching** (Issue #1582) - How should relays cache and propagate errors?
 - **Self-exclusion** (Issue #1585) - Should SUBSCRIBE_NAMESPACE exclude your own tracks?
 
-## Related
+# Related
 
 - [[moq-transport]] - Full protocol specification
 - [[relays]] - Relay behavior in pub/sub

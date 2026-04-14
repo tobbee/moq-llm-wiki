@@ -2,10 +2,9 @@
 title: "LibQuicR (Cisco)"
 tags: [implementation, cpp, go, cisco]
 date: 2026-04-10
+last_updated: 2026-04-14
 status: current
 ---
-
-# LibQuicR
 
 **Language**: C++ with Go bindings
 **Organization**: Cisco (QuicR project)
@@ -15,11 +14,11 @@ status: current
 **Website**: [quicr.org](http://www.quicr.org)
 **Slack**: #libquicr (C08ER7J16BF)
 
-## Overview
+# Overview
 
 Cisco's C++ MOQ Transport implementation with recently open-sourced Go bindings.
 
-## Draft Support
+# Draft Support
 
 - **C++ library (libquicr)**: draft-16 (ALPN `moqt-16`, code defines version `0xff00010`)
 - **Go bindings (quicr-go)**: draft-16 via libquicr
@@ -28,11 +27,11 @@ Cisco's C++ MOQ Transport implementation with recently open-sourced Go bindings.
 - Provides chat-like examples using subscribe namespace for participant discovery
 - Basic clock example included
 
-## Recent Activity
+# Recent Activity
 
 - Go bindings open-sourced (2026-03-25) by [[suhas-nandakumar]]
 
-## Related
+# Related
 
 - [[aiomoqt]] - Python implementation in the same ecosystem
 - [[interop-runner]] - Testing framework
