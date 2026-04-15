@@ -30,6 +30,12 @@ See [[track-properties]].
 
 # GitHub Activity
 
+## moq-wg/cmsf
+- **PR #18** (Merged Apr 14) — Initial proposal for ContentProtection signaling (Torbjörn Einarsson, [[moqlivemock|Eyevinn]]). Adds DRM signaling based on DASH/DASH-IF attributes: Widevine, PlayReady, FairPlay, ECCP. Merged by [[will-law]].
+
+## shaka-project/shaka-player
+- **PR #9972** (Merged Apr 14) — Add CMSF contentProtection signaling support (Álvaro Velad Galván, Atème). Second implementation of [[moq-cmsf]] ContentProtection after [[moqlivemock|warp-player]].
+
 ## moq-wg/msf
 - **PR #118** (Merged Apr 13) - Add details of authorization flows ([[suhas-nandakumar]])
 - **Issue #119** (Closed Apr 13) - Add authz details
@@ -138,3 +144,4 @@ Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere R
 7. **Consensus process** - draft-17 consensus call active on mailing list
 8. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published
 9. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
+10. **CMSF ContentProtection** - DRM signaling merged into CMSF spec (PR #18), with two implementations: [[moqlivemock|warp-player]] and [[shaka-player]]

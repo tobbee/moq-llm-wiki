@@ -2,7 +2,7 @@
 title: "moqlivemock"
 tags: [implementation, go, javascript, eyevinn, cmsf, drm]
 date: 2026-04-12
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 ---
 
@@ -25,7 +25,7 @@ status: current
 ## warp-player (v0.7.1)
 - **GitHub**: [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player)
 - **Language**: JavaScript
-- **Description**: Browser-based player for CMSF media over MoQ using MSE playback. Supports Widevine, ClearKey, and experimental PlayReady.
+- **Description**: Browser-based player for CMSF media over MoQ using MSE playback. Supports Widevine, PlayReady, FairPlay, and ClearKey.
 
 # Architecture
 
@@ -58,14 +58,18 @@ Three content protection modes, each served under its own namespace:
 
 All three modes run simultaneously, allowing subscribers to choose their preferred protection level by subscribing to the appropriate namespace.
 
+# CMSF ContentProtection
+
+The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.com/moq-wg/cmsf/pull/18), merged Apr 14) was proposed by Eyevinn based on the moqlivemock implementation. DRM support in moqlivemock and warp-player was implemented by Hugo Björs (Eyevinn). warp-player supports Widevine, PlayReady, FairPlay, and ClearKey/ECCP. It was the first running implementation, now joined by [[shaka-player]] ([PR #9972](https://github.com/shaka-project/shaka-player/pull/9972), also merged Apr 14).
+
 # Demo
 
 - **Live demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
-- [[shaka-player]] POC by Alvaro Velad (Atème) works with moqlivemock including subtitle display
+- [[shaka-player]] by Álvaro Velad Galván (Atème) works with moqlivemock including subtitle display and DRM
 
 # Interop
 
-- [[shaka-player]] POC subscribing to moqlivemock publisher
+- [[shaka-player]] subscribing to moqlivemock publisher (including CMSF ContentProtection)
 - `mlmtest` client available for the [[interop-runner]] framework
 - Draft-16 support opens interop with [[moq-rs]], [[moxygen]], [[libquicr]], and other draft-16 implementations
 

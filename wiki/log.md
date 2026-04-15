@@ -8,6 +8,23 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-04-15 - CMSF ContentProtection merged, Shaka Player DRM support
+
+**Operation**: Update
+**Sources**:
+- GitHub: moq-wg/cmsf PR #18 (merged Apr 14 by Will Law)
+- GitHub: shaka-project/shaka-player PR #9972 (merged Apr 14 by Álvaro Velad Galván)
+- User (maintainer) confirmed both merges
+
+**Pages updated**: moq-cmsf.md, shaka-player.md, moqlivemock.md, discussions-2026-04.md
+
+**Key changes**:
+- **CMSF ContentProtection signaling** (PR #18): DRM signaling proposal by Torbjörn Einarsson (Eyevinn) merged into the CMSF spec. Defines `contentProtections` with `refID`s and per-track `contentProtectionRefIDs`. Supports Widevine, PlayReady, FairPlay, and ECCP (ClearKey). Based on DASH/DASH-IF attributes. Key rotation not yet covered.
+- **moqlivemock/warp-player DRM**: DRM support implemented by Hugo Björs (Eyevinn). Supports Widevine, PlayReady, FairPlay, and ClearKey/ECCP.
+- **Shaka Player DRM support** (PR #9972): Álvaro Velad Galván (Atème) added CMSF contentProtection support to Shaka Player. This makes Shaka Player the **second implementation** of CMSF ContentProtection, after moqlivemock/warp-player. Two independent implementations is a significant milestone for the feature.
+
+---
+
 # 2026-04-15 - Wiki update: issue #3 corrections, DELIVERY_TIMEOUT PR, interop improvement
 
 **Operation**: Update + Corrections

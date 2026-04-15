@@ -62,7 +62,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
 - [[imquic]] - Meetecho's C library, also supports RoQ (draft-16/17)
 - [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16)
-- [[shaka-player]] - Google's media player with experimental MSF support (draft-14)
+- [[shaka-player]] - Google's media player with experimental MSF/CMSF support incl. DRM (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 
 ## Draft Version Support Summary

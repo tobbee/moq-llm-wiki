@@ -2,7 +2,7 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
@@ -37,6 +37,21 @@ See [[media-packaging]] for a full comparison.
 # History
 
 CMSF originated as **draft-law-moq-carp-00** ("CARP - a CMAF compliant implementation of WARP") submitted by [[will-law]] in November 2025. The draft was adopted by the MOQ working group and published as draft-ietf-moq-cmsf-00 in December 2025.
+
+# ContentProtection Signaling
+
+[PR #18](https://github.com/moq-wg/cmsf/pull/18) (merged Apr 14 by [[will-law]]) added ContentProtection signaling to the CMSF spec. The design, proposed by Torbjörn Einarsson ([[moqlivemock|Eyevinn]]), is roughly based on DASH/DASH-IF content protection signaling:
+
+- Defines `contentProtections` with `refID`s in the catalog
+- Each encrypted track uses a `contentProtectionRefIDs` array referencing available protections
+- Supports the same attributes as DASH/DASH-IF: Widevine, PlayReady, FairPlay, and ECCP (clear key)
+- Addresses [issue #8](https://github.com/moq-wg/cmsf/issues/8)
+
+**Implementations**:
+- [[moqlivemock]] — Running implementation with Widevine, PlayReady, and FairPlay at [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/warp-player/)
+- [[shaka-player]] — [PR #9972](https://github.com/shaka-project/shaka-player/pull/9972) merged Apr 14, adding CMSF contentProtection support
+
+Key rotation is not yet defined — future work can build on this for live catalogs with new `refID`s.
 
 # Related
 
