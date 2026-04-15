@@ -63,6 +63,16 @@ export default ((opts?: Partial<GraphOptions>) => {
   const Graph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const localGraph = { ...defaultOptions.localGraph, ...opts?.localGraph }
     const globalGraph = { ...defaultOptions.globalGraph, ...opts?.globalGraph }
+    const legendItems = [
+      { key: "drafts", label: "Drafts", color: "var(--graph-drafts)" },
+      { key: "concepts", label: "Concepts", color: "var(--graph-concepts)" },
+      { key: "people", label: "People", color: "var(--graph-people)" },
+      { key: "implementations", label: "Impl", color: "var(--graph-implementations)" },
+      { key: "discussions", label: "Disc", color: "var(--graph-discussions)" },
+      { key: "interop", label: "Interop", color: "var(--graph-interop)" },
+      { key: "other", label: "Other", color: "var(--graph-other)" },
+      { key: "tags", label: "Tags", color: "var(--graph-tags)" },
+    ]
     return (
       <div class={classNames(displayClass, "graph")}>
         <h3>{i18n(cfg.locale).components.graph.title}</h3>
@@ -95,8 +105,24 @@ export default ((opts?: Partial<GraphOptions>) => {
             </svg>
           </button>
         </div>
+        <div class="graph-legend">
+          {legendItems.map((item) => (
+            <span class="graph-legend-item" data-entity-type={item.key}>
+              <span class="graph-legend-dot" style={{ backgroundColor: item.color }}></span>
+              {item.label}
+            </span>
+          ))}
+        </div>
         <div class="global-graph-outer">
           <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
+          <div class="graph-legend global-graph-legend">
+            {legendItems.map((item) => (
+              <span class="graph-legend-item" data-entity-type={item.key}>
+                <span class="graph-legend-dot" style={{ backgroundColor: item.color }}></span>
+                {item.label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     )

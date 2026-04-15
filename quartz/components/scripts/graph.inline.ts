@@ -184,6 +184,14 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     "--dark",
     "--darkgray",
     "--bodyFont",
+    "--graph-drafts",
+    "--graph-concepts",
+    "--graph-people",
+    "--graph-implementations",
+    "--graph-discussions",
+    "--graph-interop",
+    "--graph-other",
+    "--graph-tags",
   ] as const
   const computedStyleMap = cssVars.reduce(
     (acc, key) => {
@@ -193,17 +201,44 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     {} as Record<(typeof cssVars)[number], string>,
   )
 
+  // map slug prefixes to entity types and colors
+  const entityPrefixes: { prefix: string; type: string; cssVar: (typeof cssVars)[number] }[] = [
+    { prefix: "drafts/", type: "drafts", cssVar: "--graph-drafts" },
+    { prefix: "concepts/", type: "concepts", cssVar: "--graph-concepts" },
+    { prefix: "people/", type: "people", cssVar: "--graph-people" },
+    { prefix: "implementations/", type: "implementations", cssVar: "--graph-implementations" },
+    { prefix: "discussions/", type: "discussions", cssVar: "--graph-discussions" },
+    { prefix: "interop/", type: "interop", cssVar: "--graph-interop" },
+  ]
+
+  function getEntityType(id: string): string {
+    if (id.startsWith("tags/")) return "tags"
+    for (const { prefix, type } of entityPrefixes) {
+      if (id.startsWith(prefix)) return type
+    }
+    return "other"
+  }
+
   // calculate color
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
     if (isCurrent) {
       return computedStyleMap["--secondary"]
-    } else if (visited.has(d.id) || d.id.startsWith("tags/")) {
-      return computedStyleMap["--tertiary"]
-    } else {
-      return computedStyleMap["--gray"]
+    } else if (d.id.startsWith("tags/")) {
+      return computedStyleMap["--graph-tags"]
     }
+
+    for (const { prefix, cssVar } of entityPrefixes) {
+      if (d.id.startsWith(prefix)) {
+        return computedStyleMap[cssVar]
+      }
+    }
+
+    return computedStyleMap["--graph-other"]
   }
+
+  // entity type filter
+  const hiddenEntityTypes = new Set<string>()
 
   function nodeRadius(d: NodeData) {
     const numLinks = graphData.links.filter(
@@ -249,16 +284,22 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   let dragStartTime = 0
   let dragging = false
 
+  function isNodeHidden(id: string): boolean {
+    return hiddenEntityTypes.has(getEntityType(id))
+  }
+
   function renderLinks() {
     tweens.get("link")?.stop()
     const tweenGroup = new TweenGroup()
 
     for (const l of linkRenderData) {
-      let alpha = 1
+      const sourceHidden = isNodeHidden(l.simulationData.source.id)
+      const targetHidden = isNodeHidden(l.simulationData.target.id)
+      let alpha = sourceHidden || targetHidden ? 0 : 1
 
       // if we are hovering over a node, we want to highlight the immediate neighbours
       // with full alpha and the rest with default alpha
-      if (hoveredNodeId) {
+      if (alpha > 0 && hoveredNodeId) {
         alpha = l.active ? 1 : 0.2
       }
 
@@ -283,8 +324,16 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const activeScale = defaultScale * 1.1
     for (const n of nodeRenderData) {
       const nodeId = n.simulationData.id
+      const hidden = isNodeHidden(nodeId)
 
-      if (hoveredNodeId === nodeId) {
+      if (hidden) {
+        tweenGroup.add(
+          new Tweened<Text>(n.label).to(
+            { alpha: 0, scale: { x: defaultScale, y: defaultScale } },
+            200,
+          ),
+        )
+      } else if (hoveredNodeId === nodeId) {
         tweenGroup.add(
           new Tweened<Text>(n.label).to(
             {
@@ -321,10 +370,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
     const tweenGroup = new TweenGroup()
     for (const n of nodeRenderData) {
-      let alpha = 1
+      const hidden = isNodeHidden(n.simulationData.id)
+      let alpha = hidden ? 0 : 1
 
       // if we are hovering over a node, we want to highlight the immediate neighbours
-      if (hoveredNodeId !== null && focusOnHover) {
+      if (alpha > 0 && hoveredNodeId !== null && focusOnHover) {
         alpha = n.active ? 1 : 0.2
       }
 
@@ -416,7 +466,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       })
 
     if (isTagNode) {
-      gfx.stroke({ width: 2, color: computedStyleMap["--tertiary"] })
+      gfx.stroke({ width: 2, color: computedStyleMap["--graph-tags"] })
     }
 
     nodesContainer.addChild(gfx)
@@ -550,8 +600,33 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
+
+  // wire up legend filter toggles — find the sibling legend within the same parent
+  const legendContainer = graph.parentElement?.querySelector(".graph-legend")
+  const legendItems = legendContainer?.querySelectorAll<HTMLElement>(".graph-legend-item") ?? []
+  const legendClickHandlers: { el: HTMLElement; handler: () => void }[] = []
+  for (const item of legendItems) {
+    const entityType = item.dataset.entityType
+    if (!entityType) continue
+    const handler = () => {
+      if (hiddenEntityTypes.has(entityType)) {
+        hiddenEntityTypes.delete(entityType)
+        item.classList.remove("disabled")
+      } else {
+        hiddenEntityTypes.add(entityType)
+        item.classList.add("disabled")
+      }
+      renderPixiFromD3()
+    }
+    item.addEventListener("click", handler)
+    legendClickHandlers.push({ el: item, handler })
+  }
+
   return () => {
     stopAnimation = true
+    for (const { el, handler } of legendClickHandlers) {
+      el.removeEventListener("click", handler)
+    }
     app.destroy()
   }
 }

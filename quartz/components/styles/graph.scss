@@ -1,5 +1,27 @@
 @use "../../styles/variables.scss" as *;
 
+:root {
+  --graph-drafts: #e67e22;
+  --graph-concepts: #27ae60;
+  --graph-people: #8e44ad;
+  --graph-implementations: #2980b9;
+  --graph-discussions: #f39c12;
+  --graph-interop: #e74c3c;
+  --graph-other: #95a5a6;
+  --graph-tags: #16a085;
+}
+
+[saved-theme="dark"] {
+  --graph-drafts: #f0a050;
+  --graph-concepts: #58d68d;
+  --graph-people: #bb8fce;
+  --graph-implementations: #5dade2;
+  --graph-discussions: #f7c948;
+  --graph-interop: #ec7063;
+  --graph-other: #bdc3c7;
+  --graph-tags: #48c9b0;
+}
+
 .graph {
   & > h3 {
     font-size: 1rem;
@@ -20,7 +42,7 @@
       background: none;
       border: none;
       color: var(--dark);
-      opacity: 0.5;
+      opacity: 0.8;
       width: 24px;
       height: 24px;
       position: absolute;
@@ -34,6 +56,42 @@
       cursor: pointer;
       &:hover {
         background-color: var(--lightgray);
+      }
+    }
+  }
+
+  .graph-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+    font-size: 0.65rem;
+    color: var(--darkgray);
+    margin-bottom: 0.5em;
+
+    & > .graph-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        background-color: var(--lightgray);
+      }
+
+      &.disabled {
+        opacity: 0.35;
+        text-decoration: line-through;
+      }
+
+      & > .graph-legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
       }
     }
   }
@@ -68,6 +126,19 @@
       @media all and not ($desktop) {
         width: 90%;
       }
+    }
+
+    & > .global-graph-legend {
+      position: fixed;
+      bottom: calc(10vh + 0.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--light);
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      border: 1px solid var(--lightgray);
+      font-size: 0.8rem;
+      z-index: 10000;
     }
   }
 }
