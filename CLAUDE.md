@@ -76,9 +76,10 @@ status: current | outdated | archived
 
 ### Ingest GitHub Activity
 1. Check repos under `moq-wg/` org: moq-transport, msf, loc, secure-objects, privacy-pass, cmsf, catalog-format
-2. Review open issues and recent PRs
-3. Update draft summary pages with active issues
-4. Append to `wiki/log.md`
+2. Check key implementation repos: cloudflare/moq-rs, video-dev/moq-js, moq-dev/moq, google/quiche (quiche/quic/moqt), moqtail/moqtail, birneee/quiche_moq
+3. Review open issues and recent PRs
+4. Update draft summary pages with active issues
+5. Append to `wiki/log.md`
 
 ### Lint / Maintenance
 1. Check for stale pages (status: outdated)
@@ -88,13 +89,30 @@ status: current | outdated | archived
 
 ## Key Data Sources
 
-- **IETF Datatracker**: https://datatracker.ietf.org/group/moq/documents/
-- **GitHub org**: https://github.com/moq-wg/
-- **Slack**: `#moq` channel in quicdev workspace (C046V0QF3CK)
+### IETF & Specifications
+- **IETF Datatracker (WG + individual drafts)**: https://datatracker.ietf.org/group/moq/documents/
 - **Mailing List**: https://mailarchive.ietf.org/arch/browse/moq/ (moq@ietf.org)
 - **AI Minutes**: https://ietfminutes.org/minutes/wg/moq.html
+
+### GitHub
+- **WG org**: https://github.com/moq-wg/ (moq-transport, msf, loc, secure-objects, privacy-pass, cmsf, catalog-format)
+- **cloudflare/moq-rs**: https://github.com/cloudflare/moq-rs — Rust relay (IETF-aligned fork)
+- **video-dev/moq-js**: https://github.com/video-dev/moq-js — JS client (community project)
+- **moq-dev/moq**: https://github.com/moq-dev/moq — Luke Curley's moq-lite / Transfork
+- **google/quiche MoQT**: https://github.com/google/quiche/tree/main/quiche/quic/moqt — C++ impl (Martin Duke, Victor Vasiliev)
+- **moqtail/moqtail**: https://github.com/moqtail/moqtail — MoQT implementation by Zafer Gurel
+- **birneee/quiche_moq**: https://github.com/birneee/quiche_moq — Rust impl on Cloudflare quiche crate (Leon Birne)
+
+### Chat & Community
+- **Slack**: `#moq` channel in quicdev workspace (C046V0QF3CK)
+- **moq.dev Discord**: https://discord.gg/FCYF3p99mr — community chat run by Luke Curley
 - **Interop Runner**: https://englishm.github.io/moq-interop-runner/
 - **Interop Guide**: https://doc.moq.dev/concept/standard/interop.html
+
+### Community Resources
+- **MoQ Monthly newsletter**: https://buttondown.com/moqmonthly — periodic ecosystem summary by Mike English
+- **Demuxed MoQ talks playlist**: https://www.youtube.com/playlist?list=PLiF9acz7G1ppuCCYHjke1p-GSpWNJOdOl
+- **Montevideo Tech Summer Camp**: https://montevideotech.dev/ — annual open-source collab including MoQ projects
 
 ## Update Workflow
 
@@ -109,10 +127,12 @@ This will trigger a check of all sources:
 
 The update should:
 - Add new discussion entries for the current month
-- Update draft pages if new versions are published
+- Update draft pages if new versions are published (check both WG and notable individual drafts)
 - Update implementation pages if version support changed
 - Update interop status if new results are available
 - Append all changes to `wiki/log.md`
+
+**Note on drafts**: The Datatracker page lists both adopted WG documents and related individual Internet-Drafts. Track WG documents closely. For individual drafts, focus on those actively discussed or referenced in implementations (e.g., subscribe-rewind, qlog-moq-events, moq-lite, cdn-provisioning, relay-dos, nmsf). Always distinguish WG documents from individual drafts in wiki pages.
 
 ## Focus Areas
 - Media-related aspects (codecs, containers, streaming formats)
