@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-14): **21 passed / 70 failed / 14 skipped** out of 105 total.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-15): **23 passed / 68 failed / 14 skipped** out of 105 total.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)
@@ -42,7 +42,7 @@ Implementations in the matrix (11):
 7. imquic (relay, [[lorenzo-miniero]])
 8. libquicr (relay)
 9. moqtail (relay)
-10. quiche-moq (relay, [[martin-duke]])
+10. quiche-moq (relay, Google QUICHE C++ — [[martin-duke]], Victor Vasiliev)
 11. **moqx** (relay, [[openmoq|OpenMOQ]]'s moxygen fork) — **new since Apr 10**
 
 Target version is draft-16. Version distribution: 48 tests at draft-16, 8 at draft-17, 49 at draft-14.

@@ -14,7 +14,7 @@ status: current
 
 - Author of [draft-duke-moq-subscribe-rewind](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/) (-02 published 2026-04-02) - "Rewind" subscription filter as alternative to [[joining-fetch]]
 - Active in protocol design discussions
-- Implementer of [[quiche-moq]] (in [[interop-runner]])
+- Primary developer of [[quiche-moq]] (Google's QUICHE MoQT C++ implementation), runs the `quichemoq.dev` relay
 
 # Recent Activity
 

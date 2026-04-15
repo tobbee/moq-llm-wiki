@@ -41,7 +41,7 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 |----------|-------|-----------|-------|
 | `47.96.89.233:4433` | 14 | QUIC only | Passed all interop runner tests |
 
-# Martin Duke (quiche-moq)
+# Martin Duke ([[quiche-moq|Google QUICHE MoQT]])
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|

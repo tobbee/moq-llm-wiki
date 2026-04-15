@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -22,7 +22,7 @@ MOQT defines a media transport protocol operating over QUIC and WebTransport. It
 
 # Key Concepts
 
-- **[[publish-subscribe]]**: Core messaging pattern - PUBLISH, SUBSCRIBE, REQUEST, PUBLISH_DONE
+- **[[publish-subscribe]]**: Core messaging pattern - PUBLISH, SUBSCRIBE, FETCH, REQUEST_OK/REQUEST_ERROR, PUBLISH_DONE
 - **[[subgroups-and-objects]]**: Data hierarchy: Track > Group > Subgroup > Object
 - **[[relays]]**: First-class relay support for CDN-style distribution
 - **[[track-properties]]**: Metadata attached to tracks and objects via Key-Value Pairs
@@ -41,7 +41,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-13)
+# Active Issues (as of 2026-04-15)
 
 ## Design Issues
 - **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
@@ -55,6 +55,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
 
 ## Open PRs
+- **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout (Victor Vasiliev, Apr 14)
 - **PR #1604** - Joining FETCH with subscription (implements #1602)
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID

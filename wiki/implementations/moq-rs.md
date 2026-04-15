@@ -18,9 +18,24 @@ Cloudflare's Rust implementation of IETF MoQ Transport. Provides both relay and 
 
 # History
 
-This codebase was originally created by [[luke-curley]] (kixelated/moq-rs). Mike English contributed to the early design and helped with the initial Go → Rust translation. When Luke diverged from strict IETF WG spec support in favor of his own moq-lite protocol, Mike forked and maintained an IETF-aligned version as `englishm/moq-rs` (created 2024-10-15). The project was later transferred to Cloudflare as `cloudflare/moq-rs`.
+**Timeline**:
+- **2022-06-29**: Luke Curley creates `kixelated/warp` (Go implementation)
+- **2023-04–05**: Luke rewrites from Go to Rust (PR #15, May 22)
+- **Mid-2023**: Mike English begins collaborating closely with Luke — near-daily discussions on codebase design and the evolving IETF MoQ Transport spec. Mike's contributions include early containerized relay deployments (Fly.io, GKE), the first MoQT client publisher (moq-pub), an exploration of C FFI for ffmpeg ([englishm/libmoq](https://github.com/englishm/libmoq)), and an update to support draft-ietf-moq-transport-04. See Mike's [pre-fork commits](https://github.com/moq-dev/moq/commits?author=englishm).
+- **2024-10-07**: Luke publishes his ["Fork" blog post](https://moq.dev/blog/transfork), stepping away from the IETF WG to focus on moq-lite/Transfork
+- **2024-10-15**: Mike creates `englishm/moq-rs` (fork of Luke's repo) to maintain IETF WG alignment
+- **Later**: Transferred to Cloudflare as `cloudflare/moq-rs`
 
 The two projects are now considered **sibling implementations** — neither is upstream of the other. See [[moq-dev]] for Luke's original project.
+
+# Key Contributors
+
+- **Mike English** (@englishm) — Maintainer. Joined during the Go→Rust transition as a close collaborator.
+- **Manish** (@itzmanish) — Cloudflare developer, currently working on draft-16 support (PR #131)
+- **Jacob** (@nnazo) — Cloudflare developer working on the MoQ relay service
+- **Scott Godin** (@sgodin) — Did the bulk of the draft-07 → draft-14 message migration
+- **Zafer Gurel** (@zafergurel) — Substantial early contributions to moq-transport protocol messages; went on to create [[moqtail]]
+- See the full [contributors page](https://github.com/cloudflare/moq-rs/graphs/contributors)
 
 # Draft Support
 

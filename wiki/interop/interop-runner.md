@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 ---
 
@@ -26,7 +26,7 @@ The interop runner automates testing between MOQ implementations, publishing res
 7. **imquic** - [[lorenzo-miniero]]'s C library
 8. **libquicr** - [[libquicr|Cisco's C++ library]]
 9. **moqtail** - [[moqtail|Zafer Gurel's Rust/TS implementation]]
-10. **quiche-moq** - [[martin-duke]]'s Rust implementation
+10. **quiche-moq** - Google's C++ MoQT ([[martin-duke]], Victor Vasiliev)
 11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (added Apr 2026)
 
 # Current Target
@@ -37,6 +37,7 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| April 15, 2026 | 105 | 23 | 68 | 14 |
 | April 14, 2026 | 105 | 21 | 70 | 14 |
 | April 13, 2026 | 105 | 20 | 71 | 14 |
 | April 12, 2026 | 105 | 21 | 70 | 14 |

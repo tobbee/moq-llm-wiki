@@ -1,36 +1,41 @@
 ---
-title: "quiche-moq"
-tags: [implementation, rust]
-date: 2026-04-10
-last_updated: 2026-04-14
+title: "Google QUICHE MoQT (quiche-moq)"
+tags: [implementation, cpp, google]
+date: 2026-04-15
+last_updated: 2026-04-15
 status: current
 ---
 
-**Language**: Rust
-**GitHub**: [birneee/quiche_moq](https://github.com/birneee/quiche_moq)
-**Maintainer**: [[martin-duke]] runs a relay using this
+**Language**: C++
+**Organization**: Google
+**Primary developers**: [[martin-duke]], Victor Vasiliev, with contributions from asedeno, dschinazi
+**GitHub**: [google/quiche](https://github.com/google/quiche/tree/main/quiche/quic/moqt) (MoQT module within Google's QUICHE library)
 
 # Overview
 
-A Rust MOQ Transport implementation built on the quiche QUIC library. Note: this is NOT an official Google/Cloudflare project despite the quiche name.
+A substantial C++ MoQT implementation inside Google's QUICHE library (part of Chromium). Includes ~74+ source files plus a tools directory with relay, server, client, chat, and simulator applications. This is one of the more actively developed implementations in the ecosystem, with commits through April 2026.
 
 # Draft Support
 
-- **Multi-version**: drafts 07-13 and 16
-- Draft 14 and 15 are **not** supported (gap in version coverage)
-- Has `draft-16` and `draft-14` branches/tags
+- **draft-16** — current target for the public relay
+- Passed 41/41 conformance tests from [[alan-frindell]] (Feb 2026)
 
 # Public Infrastructure
 
-- [[martin-duke]] runs a relay at `quichemoq.dev:443` (draft-16)
-- Passed 41/41 conformance tests from [[alan-frindell]] (Feb 2026)
+- **`quichemoq.dev:443`** — [[martin-duke]]'s relay (draft-16)
+- Registered in [[interop-runner]] as **quiche-moq**
 
 # Interop
 
-- Registered in [[interop-runner]] matrix
-- Successfully tested with [[moxygen]], [[moq-rs]], and [[moqtail]] at Boulder hackathon
+- Successfully tested with [[moxygen]], [[moq-rs]], and [[moqtail]] at Boulder hackathon (Feb 2026)
+- Registered in the [[interop-runner]] matrix
+
+# Disambiguation
+
+There is also a separate **Rust** project called [birneee/quiche_moq](https://github.com/birneee/quiche_moq) by Leon Birne, built on Cloudflare's `quiche` crate (a Rust QUIC library). Created 2025-10-17. That project supports drafts 07-13 and 16 but is **not** in the interop runner. The naming collision is coincidental — both are named after QUIC libraries that happen to share the name "quiche."
 
 # Related
 
-- [[martin-duke]] - Runs the public relay
+- [[martin-duke]] - Primary developer, runs the public relay
 - [[interop-endpoints]] - Public relay endpoints
+- [[interop-runner]] - Automated test framework

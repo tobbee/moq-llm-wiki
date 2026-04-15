@@ -2,7 +2,7 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 ---
 
@@ -48,6 +48,9 @@ See [[track-properties]].
 - #1602 - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
 - #1601 (Closed) - Joining FETCH session errors race condition
 - #1600 (Closed) - Can the same Track be published multiple times into different namespaces?
+
+**New PRs**:
+- PR #1605 - Split DELIVERY_TIMEOUT into two types of timeout (Victor Vasiliev, Apr 14)
 
 **Open PRs under review**:
 - PR #1604 - Joining FETCH with subscription (implements #1602)
@@ -104,8 +107,11 @@ Automated summary of moq-wg repository activity.
 ## Single Object Subgroup ID Likely Closing (Apr 12)
 Ian Swett commented on issue #1405 (originally filed Dec 2025) proposing that single-object subgroups don't need a Subgroup ID. After PR #1593 (allow framing single objects without subgroup ID) saw limited WG interest, Ian wrote: "Discussion of the PR so far indicates we don't really want to bother with #1593. I'm inclined to close this issue with no action, but I'll put it before the WG to confirm." The related idea of simplifying prioritization (#1446) also lacked appetite.
 
-## Interop Runner Expansion (Apr 12–14)
-The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results have fluctuated slightly: 21/70 (Apr 12) → 20/71 (Apr 13) → 21/70 (Apr 14), with 14 skip unchanged. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
+## DELIVERY_TIMEOUT Split Proposal (Apr 14)
+Victor Vasiliev opened PR #1605 proposing to split DELIVERY_TIMEOUT into two separate types of timeout. This addresses a design concern about the existing single-timeout approach.
+
+## Interop Runner Expansion (Apr 12–15)
+The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results have fluctuated: 21/70 (Apr 12) → 20/71 (Apr 13) → 21/70 (Apr 14) → **23/68** (Apr 15), with 14 skip unchanged. The Apr 15 run shows a notable improvement with 2 additional passing tests. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
 
 ## Weekly GitHub Digest (Apr 12)
 Automated weekly summary of moq-wg repository activity posted to the mailing list.
@@ -126,8 +132,9 @@ Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere R
 1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Discussed at interim 13 (Apr 13).
 2. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility and questions MOQT's readiness for non-media workloads.
 3. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary (Ian Swett supports); single-object subgroup ID (#1405) likely closing with no action
-4. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results; runner at 21/70/14 (Apr 14)
-5. **Wire format refinement** - Varint encoding, delta encoding, property parsing
-6. **Consensus process** - draft-17 consensus call active on mailing list
-7. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published
-8. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
+4. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results; runner at 23/68/14 (Apr 15)
+5. **DELIVERY_TIMEOUT redesign** - Victor Vasiliev proposes splitting into two timeout types (PR #1605)
+6. **Wire format refinement** - Varint encoding, delta encoding, property parsing
+7. **Consensus process** - draft-17 consensus call active on mailing list
+8. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published
+9. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions

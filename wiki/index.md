@@ -2,7 +2,7 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-04-14
+last_updated: 2026-04-15
 status: current
 ---
 
@@ -21,10 +21,12 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-secure-objects]] | draft-00 | Active | End-to-end authenticated encryption for MOQT objects |
 | [[moq-privacy-pass]] | draft-02 | Active | Privacy-preserving authentication via Privacy Pass tokens |
 | [[moq-cmsf]] | draft-00 | Active | CMAF-compliant extension of MSF |
-| [[moq-moqpack]] | draft-00 | Active | QPACK compression for MOQT control messages (individual) |
-| [[moq-media-interop]] | draft-03 | Active (expires Apr 23) | Media wire format over LOC for H.264/Opus/AAC (individual) |
-| [[moq-lite]] | draft-04 | Active | Simplified transport protocol by Luke Curley (individual) |
-| [[moq-nmsf]] | draft-01 | Active | Neural Video Codec Packaging for MSF (individual) |
+| [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
+| [[moq-media-interop]] | draft-03 | Individual (expires Apr 23) | Media wire format over LOC for H.264/Opus/AAC |
+| [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
+| [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
+
+For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-00 (relay DoS considerations).
 
 # Protocol Concepts
 
@@ -59,7 +61,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player (draft-14/16, DRM)
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
 - [[imquic]] - Meetecho's C library, also supports RoQ (draft-16/17)
-- [[quiche-moq]] - Rust implementation on quiche (draft-07-13, 16)
+- [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16)
 - [[shaka-player]] - Google's media player with experimental MSF support (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 
@@ -76,7 +78,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moqlivemock]] | Go / JS | 14, 16 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |
 | [[moqtail]] | Rust/TS | 14 | [moqtail/moqtail](https://github.com/moqtail/moqtail) |
 | [[imquic]] | C | 16, 17 | [meetecho/imquic](https://github.com/meetecho/imquic) |
-| [[quiche-moq]] | Rust | 07-13, 16 | [birneee/quiche_moq](https://github.com/birneee/quiche_moq) |
+| [[quiche-moq]] | C++ | 16 | [google/quiche](https://github.com/google/quiche/tree/main/quiche/quic/moqt) |
 | [[shaka-player]] | JavaScript | 14 (experimental) | [shaka-project/shaka-player](https://github.com/shaka-project/shaka-player) |
 | [[xquic-moq]] | C | 14 | Alibaba (see [[interop-runner]]) |
 
@@ -105,3 +107,13 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 - [[interop-runner]] - Standardized cross-implementation test framework
 - [[interop-status]] - Current interop testing status across implementations
 - [[interop-endpoints]] - Public relay endpoints for testing
+
+# Community Resources
+
+- **[IETF Datatracker — MOQ WG](https://datatracker.ietf.org/group/moq/documents/)** — Canonical list of all WG and related individual drafts
+- **[MoQ Monthly](https://buttondown.com/moqmonthly)** — Periodic newsletter summarizing MoQ ecosystem activity, by Mike English
+- **[Demuxed MoQ Talks](https://www.youtube.com/playlist?list=PLiF9acz7G1ppuCCYHjke1p-GSpWNJOdOl)** — Curated playlist of MoQ-related conference talks
+- **[Montevideo Tech Summer Camp](https://montevideotech.dev/summer-camp-2026-moq-project/)** — Annual open-source collaboration event with MoQ projects ([2025](https://montevideotech.dev/summercamp2025/), [2026](https://montevideotech.dev/summer-camp-2026-moq-project/))
+- **[moq.dev Discord](https://discord.gg/FCYF3p99mr)** — Community chat for MoQ developers, run by Luke Curley
+- **[Mailing List Archive](https://mailarchive.ietf.org/arch/browse/moq/)** — moq@ietf.org IETF mailing list
+- **[Slack #moq](https://quicdev.slack.com/)** — Primary developer chat in quicdev workspace

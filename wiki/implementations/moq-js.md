@@ -21,6 +21,8 @@ IETF-aligned JavaScript/browser implementation of MoQ Transport, enabling browse
 
 Created 2024-10-15, the same day as [[moq-rs]] (cloudflare/moq-rs). Both were born out of the period when [[luke-curley]] was not going to support the IETF WG specs in his original `kixelated/moq-js`. The video-dev version started from Luke's codebase but diverged to follow the IETF MoQ working group specifications. Luke's original `kixelated/moq-js` was archived in June 2025 and its functionality was absorbed into [[moq-dev]] as the Hang player (a total rewrite).
 
+Much of the post-fork development came from the [Montevideo Tech Summer Camp 2025](https://montevideotech.dev/summercamp2025/) "MoQ Player Implementation" project, with Mike English as technical sponsor and contributors from the Qualabs community. The repo was moved from `englishm/moq-js` to `video-dev/moq-js` to reflect its status as a community project. The [2026 Summer Camp](https://montevideotech.dev/summer-camp-2026-moq-project/) continued MoQ work with both Mike English and Luke Curley as co-technical sponsors, this time focused on `moq-dev/moq`.
+
 The two JS projects are now **separate implementations** — video-dev/moq-js follows IETF WG specs, while moq-dev/moq's JS packages implement Luke's moq-lite/Hang protocol.
 
 # Draft Support
