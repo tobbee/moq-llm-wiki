@@ -11,10 +11,10 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 **draft-ietf-moq-transport-17** | 121 pages | Expires 2026-09-03
 
 # Authors
-- [[suhas-nandakumar]] (Cisco)
-- Victor Vasiliev (Google)
-- Ian Swett (Google)
 - [[alan-frindell]] (Meta)
+- [[ian-swett]] (Google)
+- [[suhas-nandakumar]] (Cisco)
+- [[victor-vasiliev]] (Google)
 
 # Abstract
 
@@ -55,7 +55,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
 
 ## Open PRs
-- **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout (Victor Vasiliev, Apr 14)
+- **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
 - **PR #1604** - Joining FETCH with subscription (implements #1602)
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID
@@ -93,7 +93,7 @@ Draft-17 uses ALPN strings for version negotiation:
 [[martin-duke]] initiated a consensus call on the mailing list (2026-03-24) for draft-17 changes. The thread received responses through April 10, 2026.
 
 ## 7-Byte Varint Encoding Debate
-Multi-week mailing list thread (March 19 - April 7) about the new varint format introduced in draft-17. The 7-byte encoding (6 leading ones) was initially marked invalid. Discussion among [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, and Christian Huitema led to PR #1595 allowing 7-byte varint and non-minimal encodings.
+Multi-week mailing list thread (March 19 - April 7) about the new varint format introduced in draft-17. The 7-byte encoding (6 leading ones) was initially marked invalid. Discussion among [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], [[ian-swett|Ian Swett]], Mo Zanaty, and Christian Huitema led to PR #1595 allowing 7-byte varint and non-minimal encodings.
 
 # External Links
 - [GitHub repo](https://github.com/moq-wg/moq-transport)

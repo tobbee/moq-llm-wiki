@@ -85,11 +85,14 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 # People & Organizations
 
 - [[alan-frindell]] - Meta, editor of moq-transport
-- [[suhas-nandakumar]] - Cisco, editor of moq-transport, secure-objects, LOC
+- [[ian-swett]] - Google, editor of moq-transport
+- [[suhas-nandakumar]] - Cisco, author of moq-transport, secure-objects, LOC
+- [[victor-vasiliev]] - Google, author of moq-transport, quiche-moq developer
 - [[luke-curley]] - moq-rs creator, active implementer
 - [[will-law]] - Akamai, editor of MSF/CMSF
+- [[mike-english]] - Cloudflare, maintainer of moq-rs/moq-js, interop runner
 - [[lorenzo-miniero]] - Meetecho, Janus-based implementation
-- [[martin-duke]] - Google, rewind proposal
+- [[martin-duke]] - Google, rewind proposal, quiche-moq developer
 
 # Active Discussions
 

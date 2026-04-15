@@ -56,7 +56,7 @@ See [[track-properties]].
 - #1600 (Closed) - Can the same Track be published multiple times into different namespaces?
 
 **New PRs**:
-- PR #1605 - Split DELIVERY_TIMEOUT into two types of timeout (Victor Vasiliev, Apr 14)
+- PR #1605 - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
 
 **Open PRs under review**:
 - PR #1604 - Joining FETCH with subscription (implements #1602)
@@ -90,7 +90,7 @@ Alan concluded that "making message params inflexible in draft-17 may have been 
 [[martin-duke]] issued a consensus call on the mailing list (2026-03-24) for changes in draft-17. Discussion continued through April 10 with responses from Martin Duke.
 
 ## 7-Byte Varint Encoding Debate (Mar 19 → Apr 7)
-Multi-week discussion on the mailing list about the new varint encoding in draft-17. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, Christian Huitema. Key issue: whether to allow the 7-byte encoding (6 leading ones) which was marked invalid in the initial spec. Resolved with PR #1595 (merged Apr 9) allowing 7-byte varint and non-minimal encodings.
+Multi-week discussion on the mailing list about the new varint encoding in draft-17. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], [[ian-swett|Ian Swett]], Mo Zanaty, Christian Huitema. Key issue: whether to allow the 7-byte encoding (6 leading ones) which was marked invalid in the initial spec. Resolved with PR #1595 (merged Apr 9) allowing 7-byte varint and non-minimal encodings.
 
 ## Agenda for Virtual Interim 13 - April 13 (Apr 9)
 Magnus Westerlund posted the agenda. Key topic: REWIND slides and discussion of [[joining-fetch]] alternatives. See [[interim-meetings]].
@@ -102,7 +102,7 @@ Magnus Westerlund posted the minutes for interim-2026-moq-12. Included discussio
 Automated summary of moq-wg repository activity.
 
 ## Required-Request-ID Debate (Apr 10-11)
-[[martin-duke]] filed issue #1603 questioning whether `required-request-id` is needed for all request types. He argues only REQUEST_UPDATE and FETCH genuinely need it, and maintaining state for all request IDs creates unnecessary overhead and enables a malicious client to maximize state by using every other request ID. [[alan-frindell]] countered that QUIC's maximum bidirectional streams naturally bound the state, but Martin questioned whether stream IDs are actually bound to request IDs. Ian Swett (Apr 11) noted that **stream IDs in WebTransport and some QUIC implementations aren't exposed to the application**, and that `required-request-id` was added to achieve "feature parity" with the single control stream model but "it was never clear exactly what functionality this provided." Ian also expressed that Joining FETCH's dependency on another Request is one reason he dislikes it.
+[[martin-duke]] filed issue #1603 questioning whether `required-request-id` is needed for all request types. He argues only REQUEST_UPDATE and FETCH genuinely need it, and maintaining state for all request IDs creates unnecessary overhead and enables a malicious client to maximize state by using every other request ID. [[alan-frindell]] countered that QUIC's maximum bidirectional streams naturally bound the state, but Martin questioned whether stream IDs are actually bound to request IDs. [[ian-swett|Ian Swett]] (Apr 11) noted that **stream IDs in WebTransport and some QUIC implementations aren't exposed to the application**, and that `required-request-id` was added to achieve "feature parity" with the single control stream model but "it was never clear exactly what functionality this provided." Ian also expressed that Joining FETCH's dependency on another Request is one reason he dislikes it.
 
 ## Joining FETCH Redesign (Apr 10)
 [[martin-duke]] opened PR #1604 implementing the proposal from issue #1602 to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. He noted it was "much spicier than expected" due to parameter state sharing. [[alan-frindell]] reviewed and flagged that subscriber priority cannot differ between fetch and subscription under this model.
@@ -111,10 +111,10 @@ Automated summary of moq-wg repository activity.
 [[martin-duke]]'s [draft-duke-moq-subscribe-rewind-02](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/) was published April 2. The "Rewind" subscription filter allows subscribers to request past groups using SUBSCRIBE semantics (multiple streams, best-effort) rather than FETCH semantics (single stream, complete). This is a key topic for the interim-13 meeting on Apr 13.
 
 ## Single Object Subgroup ID Likely Closing (Apr 12)
-Ian Swett commented on issue #1405 (originally filed Dec 2025) proposing that single-object subgroups don't need a Subgroup ID. After PR #1593 (allow framing single objects without subgroup ID) saw limited WG interest, Ian wrote: "Discussion of the PR so far indicates we don't really want to bother with #1593. I'm inclined to close this issue with no action, but I'll put it before the WG to confirm." The related idea of simplifying prioritization (#1446) also lacked appetite.
+[[ian-swett|Ian Swett]] commented on issue #1405 (originally filed Dec 2025) proposing that single-object subgroups don't need a Subgroup ID. After PR #1593 (allow framing single objects without subgroup ID) saw limited WG interest, Ian wrote: "Discussion of the PR so far indicates we don't really want to bother with #1593. I'm inclined to close this issue with no action, but I'll put it before the WG to confirm." The related idea of simplifying prioritization (#1446) also lacked appetite.
 
 ## DELIVERY_TIMEOUT Split Proposal (Apr 14)
-Victor Vasiliev opened PR #1605 proposing to split DELIVERY_TIMEOUT into two separate types of timeout. This addresses a design concern about the existing single-timeout approach.
+[[victor-vasiliev|Victor Vasiliev]] opened PR #1605 proposing to split DELIVERY_TIMEOUT into two separate types of timeout. This addresses a design concern about the existing single-timeout approach.
 
 ## Interop Runner Expansion (Apr 12–15)
 The [[interop-runner]] expanded from 93 to 105 tests with the addition of **moqx** ([[openmoq|OpenMOQ]]'s moxygen fork) as an 11th implementation. Results have fluctuated: 21/70 (Apr 12) → 20/71 (Apr 13) → 21/70 (Apr 14) → **23/68** (Apr 15), with 14 skip unchanged. The Apr 15 run shows a notable improvement with 2 additional passing tests. moqx shows strong interop: moq-dev-js <-> moqx achieves 6/6, moq-rs-draft-16 <-> moqx achieves 5-6/6.
@@ -137,9 +137,9 @@ Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere R
 
 1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Discussed at interim 13 (Apr 13).
 2. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility and questions MOQT's readiness for non-media workloads.
-3. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary (Ian Swett supports); single-object subgroup ID (#1405) likely closing with no action
+3. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary ([[ian-swett|Ian Swett]] supports); single-object subgroup ID (#1405) likely closing with no action
 4. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results; runner at 23/68/14 (Apr 15)
-5. **DELIVERY_TIMEOUT redesign** - Victor Vasiliev proposes splitting into two timeout types (PR #1605)
+5. **DELIVERY_TIMEOUT redesign** - [[victor-vasiliev|Victor Vasiliev]] proposes splitting into two timeout types (PR #1605)
 6. **Wire format refinement** - Varint encoding, delta encoding, property parsing
 7. **Consensus process** - draft-17 consensus call active on mailing list
 8. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published

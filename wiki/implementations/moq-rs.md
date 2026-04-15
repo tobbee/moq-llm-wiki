@@ -8,7 +8,7 @@ status: current
 
 **Language**: Rust
 **Organization**: Cloudflare
-**Maintainer**: Mike English (@englishm)
+**Maintainer**: [[mike-english|Mike English]] (@englishm)
 **GitHub**: [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) (was englishm/moq-rs)
 **Slack**: #moq-rs (C09CG9V7A2Y) — shared channel, covers both this and [[moq-dev]]
 
@@ -30,7 +30,7 @@ The two projects are now considered **sibling implementations** — neither is u
 
 # Key Contributors
 
-- **Mike English** (@englishm) — Maintainer. Joined during the Go→Rust transition as a close collaborator.
+- **[[mike-english|Mike English]]** (@englishm) — Maintainer. Joined during the Go→Rust transition as a close collaborator.
 - **Manish** (@itzmanish) — Cloudflare developer, currently working on draft-16 support (PR #131)
 - **Jacob** (@nnazo) — Cloudflare developer working on the MoQ relay service
 - **Scott Godin** (@sgodin) — Did the bulk of the draft-07 → draft-14 message migration

@@ -30,7 +30,7 @@ There is significant debate around the best approach for fetching historical dat
 
 [[will-law]] asked about the status of these competing proposals (2026-04-08). [[alan-frindell]] indicated his approach is "more of an extension to Martin's."
 
-A meeting of "Joining fetch dissenters" was organized by [[alan-frindell]] (2026-03-22) with Ian Swett, Mike English, [[luke-curley]], and [[martin-duke]] - generated 19 replies.
+A meeting of "Joining fetch dissenters" was organized by [[alan-frindell]] (2026-03-22) with [[ian-swett|Ian Swett]], [[mike-english|Mike English]], [[luke-curley]], and [[martin-duke]] - generated 19 replies.
 
 ## Key Issue
 - **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream (latest open issue)

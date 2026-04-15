@@ -8,7 +8,7 @@ status: current
 
 **Language**: JavaScript/TypeScript
 **Organization**: video-dev
-**Maintainer**: Mike English (@englishm), community
+**Maintainer**: [[mike-english|Mike English]] (@englishm), community
 **GitHub**: [video-dev/moq-js](https://github.com/video-dev/moq-js)
 **Slack**: #moq-js (C09BZ7KH0BZ)
 **Discord**: [video-dev Discord](https://discord.gg/FCYF3p99mr)

@@ -8,7 +8,7 @@ status: current
 
 **Language**: C++
 **Organization**: Google
-**Primary developers**: [[martin-duke]], Victor Vasiliev, with contributions from asedeno, dschinazi
+**Primary developers**: [[martin-duke]], [[victor-vasiliev|Victor Vasiliev]], with contributions from asedeno, dschinazi
 **GitHub**: [google/quiche](https://github.com/google/quiche/tree/main/quiche/quic/moqt) (MoQT module within Google's QUICHE library)
 
 # Overview

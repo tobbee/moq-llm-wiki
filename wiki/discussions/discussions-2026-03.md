@@ -78,7 +78,7 @@ Daiki Matsui announced Shaka Player's MOQT support updated from draft-11 to draf
 [[martin-duke]] initiated a consensus call on draft-17 changes. Thread received responses through April 10.
 
 ## The 7-Byte MOQT Varint Encoding (Mar 19 → Apr 7)
-Major mailing list thread about the new varint encoding format. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], Ian Swett, Mo Zanaty, Christian Huitema. Debated whether to allow the previously-invalid 7-byte encoding. Result: PR #1595 allowing 7-byte varints and non-minimal encodings.
+Major mailing list thread about the new varint encoding format. Participants: [[alan-frindell]], [[martin-duke]], [[suhas-nandakumar]], [[ian-swett|Ian Swett]], Mo Zanaty, Christian Huitema. Debated whether to allow the previously-invalid 7-byte encoding. Result: PR #1595 allowing 7-byte varints and non-minimal encodings.
 
 ## MoQ Charter and QMUX (Mar 20-23)
 Magnus Westerlund, Lucas Pardue, [[luke-curley]], and [[suhas-nandakumar]] discussed whether [[qmux]] fits within MOQ's charter scope.

@@ -32,7 +32,7 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 
 - **draft-duke-moq-subscribe-rewind-02** (Apr 2) - Updated Rewind draft published with refined subscription filter semantics
 - **PR #1604** (Apr 10) - [[martin-duke]] implements the #1602 proposal to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. [[alan-frindell]] reviewed, noting subscriber priority cannot differ between fetch and subscription.
-- **#1603** (Apr 10-11) - [[martin-duke]] questions required-request-id. Ian Swett supports simplification, calling it unclear what functionality it provides. He also notes Joining FETCH's dependency on another Request as a design concern.
+- **#1603** (Apr 10-11) - [[martin-duke]] questions required-request-id. [[ian-swett|Ian Swett]] supports simplification, calling it unclear what functionality it provides. He also notes Joining FETCH's dependency on another Request as a design concern.
 - **#1602** (Apr 9) - [[martin-duke]] proposes moving Joining Fetch to SUBSCRIBE/PUBLISH stream, eliminating race conditions
 - **#1601** (Closed) - Race condition in current design
 - Restriction requiring "largest object" subscribes was removed

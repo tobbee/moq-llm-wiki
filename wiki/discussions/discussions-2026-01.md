@@ -23,7 +23,7 @@ status: current
 [[martin-duke]] raised questions about which extensions should be in the immutable block. Key points:
 - ID_GAP extension placement unclear
 - Text allows relays to drop ID_GAP for fetches, but immutable block prevents that
-- Victor Vasiliev: "I would assume payload only"
+- [[victor-vasiliev|Victor Vasiliev]]: "I would assume payload only"
 - Discussion around what "immutable" means for varint encoding differences
 
 ## DELIVERY_TIMEOUT Semantics (Jan 13-16)
@@ -34,7 +34,7 @@ Discussion about how DELIVERY_TIMEOUT works:
 - AUTH tokens on separate SUB_NS stream need QPACK-type rules
 
 ## WARP -> MSF / CARP -> CMSF Rename Confusion (Jan 12)
-Mike English noticed confusion on datatracker: CMSF and CARP both showed as adopted documents, but MSF (the replacement for WARP) didn't appear correctly. 7-reply thread to sort it out.
+[[mike-english|Mike English]] noticed confusion on datatracker: CMSF and CARP both showed as adopted documents, but MSF (the replacement for WARP) didn't appear correctly. 7-reply thread to sort it out.
 
 # Eyevinn Update (Jan 27)
 [[Torbjorn Einarsson|Torbjörn Einarsson]] announced updates to [[moqlivemock]]:

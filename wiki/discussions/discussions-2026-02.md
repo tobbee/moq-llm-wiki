@@ -22,7 +22,7 @@ Major live interop testing at Google's Boulder office:
 - Akamai test tools: `moq-test.akaleapi.net` and beta version at `moq-test-beta.akaleapi.net`
 
 ## Interop Runner Launch
-Mike English announced the [[interop-runner]] reports are now live at `englishm.github.io/moq-interop-runner/`. Key details:
+[[mike-english|Mike English]] announced the [[interop-runner]] reports are now live at `englishm.github.io/moq-interop-runner/`. Key details:
 - Everyone can register in `implementations.json`
 - VERSION-MATCHING.md documents how version matching works
 - PR #34 added quiche-moq relay Docker image

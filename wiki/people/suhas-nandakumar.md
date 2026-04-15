@@ -8,11 +8,11 @@ status: current
 
 **Organization**: Cisco
 **Slack**: @Suhas Nandakumar (U0478GETUTT)
-**Role**: Editor of [[moq-transport]], [[moq-secure-objects]], [[moq-privacy-pass]], co-author of [[moq-loc]]
+**Role**: Author of [[moq-transport]], editor of [[moq-secure-objects]], [[moq-privacy-pass]], co-author of [[moq-loc]]
 
 # Contributions
 
-- Co-editor of draft-ietf-moq-transport
+- Co-author of draft-ietf-moq-transport (all versions)
 - Co-author of LOC, Secure Objects, and Privacy Pass drafts
 - Leads the [[libquicr]] / QuicR project at Cisco
 - Open-sourced Go bindings for QuicR: [quicr-go](https://github.com/Quicr/quicr-go) (2026-03-25)

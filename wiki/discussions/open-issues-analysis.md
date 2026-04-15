@@ -21,9 +21,9 @@ Summary and evaluation of all open issues across moq-wg repos.
 
 **ABR / SWITCH** (4 issues, 1 PR) - See [[switch-abr]]. #1354 has 39 comments. Unresolved tension between transport-level and application-level switching.
 
-**Subscription Flow Control** (PR #1591) - Ian Swett proposes rate limiting subscriptions to prevent DoS. Security-labeled.
+**Subscription Flow Control** (PR #1591) - [[ian-swett|Ian Swett]] proposes rate limiting subscriptions to prevent DoS. Security-labeled.
 
-**Filters** (PR #1518, #1362) - Mo Zanaty's reduced-scope filters and Ian Swett's Prior Group filter. Both labeled Needs Discussion.
+**Filters** (PR #1518, #1362) - Mo Zanaty's reduced-scope filters and [[ian-swett|Ian Swett]]'s Prior Group filter. Both labeled Needs Discussion.
 
 **SUBSCRIBE_NAMESPACE split** (PR #1542) - Alan Frindell's proposal to split into SUBSCRIBE_NAMESPACE + SUBSCRIBE_TRACKS. Already discussed on Slack and partly implemented.
 
@@ -41,7 +41,7 @@ Summary and evaluation of all open issues across moq-wg repos.
 
 ## Other Notable
 
-- **#1582** - REQUEST_ERROR caching at relays (Victor Vasiliev)
+- **#1582** - REQUEST_ERROR caching at relays ([[victor-vasiliev|Victor Vasiliev]])
 - **PR #1534** - REDIRECT for request errors (afrind)
 - **PR #1544** - Improve 0-RTT startup latency
 - **#1316** - VOD support improvements (Ye-Kui Wang, Needs Discussion)
@@ -63,7 +63,7 @@ The catalog is the weakest part of MSF. Key concerns:
 
 ## Media Mapping (3 issues)
 
-- #153 - `initTrack` doesn't work (Victor Vasiliev, Apr 10 - very fresh)
+- #153 - `initTrack` doesn't work ([[victor-vasiliev|Victor Vasiliev]], Apr 10 - very fresh)
 - #148 - Media Mapping to MoQT needs clarification
 - #147 - Confusing Media Transmission section
 

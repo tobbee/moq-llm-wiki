@@ -8,7 +8,7 @@ status: current
 
 **Organization**: Meta
 **Slack**: @afrind (U68JLS6LV)
-**Role**: Editor of [[moq-transport]], primary relay implementer ([[moxygen]])
+**Role**: Co-editor of [[moq-transport]], primary relay implementer ([[moxygen]])
 
 # Contributions
 

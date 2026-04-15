@@ -8,6 +8,22 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-04-15 - Add people pages, fix editor/author roles
+
+**Operation**: Expansion + Correction
+
+**Pages created**: ian-swett.md, victor-vasiliev.md, mike-english.md
+**Pages updated**: alan-frindell.md, suhas-nandakumar.md, moq-transport.md, index.md, discussions-2026-04.md, discussions-2026-03.md, discussions-2026-02.md, discussions-2026-01.md, open-issues-analysis.md, joining-fetch.md, joining-fetch-dissent.md, quiche-moq.md, moq-rs.md, moq-js.md, interop-runner.md
+
+**Key changes**:
+- **Three new people pages**: Ian Swett (Google, co-editor of moq-transport), Victor Vasiliev (Google, author of moq-transport, quiche-moq co-developer), Mike English (Cloudflare, maintainer of moq-rs/moq-js, interop runner operator, MoQ Monthly publisher).
+- **Role corrections**: Alan Frindell and Ian Swett are the **editors** of draft-ietf-moq-transport. Suhas Nandakumar and Victor Vasiliev are **authors**. Previously the wiki listed Suhas as co-editor. Alan's page updated to "Co-editor", Suhas's page corrected from "Editor" to "Author".
+- **moq-transport.md authors section** now lists all four authors with wikilinks.
+- **Wikilinks added** across 11 wiki pages: all plain-text mentions of Ian Swett, Victor Vasiliev, and Mike English converted to `[[wikilink]]` format.
+- People section in index.md expanded from 6 to 9 entries.
+
+---
+
 # 2026-04-15 - CMSF ContentProtection merged, Shaka Player DRM support
 
 **Operation**: Update
