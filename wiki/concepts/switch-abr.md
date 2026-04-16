@@ -2,7 +2,7 @@
 title: "SWITCH and Client-Side ABR"
 tags: [concept, transport, abr, media]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -38,15 +38,18 @@ The core tension: should the publisher or subscriber make quality decisions?
 - **#1365** - If you can't deliver an entire Group, should you send any Objects? Affects ABR drop behavior.
 - **#1352** - SUBSCRIBE doesn't need a forward parameter if we have filters (Parked)
 
-# Current Status (April 2026)
+# Major Redesign (April 15-16, 2026)
 
-Unresolved. The PR is labeled "Needs Discussion" and hasn't been merged or closed. The community is split between:
+Gwendal Simon pushed 7 commits significantly reworking the SWITCH mechanism. The new design replaces the previous **FETCH+SUBSCRIBE delivery** with **relay-initiated PUBLISH + inline catch-up**:
 
-1. **Transport-level SWITCH** - Atomic transition, relay-aware, can optimize delivery
+- **Old approach**: SWITCH triggered a FETCH for catch-up data and a new SUBSCRIBE for live data, requiring coordination between two delivery streams
+- **New approach**: Catch-up data is delivered inline on the PUBLISH bidirectional stream, with the relay initiating the PUBLISH. This avoids the complexity of coordinating separate FETCH and SUBSCRIBE delivery during track switches.
+
+The PR remains labeled "Needs Discussion" and hasn't been merged or closed. The community is split between:
+
+1. **Transport-level SWITCH** (PR #1378) - Atomic transition with relay-initiated PUBLISH + catch-up
 2. **Application-level switching** - Just UNSUBSCRIBE old track + SUBSCRIBE new track, keep transport simple
 3. **Sender-side ABR** - Publisher decides quality, subscriber specifies constraints
-
-The April 13 interim meeting may address this.
 
 # Related
 

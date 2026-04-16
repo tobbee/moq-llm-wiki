@@ -2,7 +2,7 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-04-15
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -22,7 +22,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-privacy-pass]] | draft-02 | Active | Privacy-preserving authentication via Privacy Pass tokens |
 | [[moq-cmsf]] | draft-00 | Active | CMAF-compliant extension of MSF |
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
-| [[moq-media-interop]] | draft-03 | Individual (expires Apr 23) | Media wire format over LOC for H.264/Opus/AAC |
+| [[moq-media-interop]] | draft-03 | Individual (expires **Apr 23**) | Media wire format over LOC for H.264/Opus/AAC |
 | [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 

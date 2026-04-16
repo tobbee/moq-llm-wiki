@@ -2,7 +2,7 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-04-15
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -29,6 +29,10 @@ A substantial C++ MoQT implementation inside Google's QUICHE library (part of Ch
 
 - Successfully tested with [[moxygen]], [[moq-rs]], and [[moqtail]] at Boulder hackathon (Feb 2026)
 - Registered in the [[interop-runner]] matrix
+
+# Recent Activity (April 2026)
+
+- **Joining FETCH fix** (Apr 14, [[martin-duke]]): Limit Joining FETCH to `largest_object` at time of SUBSCRIBE rather than using current value. Moves responsibility from `MoqtOutgoingQueue` to the session layer with a new `established_` flag. Prepares for implementing REWIND's joining FETCH aspects.
 
 # Disambiguation
 

@@ -2,11 +2,59 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-15
+last_updated: 2026-04-16
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-16 - Wiki update: NAB Show MoQ showcase, SWITCH redesign, implementation activity
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: No new messages (channel quiet since Feb 5). #moq-rs and #moq-js: only new member joins (Endel).
+- GitHub: moq-transport — PR #1378 (SWITCH) major redesign Apr 15-16; PR #1604 new review comments; PR #1562 4th approval
+- GitHub: moq-dev/moq — 4 PRs merged + 4 opened Apr 15-16 (browser compat, moq-lite negotiation, TLS config)
+- GitHub: moqtail — 5 draft-16 PRs merged Apr 14-15 (unified message registry, SubgroupHeader, REQUEST_OK)
+- GitHub: cloudflare/moq-rs — PR #163 qlog alignment work; v0.7.17 released
+- GitHub: google/quiche — Joining FETCH fix (largest_object at SUBSCRIBE time) by Martin Duke
+- GitHub: msf, loc, secure-objects, cmsf, catalog-format — no activity since Apr 15
+- Mailing list: No new threads since April 13
+- IETF Datatracker: No new draft versions
+- Interop runner: Unchanged at 23/68/14 (105 tests, Apr 16)
+- MoQ Monthly: Only #0 published (March 4). No #1 yet.
+- tobbee/moq-llm-wiki: No new issues (all 3 existing issues closed)
+- Web search: NAB Show 2026 MoQ demos from Wowza, Oracle, Bitmovin, Broadpeak, Synamedia
+
+**Pages updated**: discussions-2026-04.md, moq-transport.md, switch-abr.md, moq-dev.md, moq-rs.md, moqtail.md, quiche-moq.md, interop-runner.md, index.md
+
+**Key findings**:
+
+### NAB Show 2026 (April 18-22)
+Largest public display of MoQ technology to date with multiple live demonstrations:
+- **Wowza + Cloudflare**: CMAF-to-MoQ relay demo (Java/Kwik stack → moq-rs relay) at Cloudflare booth W2300
+- **Oracle Video @ Edge (OVE)**: MoQT relay network with partner demos — Ateme (ingest), Broadpeak (packaging), Bitmovin Player Web X (playback)
+- **Bitmovin Player Web X**: Commercial MoQ player using WebTransport + WebCodecs, sub-second latency against Cloudflare's 330+ city relay network
+- **Broadpeak**: "Half MoQ relay" for HAS/MoQ coexistence at booth W3034
+- **Synamedia**: Quortex PowerVu & MEG with MoQ track-based affiliate distribution
+
+### Spec activity
+- **SWITCH PR #1378 redesigned**: Gwendal Simon replaced FETCH+SUBSCRIBE delivery with relay-initiated PUBLISH + inline catch-up (7 commits Apr 15-16)
+- **Session-Level Tracks PR #1562**: 4th approval (Suhas Nandakumar), close to merge
+- **Joining FETCH PR #1604**: Detailed feedback from Gwendal Simon on priority/parameter edge cases
+
+### Implementation activity
+- **moq-dev/moq**: Safari/Firefox compatibility fixes (avc3→avc1, AudioDecoder, WebTransport BiDi workaround), moq-lite ALPN fallback, releases moq-cli v0.7.18 + moq-relay v0.10.21
+- **moqtail**: Major draft-16 push — unified message registry (+937/−1398), SubgroupHeader, REQUEST_OK/UPDATE refactoring, datagram compat. v0.9.1 pending.
+- **cloudflare/moq-rs**: qlog alignment with draft-pardue-moq-qlog-moq-events-03 (+346/−242); v0.7.17 released
+- **quiche-moq**: Joining FETCH limited to largest_object at SUBSCRIBE time (prepares for REWIND)
+- **video-dev/moq-js**: No activity since mid-March
+
+### Status watch
+- **draft-cenzano-moq-media-interop-03** expires in 7 days (April 23) — still no renewal
+- **Interop runner** stable at 23/68/14 with 11 implementations
+
+---
 
 # 2026-04-15 - Add people pages, fix editor/author roles
 

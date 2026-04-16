@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-14
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -55,6 +55,18 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 - `cdn.moq.dev/anon` — browser pub/sub testing (QUIC + WebTransport)
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
+
+# Recent Activity (April 2026)
+
+## Browser Compatibility Push (Apr 15–16)
+[[luke-curley]] landed a burst of fixes and improvements:
+- **Safari fixes**: avc3→avc1 codec string compatibility, CSS grid layout fix
+- **Firefox fixes**: AudioDecoder 6-channel output for stereo Opus, WebTransport BiDi stream bug workaround (force WebSocket fallback on Firefox)
+- **moq-lite negotiation**: Fallback SETUP negotiation for Lite03+ when ALPN unavailable (Firefox workaround)
+- **TLS config**: Refactored `--identity` into separate `--cert` and `--key` flags
+- **Token encoding**: Default to base64url for JWK output
+- **Relay landing page**: HTML page for non-MoQ browser clients directing to moq.dev
+- **Release**: moq-cli v0.7.18, moq-relay v0.10.21
 
 # Interop
 

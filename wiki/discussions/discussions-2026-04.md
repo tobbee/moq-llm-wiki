@@ -2,7 +2,7 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-15
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -133,15 +133,96 @@ Two individual drafts appeared on the IETF datatracker this period:
 ## London In-Person Interim (June 11-12)
 Four MOQ sessions scheduled at County Hall / The Riverside Building, Belvedere Road, London SE1 7PB. June 11 has 2 sessions (likely hackathon/interop), June 12 has 3 working sessions. Similar format to the [[discussions-2026-02|Boulder interim]]. See [[interim-meetings]] for details.
 
+# NAB Show 2026 — MoQ Industry Showcase (Apr 18–22)
+
+NAB Show in Las Vegas (April 18–22) features the largest public display of MoQ technology to date, with multiple companies demonstrating live MoQ workflows:
+
+## Wowza + Cloudflare
+Live demo of a next-generation streaming architecture built on MoQ. Workflow: OBS → Wowza origin → Cloudflare [[moq-rs]] relay → MoQ playback. Barry Owen (Wowza Chief Solutions Architect) presenting at Cloudflare booth W2300 (Sunday noon–1pm, Tuesday 2–3pm). Wowza built a CMAF-to-MoQ relay using Java modules (Kwik QUIC / Flupke WebTransport). Published [April 6 blog post](https://www.wowza.com/blog/moq-streaming-with-wowza-streaming-engine-and-claude-ai) documenting the architecture.
+
+## Oracle Video @ Edge (OVE)
+Oracle's MoQT relay network — functions as a relay fabric (not CDN origin), with short sliding-window cache (~1 GOP) for late-joining subscribers. NAB partner demos with:
+- **Ateme** — encoding/ingest entry point into the OVE relay
+- **Broadpeak** — packaging within the relay workflow
+- **Bitmovin Player Web X** — commercial-grade MoQ playback
+
+## Bitmovin Player Web X
+Commercial MoQ player using WebTransport + WebCodecs API. Plugin architecture enables MoQ support without touching core player code. Successfully tested against Cloudflare's global relay network (330+ cities). [Live demo with Cloudflare at NAB](https://bitmovin.com/blog/media-over-quic-bitmovin-cloudflare/). Sub-second latency confirmed. Roadmap includes MSE and WebRTC fallback.
+
+## Broadpeak
+"Half MoQ relay" approach for HAS/MoQ coexistence — both protocols from the same cache infrastructure. Frame or small group-of-frames delivery. Live demo at booth W3034. Technical contacts: Guillaume Bichot, Christoph Neumann, Nominoë Kervadec. White paper forthcoming.
+
+## Synamedia
+Quortex PowerVu & MEG providing "next-generation MoQ track-based distribution" for affiliates. Demonstrated alongside dynamic channel creation and ATSC 3.0 reception.
+
+This represents a significant milestone for MoQ commercialization — major CDN, player, encoder, and platform vendors are all demonstrating interoperable MoQ workflows simultaneously.
+
+# GitHub Activity (Apr 15–16)
+
+## moq-transport
+
+**PR #1378 (SWITCH) — Major Redesign (Apr 15–16)**:
+Gwendal Simon pushed 7 commits redesigning SWITCH for client-side ABR. The new approach replaces FETCH+SUBSCRIBE delivery with **relay-initiated PUBLISH + inline catch-up**. Catch-up data is delivered on the PUBLISH bidi stream rather than requiring a separate FETCH. This addresses earlier concerns about the complexity of coordinating FETCH and SUBSCRIBE delivery during track switches. See [[switch-abr]].
+
+**PR #1604 (Joining FETCH) — New Feedback (Apr 15)**:
+Gwendal Simon posted detailed review comments on [[martin-duke]]'s proposal:
+- Raised edge case where SUBSCRIBE_PRIORITY in a Joining FETCH inadvertently changes live delivery priority
+- Noted the problem of publisher closing the request stream while Joining FETCH data is still delivering
+- Analyzed how relays can unilaterally assign higher QUIC stream priority to FETCH data during catch-up
+- Pointed out that a subscriber cannot include a parameter that applies only to the FETCH portion
+
+**PR #1562 (Session-Level Tracks) — 4th Approval (Apr 15)**:
+[[suhas-nandakumar]] approved [[alan-frindell]]'s PR to reserve the `.session` namespace tuple for session-level tracks. Now has 4 approvals (from [[ian-swett]], sharmafb, [[victor-vasiliev|vasilvv]], and suhasHere). Appears close to merge.
+
+## Implementation Repos
+
+**[[moq-dev]] — Very Active (Apr 15–16)**:
+[[luke-curley]] landed 4 PRs and opened 4 more in 24 hours:
+- **PR #1304** (merged): Safari/Firefox moq-boy compatibility — fixes Safari WebCodecs issue (avc3 vs avc1), Firefox AudioDecoder 6-channel output for stereo Opus
+- **PR #1280** (merged): Landing page for non-MoQ browser clients connecting to relay
+- **PR #1302** (merged): Release moq-cli v0.7.18, moq-relay v0.10.21
+- **PR #1307** (open): moq-lite negotiate Lite03+ via legacy SETUP when ALPN unavailable (Firefox workaround)
+- **PR #1306** (open): Disable WebTransport on Firefox, force WebSocket fallback (Firefox BiDi stream bug)
+- **PR #1308** (open): Replace `--identity` with separate `--cert` and `--key` flags
+- **PR #1309** (open): moq-token default to base64url encoding for JWK output
+
+**[[moqtail]] — Major Merge Day (Apr 14–15)**:
+Five draft-16 PRs merged, representing a major push toward draft-16 compliance:
+- **PR #163**: Unified registry mapping messages to request_ids (+937/−1398, 47 files)
+- **PR #160**: SubgroupHeader per draft-16 §10.4.2 (24 new type definitions)
+- **PR #162**: Consolidated OK messages into unified REQUEST_OK
+- **PR #159**: REQUEST_UPDATE refactoring
+- **PR #157**: Datagram draft-16 compatibility
+- v0.9.1 release pending (fixes race condition causing negative object deltas)
+
+**[[moq-rs]] — qlog Alignment (Apr 14)**:
+[[mike-english]] opened PR #163 aligning mlog qlog output with draft-pardue-moq-qlog-moq-events-03 (+346/−242, 6 files). Includes epoch-relative timestamps, typed parameter formatting, and authorization token redaction. Addresses feedback from Lucas Pardue ([@LPardue](https://github.com/LPardue)) at IETF 125.
+
+**[[quiche-moq]] — Joining FETCH Fix (Apr 14)**:
+[[martin-duke]] committed a fix to limit Joining FETCH to `largest_object` at time of SUBSCRIBE rather than using current value. Moves responsibility from `MoqtOutgoingQueue` to the session layer. Prepares for REWIND implementation.
+
+**video-dev/[[moq-js]]**: No activity since mid-March.
+
+# Interop Runner (Apr 16)
+
+Unchanged at **23 pass / 68 fail / 14 skip** (105 tests). Same results as April 15. Latest run: 2026-04-16.
+
+# Draft Status Watch
+
+- **[[moq-media-interop|draft-cenzano-moq-media-interop-03]]** expires in **7 days** (April 23). Still no renewal or version -04 published.
+- **MoQ Monthly #1** not yet published — #0 was published March 4 with "See you in April!" but no new issue yet.
+
 # Key Themes
 
-1. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 proposes a concrete redesign. Discussed at interim 13 (Apr 13).
-2. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility and questions MOQT's readiness for non-media workloads.
-3. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary ([[ian-swett|Ian Swett]] supports); single-object subgroup ID (#1405) likely closing with no action
-4. **Interop progress** - v17 interop achieved between moq-rs and Meetecho; moqx joins interop runner with strong results; runner at 23/68/14 (Apr 15)
-5. **DELIVERY_TIMEOUT redesign** - [[victor-vasiliev|Victor Vasiliev]] proposes splitting into two timeout types (PR #1605)
-6. **Wire format refinement** - Varint encoding, delta encoding, property parsing
-7. **Consensus process** - draft-17 consensus call active on mailing list
-8. **New individual drafts** - moq-lite-04 (simplified transport) and NMSF-01 (neural video codec packaging) published
-9. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
-10. **CMSF ContentProtection** - DRM signaling merged into CMSF spec (PR #18), with two implementations: [[moqlivemock|warp-player]] and [[shaka-player]]
+1. **NAB Show MoQ showcase** - Biggest industry milestone: Wowza, Oracle, Bitmovin, Broadpeak, Synamedia, Ateme, and Cloudflare all demoing MoQ workflows at NAB (Apr 18–22)
+2. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 getting detailed design feedback from Gwendal Simon
+3. **SWITCH redesign** - PR #1378 significantly reworked to use relay-initiated PUBLISH+catch-up instead of FETCH+SUBSCRIBE
+4. **Session-Level Tracks** - PR #1562 has 4 approvals, nearing merge
+5. **moqtail draft-16 push** - 5 PRs merged in one day, major unified message registry refactoring
+6. **moq-dev browser compat** - Luke Curley actively fixing Safari/Firefox issues, implementing ALPN fallback for Firefox
+7. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility
+8. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary
+9. **Interop stable** - Runner holding at 23/68/14 with 11 implementations
+10. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
+11. **CMSF ContentProtection** - DRM signaling merged into CMSF spec, with two implementations
+12. **media-interop expiry** - draft-cenzano-moq-media-interop-03 expires April 23, still no renewal

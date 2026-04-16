@@ -2,7 +2,7 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-04-14
+last_updated: 2026-04-16
 status: current
 ---
 
@@ -53,6 +53,18 @@ The two projects are now considered **sibling implementations** — neither is u
   - `draft-16-manish.cloudflare.mediaoverquic.com:443` (draft-16, WIP)
 - All support raw QUIC and WebTransport on port 443
 - Interop relays have `--mlog-serve` for debugging: `/<connection-id>` over HTTPS
+
+# Recent Activity (April 2026)
+
+- **v0.7.17** released (Apr 13): Bug fix — always register in coordinator after registering in local (PR #161 by itzmanish)
+- **PR #163** (Apr 14, [[mike-english]]): Aligning mlog qlog output with draft-pardue-moq-qlog-moq-events-03 (+346/−242, 6 files). Includes epoch-relative timestamps, typed parameter formatting, nested control messages within a `message` object, `request_id` mapping, and authorization token redaction. Addresses feedback from Lucas Pardue at IETF 125.
+- **PR #157** (Apr 9, [[suhas-nandakumar]]): SUBSCRIBE_NAMESPACE/PUBLISH relay forwarding with subscriber registry, upgraded web-transport crates to v0.10
+
+# NAB Show 2026
+
+Cloudflare's moq-rs relay network is a key component in multiple NAB demonstrations:
+- **Wowza + Cloudflare**: Live CMAF-to-MoQ demo at booth W2300
+- **Bitmovin Player Web X**: Sub-second playback tested against Cloudflare's 330+ city relay network
 
 # Interop
 

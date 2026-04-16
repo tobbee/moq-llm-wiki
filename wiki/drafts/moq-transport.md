@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-15
+last_updated: 2026-04-16
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -41,7 +41,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-15)
+# Active Issues (as of 2026-04-16)
 
 ## Design Issues
 - **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
@@ -56,13 +56,14 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 
 ## Open PRs
 - **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
-- **PR #1604** - Joining FETCH with subscription (implements #1602)
+- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review from Gwendal Simon on priority/parameter edge cases (Apr 15)
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme
 - **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses
-- **PR #1562** - RFC: Add Session-Level Tracks reserved namespace
+- **PR #1562** - RFC: Add Session-Level Tracks reserved namespace — **4 approvals** (ianswett, sharmafb, vasilvv, suhasHere), nearing merge
+- **PR #1378** - SWITCH for Client-Side ABR — **major redesign** Apr 15-16: replaced FETCH+SUBSCRIBE delivery with relay-initiated PUBLISH + inline catch-up (see [[switch-abr]])
 
 ## Recently Merged
 - **PR #1599** - Move normative text on Track Alias
