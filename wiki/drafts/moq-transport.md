@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-16
+last_updated: 2026-04-17
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -41,31 +41,33 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-16)
+# Active Issues (as of 2026-04-17)
 
 ## Design Issues
 - **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
 - **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
 - **#1598** - Why PUBLISH_OK not REQUEST_OK? (Needs PR, Editorial & Minor Design)
-- **#1585** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - **#1582** - Caching and propagation of REQUEST_ERRORs (Design)
-- **#1581** - Request cancellation should be able to specify an error code
+- **#1581** - Request cancellation should be able to specify an error code (addressed by PR #1606)
 - **#1578** - Bikeshed: `Largest Object` should be `Next Object`
-- **#1550** - Properties Type collision between moq-16 and loc-01
+- **#1550** - Properties Type collision between moq-16 and loc-01 (LOC issue #10; loc-02 also has collisions per [[alan-frindell]] Apr 16)
+- **#1507** - (Referenced by Session-Level Tracks extension point)
 - **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
 
 ## Open PRs
+- **PR #1606** - Generalize stream reset codes to all request streams, add GOING_AWAY / EXPIRED_AUTH_TOKEN / SESSION_CLOSED, align TOO_FAR_BEHIND and EXPIRED codes with PUBLISH_DONE, rename registry ([[alan-frindell]], Apr 16). Fixes #1581.
 - **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
-- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review from Gwendal Simon on priority/parameter edge cases (Apr 15)
-- **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE
+- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme
 - **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses
-- **PR #1562** - RFC: Add Session-Level Tracks reserved namespace — **4 approvals** (ianswett, sharmafb, vasilvv, suhasHere), nearing merge
-- **PR #1378** - SWITCH for Client-Side ABR — **major redesign** Apr 15-16: replaced FETCH+SUBSCRIBE delivery with relay-initiated PUBLISH + inline catch-up (see [[switch-abr]])
+- **PR #1542** - Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE (0x50, namespace discovery) and SUBSCRIBE_TRACKS (0x51, track subscriptions) ([[alan-frindell]], updated Apr 16). Removes SUBSCRIBE_NAMESPACE_OPTIONS + BOTH mode; adds TRACK_NAMESPACE_PREFIX (0x34) for REQUEST_UPDATE prefix changes. Fixes #1458.
+- **PR #1378** - SWITCH for Client-Side ABR — relay-initiated PUBLISH + inline catch-up design; Apr 16 polish pass by Gwendal Simon. See [[switch-abr]].
 
 ## Recently Merged
+- **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE (Apr 16, fixes #1585)
+- **PR #1562** - RFC: Add Session-Level Tracks reserved namespace (**merged Apr 16** by [[alan-frindell]]) — reserves `.session` namespace tuple[0] for transport-internal tracks; relays MUST NOT forward; unknown session tracks MUST be rejected with NOT_SUPPORTED; IANA registry established under Specification Required policy
 - **PR #1599** - Move normative text on Track Alias
 - **PR #1597** - Consistently use MOQT for protocol references
 - **PR #1595** - Allow 7-byte varint and non-minimal encodings
@@ -89,6 +91,9 @@ Draft-17 uses ALPN strings for version negotiation:
 - [[moq-privacy-pass]] - Authentication for MOQT
 
 # Mailing List
+
+## REWIND Consensus Call (Apr 16, 2026)
+Chair [Magnus Westerlund](mailto:magnus.westerlund@ericsson.com) opened a consensus call on how to proceed with [draft-duke-moq-subscribe-rewind](https://martinduke.github.io/draft-duke-moq-subscribe-rewind/draft-duke-moq-subscribe-rewind.html) following [[interim-meetings|interim-13]]. Three options on the ballot: (1) no action until MOQT is published, (2) adopt as an MOQT extension, (3) use as the basis for a PR to merge when editors decide. Deadline: **May 1, 2026**. The draft targets issues #861, #1039, #1358, #1362, and #1386 plus Boulder-meeting concerns about head-of-line blocking in Joining Fetch.
 
 ## Consensus Call on draft-17 (March 2026)
 [[martin-duke]] initiated a consensus call on the mailing list (2026-03-24) for draft-17 changes. The thread received responses through April 10, 2026.

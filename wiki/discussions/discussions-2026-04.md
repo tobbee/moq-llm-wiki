@@ -2,7 +2,7 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-16
+last_updated: 2026-04-17
 status: current
 ---
 
@@ -157,6 +157,86 @@ Quortex PowerVu & MEG providing "next-generation MoQ track-based distribution" f
 
 This represents a significant milestone for MoQ commercialization — major CDN, player, encoder, and platform vendors are all demonstrating interoperable MoQ workflows simultaneously.
 
+# Mailing List & GitHub Activity (Apr 16–17)
+
+## REWIND Consensus Call (Apr 16)
+Magnus Westerlund (MoQ chair) opened a formal consensus call on the mailing list following the [[interim-meetings|interim-13 discussion on Apr 13]] about [Martin Duke's REWIND proposal](https://martinduke.github.io/draft-duke-moq-subscribe-rewind/draft-duke-moq-subscribe-rewind.html). WG members asked to pick one of three options by **May 1, 2026**:
+1. **No action** until MOQT is published (defer joining/rewind work for V1)
+2. **Adopt as extension** — take the draft as the basis for an MOQT extension
+3. **PR approach** — use the draft as the foundation for a PR to merge into MOQT when editors deem it ready
+
+Magnus noted there is "a lot of interest to do something in this space but little agreement on the key properties of a solution." The draft aims to resolve issues #861, #1039, #1358, #1362, and #1386 along with Boulder meeting concerns about head-of-line blocking in Joining Fetch. Alternative proposals are welcome subject to the same consensus process.
+
+## Interim-13 Minutes Posted (Apr 16)
+Magnus Westerlund published [minutes for interim-13 (Apr 13)](https://datatracker.ietf.org/meeting/interim-2026-moq-13/materials/minutes-interim-2026-moq-13-202604131630-01). Key points:
+
+- **REWIND core tension**: Group debated whether REWIND should be reliable. [[luke-curley]] and [[victor-vasiliev]] worried unreliable delivery based on cache state undermines utility. Some suggested relays could "cheat" by fetching upstream data, but [[alan-frindell]] flagged this creates substantial implementation complexity for relay operators.
+- **Joining strategy debate**: Cullen Jennings advocated "pushing the complexity of joining to the client library," while [[will-law]] countered that relays — with direct cache visibility — make faster decisions and save round-trip times.
+- **Decision**: REWIND will remain a **separate experimental extension** rather than merge into the core transport draft.
+- **Action items**: Editors will develop `FETCH` timeout and subgroup filter PRs for immediate head-of-line-blocking relief. Community discussion continues on "Largest Group" filters and intent-based joining.
+- **Next meetings**: Virtual interims April 27 (moq-14) and May 11 (moq-15), then London in June.
+
+# GitHub Activity (Apr 16–17)
+
+## moq-transport
+
+**PR #1562 (Session-Level Tracks) — MERGED (Apr 16)**:
+[[alan-frindell]]'s proposal to reserve the `.session` namespace tuple for session-level tracks was merged by Alan on Apr 16 at 13:38 UTC. Relays MUST NOT forward `.session` subscriptions, and unrecognized session-level tracks MUST be rejected with `NOT_SUPPORTED`. Establishes an IANA registry for session-level track names under Specification Required policy. Enables extending transport functionality via existing subscription/object machinery. Useful for issue #1507. See [[moq-transport]].
+
+**PR #1596 (Exclude own tracks from SUBSCRIBE_NAMESPACE) — MERGED (Apr 16)**:
+Merged by [[alan-frindell]] one minute after #1562. A 4-line change fixing issue #1585 — ensures a client does not receive notifications for its own published tracks via SUBSCRIBE_NAMESPACE.
+
+**PR #1606 (Stream reset codes) — NEW (Apr 16)**:
+[[alan-frindell]] opened a PR generalizing stream reset error codes to all request streams (not just subgroup streams). Changes:
+- Move stream reset code definitions earlier in the spec
+- Add `GOING_AWAY` (0x4), `EXPIRED_AUTH_TOKEN` (0x7), `SESSION_CLOSED`
+- Renumber `UNKNOWN_OBJECT_STATUS` (0x4 → 0x6) to make room for GOING_AWAY
+- Align `TOO_FAR_BEHIND` to 0x5 in both `PUBLISH_DONE` and stream reset registries
+- Renumber `EXPIRED` to 0x6 in `PUBLISH_DONE`
+- Add SHOULD recommendation to send FIN after PUBLISH_DONE
+- Rename "Data Stream Reset Error Codes" registry to "Stream Reset Error Codes"
+Fixes #1581.
+
+**PR #1542 (Split SUBSCRIBE_NAMESPACE) — Updated (Apr 16)**:
+[[alan-frindell]] pushed a rework so the single `SUBSCRIBE_NAMESPACE` message (0x11) is replaced with two separate messages: `SUBSCRIBE_NAMESPACE` (0x50) for namespace discovery (NAMESPACE / NAMESPACE_DONE) and `SUBSCRIBE_TRACKS` (0x51) for track subscriptions (PUBLISH). Removes the `SUBSCRIBE_NAMESPACE_OPTIONS` parameter and the `BOTH` mode entirely — behavior is now determined by message type. Adds a new `TRACK_NAMESPACE_PREFIX` parameter (0x34) allowing `REQUEST_UPDATE` to change the prefix of an established subscription without tearing down the stream. Fixes #1458.
+
+**PR #1604 (Joining FETCH) — Updated (Apr 16)**:
+Gwendal Simon added a new comment explicitly connecting PR #1604 to his [[switch-abr|SWITCH]] redesign (#1378). He proposes that SWITCH's catch-up data be delivered on the same PUBLISH bidi as live objects (with higher QUIC transmission priority), implemented by having the relay follow the PUBLISH message with a FETCH_HEADER inline — effectively a **relay-proactive variant** of what #1604 proposes (co-locating FETCH data on the PUBLISH bidi, initiated by the Relay rather than the Subscriber).
+
+**PR #1378 (SWITCH) — Continued polish (Apr 16)**:
+[[gwendal-simon|Gwendal Simon]] pushed ~10 more cleanup commits refining the SWITCH prose (consistent track terminology, trimmed redundant sections, clearer failure flow, polished relay-switch and error-handling sections). See [[switch-abr]].
+
+## moq-wg/loc
+
+**Issue #10 (Properties Type collision)** got a new comment from [[alan-frindell]] (Apr 16): "fwiw loc-02 also has collisions. I recommend changing the next LOC to use the highest possible one-byte code points so we don't have problems again." Active discussion: 0x02 / 0x04 collide between moqt-17 and loc-01/02. [[suhas-nandakumar]] previously committed to fixing both drafts.
+
+## Implementation Activity (Apr 16–17)
+
+### [[moq-dev]] — Major day (Apr 16–17)
+[[luke-curley]] landed a burst of 14+ PRs in ~24 hours:
+- **PR #1319 (merged Apr 17)**: Change broadcast replacement strategy to **queue backups** instead of reannouncing. New broadcasts on an active path are now held in a FIFO backup queue; when the active broadcast closes, the oldest backup is promoted. Avoids unnecessary reannouncements when multiple broadcasts are published in quick succession.
+- **PR #1311 (merged Apr 16)**: `moq-relay` auth module refactor — `AuthError` no longer swallows transport errors; uses `thiserror`'s `#[from]` so callers can inspect cause. Fixes the PublicAccess.api flow (sets `claims.root` correctly, only calls the API with zero overlap to static prefixes, propagates HTTP errors as `ApiUnavailable`). Adds ~15 new tests using `wiremock` covering success/404/500/network/decode/cache paths plus an integration test standing up an `axum-server` with self-signed CA + `WebPkiClientVerifier` to verify `--auth-tls-identity` is actually presented during TLS handshake.
+- **PR #1308 (merged Apr 16)**: Replace `--identity` (single bundled PEM) with separate `--cert` and `--key` flags across client, server, and auth TLS configs. Each flag parses PEM files for only the relevant content, matching curl's behavior.
+- **PR #1315, #1313, #1312** (merged Apr 16): moq-boy game server fixes — replaced `capybara` with `songbird` and `fofk` with `runiestory`; ROMs on R2; volume slider + lower default volume; keyboard input fix.
+- **PR #1316 (merged Apr 16)**: `moq-relay` — inline landing page HTML to fix Nix build.
+- **PR #1317, #1314, #1305 (releases)**: patch bumps; moq-lite 0.15.14, moq-cli 0.7.18, moq-clock 0.10.16, moq-ffi 0.2.6.
+- **PR #1318 (open)**: Adding raw (non-media) track publishing/consuming to the Python `py_lib` — new `RawProducer`/`RawConsumer` classes wrapping FFI `MoqRawProducer`/`MoqRawConsumer`, with `publish_raw()` and `subscribe_raw()` on `BroadcastProducer`/`BroadcastConsumer`. Author: Lullabee.
+
+### [[moqtail]] — More draft-16 cleanup (Apr 16)
+- **PR #164 (merged)**: `refactor: request error` — unified all ERROR messages under `REQUEST_ERROR` per draft-16 (Alperen Fatih Zengin).
+- **PR #165 (merged)**: Cleaned up a draft-14-era hack that used a fake `SUBSCRIBE` message to establish subscriptions with `PUBLISH`. Draft-16's ability to update publish messages makes the hack unnecessary (Alperen Fatih Zengin).
+- **PR #169 (open)**: "Fix/message parameters fix" — updates fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (key-value pairs from older drafts were still in place).
+- **PR #145 (open)**: Umbrella draft-16 tracking PR (+12,200 / −10,236 by Zafer Gürel).
+
+### google/quiche (Apr 16)
+- Commit `ba02ee8`: "Permanently cancel subgroups if the stream has STOP_SENDING."
+
+### Others
+- **[[moq-rs]]**: No new activity since Apr 14 (PR #163 qlog alignment still open).
+- **video-dev/[[moq-js]]**: Still quiet since mid-March.
+- **[[quiche-moq]]**: No new MoQT-directory commits since Apr 16.
+- **[[openmoq]] (moqx)**: No new activity this window.
+
 # GitHub Activity (Apr 15–16)
 
 ## moq-transport
@@ -203,26 +283,30 @@ Five draft-16 PRs merged, representing a major push toward draft-16 compliance:
 
 **video-dev/[[moq-js]]**: No activity since mid-March.
 
-# Interop Runner (Apr 16)
+# Interop Runner (Apr 17)
 
-Unchanged at **23 pass / 68 fail / 14 skip** (105 tests). Same results as April 15. Latest run: 2026-04-16.
+**Regression to 18 pass / 73 fail / 14 skip** (105 tests) in the Apr 17 run (2026-04-17 00:32 UTC). Five tests flipped from pass to fail compared to Apr 15–16's 23/68/14 result. Investigation pending — the regression coincides with the large moqtail draft-16 merge and moq-dev/moq broadcast replacement and auth refactor changes that landed overnight.
 
 # Draft Status Watch
 
-- **[[moq-media-interop|draft-cenzano-moq-media-interop-03]]** expires in **7 days** (April 23). Still no renewal or version -04 published.
+- **[[moq-media-interop|draft-cenzano-moq-media-interop-03]]** expires in **6 days** (April 23). Still no renewal or version -04 published.
 - **MoQ Monthly #1** not yet published — #0 was published March 4 with "See you in April!" but no new issue yet.
+- **REWIND consensus call** closes **May 1, 2026** (14 days).
 
 # Key Themes
 
-1. **NAB Show MoQ showcase** - Biggest industry milestone: Wowza, Oracle, Bitmovin, Broadpeak, Synamedia, Ateme, and Cloudflare all demoing MoQ workflows at NAB (Apr 18–22)
-2. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind (-02 published), and Join Filters; PR #1604 getting detailed design feedback from Gwendal Simon
-3. **SWITCH redesign** - PR #1378 significantly reworked to use relay-initiated PUBLISH+catch-up instead of FETCH+SUBSCRIBE
-4. **Session-Level Tracks** - PR #1562 has 4 approvals, nearing merge
-5. **moqtail draft-16 push** - 5 PRs merged in one day, major unified message registry refactoring
-6. **moq-dev browser compat** - Luke Curley actively fixing Safari/Firefox issues, implementing ALPN fallback for Firefox
-7. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility
-8. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary
-9. **Interop stable** - Runner holding at 23/68/14 with 11 implementations
-10. **London interim** - In-person interim June 11-12 at County Hall, London with hackathon + working sessions
-11. **CMSF ContentProtection** - DRM signaling merged into CMSF spec, with two implementations
-12. **media-interop expiry** - draft-cenzano-moq-media-interop-03 expires April 23, still no renewal
+1. **REWIND consensus call open (May 1 deadline)** - Magnus Westerlund opened a formal three-way consensus call following the interim-13 decision to keep REWIND as a separate experimental extension
+2. **Session-Level Tracks merged** - PR #1562 landed on Apr 16 reserving `.session` namespace tuple (IANA registry established)
+3. **NAB Show MoQ showcase** - Biggest industry milestone: Wowza, Oracle, Bitmovin, Broadpeak, Synamedia, Ateme, and Cloudflare all demoing MoQ workflows at NAB (Apr 18–22)
+4. **Joining mechanism convergence** - Active work to reconcile Joining Fetch, Rewind, and Join Filters; Gwendal Simon connects PR #1604 and SWITCH PR #1378 as client- vs relay-initiated variants of the same pattern
+5. **SWITCH redesign** - PR #1378 significantly reworked to use relay-initiated PUBLISH+catch-up instead of FETCH+SUBSCRIBE; prose polish continues
+6. **SUBSCRIBE_NAMESPACE split reworked** - PR #1542 now splits into SUBSCRIBE_NAMESPACE (0x50) for namespace discovery and SUBSCRIBE_TRACKS (0x51) for track subscriptions; new TRACK_NAMESPACE_PREFIX param
+7. **moqtail draft-16 push continues** - More cleanup landed Apr 16: unified REQUEST_ERROR, publish-without-fake-subscribe, message params fixes
+8. **moq-dev broadcast/auth work** - Luke Curley's backup-queue broadcast replacement and major moq-relay auth refactor with wiremock test suite
+9. **Non-media use cases** - Alan Frindell's GraphQL subscriptions analysis (Apr 13) highlights draft-17 parameter inflexibility
+10. **Protocol simplification** - Growing consensus that required-request-id may be unnecessary
+11. **Interop runner regression** - Drop from 23/68/14 to 18/73/14 in the Apr 17 run (5 tests flipped), coinciding with the moqtail draft-16 and moq-dev auth/broadcast changes
+12. **London interim** - In-person interim June 11-12 at County Hall, London
+13. **CMSF ContentProtection** - DRM signaling merged into CMSF spec, with two implementations
+14. **media-interop expiry** - draft-cenzano-moq-media-interop-03 expires April 23, still no renewal
+15. **LOC Properties type collision** - Alan flags that loc-02 still has the same 0x02/0x04 collisions with moqt — needs fresh code points

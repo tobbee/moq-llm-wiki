@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-16
+last_updated: 2026-04-17
 status: current
 ---
 
@@ -31,12 +31,18 @@ Draft-14 compliant MOQ Transport protocol libraries for publisher, subscriber, a
 
 # Draft-16 Progress (April 2026)
 
-Major push toward draft-16 compliance with 5 PRs merged on April 14-15:
+Major push toward draft-16 compliance. PRs merged April 14–16:
 - **PR #163**: Unified registry mapping messages and request_ids (+937/−1398, 47 files) — centralized correlation of REQUEST_OK, REQUEST_ERROR, and REQUEST_UPDATE messages with source requests
 - **PR #160**: SubgroupHeader per draft-16 §10.4.2 (24 new type definitions, by ctllmp)
 - **PR #162**: Consolidated OK messages into unified REQUEST_OK (fatih-alperen)
 - **PR #159**: REQUEST_UPDATE refactoring (fatih-alperen)
 - **PR #157**: Datagram draft-16 compatibility (beyzademirr)
+- **PR #164 (merged Apr 16)**: `refactor: request error` — unified all ERROR messages under REQUEST_ERROR per draft-16 (fatih-alperen)
+- **PR #165 (merged Apr 16)**: Removed draft-14-era hack that used a fake SUBSCRIBE to establish subscriptions with PUBLISH. Draft-16 publish-update makes the hack unnecessary (fatih-alperen).
+
+**Open**:
+- **PR #169**: "Fix/message parameters fix" — update fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (older drafts' key-value pairs were still in place).
+- **PR #145**: Umbrella draft-16 tracking PR (+12,200 / −10,236, zafergurel).
 
 A v0.9.1 release is pending (PR #173), including a fix for a race condition causing negative object deltas.
 

@@ -2,11 +2,63 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-16
+last_updated: 2026-04-17
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-17 - Wiki update: REWIND consensus call, Session-Level Tracks merged, interop regression
+
+**Operation**: Update
+**Sources**:
+- Slack #moq: No new messages (Endel joined #moq, #moq-rs, #moq-js on Apr 16 — no substantive posts)
+- GitHub: moq-transport — PR #1562 (Session-Level Tracks) + PR #1596 (own-track filter) MERGED Apr 16; new PR #1606 (stream reset codes); PR #1542 (SUBSCRIBE_NAMESPACE split) reworked; PR #1378 SWITCH polish; PR #1604 new Gwendal Simon comment
+- GitHub: moq-wg/loc — Issue #10 new Alan Frindell comment (loc-02 also has collisions)
+- GitHub: moq-dev/moq — 10+ PRs merged Apr 16–17 (broadcast backup queue, auth refactor, --cert/--key split, moq-boy games, landing page)
+- GitHub: moqtail — 2 draft-16 cleanup PRs merged (REQUEST_ERROR unification, publish hack removal); PR #169 open
+- GitHub: cloudflare/moq-rs, video-dev/moq-js, birneee/quiche_moq — no new activity
+- GitHub: google/quiche — 1 MoQT commit (cancel subgroups on STOP_SENDING)
+- Mailing list: 2 new threads (REWIND consensus call + interim-13 minutes) from Magnus Westerlund
+- IETF Datatracker: No new WG draft versions; no new individual drafts
+- Interop runner: **Regression** to 18/73/14 (from 23/68/14) in Apr 17 00:32 UTC run
+- MoQ Monthly: Still only #0 (March 4). No #1 yet.
+- tobbee/moq-llm-wiki: No new issues (all 3 existing closed)
+
+**Pages updated**: discussions-2026-04.md, moq-transport.md, joining-fetch.md, moq-dev.md, moqtail.md, interop-runner.md, index.md
+
+**Key findings**:
+
+### Spec activity
+- **PR #1562 MERGED (Apr 16)**: Session-Level Tracks — reserves `.session` namespace tuple[0] for transport-internal tracks. Relays MUST NOT forward; unrecognized tracks MUST be rejected with NOT_SUPPORTED. IANA registry established under Specification Required policy. Useful for extending transport via existing sub/obj machinery (referenced by #1507).
+- **PR #1596 MERGED (Apr 16)**: Exclude your own tracks from SUBSCRIBE_NAMESPACE (4-line fix for #1585).
+- **PR #1606 NEW (Apr 16)**: Alan Frindell generalizes stream reset codes to all request streams. Adds GOING_AWAY (0x4), EXPIRED_AUTH_TOKEN (0x7), SESSION_CLOSED. Renumbers UNKNOWN_OBJECT_STATUS 0x4→0x6. Aligns TOO_FAR_BEHIND at 0x5 and EXPIRED at 0x6 in PUBLISH_DONE. Fixes #1581.
+- **PR #1542 reworked (Apr 16)**: Split into SUBSCRIBE_NAMESPACE (0x50, namespace discovery) + SUBSCRIBE_TRACKS (0x51, track subscriptions). Removes SUBSCRIBE_NAMESPACE_OPTIONS and BOTH mode entirely — behavior now determined by message type. Adds TRACK_NAMESPACE_PREFIX (0x34) for REQUEST_UPDATE prefix changes. Fixes #1458.
+- **PR #1604 (Apr 16)**: Gwendal Simon explicitly connects #1604 and SWITCH #1378 — same catch-up-on-PUBLISH-bidi pattern; difference is subscriber- vs relay-initiated.
+- **PR #1378 (Apr 16)**: Continued prose polish — consistent terminology, trimmed redundant sections, clearer failure flow.
+
+### Mailing list
+- **REWIND consensus call (Apr 16)**: Magnus Westerlund opened formal three-way vote. Options: (1) no action until MOQT published, (2) adopt as extension, (3) basis for PR to merge. Deadline **May 1, 2026**. Follows interim-13 decision to keep REWIND as separate experimental extension.
+- **Interim-13 minutes (Apr 16)**: Luke Curley + Victor Vasiliev worried REWIND's cache-dependent unreliability undermines utility; Alan Frindell flagged the "relay cheats by fetching upstream" idea creates substantial implementer complexity. Cullen Jennings vs Will Law on where joining complexity belongs (client library vs relay). Editors will develop FETCH timeout and subgroup filter PRs for immediate HOL relief.
+
+### Implementation activity
+- **moq-dev/moq**: Major day — broadcast backup queue (PR #1319, FIFO, avoids reannounces), major moq-relay auth refactor with ~15 new tests using wiremock + axum-server TLS integration test (PR #1311), --identity replaced with --cert/--key (PR #1308), moq-boy game server maintenance (capybara→songbird, fofk→runiestory), Python raw-track support (PR #1318 open). Releases: moq-lite 0.15.14, moq-cli 0.7.18, moq-clock 0.10.16, moq-ffi 0.2.6.
+- **moqtail**: REQUEST_ERROR unification (PR #164), removed draft-14-era fake-SUBSCRIBE hack for PUBLISH (PR #165), message parameters PR #169 open.
+- **google/quiche**: Commit cancels subgroups permanently on STOP_SENDING.
+- **cloudflare/moq-rs**: No new activity since Apr 14.
+- **video-dev/moq-js**: Still quiet since mid-March.
+
+### LOC Properties collision
+- Alan Frindell comments on loc issue #10: loc-02 still collides with moqt-17 on Properties Type 0x02/0x04. Recommends moving to highest one-byte code points in next LOC revision.
+
+### Interop regression
+- **18/73/14 (Apr 17)** vs **23/68/14 (Apr 16)** — 5 tests flipped from pass to fail. Regression coincides with moqtail draft-16 merges and moq-dev broadcast/auth changes. Pair-level investigation needed.
+
+### Status watch
+- **draft-cenzano-moq-media-interop-03** expires in 6 days (April 23) — no renewal
+- **REWIND consensus call** closes May 1, 2026 (14 days)
+
+---
 
 # 2026-04-16 - Wiki update: NAB Show MoQ showcase, SWITCH redesign, implementation activity
 

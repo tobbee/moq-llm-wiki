@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-16
+last_updated: 2026-04-17
 status: current
 ---
 
@@ -58,12 +58,19 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Recent Activity (April 2026)
 
+## Broadcast Queuing, Auth Refactor, TLS Flags (Apr 16–17)
+- **PR #1319** (merged Apr 17): Broadcast **backup queue** replaces the prior replace-and-reannounce strategy. A newly published broadcast on an already-active path is held in a FIFO queue; when the active broadcast closes, the oldest backup is promoted. Avoids unnecessary reannounces on rapid republishing.
+- **PR #1311** (merged Apr 16): Major `moq-relay` auth refactor. `AuthError` now propagates via `thiserror` `#[from]`, PublicAccess.api flow fixed (sets `claims.root`, only calls API with zero overlap to static prefixes, propagates HTTP errors as `ApiUnavailable`). ~15 new tests using `wiremock` covering success/404/500/network/decode/cache paths, plus an integration test with `axum-server` + self-signed CA + `WebPkiClientVerifier` verifying `--auth-tls-identity` is presented during TLS handshake.
+- **PR #1308** (merged Apr 16): Replace `--identity` (single bundled PEM) with separate `--cert` and `--key` flags — matches curl's behavior.
+- **PR #1315/#1313/#1312/#1316** (merged Apr 16): moq-boy game server maintenance — `capybara`→`songbird`, `fofk`→`runiestory` (ROMs on R2), volume slider, keyboard input fix, inline landing page HTML for Nix build.
+- **PR #1318** (open): Python `py_lib` raw (non-media) track publishing/consuming — `RawProducer`/`RawConsumer` classes wrapping FFI types; `publish_raw()`/`subscribe_raw()` methods (author: Lullabee).
+- **Releases** (Apr 17): moq-lite 0.15.14, moq-cli 0.7.18, moq-clock 0.10.16, moq-ffi 0.2.6.
+
 ## Browser Compatibility Push (Apr 15–16)
 [[luke-curley]] landed a burst of fixes and improvements:
 - **Safari fixes**: avc3→avc1 codec string compatibility, CSS grid layout fix
 - **Firefox fixes**: AudioDecoder 6-channel output for stereo Opus, WebTransport BiDi stream bug workaround (force WebSocket fallback on Firefox)
 - **moq-lite negotiation**: Fallback SETUP negotiation for Lite03+ when ALPN unavailable (Firefox workaround)
-- **TLS config**: Refactored `--identity` into separate `--cert` and `--key` flags
 - **Token encoding**: Default to base64url for JWK output
 - **Relay landing page**: HTML page for non-MoQ browser clients directing to moq.dev
 - **Release**: moq-cli v0.7.18, moq-relay v0.10.21

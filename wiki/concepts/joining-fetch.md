@@ -2,7 +2,7 @@
 title: "Joining Fetch"
 tags: [concept, transport, live-streaming]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-17
 status: current
 ---
 
@@ -35,6 +35,12 @@ A meeting of "Joining fetch dissenters" was organized by [[alan-frindell]] (2026
 ## Key Issue
 - **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream (latest open issue)
 - **#1601** (Closed) - Joining FETCH session errors are subject to a race condition
+
+## REWIND Consensus Call (Apr 16, 2026)
+Chair Magnus Westerlund opened a consensus call on the mailing list (deadline **May 1**) on how to proceed with Martin Duke's REWIND draft. Three options: (1) no action until MOQT is published, (2) adopt as an MOQT extension, (3) basis for a PR to merge into MOQT. Interim-13 (Apr 13) decided REWIND will remain a separate experimental extension rather than merge into the core transport draft; editors will develop FETCH timeout and subgroup filter PRs for immediate HOL-blocking relief. See [[interim-meetings]] and [[discussions-2026-04#REWIND Consensus Call (Apr 16)|discussions-2026-04]].
+
+## Relay-initiated vs Subscriber-initiated Catch-up (Apr 16)
+Gwendal Simon connected PR #1604 (subscriber-initiated Joining FETCH on the SUBSCRIBE/PUBLISH stream) to his [[switch-abr|SWITCH]] PR #1378 redesign: SWITCH delivers catch-up data on the same PUBLISH bidi as live objects (with higher QUIC transmission priority) — a **relay-proactive variant** of #1604. In both designs, catch-up bytes share the bidi with live objects; the difference is whether the subscriber or the relay initiates. See [[switch-abr]].
 
 # Related
 
