@@ -2,7 +2,7 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-15
+last_updated: 2026-04-18
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
@@ -42,8 +42,8 @@ CMSF originated as **draft-law-moq-carp-00** ("CARP - a CMAF compliant implement
 
 [PR #18](https://github.com/moq-wg/cmsf/pull/18) (merged Apr 14 by [[will-law]]) added ContentProtection signaling to the CMSF spec. The design, proposed by Torbjörn Einarsson ([[moqlivemock|Eyevinn]]), is roughly based on DASH/DASH-IF content protection signaling:
 
-- Defines `contentProtections` with `refID`s in the catalog
-- Each encrypted track uses a `contentProtectionRefIDs` array referencing available protections
+- Defines `contentProtections` as a top-level array of protection descriptors with `refID`s in the catalog
+- Each encrypted track references applicable protections via a `contentProtectionRefIDs` array
 - Supports the same attributes as DASH/DASH-IF: Widevine, PlayReady, FairPlay, and ECCP (clear key)
 - Addresses [issue #8](https://github.com/moq-wg/cmsf/issues/8)
 
@@ -52,6 +52,11 @@ CMSF originated as **draft-law-moq-carp-00** ("CARP - a CMAF compliant implement
 - [[shaka-player]] — [PR #9972](https://github.com/shaka-project/shaka-player/pull/9972) merged Apr 14, adding CMSF contentProtection support
 
 Key rotation is not yet defined — future work can build on this for live catalogs with new `refID`s.
+
+# Open Issues & PRs
+
+- **Issue #17** (Apr 14, DenizUgur) - Explicit signalling of DRM/C2PA key-rotation or init segment updates. Proposals discussed at MSF Feb 5 meeting: (a) separate init-segment track with sync concerns, or (b) inline update signaling. Links to the broader [[moq-msf]] `initTrack` debate.
+- **PR #19** (Apr 14, wilaw) - Clarify media content and group packaging requirements (fixes #12)
 
 # Related
 

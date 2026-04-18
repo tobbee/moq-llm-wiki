@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 status: current
 ---
 
@@ -27,7 +27,12 @@ The interop runner automates testing between MOQ implementations, publishing res
 8. **libquicr** - [[libquicr|Cisco's C++ library]]
 9. **moqtail** - [[moqtail|Zafer Gurel's Rust/TS implementation]]
 10. **quiche-moq** - Google's C++ MoQT ([[martin-duke]], [[victor-vasiliev|Victor Vasiliev]])
-11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (added Apr 2026)
+11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (PR #59 merged Apr 11)
+
+# Pending PRs
+
+- **[PR #63](https://github.com/englishm/moq-interop-runner/pull/63)** (Apr 12–17, Torbjörn Einarsson) — Add `mlmtest` from [[moqlivemock]] as an interop-runner client. Supports **both draft-14 and draft-16** via a `DRAFT` env var (auto-tries both if unset). Published image builds from the moqlivemock repo.
+- **[PR #57](https://github.com/englishm/moq-interop-runner/pull/57)** (Lorenzo Miniero, open since Mar 19) — Add imquic relay and client docker images.
 
 # Current Target
 

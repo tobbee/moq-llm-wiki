@@ -2,7 +2,7 @@
 title: "NMSF - Neural Video Codec Packaging for MOQT Streaming Format"
 tags: [draft, media, neural-codec, individual]
 date: 2026-04-13
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-herz-moq-nmsf/"

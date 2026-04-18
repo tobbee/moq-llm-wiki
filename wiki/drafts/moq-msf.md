@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -39,7 +39,7 @@ MSF defines how media is organized into MOQT tracks:
 
 # Active Issues (moq-wg/msf)
 
-- **#153** - `initTrack` does not work
+- **#153** - `initTrack` does not work. Active design debate (Apr 14): [[will-law]] pivoted from "remove initTrack" to proposing in-band signaling — a standard MOQT Object property referencing an integer init ID defined in the catalog, enabling mid-stream init switching without a separate sync'd init track. Victor Vasiliev agrees in-band is the only race-free approach.
 - **#150** - Wall clock is problematic
 - **#149** - Catalog Mapping to MoQT
 - **#148** - Media Mapping to MoQT
@@ -54,6 +54,7 @@ MSF defines how media is organized into MOQT tracks:
 
 # Recent PRs
 
+- **PR #118** (Merged Apr 13) - Add details of authorization flows (suhasHere; closes issue #119)
 - **PR #152** (Merged Apr 9) - Clarify MSF URL construction and fragment parameters
 - **PR #143** (Merged) - Break the monolith table into separate tables and sections
 - **PR #141** (Merged Apr 9) - Add support for InitTracks
@@ -61,7 +62,6 @@ MSF defines how media is organized into MOQT tracks:
 - **PR #124** (Merged Apr 9) - Clarify first object in event and media timeline track
 - **PR #122** (Open) - Initial text on zapping
 - **PR #121** (Merged Apr 9) - Pub tracks, logs and metrics
-- **PR #118** (Merged Apr 13) - Add details of authorization flows
 
 # Incomplete Sections
 

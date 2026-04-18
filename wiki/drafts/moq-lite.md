@@ -2,7 +2,7 @@
 title: "Media over QUIC - Lite (moq-lite)"
 tags: [draft, transport, individual]
 date: 2026-04-13
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 draft_version: "04"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/"

@@ -2,7 +2,7 @@
 title: "Luke Curley"
 tags: [person, implementer]
 date: 2026-04-13
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 ---
 
@@ -25,3 +25,4 @@ status: current
 - Achieved v17 interop with [[lorenzo-miniero]]'s implementation (2026-04-01)
 - Active in ALPN negotiation design for qmux versioning
 - Clarified PUBLISH_NAMESPACE vs SUBSCRIBE_NAMESPACE behavior for generic libraries (2026-03-23)
+- Published **MoQ Boy** demo (2026-04-17) — Game Boy emulator streaming via MOQT at moq.dev/blog/moq-boy/. Highlights SUBSCRIBE_NAMESPACE as "extremely powerful"; encoding pauses with no active subscriber; player auto-manages subscriptions by visibility/audio state.

@@ -2,7 +2,7 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 ---
 
@@ -53,7 +53,9 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - **GitHub**: [mondain/moqxr](https://github.com/mondain/moqxr)
 - Origin Publisher, Contribution, and Ingest CLI for OpenMOQ
 - C++
-- Updated: 2026-04-10
+- Latest release: **v0.2.1** (Apr 17, 2026) — draft-16 interop fixes
+- Prior: v0.2.0 (Apr 15) added draft-16 SUBSCRIBE KVP parser, dropped WebTransport subprotocol for draft-14, and made control-message handling non-blocking
+- Updated: 2026-04-17
 
 ## red5pro/moq-playa (planned)
 - Player component for OpenMOQ

@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 ---
 
@@ -10,8 +10,7 @@ status: current
 
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
-| **interim-2026-moq-13** | **2026-04-13** | REWIND slides (Joining Fetch alternatives). Agenda posted by Magnus Westerlund (Apr 9). Martin Duke responded on mailing list. |
-| **interim-2026-moq-14** | **2026-04-27** | |
+| **interim-2026-moq-14** | **2026-04-27** | Agenda TBD (as of Apr 17). |
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
 | **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day) |
@@ -32,6 +31,7 @@ In-person interim at **County Hall / The Riverside Building, Belvedere Road, Lon
 
 | Meeting | Date | Notes |
 |---------|------|-------|
+| interim-2026-moq-13 | 2026-04-13 | REWIND presentation by [[martin-duke]]. **Key decision**: REWIND will NOT go into core v1; editors land minimal band-aids (FETCH timeouts, subgroup filters). Formal consensus call to follow on 3 options (do nothing / extension / PR). Minutes posted Apr 16. Debate on relay vs. client complexity (Cullen Jennings vs. Will Law); Luke Curley + Victor Vasiliev flagged relay complexity risk. |
 | interim-2026-moq-12 | 2026-03-30 | Post-IETF 125. Minutes posted by Magnus Westerlund (Apr 9). Included SUBSCRIBE_NAMESPACE split discussion. |
 | IETF 125 Shenzhen | 2026-03-14 | 2 WG sessions |
 | interim-2026-moq-07 | 2026-02-23 | |

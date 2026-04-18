@@ -2,11 +2,72 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-18 - LargestGroup/CurrentGroup filter convergence (PR #1607)
+
+**Operation**: Update
+**Sources**:
+- Slack #moq / #moq-rs / #moq-js / #libquicr: nothing new since 2026-04-17 evening update
+- GitHub moq-wg repos: **PR #1607 (vasilvv, Apr 18)** — new Draft/RFC "Largest Available Group filter"; nothing else new
+- Mailing list: four new replies in "Consensus call on way forward on REWIND" thread ([[luke-curley]] Apr 17 and Apr 18, [[victor-vasiliev|Victor Vasiliev]] Apr 18, [[alan-frindell]] Apr 18) all coalescing around a LargestGroup / CurrentGroup filter
+- Implementation repos: moq-dev/moq merged PR #1327 (Luke, Apr 17 23:48 UTC) — fix TrackConsumer::read_frame respect start_at — and PR #1318 (Lullabee, Apr 17 23:39 UTC) — add JSON data to py_lib
+- IETF Datatracker: no new WG or individual draft versions
+
+**Pages updated**: concepts/joining-fetch-dissent.md, discussions/discussions-2026-04.md, drafts/moq-transport.md, index.md
+
+**Key findings**:
+
+*REWIND consensus thread converging on LargestGroup / CurrentGroup filter (Apr 17–18)*:
+- **Luke Curley, Apr 17**: argues FETCH is inherently HOL-prone; proposes **LargestGroup filter for SUBSCRIBE** to cover 99% of the join-live case.
+- **Luke Curley, Apr 18**: "Yeah, I just want to adopt CurrentGroup so we can make *some* progress."
+- **Victor Vasiliev, Apr 18**: "Not against the LargestGroup idea." Turns it into concrete **PR #1607** — current group only, always complete group, no relay backfill, "probably really easy to implement."
+- **Alan Frindell, Apr 18**: does not object; has drafted a parallel "CurrentGroupFill" PR in his own fork.
+- Practical direction: drop REWIND for v1; land a narrow SUBSCRIBE filter instead.
+
+*moq-transport PR #1607 — Largest Available Group filter (new, vasilvv, Apr 18)*: Draft/RFC. Sits alongside afrind/moq-transport#15 CurrentGroupFill and Luke's LargestGroup as three shapes of the same minimal filter direction.
+
+*moq-dev/moq late Apr 17*: Luke merged PR #1327 fixing TrackConsumer::read_frame to respect start_at. Lullabee merged PR #1318 adding JSON data support to py_lib.
+
+---
+
+# 2026-04-17 (evening) - Supplemental: moqlivemock mlmtest, moqxr v0.2.1, Alan's REWIND reply
+
+**Operation**: Update
+**Sources**:
+- Slack #moq (via MCP): new messages since morning update (Torbjörn on mlmtest PR #63, Paul Gregoire on moqxr v0.2.1, yuyou on moq-dev-rs v17 build, Torbjörn's Apr 12 moqlivemock dual-draft update)
+- GitHub moq-wg repos: minor churn only — PR #1378 SWITCH got new gwendalsimon review comments Apr 17
+- Implementation repos: cloudflare/moq-rs (release v0.7.17 on Apr 13), moq-dev/moq (heavy Apr 16-17 activity), video-dev/moq-js (Ali Begen UI work Apr 13-17), Quicr/libquicr (PUBLISH_OK filter), google/quiche (Apr 14-16 fixes), mondain/moqxr (v0.2.0 Apr 15, v0.2.1 Apr 17)
+- Mailing list: Alan Frindell's Apr 17 reply on REWIND consensus call (backs Option 1)
+
+**Pages updated**: discussions/discussions-2026-04.md, drafts/moq-transport.md, concepts/joining-fetch-dissent.md, implementations/openmoq.md, interop/interop-runner.md
+
+**Key findings**:
+
+*Alan Frindell on REWIND consensus (Apr 17)*: Backs **Option 1 — no action**. Argues FILL_TIMEOUT=0 (PR #1490, merged Apr 14) already removes the HOL-blocking scenarios REWIND was designed to fix. Recommends "stabilise around the core."
+
+*moqlivemock / Eyevinn stack update (Apr 12 + Apr 17)*: Torbjörn posted a substantial update — dual draft-14/16 auto-negotiation; new namespaces `cmsf/clear`, `cmsf/drm-cbcs`, `cmsf/ecpp-cbcs`; iOS Safari 26.4 via managed source buffers + EME. Interop-runner PR #63 opened Apr 12, updated Apr 17, adds `mlmtest` component as a runner client.
+
+*moqxr v0.2.0 + v0.2.1 releases (Apr 15 + Apr 17, Paul Gregoire / rwl4)*: Brings moqxr to working draft-16 base. v0.2.0 fixed SUBSCRIBE KVP parser, dropped WebTransport subprotocol for draft-14, unblocked unknown-control-message handling. v0.2.1 is additional draft-16 interop fixes.
+
+---
+
+# 2026-04-17 (late) - Supplemental: Luke Curley MoQ Boy demo
+
+**Operation**: Update
+**Sources**:
+- Mailing list: "[Moq] MoQ Boy" by Luke Curley (2026-04-17)
+- Blog: moq.dev/blog/moq-boy/
+
+**Key findings**: Game Boy emulator demo streaming via MOQT. Showcases SUBSCRIBE_NAMESPACE as a flow-control + discovery primitive: encoding/emulation pauses when no active SUBSCRIBE for a track; player auto-unsubscribes invisible/muted tracks; bidirectional emulator↔player namespace publishing with per-viewer authorization. Timely given PR #1542 (SUBSCRIBE_NAMESPACE split) and PR #1562 (`.session` reserved namespace, merged Apr 16).
+
+**Pages updated**: discussions/discussions-2026-04.md, people/luke-curley.md
+
+---
 
 # 2026-04-17 - Wiki update: REWIND consensus call, Session-Level Tracks merged, interop regression
 

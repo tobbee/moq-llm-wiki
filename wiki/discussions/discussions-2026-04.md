@@ -2,7 +2,7 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 status: current
 ---
 
@@ -10,8 +10,25 @@ Summary of active discussions in the MOQ ecosystem during April 2026.
 
 # Slack #moq Highlights
 
-## London Interim Visa Invitation (Apr 14)
-Aman Sharma asked in #moq about obtaining a letter of invitation for the London interim (for visa/travel purposes). [[alan-frindell]] tagged [[mike-english|Mike English]] on this.
+## moqlivemock `mlmtest` Interop Client PR (Apr 17)
+Torbjörn Einarsson opened [interop-runner PR #63](https://github.com/englishm/moq-interop-runner/pull/63) adding `mlmtest` — a new component from [[moqlivemock]] — as an interop-runner test client. Takes a `DRAFT` env var to pick draft-14 or draft-16, and auto-tries both. Already passes locally against most published endpoints. Tobbe also announced he is adding MSF/LOC and moq-mi support, with the goal of enabling proper **media interop** (not just transport interop) in the runner. See [[interop-runner]].
+
+## moqxr v0.2.1 Release — Draft-16 Ready (Apr 17)
+Paul Gregoire ([[openmoq|OpenMOQ / RED5]]) tagged [moqxr v0.2.1](https://github.com/mondain/moqxr/releases/tag/v0.2.1) on Apr 17, following v0.2.0 on Apr 15. Adds draft-16 interop fixes: SUBSCRIBE parser now reads the KVP parameter list, no WebTransport subprotocol is offered for draft-14, and unknown control messages are handled without blocking. Brings moqxr to a working draft-16 base. See [[openmoq]].
+
+## v17 Interop Build Issues (Apr 17)
+`yuyou` reported that the `builds/moq-dev-rs/build.sh` docker build in `englishm/moq-interop-runner` fails when trying to run their draft-17 server/client against the runner, and asked whether other public v17 endpoints exist. As of Apr 17 no public follow-up yet — tracks with the still-limited draft-17 interop surface (only [[luke-curley]]'s stack confirmed so far; see [[interop-status]]).
+
+## moqlivemock Update — Dual draft-14/16 + DRM (Apr 12)
+Torbjörn Einarsson posted a substantial update on moqlivemock and warp-player:
+- Auto-negotiates **draft-14 or draft-16**
+- New publishable namespaces: `cmsf/clear`, `cmsf/drm-cbcs` (Widevine / PlayReady / FairPlay), `cmsf/ecpp-cbcs` (ClearKey), plus `moq-test/interop` for interop testing
+- DRM signalling follows the [[moq-cmsf|CMSF]] PR #18 approach (now merged)
+- Catalog is fetchable via both FETCH and SUBSCRIBE (the latter is against current spec — see [[moq-cmsf]] catalog discussion)
+- Works with [[shaka-player]] and [[moqtail]] on the CMSF path
+- Client uses MSE/EME including on iOS Safari 26.4 with managed source buffers
+
+Demo: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io).
 
 ## Joining Fetch Restriction Removed (Apr 9)
 [[martin-duke]] asked if there's still a requirement that Joining FETCH only be with largest object subscribes. [[alan-frindell]] confirmed: "We did remove it. You can joining fetch any subscription at any time - it fetches to Joining Location." See [[joining-fetch]].
@@ -41,7 +58,7 @@ See [[track-properties]].
 - **Issue #119** (Closed Apr 13) - Add authz details
 
 ## moq-transport
-**Merged PRs**:
+**Merged PRs** (Apr 9-10 batch):
 - PR #1599 - Move normative text on Track Alias
 - PR #1597 - Consistently use MOQT for protocol references  
 - PR #1595 - Allow 7-byte varint and non-minimal encodings
@@ -50,27 +67,40 @@ See [[track-properties]].
 - PR #1540 - Allow coalescing REQUEST_UPDATE processing
 
 **New Issues**:
-- #1603 - What is the use case for required-request-id
-- #1602 - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
+- #1603 - What is the use case for required-request-id (Apr 10)
+- #1602 - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream (Apr 9)
 - #1601 (Closed) - Joining FETCH session errors race condition
 - #1600 (Closed) - Can the same Track be published multiple times into different namespaces?
 
-**New PRs**:
-- PR #1605 - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
-
-**Open PRs under review**:
+**New / Updated Open PRs** (since Apr 10):
+- PR #1607 (New, Apr 18) - **[Draft/RFC] Largest Available Group filter** ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay backfill. See [[joining-fetch-dissent]].
+- PR #1606 (New, Apr 16) - Generalize stream reset codes to all request streams, add new codes (GOING_AWAY 0x4, EXPIRED_AUTH_TOKEN 0x7, SESSION_CLOSED), align TOO_FAR_BEHIND/EXPIRED numbering in PUBLISH_DONE with stream reset registry ([[alan-frindell]]; fixes #1581)
+- PR #1605 (New, Apr 14) - Split DELIVERY_TIMEOUT into OBJECT_DELIVERY_TIMEOUT + SUBGROUP_DELIVERY_TIMEOUT ([[victor-vasiliev|Victor Vasiliev]]; fixes #667)
 - PR #1604 - Joining FETCH with subscription (implements #1602)
 - PR #1596 - Exclude your own tracks from SUBSCRIBE_NAMESPACE
 - PR #1593 - Allow framing single Objects without Subgroup ID
 - PR #1591 - Add flow control for Subscriptions
 - PR #1588 - Add internationalization statement for moqt URI scheme
 - PR #1586 - Delta encoding of Group/Object ID in Fetch responses
+- PR #1544 - Improve Startup Latency and 0-RTT (ianswett)
+- PR #1455 - Security Consideration Extension (gloinul)
+- PR #1451 - Allow multiple Subscriptions to a Track (ianswett)
+- PR #1378 - SWITCH for Client-side ABR (gwendalsimon; updated Apr 17)
 
 ## moq-wg/msf (earlier)
 - PR #152 (Merged) - Clarify MSF URL construction and fragment parameters
 - PR #141 (Merged) - Add support for InitTracks
 - PR #121 (Merged) - Pub tracks, logs and metrics
-- Issue #153 - `initTrack` does not work (vasilvv reports synchronization problem; favors removing initTrack entirely)
+- Issue #153 (Apr 14 activity) - `initTrack` does not work. Will Law now proposes instead of removing initTrack: define a standard MOQT Object property that references an init label (with integer init IDs) defined in the catalog, allowing mid-stream init changes to be signalled via the media payload itself. Victor Vasiliev agrees in-band signaling in the media payload is the only way that actually avoids the race condition.
+
+### moq-wg/cmsf
+- PR #18 (Merged Apr 14) - Initial proposal for ContentProtection signaling (tobbee). Specifies `contentProtections` with `refID`s and per-track `contentProtectionRefIDs`; DASH-compatible attributes; examples for Widevine, PlayReady, FairPlay, ECCP (clear key); referenced running implementation at moqlivemock.demo.osaas.io.
+- PR #19 (New, Apr 14) - Clarify media content and group packaging requirements (wilaw; fixes #12)
+- Issue #17 (New, Apr 14) - Explicit signalling of DRM/C2PA key-rotation or various init segment updates (DenizUgur). Notes MSF Feb 5 discussion and proposes either a dedicated init-segment track (with sync concerns) or inclusion of init updates inline.
+- Issue #8 (Closed Apr 14) - Need to describe how Common Encryption is supported and communicated (closed by tobbee's PR #18).
+
+### moq-wg/loc
+- Issue #10 (New, Apr 16) - Properties Type collision between moqt-draft17 and loc-01 (yuanchao-chris). Properties Type (Extensions Type) 0x02 and 0x04 are defined in both with different semantics. Cross-ref transport issue #1550.
 
 ## PUBLISH_DONE and Subgroup FIN Handling (Mar 31)
 [[alan-frindell]] asked relay implementers: "How do you handle the case where you receive a PUBLISH_DONE but some subgroups have not received a FIN? What will the downstream subscriber(s) see?" Options discussed: timer-based cleanup (preferred by [[suhas-nandakumar]]), RESET_STREAM_AT, or resetting streams.
@@ -310,3 +340,43 @@ Five draft-16 PRs merged, representing a major push toward draft-16 compliance:
 13. **CMSF ContentProtection** - DRM signaling merged into CMSF spec, with two implementations
 14. **media-interop expiry** - draft-cenzano-moq-media-interop-03 expires April 23, still no renewal
 15. **LOC Properties type collision** - Alan flags that loc-02 still has the same 0x02/0x04 collisions with moqt — needs fresh code points
+16. **LargestGroup/CurrentGroup filter convergence (Apr 17–18)** - PR #1607 by Vasiliev captures WG pivot from REWIND toward narrow SUBSCRIBE filter
+
+# Mailing List & GitHub Activity (Apr 17–18 additions)
+
+## Alan Frindell's Reply on REWIND (Apr 17)
+[[alan-frindell]] posted a [detailed response](https://mailarchive.ietf.org/arch/msg/moq/hw5pIm56DBOot-DqmLkaCBxtSVo/) advocating for **Option 1 — no action at this time**. His argument: recent MOQT changes (notably `FILL_TIMEOUT=0`, landed in PR #1490) have eroded REWIND's core value proposition by removing head-of-line-blocking scenarios REWIND was introduced to fix:
+- Cache gaps in low-priority subgroups no longer block higher-priority cached objects
+- Datagram / stream-per-object tracks with missing objects can be delivered without HOL blocking
+- Evicted-group scenarios are handled via immediate FETCH responses
+
+Frindell concedes one narrow remaining case (lower-priority cached data shouldn't cause blocking) and suggests it can be solved with filters, not REWIND. His recommendation: "stabilise around the core" and defer such innovation to future versions. See [[joining-fetch-dissent]].
+
+## Convergence on "LargestGroup / CurrentGroup" Filter (Apr 17–18)
+After Alan's Option-1 reply, the REWIND thread pivoted toward a simpler filter-based alternative.
+
+- **[[luke-curley]] (Apr 17, [message](https://mailarchive.ietf.org/arch/msg/moq/y5f5XZT005Y6ebrHYBOXtr4JojQ/))**: argues FETCH introduces HOL blocking (one uncached group blocks cached subsequent groups) and that "smart" VOD clients are better served issuing per-group FETCH requests HLS/DASH-style. Core critique: subscribers want **live semantics** on all groups, but today's first group uses **VOD semantics** via Joining FETCH. Calls the current workaround (sequentially-prioritised Joining FETCHes merged with SUBSCRIBE streams) "a gross hack." Proposes a **LargestGroup filter for SUBSCRIBE** that captures the intended behaviour 99% of the time and eliminates the first-group special case.
+- **[[luke-curley]] (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/UpRFbpqfPGUb5V5X4-saOznMWaU/))**: "Yeah, I just want to adopt CurrentGroup so we can make *some* progress." Treats it as incremental and achievable.
+- **[[victor-vasiliev|Victor Vasiliev]] (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/q8Vxe5NGEX-KWgqnChyA3LnMUDE/))**: "Not against the LargestGroup idea" — turned it into a concrete draft as [PR #1607](https://github.com/moq-wg/moq-transport/pull/1607).
+- **[[alan-frindell]] (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/GKLXatC9zc2euVTCXwO0ICxgYWQ/))**: also "does not object" and has drafted a parallel "CurrentGroupFill" PR. Caveats: the filter solves "joining via a single message and keeping the response in a more consistent format" (the common case) but does **not** address previous-group HOL cases REWIND was aimed at.
+
+Practical consensus forming: drop REWIND for v1, land a narrow SUBSCRIBE filter (LargestGroup / CurrentGroup / CurrentGroupFill) that handles the common join case without new messages, new streams, or best-effort semantics. See [[joining-fetch-dissent]] and [[moq-transport]] PR #1607.
+
+## moq-transport PR #1607 — Largest Available Group Filter (Apr 18)
+[[victor-vasiliev|Victor Vasiliev]] opened [PR #1607](https://github.com/moq-wg/moq-transport/pull/1607) as a Draft/RFC "Largest Available Group filter." Distinctives versus REWIND / CurrentGroupFill / LargestGroup:
+- Only the **current** group supported (no prior groups)
+- Always serves a **complete** group
+- **No explicit backfill on the relay** — relay just delivers whatever cached subgroups it has for the largest available group
+- "Probably really easy to implement"
+- "Sensible semantics for cases when the groups are really large"
+
+Direct alternative to [[draft-duke-moq-subscribe-rewind|REWIND]], [afrind/moq-transport#15 CurrentGroupFill](https://github.com/afrind/moq-transport/pull/15), and Luke's LargestGroup proposal. See [[joining-fetch-dissent]].
+
+## MoQ Boy — SUBSCRIBE_NAMESPACE Demo (Apr 17)
+[[luke-curley]] announced "MoQ Boy" on the mailing list, a Game Boy emulator demo that streams gameplay over MOQT (blog: moq.dev/blog/moq-boy/). Key protocol points highlighted:
+- Encoding/emulation is on-demand and **pauses when there is no active SUBSCRIBE** for a track — pub-side reacts to subscribe/unsubscribe as a flow-control signal
+- Player automatically unsubscribes tracks that are not visible or audible, and re-subscribes when they are
+- Bidirectional flow: emulator publishes per-game namespaces and subscribes to viewer streams; player publishes a per-viewer namespace and subscribes to game content
+- Multiple concurrent players supported with per-session authorization
+
+Curley's takeaway: **SUBSCRIBE_NAMESPACE is "extremely powerful"** and under-exploited. This lands mid-debate about SUBSCRIBE_NAMESPACE splitting (PR #1542) and the `.session` reserved namespace (PR #1562 merged Apr 16) — concrete evidence for keeping the namespace discovery primitive flexible. See [[luke-curley]], [[moq-dev]].

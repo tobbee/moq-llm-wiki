@@ -2,7 +2,7 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-04-18
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
@@ -43,7 +43,7 @@ LOC uses numbered extensions in the object header:
 - **#15** - Ambiguity in Video Frame Marking vi64 encoding
 - **#14** - WebCodecs issue: fix new avc3/hev1 formats
 - **#13** - Duplicate extension ID for Timestamp and Audio Level
-- **#10** - Properties Type collision between moqt-draft17 and loc-01
+- **#10** (Apr 16, yuanchao-chris) - Properties Type collision between moqt-draft17 and loc-01. Properties Type (Extensions Type) 0x02 and 0x04 are defined in both specs with different semantics. Cross-references transport issue #1550.
 - **#9** - Track Property can't be authenticated
 - **#5** - Move LOC header metadata from object header extensions to object payload
 
