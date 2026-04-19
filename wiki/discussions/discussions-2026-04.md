@@ -2,11 +2,34 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Mailing List & GitHub Activity (Apr 18–19)
+
+## Gwendal Simon Dissents on REWIND Consensus — Charter Requires ABR Switching (Apr 18)
+[Gwendal Simon's reply](https://mailarchive.ietf.org/arch/msg/moq/1DoFuRdZDWMVXb9e7AXxpgR_EZ8/) to the [[joining-fetch-dissent|REWIND consensus thread]] pushes back on the Alan/Luke/Victor convergence around a narrow LargestGroup/CurrentGroup/CurrentGroupFill filter. His argument:
+- **Charter alignment**: ABR track switching is an explicit charter deliverable; deferring it to "extensions or V2" contradicts the charter.
+- **Not an edge case**: A subscriber is "almost always behind the live edge" during a switch (congestion and intentional buffering both create lag).
+- **CurrentGroup is insufficient**: It handles the join case for a single group, but ABR switching requires access to "an arbitrary range of past groups."
+- **Real blocker is semantic, not HOL**: The actual V1 constraint is that **past objects are not allowed in a PUBLISH stream**. He asks the WG to reconsider that rule, scoped narrowly.
+- **Proposed path**: "Joining PUBLISH with live semantics" — already prototyped in [PR #1378 (SWITCH)](https://github.com/moq-wg/moq-transport/pull/1378). See [[switch-abr]].
+
+This is currently the only dissent on the emerging LargestGroup convergence documented in [[joining-fetch-dissent]]. The REWIND consensus call still closes **May 1, 2026**.
+
+## Implementation, GitHub, Drafts — Quiet (Apr 18–19)
+- **moq-transport**: No new issues or PRs; PR #1607 (Largest Available Group filter, Vasiliev) remains the most recent activity.
+- **MSF / LOC / CMSF / Secure-Objects / Catalog-Format**: No new activity.
+- **moq-dev/moq**: Only a release bot PR (#1321) opened Apr 18; no new code commits since PR #1327 / #1318 merged Apr 17.
+- **cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche MoQT, birneee/quiche_moq**: No new activity in this window.
+- **IETF Datatracker**: No new WG or individual draft versions.
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
+
+## Interop Runner — Stable at 18/73/14 (Apr 19)
+The [[interop-runner]] ran on Apr 19 00:32 UTC and reported **18 pass / 73 fail / 14 skip** across 105 tests — identical to the Apr 17 regression baseline. No recovery from the Apr 17 drop yet; investigation of the pair-level regression (moqtail draft-16 merges + moq-dev broadcast/auth changes) still pending.
 
 # Slack #moq Highlights
 

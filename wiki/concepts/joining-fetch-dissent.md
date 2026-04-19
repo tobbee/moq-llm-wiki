@@ -2,7 +2,7 @@
 title: "Joining Fetch Dissent"
 tags: [concept, transport, design-debate]
 date: 2026-04-12
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 status: current
 ---
 
@@ -45,7 +45,8 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 - **Luke Curley's reply** (Apr 17, [message](https://mailarchive.ietf.org/arch/msg/moq/y5f5XZT005Y6ebrHYBOXtr4JojQ/)) — against REWIND as-is. Sees FETCH's VOD semantics as inherently HOL-prone and argues "smart" VOD clients are better served by per-group FETCHes (HLS/DASH-style). Proposes a **LargestGroup filter for SUBSCRIBE** to cover 99% of the join-live use case and eliminate the first-group special case. Follow-up Apr 18 ([message](https://mailarchive.ietf.org/arch/msg/moq/UpRFbpqfPGUb5V5X4-saOznMWaU/)): "Yeah, I just want to adopt CurrentGroup so we can make some progress."
 - **Victor Vasiliev's reply** (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/q8Vxe5NGEX-KWgqnChyA3LnMUDE/)) — "Not against the LargestGroup idea." Authored a concrete draft: **[PR #1607 — Largest Available Group filter](https://github.com/moq-wg/moq-transport/pull/1607)**. Only the current group is supported, always serves a complete group, no relay-side backfill, "probably really easy to implement."
 - **Alan Frindell follow-up** (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/GKLXatC9zc2euVTCXwO0ICxgYWQ/)) — also does not object to a LargestGroup filter and has drafted a parallel "CurrentGroupFill" PR. Key caveat: the filter handles the common case (joining via one message, consistent response format) and the in-cache low-pri subgroup/datagram case of the *current* group, but does **not** address previous groups.
-- **Emerging consensus** (as of Apr 18): drop REWIND for v1, land a narrow SUBSCRIBE filter (LargestGroup / CurrentGroup / CurrentGroupFill) that handles the common join case without new messages, new streams, or best-effort semantics.
+- **Gwendal Simon's dissent** (Apr 18, [message](https://mailarchive.ietf.org/arch/msg/moq/1DoFuRdZDWMVXb9e7AXxpgR_EZ8/)) — argues the emerging LargestGroup/CurrentGroup direction is **insufficient for MoQ V1** because it does not cover ABR track switching, which is an explicit **charter deliverable**. Key points: (1) a subscriber is "almost always behind the live edge" during switches (congestion or buffering creates lag), so switching is not an edge case; (2) CurrentGroup helps with *joining* but only covers one group, whereas ABR switching requires "an arbitrary range of past groups"; (3) the real blocker is a **semantic constraint** — past objects are currently not allowed in a PUBLISH stream — not head-of-line blocking. He proposes reconsidering this constraint via **Joining PUBLISH with live semantics**, which he has prototyped in [PR #1378 — SWITCH](https://github.com/moq-wg/moq-transport/pull/1378). See [[switch-abr]].
+- **Emerging consensus vs. unresolved ABR case** (as of Apr 19): Alan/Luke/Victor converging on a narrow LargestGroup/CurrentGroup filter for the join-live case; Gwendal contends this does not satisfy the charter's ABR-switching requirement and keeps pushing the SWITCH / Joining-PUBLISH path.
 - **PR #1604** (Apr 10, updated Apr 16) - [[martin-duke]] implements #1602 to move Joining FETCH onto the SUBSCRIBE/PUBLISH stream. [[alan-frindell]] reviewed, noting subscriber priority cannot differ between fetch and subscription.
 - **PR #1490** (Merged Apr 14) - FILL_TIMEOUT parameter: subscriber's max wait to fill a gap in a FETCH range before Unknown. Addresses part of #1023.
 - **draft-duke-moq-subscribe-rewind-02** (Apr 2) - Updated Rewind draft published with refined subscription filter semantics.

@@ -2,11 +2,41 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-19 - Gwendal Simon dissents on REWIND consensus, interop still at 18/73/14
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped
+- GitHub moq-wg repos (moq-transport, msf, loc, secure-objects, cmsf, catalog-format): no new issues or PRs since the Apr 18 update. PR #1607 (Largest Available Group filter) remains the most recent activity.
+- Implementation repos: moq-dev/moq had only a release bot PR #1321 (Apr 18); no new commits since Apr 17. cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche MoQT, birneee/quiche_moq all quiet in this window.
+- Mailing list: One new message — **Gwendal Simon's reply** to the REWIND consensus thread ([msg](https://mailarchive.ietf.org/arch/msg/moq/1DoFuRdZDWMVXb9e7AXxpgR_EZ8/), Apr 18) — not covered in the Apr 18 update.
+- IETF Datatracker: No new WG or individual draft versions since Apr 9 (moq-lite-04).
+- Interop runner: Apr 19 00:32 UTC run still at **18 / 73 / 14** — unchanged since the Apr 17 regression.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: All 3 closed, no new issues.
+
+**Pages updated**: concepts/joining-fetch-dissent.md, concepts/switch-abr.md, discussions/discussions-2026-04.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*Gwendal Simon's dissent on REWIND consensus (Apr 18, mailing list)*:
+- Pushes back on the Alan/Luke/Victor convergence around a narrow LargestGroup/CurrentGroup/CurrentGroupFill filter (documented in the Apr 18 log entry).
+- **Charter argument**: ABR track switching is an explicit MoQ charter deliverable; dismissing it as "innovation for extensions or V2" contradicts the charter.
+- **Not an edge case**: A subscriber is "almost always behind the live edge" during a switch because congestion and intentional buffering both create lag.
+- **CurrentGroup is insufficient**: It covers *joining* in one group, but ABR switching requires "an arbitrary range of past groups."
+- **Real blocker is semantic, not HOL**: The V1 constraint he wants the WG to reconsider is that **past objects are not allowed in a PUBLISH stream**.
+- **Proposed path**: "Joining PUBLISH with live semantics" — already prototyped in PR #1378 (SWITCH).
+- This is currently the only documented dissent on the LargestGroup convergence. Consensus call closes May 1, 2026.
+
+*Everything else is quiet*: this is a settle-down day after the heavy Apr 16–18 activity. moq-wg repos had zero new issues/PRs, implementation repos had only release bots, and no new drafts appeared. Interop runner is still at the Apr 17 regression baseline (18/73/14) with no recovery yet.
+
+---
 
 # 2026-04-18 - LargestGroup/CurrentGroup filter convergence (PR #1607)
 

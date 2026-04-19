@@ -2,7 +2,7 @@
 title: "SWITCH and Client-Side ABR"
 tags: [concept, transport, abr, media]
 date: 2026-04-10
-last_updated: 2026-04-16
+last_updated: 2026-04-19
 status: current
 ---
 
@@ -50,6 +50,18 @@ The PR remains labeled "Needs Discussion" and hasn't been merged or closed. The 
 1. **Transport-level SWITCH** (PR #1378) - Atomic transition with relay-initiated PUBLISH + catch-up
 2. **Application-level switching** - Just UNSUBSCRIBE old track + SUBSCRIBE new track, keep transport simple
 3. **Sender-side ABR** - Publisher decides quality, subscriber specifies constraints
+
+# Charter-Alignment Argument (Apr 18, 2026)
+
+In a [mailing-list reply on the REWIND consensus call](https://mailarchive.ietf.org/arch/msg/moq/1DoFuRdZDWMVXb9e7AXxpgR_EZ8/) (Apr 18), Gwendal Simon reframed SWITCH as **a charter deliverable**, not an optional extension:
+
+- The MoQ charter explicitly lists ABR switching, so relegating it to "innovation for extensions or V2" contradicts the charter.
+- During a track switch a subscriber is "almost always behind the live edge" (congestion or intentional buffering both create lag), so switching is not an edge case.
+- The emerging **LargestGroup / CurrentGroup / CurrentGroupFill** direction (see [[joining-fetch-dissent]]) covers *joining* but only one group — ABR switching needs "an arbitrary range of past groups."
+- The real blocker is a **semantic constraint**, not head-of-line blocking: past objects are currently not allowed in a PUBLISH stream. His ask is a scoped reconsideration of that rule.
+- His proposed solution is a **Joining PUBLISH with live semantics**, prototyped in PR #1378.
+
+This positions SWITCH as the only design currently on the table that actually addresses mid-stream quality switching inside V1, and sets up a tension with the LargestGroup/CurrentGroup convergence in [[joining-fetch-dissent]].
 
 # Related
 
