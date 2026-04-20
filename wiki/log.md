@@ -2,11 +2,45 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-20 - moq-dev burst (hop-clustering, MSF catalog), PR #1607 review, quiche cleanup
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped
+- GitHub moq-wg repos: PR #1607 saw its first substantive review on Apr 19 (Luke Curley). No new issues/PRs on moq-transport, msf, loc, secure-objects, cmsf, catalog-format.
+- Implementation repos:
+  - **moq-dev/moq** very active: PR #1322 (hop-based clustering refactor, open), #1330 (MSF catalog auto-negotiation, open), #1335 (WebSocket fallback tuning, open); merged #1332 (DNS bind), #1331 (fly.toml), #1333 (flake.lock), #1284 (crate READMEs), #1336/#1337 (Nix crane downgrade, Apr 20), #1321/#1334 (release bumps).
+  - **google/quiche**: Apr 20 commit `9843feb` by [[martin-duke]] removing `moqt::SubscribeWindow`.
+  - cloudflare/moq-rs, video-dev/moq-js, moqtail/moqtail, birneee/quiche_moq: quiet.
+- Mailing list: Apr 19 automated "Weekly github digest" from Repository Activity Summary Bot; Apr 20 quiet.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- Interop runner: Apr 20 run still at **18 / 73 / 14** across 105 tests — unchanged since the Apr 17 regression (now three consecutive daily runs at the same numbers).
+
+**Pages updated**: discussions/discussions-2026-04.md, drafts/moq-transport.md, implementations/moq-dev.md, implementations/quiche-moq.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*moq-dev/moq burst of activity (Apr 19–20)* — Luke opened three substantive PRs in rapid succession:
+- **#1322 (hop-based clustering)**: Replaces the three-tier `primary`/`secondary`/`combined` origin model and the `cluster: bool` token flag with a single `OriginProducer` per relay tagged by a stable `OriginId`. Broadcasts now carry `hops: Vec<OriginId>` for loop detection and shortest-path routing. `MAX_HOPS` tightened 256 → 32. CLI collapses into `--cluster-connect` for full-mesh config. `Claims::cluster` is now `#[deprecated]`. Flagged by `cargo-semver-checks` as a **breaking change** on `moq-lite` and `moq-relay` (+857/-900).
+- **#1330 (MSF catalog)**: Adds a `@moq/msf` package and race-based Hang/MSF auto-negotiation in `<moq-watch>` — Hang gets a 100ms head start, then `Promise.any()` picks the first successful fetch. Concrete step toward MSF being a first-class catalog format in Luke's stack.
+- **#1335**: WebSocket fallback head start 200 → 500 ms, with a synchronous bail-out when WebTransport has already won.
+- Plus merged infra work: DNS-in-bind (#1332), Fly.io docker image (#1331), Nix toolchain alignment (#1336/#1337), crate READMEs (#1284).
+
+*PR #1607 has live sub-debate on "partial cache / partial group"*:
+- [[luke-curley]] reviewed Vasiliev's "Largest Available Group" filter PR on Apr 19 and pushed back: *"The MUST is too strong and requiring a full cache is too narrow."* Counter-proposal: `MAY attempt to reconstruct subscription from a partial cache; MUST NOT serve an object until all prior objects in that sub-group have been served`.
+- Convergence on the overall filter shape continues, but partial-cache handling is still being negotiated.
+
+*google/quiche*: Martin Duke removed `moqt::SubscribeWindow` (Apr 20) — continues the cleanup of legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settles.
+
+*Interop runner*: Three consecutive daily runs (Apr 18, 19, 20) all at 18/73/14. Pair-level investigation of the Apr 17 regression still pending.
+
+---
 
 # 2026-04-19 - Gwendal Simon dissents on REWIND consensus, interop still at 18/73/14
 

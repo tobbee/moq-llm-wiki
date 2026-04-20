@@ -2,7 +2,7 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-04-16
+last_updated: 2026-04-20
 status: current
 ---
 
@@ -32,6 +32,7 @@ A substantial C++ MoQT implementation inside Google's QUICHE library (part of Ch
 
 # Recent Activity (April 2026)
 
+- **Remove `moqt::SubscribeWindow`** (Apr 20, [[martin-duke]]): Commit [`9843feb`](https://github.com/google/quiche/commit/9843feb) drops the `SubscribeWindow` class, continuing the cleanup of legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settles.
 - **Joining FETCH fix** (Apr 14, [[martin-duke]]): Limit Joining FETCH to `largest_object` at time of SUBSCRIBE rather than using current value. Moves responsibility from `MoqtOutgoingQueue` to the session layer with a new `established_` flag. Prepares for implementing REWIND's joining FETCH aspects.
 
 # Disambiguation

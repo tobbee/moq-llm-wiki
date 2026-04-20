@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-18
+last_updated: 2026-04-20
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -55,7 +55,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
 
 ## Open PRs
-- **PR #1607** (Apr 18) - [Draft/RFC] Largest Available Group filter ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay-side backfill. Coalescing point of the Apr 17–18 mailing-list convergence on LargestGroup/CurrentGroup. See [[joining-fetch-dissent]].
+- **PR #1607** (Apr 18) - [Draft/RFC] Largest Available Group filter ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay-side backfill. Coalescing point of the Apr 17–18 mailing-list convergence on LargestGroup/CurrentGroup. **Apr 19**: [[luke-curley]] left the first review — pushes back on the "MUST serve a complete group" / "full cache only" framing. Proposes "A relay MAY attempt to reconstruct subscription from a partial cache. An object MUST NOT be served until all prior objects within that sub-group have been served." Convergence on filter shape continues but partial-cache / partial-group handling remains under active discussion. See [[joining-fetch-dissent]].
 - **PR #1606** - Generalize stream reset codes to all request streams, add GOING_AWAY / EXPIRED_AUTH_TOKEN / SESSION_CLOSED, align TOO_FAR_BEHIND and EXPIRED codes with PUBLISH_DONE, rename registry ([[alan-frindell]], Apr 16). Fixes #1581.
 - **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14)
 - **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378

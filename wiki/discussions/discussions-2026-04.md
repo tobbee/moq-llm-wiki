@@ -2,11 +2,62 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 19–20)
+
+## moq-dev/moq — Hop-Based Clustering Refactor (PR #1322, Apr 19)
+[[luke-curley]] opened [PR #1322](https://github.com/moq-dev/moq/pull/1322) porting the hop-based clustering design from the `origin/dev` branch (#1082 + #1152) onto `main`. Large refactor (**857+/-900** lines) that replaces the three-tier `primary`/`secondary`/`combined` origin model and the `cluster: bool` token flag with a **single `OriginProducer` per relay** tagged with a stable `OriginId`. Every `Broadcast` now carries a `hops: Vec<OriginId>` chain so loops are refused and the shortest path wins.
+
+Highlights:
+- New `OriginId` type — non-zero 62-bit varint, encoded as `u64` on the wire.
+- `Lite04` `Announce` changes from `Vec<u64>` to `Vec<OriginId>`; `Lite03` still decodes as `UNKNOWN` placeholders.
+- `MAX_HOPS` tightened from 256 → **32** (matched in the JS `@moq/lite` publisher).
+- `moq-relay` CLI flattens: `--cluster-root`/`--cluster-node`/`--cluster-prefix` → `--cluster-connect` (repeat or comma-sep for full mesh), plus optional `--cluster-origin-id` for deterministic IDs in tests.
+- `Claims::cluster` is now `#[deprecated]`; existing tokens still parse but the flag no longer affects routing.
+- Browser clients generate a random 53-bit non-zero `originId` per session — they only publish their own broadcasts (no forwarding), so they don't need full loop-detection logic.
+- `demo/relay/{root,leaf0,leaf1}.toml` switched to the mesh `connect = [...]` format with pinned per-node `origin_id`s.
+
+`cargo-semver-checks` will flag this as a **breaking change** on `moq-lite` and `moq-relay`. See [[moq-dev]] and [[moq-lite]].
+
+## moq-dev/moq — MSF Catalog Format with Auto-Negotiation (PR #1330, Apr 19–20)
+[[luke-curley]] opened [PR #1330](https://github.com/moq-dev/moq/pull/1330) adding **MSF catalog format** support alongside the existing Hang format, with **race-based format negotiation**:
+- New `@moq/msf` package with Zod-validated MSF catalog schema and encode/decode/fetch helpers.
+- `js/watch/src/msf.ts` converts MSF catalogs into the internal Hang shape (`toHang()`, `toVideoConfig()`, `toAudioConfig()`, `toContainer()` parsing CMAF init segments with legacy-format fallback).
+- `Broadcast` gains a `catalogFormats` signal; `<moq-watch>` gains a new `catalog` attribute accepting `"hang"`, `"msf"`, or `"auto"`.
+- Fetch race: Hang gets a **100ms head start**, then `Promise.any()` picks the first successful catalog. Winner continues for subsequent updates, avoiding format switching mid-stream.
+
+Concrete step toward MSF becoming a first-class catalog format in Luke's stack (not just the Hang-specific one). See [[moq-msf]] and [[catalog-format]].
+
+## moq-dev/moq — WebSocket Fallback Tuning (PR #1335, Apr 19)
+[[luke-curley]] opened [PR #1335](https://github.com/moq-dev/moq/pull/1335) raising the moq-lite WebSocket fallback head start from **200ms → 500ms** to give QUIC more runway, and adding an explicit synchronous check so the WebSocket connect attempt bails out when WebTransport has already won the race (closes a tight microtask-ordering window).
+
+## moq-dev/moq — Infrastructure Merges (Apr 19–20)
+- **PR #1332** (merged Apr 19) — `moq-native`: resolve DNS hostnames in `--server-bind` (accepts `host:port` inputs like Fly.io's `fly-global-services:443`; first resolved address is used since Quinn doesn't support multi-address bind).
+- **PR #1331** (merged Apr 19) — Update `fly.toml` to use the hosted docker image.
+- **PR #1333** (merged Apr 19) — Update `flake.lock` dependencies.
+- **PR #1284** (merged Apr 19) — Add `README` files for Rust crates.
+- **PR #1336/#1337** (merged Apr 20) — Nix: downgrade crane to avoid needing Rust 1.95; align toolchain with devShell's `rust-overlay` stable.
+- **Release PRs #1321 + #1334** (merged Apr 19–20) — `chore: release` bumps.
+
+## Luke Curley Reviews PR #1607 — Pushes Back on "MUST + Full Cache" (Apr 19)
+[[luke-curley]] left the first substantive review on [moq-transport PR #1607](https://github.com/moq-wg/moq-transport/pull/1607) (Vasiliev's Largest Available Group filter): *"The MUST is too strong and requiring a full cache is too narrow."* His counter-proposal:
+
+> A relay MAY attempt to reconstruct subscription from a partial cache. An object MUST NOT be served until all prior objects within that sub-group have been served. This can be deduced by sequence numbers, upstream subscriptions (sub-groups are ordered), and/or upstream fetches (groups are ordered).
+
+This keeps the filter shape from #1607 but loosens the strict "complete group only" and "no relay backfill" constraints that Vasiliev included as distinguishing features. Signals that the LargestGroup convergence still has a live sub-debate around **partial cache / partial group** handling, even as everyone continues to agree on the overall direction. See [[joining-fetch-dissent]] and [[moq-transport]].
+
+## google/quiche — `moqt::SubscribeWindow` Removed (Apr 20)
+[[martin-duke]] landed commit [`9843feb`](https://github.com/google/quiche/commit/9843feb) on Apr 20 14:37 UTC: *"Get rid of moqt::SubscribeWindow."* Continues the ongoing cleanup of legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settles. See [[quiche-moq]].
+
+# Mailing List (Apr 19)
+
+## Weekly GitHub Digest (Apr 19)
+The automated [Repository Activity Summary Bot](https://mailarchive.ietf.org/arch/browse/moq/) (do_not_reply@mnot.net) posted its regular weekly "Media Over QUIC Activity Summary" to the list on Apr 19. No substantive discussion; purely a mechanical rollup of the week's GitHub activity across moq-wg repos.
 
 # Mailing List & GitHub Activity (Apr 18–19)
 

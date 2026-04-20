@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-17
+last_updated: 2026-04-20
 status: current
 ---
 
@@ -57,6 +57,17 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Hop-Based Clustering, MSF Catalog, DNS Bind (Apr 19–20)
+- **PR #1322** (open, Apr 19): Major refactor — ports the hop-based clustering design from `origin/dev` (#1082 + #1152) to `main`. Replaces three-tier `primary`/`secondary`/`combined` origin model and `cluster: bool` token flag with a single `OriginProducer` per relay tagged with a stable `OriginId`. Every `Broadcast` now carries `hops: Vec<OriginId>` so loops are refused and the shortest path wins. `Lite04` `Announce` changes to `Vec<OriginId>`; `Lite03` decodes as `UNKNOWN` placeholders. `MAX_HOPS` tightened 256 → 32. CLI: `--cluster-root`/`--cluster-node`/`--cluster-prefix` collapse into `--cluster-connect` for a full mesh, plus optional `--cluster-origin-id`. `Claims::cluster` is now `#[deprecated]`. Browser clients generate random 53-bit non-zero `originId` per session. Flagged as a `cargo-semver-checks` **breaking change** on `moq-lite` and `moq-relay`. +857/-900 lines.
+- **PR #1330** (open, Apr 19–20): **MSF catalog format support** with auto-negotiation. New `@moq/msf` package with Zod-validated schema + encode/decode/fetch helpers. `js/watch/src/msf.ts` converts MSF catalogs into the internal Hang shape. `<moq-watch>` gains a `catalog="hang"|"msf"|"auto"` attribute. Negotiation: Hang gets a 100ms head start, then `Promise.any()` picks the first successful catalog; winner continues for subsequent updates.
+- **PR #1335** (open, Apr 19): Raise WebSocket fallback head start 200ms → 500ms to give QUIC more runway; adds a synchronous check so the WebSocket connect attempt bails out when WebTransport has already won the race.
+- **PR #1332** (merged Apr 19): `moq-native` resolves DNS hostnames in `--server-bind` — accepts `host:port` inputs like `fly-global-services:443` on Fly.io. `ServerConfig::bind` changes from `SocketAddr` to `String`; first resolved address is used since Quinn can't bind to multiple addresses.
+- **PR #1331** (merged Apr 19): Update `fly.toml` to use the hosted docker image.
+- **PR #1333** (merged Apr 19): Update `flake.lock` dependencies.
+- **PR #1284** (merged Apr 19): Add `README` files for Rust crates.
+- **PR #1336 / #1337** (merged Apr 20): Nix: downgrade crane to avoid requiring Rust 1.95; align toolchain with devShell's `rust-overlay` stable.
+- **Releases** (Apr 19–20): `chore: release` PRs #1321 and #1334.
 
 ## Broadcast Queuing, Auth Refactor, TLS Flags (Apr 16–17)
 - **PR #1319** (merged Apr 17): Broadcast **backup queue** replaces the prior replace-and-reannounce strategy. A newly published broadcast on an already-active path is held in a FIFO queue; when the active broadcast closes, the oldest backup is promoted. Avoids unnecessary reannounces on rapid republishing.

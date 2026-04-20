@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **April 19, 2026** | **105** | **18** | **73** | **14** |
+| **April 20, 2026** | **105** | **18** | **73** | **14** |
+| April 19, 2026 | 105 | 18 | 73 | 14 |
 | April 17, 2026 | 105 | 18 | 73 | 14 |
 | April 16, 2026 | 105 | 23 | 68 | 14 |
 | April 15, 2026 | 105 | 23 | 68 | 14 |
@@ -58,7 +59,7 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 
 **April 17 regression**: 5 tests flipped from pass to fail between the Apr 16 and Apr 17 runs. The regression coincides with the large moqtail draft-16 merges on Apr 14–16 (unified message registry, REQUEST_ERROR consolidation, message parameter fixes) and moq-dev/moq changes landed on Apr 16–17 (broadcast replacement queue, auth module refactor, `--cert`/`--key` flag split). Need investigation to identify which pair(s) regressed.
 
-**April 18–19**: Still at 18/73/14 — no recovery from the Apr 17 regression. Pair-level investigation remains pending.
+**April 18–20**: Still at 18/73/14 — no recovery from the Apr 17 regression across three consecutive daily runs. Pair-level investigation remains pending.
 
 # Best Performing Pairs
 
