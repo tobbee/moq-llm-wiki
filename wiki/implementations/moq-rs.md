@@ -2,7 +2,7 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-04-16
+last_updated: 2026-04-21
 status: current
 ---
 
@@ -58,7 +58,7 @@ The two projects are now considered **sibling implementations** — neither is u
 
 - **v0.7.17** released (Apr 13): Bug fix — always register in coordinator after registering in local (PR #161 by itzmanish)
 - **PR #163** (Apr 14, [[mike-english]]): Aligning mlog qlog output with draft-pardue-moq-qlog-moq-events-03 (+346/−242, 6 files). Includes epoch-relative timestamps, typed parameter formatting, nested control messages within a `message` object, `request_id` mapping, and authorization token redaction. Addresses feedback from Lucas Pardue at IETF 125.
-- **PR #157** (Apr 9, [[suhas-nandakumar]]): SUBSCRIBE_NAMESPACE/PUBLISH relay forwarding with subscriber registry, upgraded web-transport crates to v0.10
+- **PR #157** (opened Apr 9, [[suhas-nandakumar]], updated Apr 21): **Publish/Subscribe Namespace Support**. Now at **+6270/−2083 across 82 files**. Bundles draft-16 migration (subsumes PR #131) with a new relay `subscriber_registry`, preserved subgroup-header forwarding (fixes EndOfGroup handling), a fix for a 1-second freeze on group transitions, and a `web-transport` v0.10 upgrade with subprotocol negotiation. Nine iteration commits on Apr 21 03:13–05:30 UTC tightened the SUBSCRIBE_NAMESPACE/PUBLISH_NAMESPACE lifecycle: `REQUEST_UPDATE forward=1` for paused-track arrivals, stale-namespace cleanup on publisher reconnect, handle-lifetime fixes in `serve_subscribe_namespace`, self-exclusion in SUBSCRIBE_NAMESPACE, wait-for-`PUBLISH_OK`-before-streaming, and the correct wire type (`NAMESPACE` vs `PUBLISH`).
 
 # NAB Show 2026
 

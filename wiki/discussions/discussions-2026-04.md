@@ -2,11 +2,42 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 20–21)
+
+## cloudflare/moq-rs — Suhas Iterates on PR #157 Publish/Subscribe Namespace (Apr 21 early UTC)
+[[suhas-nandakumar]] pushed **nine commits** to [moq-rs PR #157](https://github.com/cloudflare/moq-rs/pull/157) between 03:13 and 05:30 UTC on Apr 21, iterating on the SUBSCRIBE_NAMESPACE / PUBLISH_NAMESPACE relay flow that sits on top of Manish's draft-16 migration branch. The commit sequence reads like a focused debugging session:
+
+- `c8cb923` — Add `REQUEST_UPDATE` with `forward=1` when a subscriber arrives for a paused track.
+- `12ac6bf` — Fix `PublishNamespace` handle lifetime and stale-track cleanup.
+- `54a3557` — Remove stale namespace entry on publisher reconnect.
+- `cd0bdcd` — Keep `PublishNamespace` handles alive inside `serve_subscribe_namespace`.
+- `a29815e` — Fix `SUBSCRIBE_NAMESPACE` to send `NAMESPACE` instead of `PUBLISH`.
+- `43b5665` — Fix `SUBSCRIBE_NAMESPACE` to wait for `PUBLISH_OK` before streaming.
+- `4dcaa7a` — Add self-exclusion to the `SUBSCRIBE_NAMESPACE` flow (matches PR #1596's "exclude your own tracks" rule).
+- `fbefe1d` — Send `PUBLISH` for existing tracks on `SUBSCRIBE_NAMESPACE`.
+- `eddc7bc` — Only send `PUBLISH` for tracks, not `PUBLISH_NAMESPACE`.
+
+The overall PR is now **+6270/−2083** across 82 files. It bundles Manish's draft-16 migration (#131) with a new relay `subscriber_registry`, preserved subgroup-header forwarding (fixes EndOfGroup handling), a fix for a 1-second freeze on group transitions, and a web-transport v0.10 upgrade with subprotocol negotiation. See [[moq-rs]].
+
+## video-dev/moq-js — Manish's Player Lifecycle + Audio Fix (PR #70, Apr 20 18:55 UTC)
+Manish ([@itzmanish](https://github.com/itzmanish)) opened [moq-js PR #70](https://github.com/video-dev/moq-js/pull/70) — *"fix: moq-js player lifecycle and browser audio playback"* — a **+9542/−6440** sweeping change. The substantive playback work:
+- Reworked `lib/playback/worker/audio.ts` (+137/−9): better browser audio handling.
+- Extended `<video-moq>` lifecycle (`lib/video-moq/index.ts`) and the worker's index, timeline, video, and worklet code.
+- `lib/transport/subscriber.ts` (+32/−3): subscriber plumbing for lifecycle.
+
+The bulk of the diff volume is **deleting the old `web/` blog site and its assets** and bundling a fresh `demo/lib/publish.iife.js` (+9066). First substantive moq-js PR since Ali Begen's UI refactor work in mid-April. See [[moq-js]].
+
+## moq-wg/moq-transport — Aman Sharma Typo Review on PR #1607 (Apr 20 evening)
+Aman Sharma ([@sharmafb](https://github.com/sharmafb)) left two inline review comments on [PR #1607](https://github.com/moq-wg/moq-transport/pull/1607) (Vasiliev's Largest Available Group filter) on Apr 20 23:14–23:33 UTC — both trivial typo fixes (`available` / `Available` casing in the draft text, lines 1427 and 1442). No substantive new debate; the partial-cache discussion with Luke remains open from Apr 19.
+
+## Interop Runner — First Partial Recovery from the Apr 17 Regression (Apr 21)
+The **Apr 21 00:33 UTC** run is **20 / 71 / 14** (up from 18/73/14). First movement after **four consecutive days** flat at the regression floor since Apr 17. Two tests flipped back from fail to pass — specific pair(s) still need identification. See [[interop-runner]].
 
 # Implementation Activity (Apr 19–20)
 

@@ -2,11 +2,52 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-21 - Suhas iterates on moq-rs Pub/Sub Namespace PR, moq-js lifecycle fix, interop partial recovery
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped
+- GitHub moq-wg repos: Only activity — [[victor-vasiliev|Victor Vasiliev]]'s PR #1607 (Largest Available Group filter) got two typo review comments from Aman Sharma (@sharmafb) on Apr 20 23:14–23:33 UTC (draft text `available`/`Available` casing). No new issues/PRs on moq-transport, msf, loc, secure-objects, cmsf, catalog-format.
+- Implementation repos:
+  - **cloudflare/moq-rs**: [[suhas-nandakumar]] pushed **9 commits** to PR #157 between 03:13 and 05:30 UTC on Apr 21 — lifecycle/cleanup fixes for SUBSCRIBE_NAMESPACE and PUBLISH_NAMESPACE flows (self-exclusion, wait for PUBLISH_OK, stale namespace on reconnect, handle lifetime). PR now at +6270/−2083 across 82 files.
+  - **video-dev/moq-js**: New PR #70 by Manish (@itzmanish, Apr 20 18:55 UTC) — *"fix: moq-js player lifecycle and browser audio playback"* (+9542/−6440). Substantive playback rework; bulk of diff is deletion of legacy `web/` blog site.
+  - moq-dev/moq, google/quiche (moqt), moqtail/moqtail, birneee/quiche_moq: quiet since Apr 20 covered in previous log entry.
+- Mailing list: No new messages since Apr 19 weekly digest.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- Interop runner: Apr 21 00:33 UTC run at **20 / 71 / 14** — **first partial recovery** (+2 pass, −2 fail) after four consecutive days flat at the 18/73/14 regression floor since Apr 17. Still 3 short of Apr 16 baseline.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: All 3 closed, no new issues.
+
+**Pages updated**: discussions/discussions-2026-04.md, implementations/moq-rs.md, implementations/moq-js.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*cloudflare/moq-rs PR #157 late-night iteration (Apr 21 03:13–05:30 UTC)* — Suhas ran a focused debugging session on the SUBSCRIBE_NAMESPACE / PUBLISH_NAMESPACE relay flow that sits on top of Manish's draft-16 migration branch. Nine commits in ~2 hours:
+- `c8cb923` `REQUEST_UPDATE` with `forward=1` when a subscriber arrives for a paused track.
+- `12ac6bf` `PublishNamespace` handle lifetime + stale-track cleanup.
+- `54a3557` Remove stale namespace entry on publisher reconnect.
+- `cd0bdcd` Keep `PublishNamespace` handles alive in `serve_subscribe_namespace`.
+- `a29815e` Send `NAMESPACE` (not `PUBLISH`) on `SUBSCRIBE_NAMESPACE`.
+- `43b5665` Wait for `PUBLISH_OK` before streaming.
+- `4dcaa7a` Self-exclusion on `SUBSCRIBE_NAMESPACE` (mirrors PR #1596 in the spec).
+- `fbefe1d` Send `PUBLISH` for existing tracks on `SUBSCRIBE_NAMESPACE`.
+- `eddc7bc` Only `PUBLISH` for tracks, not `PUBLISH_NAMESPACE`.
+
+The PR as a whole bundles: draft-16 migration (subsumes PR #131), a new relay `subscriber_registry`, preserved subgroup-header forwarding (EndOfGroup fix), a fix for a 1-second freeze on group transitions, and `web-transport` crate v0.10 with subprotocol negotiation.
+
+*video-dev/moq-js PR #70 (Apr 20 18:55 UTC)* — First substantive moq-js PR since Ali Begen's mid-April UI work. The real code changes are concentrated in `lib/playback/worker/audio.ts` (+137/−9), `lib/video-moq/index.ts`, `lib/playback/worker/{index,timeline,video}.ts`, and `lib/transport/subscriber.ts`. Most of the +9542/−6440 volume is deleting the legacy `web/` blog pages (quic-powers, replacing-hls-dash, never-use-datagrams, etc.) and bundling a fresh `demo/lib/publish.iife.js` (+9066).
+
+*Interop runner partial recovery* — 20/71/14 is the first movement after four days stuck at 18/73/14. Coincides with continued draft-16 fixes in [[moqtail]] and [[moq-dev]] plus active iteration on the [[moq-rs]] SUBSCRIBE_NAMESPACE flow. Pair-level diff still needed to identify which two tests flipped back to pass.
+
+*PR #1607 — typo-only activity*: Aman Sharma's two inline comments are the only moq-wg repo activity in this 24-hour window. No substantive movement on the partial-cache debate Luke opened on Apr 19.
+
+---
 
 # 2026-04-20 - moq-dev burst (hop-clustering, MSF catalog), PR #1607 review, quiche cleanup
 

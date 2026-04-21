@@ -2,7 +2,7 @@
 title: "moq-js (video-dev)"
 tags: [implementation, javascript, browser, ietf]
 date: 2026-04-11
-last_updated: 2026-04-14
+last_updated: 2026-04-21
 status: current
 ---
 
@@ -39,6 +39,10 @@ The two JS projects are now **separate implementations** — video-dev/moq-js fo
 # Top Contributors
 
 kixelated (historical), englishm, JoaquinBCh, itzmanish, Manuel-Barrabino
+
+# Recent Activity (April 2026)
+
+- **PR #70** (Apr 20, Manish / @itzmanish): *"fix: moq-js player lifecycle and browser audio playback"* — +9542/−6440. Reworks `lib/playback/worker/audio.ts` for browser audio handling, extends `<video-moq>` lifecycle, and updates the subscriber transport plumbing. The volume comes mostly from deleting the legacy `web/` blog site and bundling a fresh `demo/lib/publish.iife.js`. First substantive moq-js PR since mid-April.
 
 # Related
 
