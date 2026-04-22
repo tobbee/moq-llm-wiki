@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-18
+last_updated: 2026-04-22
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -39,7 +39,7 @@ MSF defines how media is organized into MOQT tracks:
 
 # Active Issues (moq-wg/msf)
 
-- **#153** - `initTrack` does not work. Active design debate (Apr 14): [[will-law]] pivoted from "remove initTrack" to proposing in-band signaling — a standard MOQT Object property referencing an integer init ID defined in the catalog, enabling mid-stream init switching without a separate sync'd init track. Victor Vasiliev agrees in-band is the only race-free approach.
+- **#153** - `initTrack` does not work. Active design debate. Apr 14: [[will-law]] pivoted from "remove initTrack" to proposing in-band signaling — a standard MOQT Object property referencing an integer init ID defined in the catalog, enabling mid-stream init switching without a separate sync'd init track. Victor Vasiliev agrees in-band is the only race-free approach. Apr 21: [[luke-curley]] proposes using a new MP4 `track_id` per init (block on unknown `track_id`), and separately argues the cleanest fix is to **require static init data** (with annexb or inline init when `initData` is absent), reverting `initTrack` entirely.
 - **#150** - Wall clock is problematic
 - **#149** - Catalog Mapping to MoQT
 - **#148** - Media Mapping to MoQT

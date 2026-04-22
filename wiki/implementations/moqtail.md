@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-17
+last_updated: 2026-04-22
 status: current
 ---
 
@@ -42,9 +42,13 @@ Major push toward draft-16 compliance. PRs merged April 14–16:
 
 **Open**:
 - **PR #169**: "Fix/message parameters fix" — update fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (older drafts' key-value pairs were still in place).
+- **PR #168**: Feature/draft16 fetch object — still in progress.
 - **PR #145**: Umbrella draft-16 tracking PR (+12,200 / −10,236, zafergurel).
 
 A v0.9.1 release is pending (PR #173), including a fix for a race condition causing negative object deltas.
+
+- **PR #175 (merged Apr 21)**: *"fix wrong termination of a subscription"* — subscription inactivity timeout raised from **1s to 5s** to tolerate congested links; plus minor optimizations (+47/−42, zafergurel).
+- **Issue #176 (opened Apr 21)**: *"Implement the scheduling algorithm (Draft 16 Section 7.2)"*. The current relay does not honor subscribe/publish message priorities (zafergurel).
 
 Draft-16 tracking PR: [#145](https://github.com/moqtail/moqtail/pull/145) (zafergurel)
 

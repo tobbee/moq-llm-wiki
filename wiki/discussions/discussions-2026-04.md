@@ -2,11 +2,49 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 21–22)
+
+## moq-wg/msf — Luke Pushes Back on `initTrack`, Prefers Static Init or annexb (Issue #153, Apr 21)
+[[luke-curley]] weighed in on [msf#153 "`initTrack` does not work"](https://github.com/moq-wg/msf/issues/153) (Vasiliev's Apr 10 report of a race between init-track and media-track updates when init version changes at the same group). Two comments on Apr 21:
+
+- **16:21 UTC**: Acknowledges the race also occurs with inline init segments. Proposes a general mechanism — have each media segment reference its init segment via the MP4 `track_id` (instead of hard-coding 1). If a `moof` references an unknown `track_id`, the player blocks until the matching `moov` arrives. To avoid a rare race for new subscribers, the new init could carry both old and new `track_id` entries for a few seconds.
+- **16:26 UTC**: "To be honest, I'd rather just use annexb instead of dynamic init segments. It avoids this whole class of problem and any HLS import library can make a separate track on discontinuity or new init. I'm fine reverting `initTrack` if we add the restriction that init data (and codec mime) are static. If `initData` is not present, init data is inline."
+
+Will Law's earlier proposal (an `inits[]` array with a per-object init reference ID) and Vasiliev's original "remove `initTrack`" stance are both in play; Luke's contribution reopens the static-init / annexb simplification path. See [[moq-msf]].
+
+## cloudflare/moq-rs — Suhas Fixes Forwarding + Datagram Rate on PR #157 (Apr 21 morning UTC)
+[[suhas-nandakumar]] pushed **five more commits** to [moq-rs PR #157](https://github.com/cloudflare/moq-rs/pull/157) between 06:39 and 08:46 UTC on Apr 21 — a direct follow-up to the 03:13–05:30 UTC debug run documented in the Apr 21 log entry:
+
+- `7f95515` (06:39) — Forward `track_extensions` in PUBLISH messages.
+- `4e33675` (07:41) — Fix stream header type mismatch when forwarding objects without extensions.
+- `0112f91` (08:03) — Fix datagram forwarding to use a broadcast channel for proper queueing.
+- `1148fa1` (08:24) — **Fix datagram forwarding rate from 1/sec to 50/sec** (throughput regression in the earlier refactor).
+- `5c0606d` (08:46) — Fix object encoding to match header type in SUBSCRIBE flow.
+
+Two themes in this batch: propagating `track_extensions` through the relay forwarding path correctly, and repairing datagram-channel behaviour that had regressed to a 1/sec serialisation bottleneck. See [[moq-rs]].
+
+## google/quiche — Martin Duke Refactors moqt_messages.h, Adds Session-Parameter Hooks (Apr 22 early UTC)
+Two commits from [[martin-duke]] on Apr 22:
+
+- `c8ff6dc4` (03:59 UTC) — *Move some non-message-related data structures out of `moqt_messages.h`.* Prep refactor to untangle the monolithic messages header before the session-parameter work.
+- `10045277` (04:16 UTC) — *Allow `MoqtClient` and `MoqtServer` to control session parameters.* Exposes an API so applications can tune session-level parameters (groundwork for partial-object delivery on the relay).
+
+See [[quiche-moq]].
+
+## moqtail/moqtail — Subscription Timeout 1s → 5s, New Scheduling Algorithm Issue (Apr 21)
+- **PR #175** merged Apr 21 06:17 UTC ([zafergurel](https://github.com/zafergurel)): *"fix wrong termination of a subscription"*. When a subscription received no events for 1 second it was being terminated; the timeout is raised to **5 seconds** to tolerate congested links, plus minor optimizations (+47/−42).
+- **Issue #176** opened Apr 21 17:42 UTC ([zafergurel](https://github.com/zafergurel)): *"Implement the scheduling algorithm (Draft 16 Section 7.2)"*. The current relay does not honor subscribe/publish message priorities; draft-16 §7.2 scheduling is not yet implemented.
+
+PR #168 (draft-16 fetch object) remains open.
+
+## Interop Runner — Second Partial Recovery, Now 22/69/14 (Apr 22)
+The **Apr 22 00:30 UTC** run is **22 / 69 / 14** — another +2 pass / −2 fail vs. Apr 21. Two consecutive daily improvements after the four-day stall at 18/73/14. Still 1 short of the Apr 16 baseline (23/68/14). See [[interop-runner]].
 
 # Implementation Activity (Apr 20–21)
 

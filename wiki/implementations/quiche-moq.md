@@ -2,7 +2,7 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-04-20
+last_updated: 2026-04-22
 status: current
 ---
 
@@ -32,6 +32,8 @@ A substantial C++ MoQT implementation inside Google's QUICHE library (part of Ch
 
 # Recent Activity (April 2026)
 
+- **Session parameter control API** (Apr 22, [[martin-duke]]): Commit [`1004527761`](https://github.com/google/quiche/commit/1004527761) lets `MoqtClient` and `MoqtServer` control session parameters — groundwork for partial-object delivery on the relay.
+- **`moqt_messages.h` split** (Apr 22, [[martin-duke]]): Commit [`c8ff6dc4`](https://github.com/google/quiche/commit/c8ff6dc4) moves non-message-related data structures out of the monolithic messages header — prep refactor before the session-parameter work above.
 - **Remove `moqt::SubscribeWindow`** (Apr 20, [[martin-duke]]): Commit [`9843feb`](https://github.com/google/quiche/commit/9843feb) drops the `SubscribeWindow` class, continuing the cleanup of legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settles.
 - **Joining FETCH fix** (Apr 14, [[martin-duke]]): Limit Joining FETCH to `largest_object` at time of SUBSCRIBE rather than using current value. Moves responsibility from `MoqtOutgoingQueue` to the session layer with a new `established_` flag. Prepares for implementing REWIND's joining FETCH aspects.
 

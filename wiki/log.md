@@ -2,11 +2,53 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-22 - moq-rs datagram rate restored, quiche session-parameter API, moqtail timeout fix, interop +2 again
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped.
+- GitHub moq-wg repos: Only activity — two comments from [[luke-curley]] on [msf#153](https://github.com/moq-wg/msf/issues/153) (Apr 21 16:21/16:26 UTC) reopening the static-init / annexb simplification path for `initTrack`. No new issues/PRs on moq-transport, msf (besides the comments), loc, secure-objects, cmsf, catalog-format, privacy-pass. PR #1607 quiet since Apr 20.
+- Implementation repos:
+  - **cloudflare/moq-rs**: [[suhas-nandakumar]] pushed **five more commits** to PR #157 on Apr 21 06:39–08:46 UTC, follow-up to the 03:13–05:30 UTC debug run in yesterday's log. Fixes on the forwarding path (track_extensions propagation, stream header type mismatch, datagram broadcast-channel queueing, **datagram rate restored 1/sec → 50/sec**, SUBSCRIBE-flow object encoding).
+  - **google/quiche (moqt)**: Two Apr 22 commits by [[martin-duke]] — `c8ff6dc4` (03:59 UTC) moves non-message data structures out of `moqt_messages.h`; `10045277` (04:16 UTC) lets `MoqtClient`/`MoqtServer` control session parameters (groundwork for partial-object delivery).
+  - **moqtail/moqtail**: PR #175 merged Apr 21 06:17 UTC by [[zafergurel]](https://github.com/zafergurel) — subscription inactivity timeout raised **1s → 5s** for congested links (+47/−42). New Issue #176 opened Apr 21 17:42 UTC — *"Implement the scheduling algorithm (Draft 16 Section 7.2)"* — relay currently does not honor message priorities.
+  - **video-dev/moq-js**: PR #70 still open, no new activity since Apr 20 18:55 UTC.
+  - **moq-dev/moq**: Quiet Apr 21 (PRs #1322, #1330, #1335, #1338 unchanged; #1330 and #1335 were in fact merged earlier on Apr 20 — status carried forward correctly in tree).
+  - **birneee/quiche_moq**: Quiet.
+- Mailing list: No new messages since Apr 19 weekly digest.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- Interop runner: Apr 22 00:30 UTC run at **22 / 69 / 14** — **second consecutive +2 pass** (Apr 20 18/73/14 → Apr 21 20/71/14 → Apr 22 22/69/14). Now just 1 short of the Apr 16 baseline.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: No open issues, none updated since Apr 21.
+
+**Pages updated**: discussions/discussions-2026-04.md, drafts/moq-msf.md, implementations/moq-rs.md, implementations/moqtail.md, implementations/quiche-moq.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*cloudflare/moq-rs PR #157 — forwarding-path repair (Apr 21 morning UTC)* — After the lifecycle fixes in the 03:13–05:30 UTC session, Suhas ran a second batch between 06:39 and 08:46 UTC focused on the relay's forwarding path:
+- `7f95515` — Forward `track_extensions` through PUBLISH messages so extensions survive relay hops.
+- `4e33675` — Fix stream header type mismatch when forwarding objects that have no extensions.
+- `0112f91` — Move datagram forwarding onto a broadcast channel so per-subscriber queues drain correctly.
+- `1148fa1` — **Fix datagram forwarding rate from 1/sec back to 50/sec** (a regression in the earlier refactor that had serialized datagram delivery).
+- `5c0606d` — Fix object encoding in the SUBSCRIBE flow to match the header type.
+
+The 50/sec vs 1/sec restoration is the most visible change — it directly affects interop pairs that exercise datagram-mode delivery.
+
+*Luke on msf#153 `initTrack` — push toward static-only init or annexb (Apr 21)* — Two comments. The first (16:21 UTC) accepts Vasiliev's race framing but proposes a generic in-band fix using MP4 `track_id` switching: a `moof` referencing an unknown `track_id` blocks the player until the matching `moov` arrives, and the new init can carry both old and new `track_id` entries briefly for new subscribers. The second (16:26 UTC) is the stronger opinion — he'd rather use **annexb** and drop dynamic init segments entirely, and is fine reverting `initTrack` if init data (and codec mime) are made static with inline fallback. This reopens the static-init simplification path alongside Will Law's `inits[]` proposal and Vasiliev's original remove-`initTrack` stance.
+
+*google/quiche session parameters (Apr 22)* — Martin Duke's `10045277` commit adds an API letting applications control MoQT session parameters on both client and server. Commit message specifically cites *partial-object delivery on the relay* as the motivating use case, which ties directly into the partial-cache debate Luke opened on moq-transport PR #1607 on Apr 19.
+
+*moqtail subscription timeout fix (Apr 21)* — Zafer Gürel's PR #175 raises the no-event subscription termination window from **1 second to 5 seconds** because congested links were producing spurious terminations. Combined with the new Issue #176 acknowledging the relay doesn't yet implement draft-16 §7.2 scheduling (subscribe/publish priorities), this is part of the broader robustness push in moqtail's draft-16 migration.
+
+*Interop runner continues to climb* — Three daily runs now: 18/73/14 (Apr 20) → 20/71/14 (Apr 21) → 22/69/14 (Apr 22). Two consecutive +2-pass recoveries after four days stuck at the Apr 17 regression floor. Likely drivers: moqtail PR #175's timeout fix (less spurious termination on congested pair tests) and Suhas's datagram-rate restoration on moq-rs.
+
+---
 
 # 2026-04-21 - Suhas iterates on moq-rs Pub/Sub Namespace PR, moq-js lifecycle fix, interop partial recovery
 
