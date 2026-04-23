@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 status: current
 ---
 
@@ -69,6 +69,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **April 22**: Second consecutive partial recovery — **22 / 69 / 14** (+2 pass, −2 fail vs Apr 21). Two daily improvements in a row; the likely drivers are moqtail PR #175 (subscription timeout 1s → 5s, merged Apr 21) and Suhas's follow-up forwarding/datagram fixes on [[moq-rs]] PR #157 (Apr 21 06:39–08:46 UTC, notably restoring the datagram forwarding rate from 1/sec back to 50/sec). Now just **1 short** of the Apr 16 baseline (23/68/14).
 
 **April 23**: Flat at **22 / 69 / 14** (00:35 UTC run). First day without movement after the two-day Apr 21–22 recovery (18 → 20 → 22). The 1-test gap to the Apr 16 baseline remains. Apr 22–23 implementation work was dominated by spec/refactor PRs in [[moq-dev]] (none on `main` yet besides docs) and moq-wg review activity — no new fixes landed that would move the matrix.
+
+**April 24**: No new run posted at time of check. Apr 23 UTC activity was dominated by the moq-transport editor wave (PR #1606 merged; PRs #1608–#1611 opened) which is pre-wire-format spec work, so no matrix movement is expected from it.
 
 # Best Performing Pairs
 

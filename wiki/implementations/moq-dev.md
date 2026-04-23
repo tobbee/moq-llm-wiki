@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 status: current
 ---
 
@@ -57,6 +57,13 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Python Examples: clock + announced (PR #1345, Apr 23)
+- **PR #1345** (open, Apr 23 20:39 UTC, +108/0) — `py/moq-lite: add clock + announced examples`. Two new CLI examples in the Python binding:
+  - `examples/clock.py` — Python twin of `rs/moq-clock` with `publish` / `subscribe` subcommands; publishes UTC timestamps at one group per minute, one frame per second.
+  - `examples/announced.py` — lists broadcasts announced under a given prefix.
+
+Both use `argparse` + `async with moq.Client(...)`. Extends the Python surface that Lullabee's PR #1318 started (raw track publish/consume). Fifth PR in the Apr 22–23 burst.
 
 ## Catalog-Format Docs, wait_for_broadcast, Producer Refactor, Subdomain Routing (Apr 22–23)
 Four-PR burst by [[luke-curley]] on `main`:

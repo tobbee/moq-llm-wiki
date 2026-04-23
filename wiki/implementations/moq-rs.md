@@ -2,7 +2,7 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-04-22
+last_updated: 2026-04-24
 status: current
 ---
 
@@ -56,6 +56,7 @@ The two projects are now considered **sibling implementations** — neither is u
 
 # Recent Activity (April 2026)
 
+- **PR #165** (opened Apr 23 20:47 UTC, @hrushikeshdeshpande from Cloudflare AppSec/ProdSec): *ci: add Semgrep OSS scanning workflow*. Part of Cloudflare App&ProdSec's migration from Semgrep Pro to Semgrep CE. Runs on PR, push-to-main, and monthly staggered schedule. Uses `actions/cache@v5`, pinned `semgrep==1.160.0` with `--config=auto`, runs on `ubuntu-slim` (+30/0). No code changes to the MoQ relay itself.
 - **v0.7.17** released (Apr 13): Bug fix — always register in coordinator after registering in local (PR #161 by itzmanish)
 - **PR #163** (Apr 14, [[mike-english]]): Aligning mlog qlog output with draft-pardue-moq-qlog-moq-events-03 (+346/−242, 6 files). Includes epoch-relative timestamps, typed parameter formatting, nested control messages within a `message` object, `request_id` mapping, and authorization token redaction. Addresses feedback from Lucas Pardue at IETF 125.
 - **PR #157** (opened Apr 9, [[suhas-nandakumar]], updated Apr 21): **Publish/Subscribe Namespace Support**. Bundles draft-16 migration (subsumes PR #131) with a new relay `subscriber_registry`, preserved subgroup-header forwarding (fixes EndOfGroup handling), a fix for a 1-second freeze on group transitions, and a `web-transport` v0.10 upgrade with subprotocol negotiation. Nine iteration commits on Apr 21 03:13–05:30 UTC tightened the SUBSCRIBE_NAMESPACE/PUBLISH_NAMESPACE lifecycle: `REQUEST_UPDATE forward=1` for paused-track arrivals, stale-namespace cleanup on publisher reconnect, handle-lifetime fixes in `serve_subscribe_namespace`, self-exclusion in SUBSCRIBE_NAMESPACE, wait-for-`PUBLISH_OK`-before-streaming, and the correct wire type (`NAMESPACE` vs `PUBLISH`). A second batch of **five commits on Apr 21 06:39–08:46 UTC** fixed forwarding-path issues: forward `track_extensions` in PUBLISH messages (`7f95515`), fix stream header type mismatch when forwarding objects without extensions (`4e33675`), move datagram forwarding to a broadcast channel for proper queueing (`0112f91`), restore the datagram forwarding rate from a regressed **1/sec back to 50/sec** (`1148fa1`), and fix object encoding to match header type in the SUBSCRIBE flow (`5c0606d`).

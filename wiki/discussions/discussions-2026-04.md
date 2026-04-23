@@ -2,11 +2,47 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 23–24 UTC)
+
+## moq-wg/moq-transport — Pre-Interim Editor Wave (Apr 23)
+With the Apr 27 interim agenda locked in, the editors pushed a large batch of PRs, issues, and review activity on Apr 23 — the largest single-day moq-transport burst since the draft-17 consensus call closed. Key items:
+
+- **PR #1606 MERGED** (Apr 23 18:32 UTC, [[alan-frindell]]) — *Generalize stream reset codes to all request streams* (fixes #1581). The first new merge to `main` since the draft-17 publication. Adds `GOING_AWAY` (0x4), `EXPIRED_AUTH_TOKEN` (0x7), `SESSION_CLOSED`, and aligns `TOO_FAR_BEHIND`/`EXPIRED` codes between stream-reset and `PUBLISH_DONE` registries. Approved earlier in the day by [[ian-swett]] (see yesterday's log).
+- **PR #1608 opened** (Apr 23 17:01 UTC, [[ian-swett]], +9/−10) — *Make Subgroup ID identical to first Object Id in the Subgroup*. Authored by Jules AI on Ian's behalf. Fixes #1405, closes #1593. First review comment by [[alan-frindell]] (18:31 UTC): "still relevant if you have a group with SG=0 and datagrams. Unless you are saying that the datagram's object ID is compared to the subgroup ID, in which case you should be more explicit." This is the direct follow-up to Ian's Apr 23 01:29 UTC inline comment on PR #1607 — now a standalone PR that retires the long-running "Largest Object" subgroup-start ambiguity.
+- **PR #1609 opened** (Apr 23 18:41 UTC, [[alan-frindell]], +3/−2) — *Joining Fetch forward state mismatch is a request error* (fixes #1601 by Martin Duke). Downgrades the previously-session-fatal forward-state mismatch (race between REQUEST_UPDATE forward=1 on the subscription stream and a joining FETCH on a different stream) to a request error. Small wording change, non-controversial.
+- **PR #1610 opened** (Apr 23 18:51 UTC, [[alan-frindell]], +22/−17) — *Define textual aliases for REQUEST_OK by request type*. Introduces shorthand names `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK` so the spec stops saying "REQUEST_OK (in response to X)". Purely editorial.
+- **PR #1611 opened** (Apr 23 18:56 UTC, [[alan-frindell]], +11/−30) — *Remove PUBLISH_OK message type, make it a REQUEST_OK alias* (fixes #1598). **Wire format change**: PUBLISH_OK had the same wire format as REQUEST_OK (no Track Properties, only Parameters), so the code point is removed and PUBLISH_OK becomes a textual shorthand. Author's note: "retarget main branch after #1610 lands".
+- **Issue #1612 opened** (Apr 23 20:25 UTC, [[martin-duke]]) — *"What happens to Joining FETCH if fwd changes to 0?"*. Martin asks for spec clarity on whether sending Joining FETCH after fwd flips to 0 mid-subscription cancels the FETCH. Open question, no preferred resolution.
+- **PR #1586 reviews** (Apr 23) — delta-encoded Object/Group ID in FETCH responses. [[alan-frindell]] pushed back on "first object in the group" ambiguity (17:46 UTC): for FETCH starts mid-group, the semantics aren't obvious. [[ian-swett]] added a suggestion clarifying the Group-ID-Delta-present case uses the absolute Object ID Delta (19:44 UTC).
+- **PR #1605 reviews** (Apr 23) — [[alan-frindell]] left three inline suggestions on Vasiliev's DELIVERY_TIMEOUT split (18:02 UTC): **"we should explicitly permit cancellation of retransmissions after delivery timeout, and even suggest that is optimal"**; "evaluate the datagram's delivery timeout as late as possible before sending, after any internal queuing"; and the same "as late as possible" guidance on the subgroup path.
+- **PR #1607 review** (Apr 23 15:07 UTC) — [[suhas-nandakumar]] marked Vasiliev's Largest Available Group filter as **CHANGES_REQUESTED**, the first hard blocker on that PR since it opened. Still needs a proper review writeup.
+- **PR #1534 decision** (Apr 23 19:34 UTC) — [[alan-frindell]]: "Discussed in author/editor call: Remove REDIRECT message from this PR. Use GOAWAY on a bidi stream to mean what REDIRECT did." Confirms an editor call happened earlier Apr 23 in US hours; the outcome is that redirect semantics will be overloaded onto GOAWAY rather than a new control message.
+- **Issue #1603 discussion** (Apr 23) — *What is the use case for required-request-id*. The thread flared up with [[martin-duke]] raising a **DoS vector**: "I need to keep a scoreboard of all received request IDs to check if I processed them, even if the request is long-dead. A malicious client could use every other request ID to maximize my state." [[alan-frindell]] counter-argued that QUIC's max-bidi-stream limits bound the state, but Martin notes request IDs multiply via REQUEST_UPDATE even on a single stream. Martin's concrete proposal (19:20 UTC): (1) eliminate required-request-id and Request ID in REQUEST_UPDATE; (2) use SWITCH for ordering forward-mode swaps or accept REQUEST_ERROR; (3) put Joining FETCH in the SUBSCRIBE stream (per PR #1604); (4) add a "modified request ID" field to REQUEST_UPDATE if needed. Martin flags: "I have all these aesthetic concerns, but I do want to highlight that there is a DoS vector in here that IMO we must address."
+- **Issue #1578** (Apr 23 12:56 UTC) — [[ian-swett]]: "Fair point, this rename makes sense to me and reduces likelihood that people will mistakenly think Largest Object gives them a join point" — agreeing with Luke's bikeshed to rename `Largest Object` → `Next Object`.
+- **Issue #1476** (Apr 23 19:18 UTC) — [[alan-frindell]] notes "Victor asks if it's ok to go from zero to non-zero" on the DELIVERY_TIMEOUT extension-scope question.
+
+The shape of the Apr 27 editor session is now clear: 1605, 1607, 1608, 1609, 1610, 1611 are the six PRs; #1603 (required-request-id) is the heaviest open design issue. See [[moq-transport]] and [[interim-meetings]].
+
+## cloudflare/moq-rs — Semgrep CI Scanning (PR #165, Apr 23)
+[[hrushikeshdeshpande]] (Cloudflare AppSec/ProdSec) opened [PR #165](https://github.com/cloudflare/moq-rs/pull/165) at 20:47 UTC adding a Semgrep Community Edition (OSS) scanning workflow to the repo. Context: Cloudflare's App&ProdSec team is migrating from Semgrep Pro to Semgrep CE. Runs on every PR, on pushes to main/master, and monthly on a staggered schedule. Uses `actions/cache@v5`, pinned to `semgrep==1.160.0` with `--config=auto`, runs on `ubuntu-slim`. +30/0. No code-repo activity on the MoQ relay itself — PR #157 (Pub/Sub Namespace Support) remains open without new pushes since Apr 21.
+
+## moq-dev/moq — Python Examples Land (PR #1345, Apr 23)
+[[luke-curley]] opened [PR #1345](https://github.com/moq-dev/moq/pull/1345) at 20:39 UTC (+108/0) adding two Python examples to the `py/moq-lite` package: `examples/clock.py` (Python twin of `rs/moq-clock` — publishes UTC timestamps one group/minute, one frame/second) and `examples/announced.py` (CLI listing broadcasts announced under a prefix). Both use `argparse` and the `async with moq.Client(...)` pattern. This is the **fifth PR in Luke's Apr 22–23 burst** (after #1339, #1340, #1341, #1343, #1344) and extends the Python binding surface that PR #1318 (Lullabee, Apr 16) started with raw track publish/consume.
+
+## moqtail/moqtail — PR #168 Conflict Resolution (Apr 23)
+@ctllmp pushed two merge-conflict-resolution commits (`0570542` at 19:49 UTC, `bf84690` at 19:52 UTC) and then merged `draft-16` into `feature/draft16-fetch-object` at 19:56 UTC (`1f967c1`) on the long-running [moqtail PR #168](https://github.com/moqtail/moqtail/pull/168) (draft-16 FetchObject). PR has been open since Mar 30 and is the umbrella for draft-16 §10.4.4 fetch-object serialization with delta encoding and end-of-range markers (+1094/−443). No new substantive changes — this is rebase work ahead of a push to land. See [[moqtail]].
+
+## Mailing List, IETF Datatracker, Interop Runner — Quiet
+- **Mailing list**: No new posts since [[martin-duke]]'s Apr 22 19:41 PDT "Monday's agenda is ready" notice.
+- **Datatracker**: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- **Interop runner**: No new run posted for Apr 24 (last run Apr 23 00:35 UTC = 22/69/14).
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
 
 # Implementation Activity (Apr 22–23)
 

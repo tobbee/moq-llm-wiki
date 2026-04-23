@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -41,32 +41,41 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-18)
+# Active Issues (as of 2026-04-23)
 
 ## Design Issues
-- **#1603** - What is the use case for required-request-id (questions if field is needed beyond REQUEST_UPDATE/FETCH)
-- **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream
-- **#1598** - Why PUBLISH_OK not REQUEST_OK? (Needs PR, Editorial & Minor Design)
+- **#1612** - What happens to Joining FETCH if fwd changes to 0? (opened Apr 23 by [[martin-duke]]; asks for explicit spec behaviour)
+- **#1603** - What is the use case for required-request-id. **Apr 23**: [[martin-duke]] escalated with a **DoS concern** — "a malicious client could use every other request ID to maximize my state" (request IDs multiply via REQUEST_UPDATE even on one stream). Martin's proposed resolution: eliminate RRID except for REQUEST_UPDATE and FETCH, move Joining FETCH to the SUBSCRIBE stream (per PR #1604), use SWITCH or accept REQUEST_ERROR for ordering.
+- **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream (addressed by PR #1604)
+- **#1601** - Joining FETCH session errors are subject to a race condition (addressed by PR #1609)
+- **#1598** - Why PUBLISH_OK not REQUEST_OK? (addressed by PR #1611)
 - **#1582** - Caching and propagation of REQUEST_ERRORs (Design)
-- **#1581** - Request cancellation should be able to specify an error code (addressed by PR #1606)
-- **#1578** - Bikeshed: `Largest Object` should be `Next Object`
+- **#1581** - Request cancellation should be able to specify an error code (resolved — PR #1606 merged Apr 23)
+- **#1578** - Bikeshed: `Largest Object` should be `Next Object`. **Apr 23**: [[ian-swett]] agrees with the rename.
 - **#1550** - Properties Type collision between moq-16 and loc-01 (LOC issue #10; loc-02 also has collisions per [[alan-frindell]] Apr 16)
+- **#1534** - REDIRECT. **Apr 23 editor call**: Remove REDIRECT message from PR. Use GOAWAY on a bidi stream to mean what REDIRECT did.
 - **#1507** - (Referenced by Session-Level Tracks extension point)
-- **#1405** - Single Object Subgroups don't need a Subgroup ID (likely closing — no WG appetite for change)
+- **#1476** - DELIVERY_TIMEOUT is both Track and Object extension. **Apr 23**: Victor asks whether zero→non-zero transition is permitted.
+- **#1405** - Single Object Subgroups don't need a Subgroup ID (**closed by PR #1608**)
 
 ## Open PRs
-- **PR #1607** (Apr 18) - [Draft/RFC] Largest Available Group filter ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay-side backfill. Coalescing point of the Apr 17–18 mailing-list convergence on LargestGroup/CurrentGroup. **Apr 19**: [[luke-curley]] left the first review — pushes back on the "MUST serve a complete group" / "full cache only" framing. Proposes "A relay MAY attempt to reconstruct subscription from a partial cache. An object MUST NOT be served until all prior objects within that sub-group have been served." **Apr 23**: [[ian-swett]] suggests an ambiguity fix — force the Subgroup ID to be the Object ID of the first Object in a subgroup, so the start is unambiguous even with "largest Object" or range filters that begin mid-Group. Cross-posted to issue [#1405](https://github.com/moq-wg/moq-transport/issues/1405). See [[joining-fetch-dissent]].
-- **PR #1606** - Generalize stream reset codes to all request streams, add GOING_AWAY / EXPIRED_AUTH_TOKEN / SESSION_CLOSED, align TOO_FAR_BEHIND and EXPIRED codes with PUBLISH_DONE, rename registry ([[alan-frindell]], Apr 16). Fixes #1581. **Apr 23**: Approved by [[ian-swett]].
-- **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14). `OBJECT_DELIVERY_TIMEOUT` is the refined replacement for existing `DELIVERY_TIMEOUT`; new `SUBGROUP_DELIVERY_TIMEOUT` covers subgroups that have been fully queued but not yet fully delivered. Fixes #667 and #606. **Apr 23**: First review by [[ian-swett]] — overall "this looks reasonable, but I don't intuitively understand why two timeouts are necessary"; six inline suggestions on `MUST/SHOULD/MAY` tuning, section rename, and citing WebTransport's native datagram queue timeouts. On the Apr 27 interim agenda.
-- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378
-- **PR #1593** - RFC: Allow framing single Objects without Subgroup ID
+- **PR #1611** (Apr 23, [[alan-frindell]]) — *Remove PUBLISH_OK message type, make it a REQUEST_OK alias* (fixes #1598, +11/−30). **Wire format change**: PUBLISH_OK has the same wire format as REQUEST_OK (no Track Properties, only Parameters), so the code point is removed and PUBLISH_OK becomes a textual shorthand. Author note: retarget main branch after #1610 lands.
+- **PR #1610** (Apr 23, [[alan-frindell]]) — *Define textual aliases for REQUEST_OK by request type* (+22/−17). Editorial: introduces `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK` as shorthand for `REQUEST_OK (in response to X)`.
+- **PR #1609** (Apr 23, [[alan-frindell]]) — *Joining Fetch forward state mismatch is a request error* (fixes #1601, +3/−2). Downgrades session-fatal forward-state mismatch (race between REQUEST_UPDATE fwd=1 and joining FETCH on different streams) to a request error.
+- **PR #1608** (Apr 23, [[ian-swett]] via Jules AI) — *Make Subgroup ID identical to first Object Id in the Subgroup* (fixes #1405, closes #1593, +9/−10). Follow-up to Ian's Apr 23 01:29 UTC comment on #1607. First review comment from [[alan-frindell]]: "still relevant if you have a group with SG=0 and datagrams."
+- **PR #1607** (Apr 18) - [Draft/RFC] Largest Available Group filter ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay-side backfill. Coalescing point of the Apr 17–18 mailing-list convergence on LargestGroup/CurrentGroup. **Apr 19**: [[luke-curley]] left the first review — pushes back on the "MUST serve a complete group" / "full cache only" framing. **Apr 23**: [[suhas-nandakumar]] marked the PR **CHANGES_REQUESTED** (15:07 UTC, the first hard blocker). Separately, [[ian-swett]]'s Apr 23 inline "force Subgroup ID = first Object ID" suggestion has now been split into standalone PR #1608. See [[joining-fetch-dissent]].
+- **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14). `OBJECT_DELIVERY_TIMEOUT` replaces existing `DELIVERY_TIMEOUT`; new `SUBGROUP_DELIVERY_TIMEOUT` covers subgroups that have been fully queued but not yet fully delivered. Fixes #667 and #606. **Apr 23 morning**: First review by [[ian-swett]] — "this looks reasonable, but I don't intuitively understand why two timeouts are necessary". **Apr 23 afternoon**: [[alan-frindell]] added three suggestions — explicitly permit cancellation of retransmissions after delivery timeout, and evaluate delivery timeout "as late as possible" after internal queuing. On the Apr 27 interim agenda.
+- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378. **Apr 23**: [[alan-frindell]] asked [[martin-duke]] for thoughts on Gwendal's FETCH+PUBLISH_DONE race proposal; Martin replies that REQUEST_UPDATE ordering is a general problem and orthogonal to this PR.
+- **PR #1593** - RFC: Allow framing single Objects without Subgroup ID (now set to be **closed by #1608**).
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme
-- **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses
+- **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses. **Apr 23**: [[alan-frindell]] flagged a "first object in the group" ambiguity for mid-group FETCH starts (17:46 UTC); [[ian-swett]] added a suggestion clarifying the Group-ID-Delta-present semantics (19:44 UTC).
 - **PR #1542** - Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE (0x50, namespace discovery) and SUBSCRIBE_TRACKS (0x51, track subscriptions) ([[alan-frindell]], updated Apr 16). Removes SUBSCRIBE_NAMESPACE_OPTIONS + BOTH mode; adds TRACK_NAMESPACE_PREFIX (0x34) for REQUEST_UPDATE prefix changes. Fixes #1458.
+- **PR #1534** - Add REDIRECT for request errors and established subscriptions. **Apr 23 editor call decision**: remove the REDIRECT message from this PR; use GOAWAY on a bidi stream to mean what REDIRECT did. [[alan-frindell]] will revise.
 - **PR #1378** - SWITCH for Client-Side ABR — relay-initiated PUBLISH + inline catch-up design; Apr 16 polish pass by Gwendal Simon. See [[switch-abr]].
 
-## Recently Merged (Apr 14-16)
+## Recently Merged
+- **PR #1606** - *Generalize stream reset codes to all request streams* (**merged Apr 23 18:32 UTC** by [[alan-frindell]], fixes #1581). Adds `GOING_AWAY` (0x4), `EXPIRED_AUTH_TOKEN` (0x7), `SESSION_CLOSED`; aligns `TOO_FAR_BEHIND` / `EXPIRED` codes between stream-reset and `PUBLISH_DONE` registries. First merge to `main` since draft-17 publication.
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE (Apr 16, fixes #1585)
 - **PR #1562** - RFC: Add Session-Level Tracks reserved namespace (**merged Apr 16** by [[alan-frindell]]) — reserves `.session` namespace tuple[0] for transport-internal tracks; relays MUST NOT forward; unknown session tracks MUST be rejected with NOT_SUPPORTED; IANA registry established under Specification Required policy
 - **PR #1490** - FILL_TIMEOUT parameter (Apr 14; subscriber's max wait to fill a FETCH gap before Unknown; addresses part of #1023)

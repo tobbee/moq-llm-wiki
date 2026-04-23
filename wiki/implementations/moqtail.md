@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-22
+last_updated: 2026-04-24
 status: current
 ---
 
@@ -42,7 +42,7 @@ Major push toward draft-16 compliance. PRs merged April 14–16:
 
 **Open**:
 - **PR #169**: "Fix/message parameters fix" — update fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (older drafts' key-value pairs were still in place).
-- **PR #168**: Feature/draft16 fetch object — still in progress.
+- **PR #168**: Feature/draft16 fetch object — still in progress. **Apr 23 19:49–19:56 UTC**: @ctllmp resolved conflicts and merged `draft-16` back into the feature branch (`0570542`, `bf84690`, `1f967c1`), rebase work ahead of a push to land. +1094/−443 lines implementing draft-16 §10.4.4 fetch-object serialization with bitmask-based serialization flags, delta encoding, and end-of-range markers.
 - **PR #145**: Umbrella draft-16 tracking PR (+12,200 / −10,236, zafergurel).
 
 A v0.9.1 release is pending (PR #173), including a fix for a race condition causing negative object deltas.

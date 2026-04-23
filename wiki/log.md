@@ -2,11 +2,63 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-24 - moq-transport editor wave: PR #1606 merged, #1608–#1611 opened, RRID DoS concern, Semgrep CI on moq-rs, Python examples on moq-dev
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped.
+- GitHub moq-wg repos:
+  - **moq-transport**: Heavy Apr 23 UTC burst — largest single-day moq-transport day since the draft-17 publication:
+    - **PR #1606 MERGED** Apr 23 18:32 UTC by [[alan-frindell]] (fixes #1581) — *Generalize stream reset codes to all request streams, add new codes, align with PUBLISH_DONE*. First merge to `main` since draft-17 published.
+    - **PR #1608 opened** Apr 23 17:01 UTC by [[ian-swett]] (authored by Jules AI, +9/−10) — *Make Subgroup ID identical to first Object Id in the Subgroup*. Fixes #1405, closes #1593. First review comment from [[alan-frindell]] (18:31 UTC) flags the datagram + SG=0 case.
+    - **PR #1609 opened** Apr 23 18:41 UTC by [[alan-frindell]] (fixes #1601, +3/−2) — *Joining Fetch forward state mismatch is a request error*. Downgrades session-fatal mismatch caused by REQUEST_UPDATE fwd=1 / joining-FETCH cross-stream race.
+    - **PR #1610 opened** Apr 23 18:51 UTC by [[alan-frindell]] (+22/−17) — *Define textual aliases for REQUEST_OK by request type*. Editorial: `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK`.
+    - **PR #1611 opened** Apr 23 18:56 UTC by [[alan-frindell]] (fixes #1598, +11/−30) — *Remove PUBLISH_OK message type, make it a REQUEST_OK alias*. **Wire format change**: removes PUBLISH_OK code point. Author note: retarget main after #1610 lands.
+    - **Issue #1612 opened** Apr 23 20:25 UTC by [[martin-duke]] — *"What happens to Joining FETCH if fwd changes to 0?"*. Asks for explicit spec text on this race.
+    - **PR #1607** (Largest Available Group filter) — [[suhas-nandakumar]] marked **CHANGES_REQUESTED** Apr 23 15:07 UTC — first hard blocker on the PR since it opened.
+    - **PR #1605** (DELIVERY_TIMEOUT split) — [[alan-frindell]] left three Apr 23 18:02 UTC suggestions: explicitly permit retransmission cancellation after delivery timeout; evaluate delivery timeout "as late as possible" after internal queuing (both datagram and subgroup paths).
+    - **PR #1586** (delta-encoded Object/Group ID in FETCH) — Apr 23 review by [[alan-frindell]] (ambiguity for mid-group FETCH starts) + [[ian-swett]] suggestion on Group-ID-Delta-present semantics.
+    - **Issue #1603** (required-request-id use case) — [[martin-duke]] escalated Apr 23 18:54 UTC with a **DoS concern**: request IDs multiply via REQUEST_UPDATE even within one stream, so a malicious client can inflate state. Concrete proposal: eliminate RRID + Request ID in REQUEST_UPDATE; move Joining FETCH to the SUBSCRIBE stream (per PR #1604); use SWITCH or accept REQUEST_ERROR for ordering. "I have all these aesthetic concerns, but I do want to highlight that there is a DoS vector in here that IMO we must address."
+    - **Issue #1578** (Bikeshed: `Largest Object` → `Next Object`) — [[ian-swett]] Apr 23 12:56 UTC: agrees with the rename.
+    - **Issue #1534** (REDIRECT) — Apr 23 editor call decision: remove REDIRECT message from PR, overload GOAWAY on bidi stream for the same purpose.
+    - **Issue #1476** (DELIVERY_TIMEOUT extension scope) — [[alan-frindell]]: "Victor asks if it's ok to go from zero to non-zero."
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass: no activity.
+- Implementation repos:
+  - **cloudflare/moq-rs**: **PR #165 opened Apr 23 20:47 UTC** by @hrushikeshdeshpande (Cloudflare App&ProdSec) — *ci: add Semgrep OSS scanning workflow*. Part of Cloudflare's migration from Semgrep Pro to Semgrep CE. +30/0. PR #157 (Pub/Sub Namespace) quiet since Apr 21.
+  - **moq-dev/moq**: **PR #1345 opened Apr 23 20:39 UTC** by [[luke-curley]] (+108/0) — *py/moq-lite: add clock + announced examples*. Python twin of `rs/moq-clock` (`publish` / `subscribe` subcommands) plus a CLI listing broadcasts announced under a prefix. Fifth PR in the Apr 22–23 burst.
+  - **google/quiche (moqt)**: No new moqt-specific commits — Apr 22–23 commits are all general QUIC refactors (`PendingStream` cleanup) outside the moqt directory.
+  - **moqtail/moqtail**: PR #168 (draft-16 fetch object) — @ctllmp pushed conflict-resolution commits Apr 23 19:49–19:56 UTC and merged `draft-16` back into the feature branch. Rebase work ahead of a push to land; no new substantive changes. PR #169 (message-parameters fix) remains open.
+  - **video-dev/moq-js**: Quiet.
+  - **birneee/quiche_moq**: Quiet.
+- Mailing list: No new posts since Martin Duke's Apr 22 19:41 PDT "Monday's agenda is ready" notice.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- Interop runner: No new run for Apr 24 at time of check — last run Apr 23 00:35 UTC = 22/69/14.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: No open issues.
+
+**Pages updated**: discussions/discussions-2026-04.md, drafts/moq-transport.md, implementations/moq-dev.md, implementations/moq-rs.md, implementations/moqtail.md, interop/interop-runner.md
+
+**Key findings**:
+
+*moq-transport editor push ahead of Apr 27 interim* — Apr 23 was the largest single-day moq-transport activity day since draft-17 published. The shape of the Apr 27 editor session is now clear: six PRs (#1605, #1607, #1608, #1609, #1610, #1611) and one heavyweight design issue (#1603 required-request-id). PR #1606 landing as the first post-draft-17 merge signals the editors are comfortable landing uncontroversial cleanup while the big design calls wait for the interim. Three Apr 23 PRs (#1609, #1610, #1611) all come from Alan Frindell in the same 15-minute window — a cleanup sweep of REQUEST_OK naming, PUBLISH_OK wire-format removal, and the Joining-FETCH session-error downgrade. PR #1608 is essentially Ian Swett's inline suggestion from PR #1607 promoted to its own PR, retiring the long-running #1405 Subgroup-ID ambiguity and closing #1593. Suhas's CHANGES_REQUESTED on PR #1607 is notable because it's the first formal block on the Largest-Available-Group filter since Vasiliev opened it — until now the review energy had been mostly Luke's partial-cache pushback and Ian's Subgroup-ID clarification.
+
+*Martin Duke's RRID DoS escalation (Issue #1603)* — Issue #1603 has been lingering since Apr 10. Apr 23 it sharpened into a security argument: request IDs can multiply within a single stream via REQUEST_UPDATE, so the QUIC max-bidi-stream bound (Alan's mitigation) doesn't actually cap receiver state. Martin's concrete proposal is now on the record: eliminate RRID except where dependencies are real (REQUEST_UPDATE, FETCH); move Joining FETCH onto the SUBSCRIBE stream; use SWITCH or accept REQUEST_ERROR for ordering. This is likely to be the spiciest item on the Apr 27 agenda.
+
+*Editor call results bleed through in issue threads* — Comments like "Discussed in author/editor call" (PR #1534) and "Victor asks..." (Issue #1476) suggest an Apr 23 editor call happened in US hours before the PR burst. The call's two visible outcomes: REDIRECT moves onto GOAWAY rather than getting its own message; DELIVERY_TIMEOUT zero→non-zero transitions are still an open question.
+
+*Semgrep CI scanning appears on moq-rs (PR #165)* — Not MoQ-specific content, but a signal that Cloudflare's App&ProdSec team is including cloudflare/moq-rs in their migration to Semgrep CE. The repo hadn't had third-party security-tooling contributions before. No new push from Suhas on PR #157 this cycle.
+
+*moq-dev's Python surface widens (PR #1345)* — Luke's Apr 23 PR adds `clock.py` and `announced.py` as `py/moq-lite` examples. Combined with Lullabee's Apr 16 PR #1318 (raw track Python FFI), the Python binding is approaching functional parity with the Rust examples. This is the fifth consecutive PR in Luke's Apr 22–23 push; a pattern of stabilizing `main` ahead of closing #1322 (hop-clustering) and promoting the MSF-vs-Hang catalog negotiation work.
+
+*Interop matrix still idle* — Three straight days at 22/69/14 (Apr 21 recovered 18→20→22, then two flat days). Nothing landed Apr 23 that would touch the wire — moq-rs PR #157 is still open; moqtail PR #168 is still rebasing; all the moq-transport action was spec-level PRs. Expect movement once PR #157 merges, PR #168/#169 lands, or the Apr 27 interim unblocks any of the DELIVERY_TIMEOUT / REDIRECT / Subgroup-ID design items.
+
+---
 
 # 2026-04-23 - MSF InitTracks reverted, Luke opens group-alignment issue, Apr 27 agenda published, moq-dev PR burst, interop flat
 
