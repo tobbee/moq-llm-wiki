@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **April 22, 2026** | **105** | **22** | **69** | **14** |
+| **April 23, 2026** | **105** | **22** | **69** | **14** |
+| April 22, 2026 | 105 | 22 | 69 | 14 |
 | April 21, 2026 | 105 | 20 | 71 | 14 |
 | April 20, 2026 | 105 | 18 | 73 | 14 |
 | April 19, 2026 | 105 | 18 | 73 | 14 |
@@ -66,6 +67,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **April 21**: First partial recovery — **20 / 71 / 14** (+2 pass, −2 fail) after four days flat at the regression floor. The lift coincides with ongoing draft-16 fixes in [[moqtail]] and [[moq-dev]] plus iteration on the SUBSCRIBE_NAMESPACE relay flow in [[moq-rs]] PR #157. Still 3 short of the Apr 16 baseline (23/68/14). Need pair-level diff to identify which tests flipped.
 
 **April 22**: Second consecutive partial recovery — **22 / 69 / 14** (+2 pass, −2 fail vs Apr 21). Two daily improvements in a row; the likely drivers are moqtail PR #175 (subscription timeout 1s → 5s, merged Apr 21) and Suhas's follow-up forwarding/datagram fixes on [[moq-rs]] PR #157 (Apr 21 06:39–08:46 UTC, notably restoring the datagram forwarding rate from 1/sec back to 50/sec). Now just **1 short** of the Apr 16 baseline (23/68/14).
+
+**April 23**: Flat at **22 / 69 / 14** (00:35 UTC run). First day without movement after the two-day Apr 21–22 recovery (18 → 20 → 22). The 1-test gap to the Apr 16 baseline remains. Apr 22–23 implementation work was dominated by spec/refactor PRs in [[moq-dev]] (none on `main` yet besides docs) and moq-wg review activity — no new fixes landed that would move the matrix.
 
 # Best Performing Pairs
 

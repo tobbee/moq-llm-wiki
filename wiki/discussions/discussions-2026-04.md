@@ -2,11 +2,65 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 22–23)
+
+## moq-wg/msf — InitTracks Reverted, Static-Init Wins (PR #154, Apr 22)
+After six days of back-and-forth on [msf#153](https://github.com/moq-wg/msf/issues/153), [[will-law]] **reverted his own PR #141** ("Add support for InitTracks") in [PR #154](https://github.com/moq-wg/msf/pull/154) (merged **Apr 22 17:01 UTC**, −170 lines). Reasoning posted in #153:
+
+> After feedback from @vasilvv, comments from @kixelated and discussion with @suhasHere, I reverted the PR adding inittracks. The merged design did not provide a practical solution to synchronize mid-stream changes. Additionally, streams requiring mid-stream parameter re-initialization can leverage **AVC3 self-initializing segments** as defined by ISO/IEC 14496-15. Each segment contains the SPS/PPS inside the media data units. To keep MSF simple, we'll stick with statically declared inits.
+
+Will also proposed addressing catalog bloat from repeated `initData` declarations via either (a) an `initCopy` track property pointing to another track's init, or (b) a more general `inherit` track property inheriting all properties from a parent track unless overwritten. [[victor-vasiliev|Victor Vasiliev]] asked if [#144 catalog compression](https://github.com/moq-wg/msf/issues/144) (zlib) could solve it instead. [[luke-curley]] suggested `initCopy` makes sense for HLS→MoQ demuxers that don't re-encode init segments, but argued "two tracks *shouldn't* have identical init data if the publisher is building them correctly" — init data should describe a single track, not multiplex. See [[moq-msf]].
+
+## moq-wg/msf — Luke: "Sequence Aligned Groups Are Too Restrictive" (Issue #155, Apr 22 22:47 UTC)
+[[luke-curley]] opened [msf#155](https://github.com/moq-wg/msf/issues/155) pushing back on §4.2's "The render duration of the first media object of each equally numbered MOQT Group, after decoding, MUST have overlapping presentation time." He reads this as requiring **group-aligned boundaries across tracks**, and lists four reasons MSF should loosen the requirement:
+
+1. **Audio buffering**: Group alignment forces audio to wait for video keyframe boundaries — 300ms of video encode latency forces at least 300ms of audio encode latency because audio can't flush until keyframe boundaries are known. Hurts (re)transmit-early latency wins.
+2. **On-demand encoding**: Generating a late rendition (e.g., 1080p arriving after 360p is already on-air) requires seeking back to align GoPs — means keeping raw frames in memory when not encoding.
+3. **Mixed GoP sizes**: Prevents 1s GoPs for 360p (fast join/switch-down) combined with 4+s GoPs for 4K (slow switch-up). "We have a chance to improve upon HLS/DASH here."
+4. **Transcoding non-source renditions**: For passthrough-then-transcode pipelines (e.g., Twitch accepting OBS h.264 and transmuxing), keyframes must land at exactly the same frame boundaries as the source.
+
+Luke's conclusion: CMSF can keep group alignment for HLS/DASH back-compat, but **MSF should be more lenient** — tracks share the same PTS but not necessarily the same group boundaries. See [[moq-msf]].
+
+## moq-wg/moq-transport — Ian Swett Review Wave on PRs #1605, #1606, #1607 (Apr 23 early UTC)
+[[ian-swett]] posted reviews on three open PRs within 15 minutes (01:20–02:10 UTC Apr 23):
+
+- **PR #1606** ([[alan-frindell]]'s stream-reset-codes generalization) — **APPROVED** (01:20 UTC). This PR moves stream reset code definitions earlier so they apply to all request streams, adds `GOING_AWAY` (0x4), `EXPIRED_AUTH_TOKEN` (0x7), `SESSION_CLOSED`, and aligns `TOO_FAR_BEHIND`/`EXPIRED` codes between the stream-reset and PUBLISH_DONE registries. Fixes #1581.
+- **PR #1607** ([[victor-vasiliev|Victor Vasiliev]]'s Largest Available Group filter) — one inline comment (01:29 UTC): "The first object in a subgroup starts the subgroup except in cases like 'largest Object' today and when a range filter explicitly starts partway through a Group. ... We could force the Subgroup ID to be the Object ID of the first Object, and then it'd be unambiguous." Posted as a cross-reference on [issue #1405](https://github.com/moq-wg/moq-transport/issues/1405) (Single Object Subgroups don't need a Subgroup ID) two minutes later.
+- **PR #1605** ([[victor-vasiliev|Victor Vasiliev]]'s DELIVERY_TIMEOUT split) — review summary (02:08 UTC): "I think this looks reasonable, but I don't intuitively understand why two timeouts are necessary." Plus six line-level suggestions, notably: renaming to "Delivery Timeouts and Data Reliability {#delivery-timeouts}", softening `MUST` → `SHOULD` where a timer isn't strictly required, suggesting `MAY`/`SHOULD` on WebTransport datagram-queue timeouts (pragmatic because WebTransport supports this natively).
+
+All three PRs are on the **Apr 27 interim agenda** (see [[interim-meetings]]).
+
+## moq-dev/moq — Catalog-Format Docs, `wait_for_broadcast` API, Producer Refactor, Subdomain Routing (Apr 22–23)
+[[luke-curley]] pushed a four-PR burst on `main` spanning 8 hours:
+
+- **PR #1339** (merged Apr 22 16:51 UTC, +5/−5) — Bump JS patch versions to publish `recvGroup`. `@moq/lite@0.2.1` on NPM was published Apr 16 **before** the `recvGroup` API landed in #1324 on Apr 17, so `@moq/watch@0.2.9` built against the new API declared `@moq/lite: ^0.2.1` and resolved to the broken 0.2.1 for consumers, causing runtime errors when `recvGroup` was called.
+- **PR #1340** (open, Apr 22 17:16 UTC, +182/−5) — `moq-lite: add OriginConsumer::wait_for_broadcast; deprecate consume_broadcast`. Flags synchronous `consume_broadcast` as a footgun: a freshly-connected origin has not yet received any announcements over the wire, so a sync lookup returns `None` even when the broadcast is about to arrive. moq-gst's source hit this directly. New `wait_for_broadcast(path)` scopes a fresh consumer to the path and loops.
+- **PR #1341** (open, Apr 23 00:01 UTC, +748/−1145) — `Refactor media producers and simplify fMP4 CMAF passthrough`. Renames `moq_mux::import` → `moq_mux::producer`, removes the `Fmp4Config` passthrough flag, makes CMAF passthrough the only fMP4 mode.
+- **PR #1343** (open, Apr 23 00:24 UTC, +226/−37) — `relay: add subdomain-based slug routing for customer isolation`. New `--auth-domain`/`MOQ_AUTH_DOMAIN` flag accepts suffix lists; when a connection URL host is `<slug>.<suffix>`, the slug is prepended to the path so `customer.cdn.moq.dev/foo` equals `cdn.moq.dev/customer/foo`. Multi-label slugs allowed.
+- **PR #1344** (merged Apr 23 01:12 UTC, +31/−0) — Add catalog-format configuration docs for `@moq/watch` (hang vs MSF, HTML example, auto-negotiation note).
+- **Issue #1342** (open, Apr 23 00:08 UTC) — *"Raw QUIC doesn't support paths"*: No PATH SETUP parameter, so only WebTransport works with path-based auth today.
+
+See [[moq-dev]].
+
+## Interop Runner — Apr 23 Flat at 22/69/14
+The **Apr 23 00:35 UTC** run is again **22 / 69 / 14** — third consecutive day at the same pass count after the two-day Apr 21–22 recovery (18→20→22). No further movement; the 1-test gap to the Apr 16 baseline (23/68/14) persists. See [[interop-runner]].
+
+## IETF MoQ WG — Apr 27 Interim Agenda Published ([[martin-duke]], Apr 23 02:41 UTC)
+[[martin-duke]] sent a short mailing-list note ("It's all editor time") announcing the [interim-2026-moq-14 agenda](https://datatracker.ietf.org/doc/agenda-interim-2026-moq-14-moq-01/) on the MoQ list. Editor-driven session working through:
+1. **PR #1542 / Issue #1458** — Split `SUBSCRIBE_NAMESPACE` and `SUBSCRIBE_TRACKS` with prefix update ([[alan-frindell]]).
+2. **PR #1586** — Delta-encode Object ID and Group ID in FETCH responses ([[ian-swett]]).
+3. **Issue #1604 / Issue #1602** — Placement of Joining FETCH on the SUBSCRIBE stream (noted as having complications).
+4. **PR #1605** — Split `DELIVERY_TIMEOUT` into two types (Vasiliev); potentially resolves #1476.
+5. **PR #1603 / Issue #1519** — Required request ID for draft-17.
+6. **General discussion** — Whether removing Message Parameters was a mistake.
+
+Meeting runs **2026-04-27 16:30 UTC** via Meetecho. See [[interim-meetings]].
 
 # Implementation Activity (Apr 21–22)
 

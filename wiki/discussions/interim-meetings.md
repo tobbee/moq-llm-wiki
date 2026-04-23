@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-18
+last_updated: 2026-04-23
 status: current
 ---
 
@@ -10,13 +10,26 @@ status: current
 
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
-| **interim-2026-moq-14** | **2026-04-27** | Agenda TBD (as of Apr 17). |
+| **interim-2026-moq-14** | **2026-04-27** 16:30 UTC | [Agenda](https://datatracker.ietf.org/doc/agenda-interim-2026-moq-14-moq-01/) posted Apr 22 — "all editor time" ([[martin-duke]]). See below. |
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
 | **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day) |
 | **interim-2026-moq-09** | **2026-06-12** | London interim |
 | **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim |
 | **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim |
+
+## interim-2026-moq-14 Agenda (Apr 27 16:30 UTC)
+
+Posted to datatracker and announced on the MoQ mailing list by [[martin-duke]] on 2026-04-22 19:41 PDT. "It's all editor time." Working items:
+
+1. **PR #1542 / Issue #1458** — Split `SUBSCRIBE_NAMESPACE` and `SUBSCRIBE_TRACKS` with prefix-update capability ([[alan-frindell]]).
+2. **PR #1586** — Delta-encode Object ID and Group ID in FETCH responses ([[ian-swett]]).
+3. **Issue #1604 / Issue #1602** — Placement of Joining FETCH on the SUBSCRIBE stream (noted as having complications).
+4. **PR #1605** — Split `DELIVERY_TIMEOUT` into `OBJECT_DELIVERY_TIMEOUT` and `SUBGROUP_DELIVERY_TIMEOUT` ([[victor-vasiliev|Victor Vasiliev]]); potentially resolves #1476.
+5. **PR #1603 / Issue #1519** — Required request ID for draft-17.
+6. **General discussion** — Whether removing Message Parameters was a mistake.
+
+Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to post issue slides.
 
 ## London Interim (June 11-12)
 

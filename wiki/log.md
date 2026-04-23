@@ -2,11 +2,59 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-23 - MSF InitTracks reverted, Luke opens group-alignment issue, Apr 27 agenda published, moq-dev PR burst, interop flat
+
+**Operation**: Update
+**Sources**:
+- Slack: No MCP access this session — skipped.
+- GitHub moq-wg repos:
+  - **msf**: **PR #154 merged Apr 22 17:01 UTC** by [[will-law]] — **Revert "Add support for InitTracks"** (−170 lines). After feedback from [[victor-vasiliev|Victor Vasiliev]], [[luke-curley]], and [[suhas-nandakumar]], Will decided the merged InitTracks design did not provide a practical solution for mid-stream parameter changes; MSF will stick with statically declared inits, leveraging AVC3 self-initializing segments (ISO/IEC 14496-15) for mid-stream changes. Follow-up discussion on catalog bloat: Will proposes `initCopy` or `inherit` track properties; Vasiliev asks if [#144 zlib compression](https://github.com/moq-wg/msf/issues/144) could solve it; Luke argues two tracks shouldn't have identical init data if publisher is demuxing correctly.
+  - **msf**: **Issue #155 opened Apr 22 22:47 UTC** by [[luke-curley]] — *"Sequence aligned groups are too restrictive"*. Argues MSF §4.2 currently mandates group alignment across tracks and lists four concrete problems (audio buffering forced to video keyframe boundaries, on-demand encoding of late renditions, mixed GoP sizes across renditions, transcoding non-source renditions). Proposes MSF require shared PTS but loosen group alignment; CMSF can keep alignment for HLS/DASH compat.
+  - **moq-transport**: **PR #1606 APPROVED by [[ian-swett]]** on Apr 23 01:20 UTC (stream reset codes generalization). **PR #1605** first review by Ian at 01:55–02:10 UTC — overall "looks reasonable but not sure two timeouts are necessary" + 6 line suggestions on MUST/SHOULD/MAY tuning, section rename, WebTransport datagram queue citation. **PR #1607** inline comment by Ian at 01:29 UTC — proposes forcing Subgroup ID = Object ID of first Object in a subgroup (cross-linked to issue [#1405](https://github.com/moq-wg/moq-transport/issues/1405)) to disambiguate subgroup start with "largest Object" / range filters.
+  - loc, secure-objects, cmsf, catalog-format, privacy-pass: no activity.
+- Implementation repos:
+  - **moq-dev/moq**: Four-PR burst by [[luke-curley]] (Apr 22 16:51 UTC – Apr 23 01:12 UTC):
+    - **PR #1339** (merged Apr 22 16:51 UTC, +5/−5) — bump JS patch versions to publish `recvGroup`; fixes the broken `@moq/lite@0.2.1` on NPM that predated the Apr 17 `recvGroup` API.
+    - **PR #1340** (open, Apr 22 17:16 UTC, +182/−5) — `OriginConsumer::wait_for_broadcast; deprecate consume_broadcast`. Synchronous `consume_broadcast` is a footgun on freshly-connected origins; moq-gst's source hit this.
+    - **PR #1341** (open, Apr 23 00:01 UTC, +748/−1145) — refactor media producers, simplify fMP4 CMAF passthrough; rename `moq_mux::import` → `moq_mux::producer`, remove `Fmp4Config` passthrough flag.
+    - **PR #1343** (open, Apr 23 00:24 UTC, +226/−37) — relay subdomain-based slug routing; `--auth-domain`/`MOQ_AUTH_DOMAIN` maps `<slug>.<suffix>` hosts into path-based routing.
+    - **PR #1344** (merged Apr 23 01:12 UTC, +31/−0) — catalog-format configuration docs for `@moq/watch`.
+    - **Issue #1342** (Apr 23 00:08 UTC) — *"Raw QUIC doesn't support paths"*: no PATH SETUP param, only WebTransport works with path-based auth today.
+  - **cloudflare/moq-rs**: No activity since Apr 21 PR #157 push.
+  - **google/quiche (moqt)**: No new moqt commits since Apr 22 `10045277` (session-parameter API).
+  - **moqtail/moqtail**: New Issue #177 opened Apr 22 11:08 UTC by @danrossi — Letsencrypt SSL setup docs suggestion. PR #169 (message-parameters fix, +900/−565) still open. Otherwise quiet.
+  - **video-dev/moq-js**: Quiet.
+  - **birneee/quiche_moq**: Quiet.
+- Mailing list: One new post — **[[martin-duke]] Apr 22 19:41 PDT**: *"Monday's agenda is ready"* → points at datatracker [agenda-interim-2026-moq-14](https://datatracker.ietf.org/doc/agenda-interim-2026-moq-14-moq-01/) for the Apr 27 16:30 UTC session. "It's all editor time."
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9). New Apr 27 interim agenda published (PR #1542/#1586/#1605/#1603/#1604/#1602 + Message Parameters discussion).
+- Interop runner: **Apr 23 00:35 UTC run — 22 / 69 / 14** — flat vs Apr 22 (third day of the same pass count after the Apr 21–22 two-day recovery). 1-test gap to the Apr 16 baseline remains.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: No open issues.
+
+**Pages updated**: discussions/discussions-2026-04.md, discussions/interim-meetings.md, drafts/moq-msf.md, drafts/moq-transport.md, implementations/moq-dev.md, interop/interop-runner.md
+
+**Key findings**:
+
+*MSF InitTracks reverted (Apr 22)* — Six days of debate on msf#153 resolved decisively: Will Law reverted his own PR #141 rather than land a partial fix. The consensus that formed between Vasiliev's original "remove `initTrack`", Luke's Apr 21 "I'd rather just use annexb", and Suhas's in-band SPS/PPS practice is now encoded as "statically declared inits only; AVC3 self-init segments for mid-stream changes". The open design question has shifted from *how to synchronize dynamic init updates* to *how to reduce the catalog bloat from repeated `initData` across renditions* — Will's proposed `initCopy`/`inherit` properties vs Vasiliev's proposed zlib compression (#144). Luke's stance is that a correctly-built demuxer won't produce duplicate init data in the first place, so `initCopy` is mostly a demuxer-passthrough affordance.
+
+*Luke's msf#155 challenges §4.2 group alignment* — Opened hours after the #153 revert. The framing ("Sequence aligned groups are too restrictive") targets a specific piece of MSF-00 §4.2 text (equal-numbered Groups must have overlapping render-duration). Luke's four arguments target different pipeline shapes: live encoding (audio flush latency tied to video keyframes), on-demand rendition lift-in, mixed GoP-size ladders (fast-join 1s / efficient 4k 4s), and OBS→Twitch transmux where source keyframe cadence is externally controlled. The proposed split — strict PTS alignment, loose group alignment in MSF; strict group alignment only in CMSF for HLS/DASH back-compat — is a substantive design proposal, not a typo-level nit. Expect discussion on the Apr 27 interim or via the `#moq` channel.
+
+*Ian Swett review wave (Apr 23 01:20–02:10 UTC)* — Three open moq-transport PRs reviewed in ~50 minutes, ahead of the Apr 27 interim that has all three on the agenda:
+- **#1606 APPROVED** — error-code generalization is straightforward and now ready to merge.
+- **#1605** — the DELIVERY_TIMEOUT split got its first real review. Ian's "don't intuitively understand why two timeouts are necessary" is the key question the editors will likely take up on Monday.
+- **#1607** — Ian's "force Subgroup ID = first Object ID" observation is the kind of design simplification that could land as a separate PR bolted onto the Largest-Available-Group filter work. Cross-posted to issue #1405 (which is the long-standing "Single Object Subgroups don't need a Subgroup ID" item).
+
+*moq-dev spec cleanup push (Apr 22–23)* — Luke's four PRs are all small/medium in scope (producer refactor is the largest at +748/−1145) but they read as a push to stabilize `main` ahead of (a) closing out hop-clustering #1322 and (b) promoting the MSF-vs-Hang catalog negotiation work landed Apr 19–20 (#1330). The `wait_for_broadcast` API is a direct fix for a footgun reported by moq-gst; the subdomain routing PR gives operators a cleaner customer-isolation story on multi-tenant relays.
+
+*Interop flat at 22/69/14* — Three days of the same number. Apr 22–23 didn't include landed implementation fixes that would touch the matrix (the moq-dev PRs are docs/refactors; moq-rs PR #157 is still open; quiche moqt just got a session-parameter API that doesn't change wire format). Expect movement again once PR #157 lands or moqtail PR #169 merges.
+
+---
 
 # 2026-04-22 - moq-rs datagram rate restored, quiche session-parameter API, moqtail timeout fix, interop +2 again
 

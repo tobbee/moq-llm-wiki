@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-20
+last_updated: 2026-04-23
 status: current
 ---
 
@@ -57,6 +57,15 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Catalog-Format Docs, wait_for_broadcast, Producer Refactor, Subdomain Routing (Apr 22–23)
+Four-PR burst by [[luke-curley]] on `main`:
+- **PR #1339** (merged Apr 22 16:51 UTC, +5/−5) — Bump JS patch versions to publish `recvGroup`. `@moq/lite@0.2.1` on NPM was published Apr 16 **before** the `recvGroup` API added in PR #1324 (Apr 17). `@moq/watch@0.2.9` built against the new API declared `@moq/lite: ^0.2.1`, resolving to the broken 0.2.1 for consumers and triggering runtime errors on `recvGroup`.
+- **PR #1340** (open, Apr 22 17:16 UTC, +182/−5) — `moq-lite: add OriginConsumer::wait_for_broadcast; deprecate consume_broadcast`. Synchronous `consume_broadcast` is a footgun: a freshly-connected origin has not yet received announcements over the wire, so a sync lookup returns `None` even when the broadcast is about to arrive. moq-gst's source hit this directly. `wait_for_broadcast(path)` scopes a fresh consumer to the path and loops.
+- **PR #1341** (open, Apr 23 00:01 UTC, +748/−1145) — `Refactor media producers and simplify fMP4 CMAF passthrough`. Renames `moq_mux::import` → `moq_mux::producer`, removes `Fmp4Config` passthrough flag, makes CMAF passthrough the only fMP4 mode.
+- **PR #1343** (open, Apr 23 00:24 UTC, +226/−37) — `relay: add subdomain-based slug routing for customer isolation`. New `--auth-domain`/`MOQ_AUTH_DOMAIN`/TOML `domains` suffix list. When a connection URL host is `<slug>.<suffix>`, the slug is prepended to the path before auth runs: `customer.cdn.moq.dev/foo` equals `cdn.moq.dev/customer/foo`. Hosts matching a suffix exactly or matching none fall back to plain path routing.
+- **PR #1344** (merged Apr 23 01:12 UTC, +31/−0) — Catalog-format docs for `@moq/watch`: `hang` (default) vs `msf`, HTML example, auto-negotiation note.
+- **Issue #1342** (open, Apr 23) — *"Raw QUIC doesn't support paths"*: No PATH SETUP parameter means only WebTransport works with path-based auth today.
 
 ## Hop-Based Clustering, MSF Catalog, DNS Bind (Apr 19–20)
 - **PR #1322** (open, Apr 19): Major refactor — ports the hop-based clustering design from `origin/dev` (#1082 + #1152) to `main`. Replaces three-tier `primary`/`secondary`/`combined` origin model and `cluster: bool` token flag with a single `OriginProducer` per relay tagged with a stable `OriginId`. Every `Broadcast` now carries `hops: Vec<OriginId>` so loops are refused and the shortest path wins. `Lite04` `Announce` changes to `Vec<OriginId>`; `Lite03` decodes as `UNKNOWN` placeholders. `MAX_HOPS` tightened 256 → 32. CLI: `--cluster-root`/`--cluster-node`/`--cluster-prefix` collapse into `--cluster-connect` for a full mesh, plus optional `--cluster-origin-id`. `Claims::cluster` is now `#[deprecated]`. Browser clients generate random 53-bit non-zero `originId` per session. Flagged as a `cargo-semver-checks` **breaking change** on `moq-lite` and `moq-relay`. +857/-900 lines.

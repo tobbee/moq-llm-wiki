@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -39,7 +39,8 @@ MSF defines how media is organized into MOQT tracks:
 
 # Active Issues (moq-wg/msf)
 
-- **#153** - `initTrack` does not work. Active design debate. Apr 14: [[will-law]] pivoted from "remove initTrack" to proposing in-band signaling — a standard MOQT Object property referencing an integer init ID defined in the catalog, enabling mid-stream init switching without a separate sync'd init track. Victor Vasiliev agrees in-band is the only race-free approach. Apr 21: [[luke-curley]] proposes using a new MP4 `track_id` per init (block on unknown `track_id`), and separately argues the cleanest fix is to **require static init data** (with annexb or inline init when `initData` is absent), reverting `initTrack` entirely.
+- **#155** (opened Apr 22) — *Sequence aligned groups are too restrictive* ([[luke-curley]]). Argues §4.2 currently mandates group-aligned boundaries across tracks, which forces audio to buffer until video keyframe boundaries are known, breaks on-demand encoding of late-added renditions, prevents mixing GoP sizes across renditions (1s for 360p vs 4+s for 4K), and complicates transcoding non-source renditions. Proposes MSF require shared PTS but loosen group alignment; CMSF can keep alignment for HLS/DASH back-compat.
+- **#153** — `initTrack` does not work. **RESOLVED Apr 22 via revert** — see PR #154 below. Catalog-bloat follow-up discussion: [[will-law]] proposes `initCopy` (point to another track's init) or more general `inherit` (all properties from a parent track); [[victor-vasiliev|Victor Vasiliev]] asks if [#144 zlib compression](https://github.com/moq-wg/msf/issues/144) could solve the repetition problem; [[luke-curley]] argues two tracks *shouldn't* have identical init data if the publisher is demuxing correctly, so `initCopy` is mostly useful for HLS→MoQ passthrough.
 - **#150** - Wall clock is problematic
 - **#149** - Catalog Mapping to MoQT
 - **#148** - Media Mapping to MoQT
@@ -54,10 +55,11 @@ MSF defines how media is organized into MOQT tracks:
 
 # Recent PRs
 
+- **PR #154** (Merged Apr 22) — **Revert "Add support for InitTracks"** ([[will-law]], −170 lines). Reverts PR #141 after Apr 14–22 debate in #153. MSF will stick with statically declared inits; mid-stream parameter re-initialization uses AVC3 self-initializing segments (ISO/IEC 14496-15). Will add language that if `initData` is not present, the track MUST be self-initializing.
 - **PR #118** (Merged Apr 13) - Add details of authorization flows (suhasHere; closes issue #119)
 - **PR #152** (Merged Apr 9) - Clarify MSF URL construction and fragment parameters
 - **PR #143** (Merged) - Break the monolith table into separate tables and sections
-- **PR #141** (Merged Apr 9) - Add support for InitTracks
+- **PR #141** (Merged Apr 9, **reverted Apr 22**) - Add support for InitTracks (reverted by PR #154)
 - **PR #133** (Open) - Add SCTE-35 support and CEA-608/708 accessibility fields
 - **PR #124** (Merged Apr 9) - Clarify first object in event and media timeline track
 - **PR #122** (Open) - Initial text on zapping
