@@ -2,13 +2,13 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-25
+last_updated: 2026-04-24
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
-# 2026-04-25 - Hop-based clustering MERGED on moq-dev, PR #1613 flow-control response to RRID DoS, interop finally ticks up to 23/68/14, moqtail FETCH wire format finalized
+# 2026-04-24 - Hop-based clustering MERGED on moq-dev, PR #1613 flow-control response to RRID DoS, interop finally ticks up to 23/68/14, moqtail FETCH wire format finalized
 
 **Operation**: Update
 **Sources**:
@@ -51,7 +51,7 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-24 - moq-transport editor wave: PR #1606 merged, #1608–#1611 opened, RRID DoS concern, Semgrep CI on moq-rs, Python examples on moq-dev
+# 2026-04-23 - moq-transport editor wave: PR #1606 merged, #1608–#1611 opened, RRID DoS concern, Semgrep CI on moq-rs, Python examples on moq-dev
 
 **Operation**: Update
 **Sources**:
