@@ -2,11 +2,44 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 24 UTC)
+
+## moq-dev/moq — Hop-Based Clustering MERGED (PR #1322, Apr 23 23:26 UTC)
+[[luke-curley]] **merged [PR #1322](https://github.com/moq-dev/moq/pull/1322)** ("moq-lite/moq-relay: hop-based clustering", +961/−979) at **23:26 UTC on Apr 23** — the structural rework of moq-relay's cluster plane that had been on the `hops-port` branch since Apr 19. Replaces the three-tier `primary` / `secondary` / `combined` origin model and the `cluster: bool` token flag with a single `OriginProducer` per relay tagged with a stable `OriginId`; every `Broadcast` now carries `hops: Vec<OriginId>` so loops are refused and the shortest path wins. CLI collapses `--cluster-root` / `--cluster-node` / `--cluster-prefix` into a single `--cluster-connect` list for full-mesh peers, plus optional `--cluster-origin-id`. `Lite04` `Announce` changes from `Vec<u64>` to `Vec<OriginId>`; `MAX_HOPS` tightened 256 → 32. `Claims::cluster` is now `#[deprecated]` — existing signed tokens still parse but the flag no longer affects routing. Browser JS `Publisher` generates a random 53-bit non-zero `originId` via `crypto.getRandomValues` per session. `cargo-semver-checks` will flag this as a **breaking change** on `moq-lite` and `moq-relay`; a `chore: release` PR #1338 was refreshed by moq-bot at Apr 23 23:42 UTC to pick up the version bumps. The PR description carries the `🤖 Generated with [Claude Code]` trailer — the largest Claude Code–authored merge to moq-dev `main` to date. Local smoke and browser-publisher interop checks remain on the unchecked test plan (wire-compatible by design, but the JS origin-id plumbing is newly executed). See [[moq-dev]].
+
+## moq-wg/moq-transport — PR #1613: Flow-Control Response to the RRID DoS (Apr 23 → 24)
+In direct response to [[martin-duke]]'s Apr 23 DoS escalation on [issue #1603](https://github.com/moq-wg/moq-transport/issues/1603) (request IDs multiplying via REQUEST_UPDATE), [[alan-frindell]] opened **[PR #1613](https://github.com/moq-wg/moq-transport/pull/1613)** at **Apr 23 23:10 UTC** (+30/0, labelled `Design`) — *Add MAX_REQUEST_UPDATES setup option and TOO_MANY_REQUEST_UPDATES error*. Per-stream flow control for REQUEST_UPDATE messages via a new `MAX_REQUEST_UPDATES` Setup Option; each `REQUEST_OK` / `REQUEST_ERROR` response restores one unit of capacity; default is 1 if not present.
+
+Martin's response was a short arc that ran through the night:
+
+- **Apr 23 23:28 UTC** — "What happens when REQUEST_UPDATE is aggregated as described in the draft?"
+- **Apr 23 23:31 UTC** — "Actually I take it back, this doesn't solve the problem at all. The problem isn't pending REQUEST_UPDATEs, it's any REQUEST_UPDATE at all. If the sender sends 1,000 REQUEST_UPDATES, skipping a valid ID each time, and each is OKed, I still have credit to do more requests, but the receiver still has to store 1,000 request IDs in case there is a reference to them later."
+- **Apr 24 00:42 UTC** — "OK, we chatted online and I get it now. Given the number of authorized streams, there's a cap on the maximum possible request ID assuming the peer isn't skipping request IDs, which it shouldn't. So this does finitely bound the non-contiguous request ID table. However, this PR is missing any text that endpoints have to check the request ID against this theoretical maximum. That's crucial, and a little tricky to write."
+
+Net outcome: the PR is viable but incomplete — the design is accepted but the spec text that makes the bound enforceable still needs to be written. This PR is now the **alternative-frame** to PR #1604 on the Apr 27 interim: #1613 keeps RRID and adds flow control; #1604 moves Joining FETCH onto the SUBSCRIBE stream so RRID stops multiplying in the first place. See [[moq-transport]] and [[interim-meetings]].
+
+## moq-wg/moq-transport — Issue #1612: afrind Hints at Allowing Joining FETCH with fwd=0
+Responding to Martin's Apr 23 [issue #1612](https://github.com/moq-wg/moq-transport/issues/1612) ("What happens to Joining FETCH if fwd changes to 0?"), [[alan-frindell]] posted Apr 23 21:02 UTC: *"Changing the subscription from 1 to 0 after joining fetch has no effect on the FETCH. We can update the spec. Though now it seems like requiring fwd=1 is causing a lot of problems. I wonder if we should just allow fwd=0."* Meanwhile, Martin updated PR #1604 at 20:57 UTC to note "Now fixes #1612 as well" and clarified (20:55 UTC review comment) that the PR already kills the FETCH on SUBSCRIBE teardown: *"I added text that killing SUBSCRIBE also kills the FETCH. I'm not sure how else to do it; there's no other way to turn off the SUBSCRIBE."* Concrete hint that the editors are converging on relaxing the fwd=1 precondition for Joining FETCH entirely.
+
+## moqtail — PR #168 Draft-16 FETCH Object Spec Finalized in PR Comment (Apr 23 20:01 UTC)
+@beyzademirr posted a detailed status comment on [moqtail#168](https://github.com/moqtail/moqtail/pull/168) formalising the final draft-16 FETCH-object wire format and API shape for moqtail-rs + moqtail-ts: Serialization Flags varint (subgroup mode + object_id / group_id / priority present bits + extensions + datagram bits + End-of-Range markers at 0x8C / 0x10C), sum-type API (Rust `enum FetchObject { Object, EndOfRange }`; TS class + factories), `FetchObjectContext` threaded through serialize/deserialize. FETCH objects no longer carry Object Status; zero-length payload = zero-length Normal object. Client-js / meet / Rust client apps stay source-compatible. Follows the Apr 23 19:49–19:56 UTC conflict-resolution push by @ctllmp. See [[moqtail]].
+
+## Interop Runner — First Up-Tick in 3 Days (Apr 24 00:35 UTC = 23/68/14)
+After three days flat at 22/69/14 (Apr 21–23), the **Apr 24 00:35 UTC** run finally moved up by one: **23 / 68 / 14**, matching the Apr 15–16 baseline. One test flipped fail → pass; the summary report doesn't expose the pair diff directly, but the timing (Apr 23 23:26 UTC hop-clustering merge, ~1 hour before the run) is consistent with a moq-dev-rs / moq-dev-js docker rebuild picking up the new cluster plane. See [[interop-runner]].
+
+## Slack #moq — Ian Swett Asks for i18n Statement Review (Apr 23 14:12 UTC)
+[[ian-swett]] posted to `#moq`: *"If anyone has any familiarity with Internationalization Statements, can they review: moq-transport/pull/1588. I think it looks ok, but it's generated by AI based on past IETF docs, so it'd be good to have a review from someone who knows more than Alan and I."* Refers to [moq-transport PR #1588](https://github.com/moq-wg/moq-transport/pull/1588) (Add internationalization statement for moqt URI scheme). Still outstanding — no response on the channel.
+
+## Mailing List, Datatracker, MoQ Monthly — Quiet
+- **Mailing list**: Still no new posts since [[martin-duke]]'s Apr 22 19:41 PDT "Monday's agenda is ready" notice — two calendar days of silence ahead of the Apr 27 interim.
+- **Datatracker**: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
 
 # Implementation Activity (Apr 23–24 UTC)
 

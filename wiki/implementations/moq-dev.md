@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
@@ -58,6 +58,22 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Recent Activity (April 2026)
 
+## Hop-Based Clustering MERGED (PR #1322, Apr 23 23:26 UTC)
+After four days of work on the `hops-port` branch (opened Apr 19), [[luke-curley]] **merged [PR #1322](https://github.com/moq-dev/moq/pull/1322)** (+961/−979 on the final diff) — the full port of the hop-based clustering design from `origin/dev` (#1082 + #1152) onto `main`. This is the **first substantive protocol change merge to `main` in weeks** and a structural rework of moq-relay's cluster plane:
+
+- **`OriginId`**: new non-zero 62-bit varint type encoded as `u64` on the wire.
+- **`Broadcast::hops: Vec<OriginId>`**: every Broadcast carries its origin chain; `BroadcastProducer` / `BroadcastConsumer` / `BroadcastDynamic` expose it via a `pub info: Broadcast` field plus `Deref<Target = Broadcast>`.
+- **Loop refusal + shortest-path**: `OriginProducer::publish_broadcast` refuses broadcasts whose hop chain already contains our id; on equal hop lengths the newer broadcast wins (test change: `test_duplicate` now expects this).
+- **Cluster CLI**: `--cluster-root` / `--cluster-node` / `--cluster-prefix` collapse into `--cluster-connect` (repeat or comma-separated for mesh peers) + optional `--cluster-origin-id` for deterministic IDs in tests/logs. `primary` / `secondary` / `combined` tiers are gone; the `internal/origins/*` registration dance is gone.
+- **`Claims::cluster`**: now `#[deprecated]` — existing signed tokens still parse, but the flag no longer affects routing. The one call site that unavoidably reads it for back-compat uses `#[allow(deprecated)]`.
+- **`Lite04` `Announce`**: changes from `Vec<u64>` to `Vec<OriginId>`. `Lite03` still sends count-only, decoded as `UNKNOWN` placeholders. `MAX_HOPS` tightened from 256 → 32.
+- **JS `Publisher`**: generates a random 53-bit non-zero `originId` via `crypto.getRandomValues` per session and appends it to `hops` on every outbound `Announce::Active`. Browser clients only publish their own broadcasts (no forwarding), so a per-connection id is enough for the relay to tag/dedupe.
+- **Demo configs**: `demo/relay/{leaf0,leaf1,root}.toml` switched to the mesh `connect = [...]` format with pinned per-node `origin_id`s (1 / 10 / 11) for readable logs.
+- `cargo-semver-checks` will flag this as a **breaking change** on `moq-lite` and `moq-relay`; release-plz is expected to pick up the version bumps automatically.
+- **Local smoke test and browser-publisher interop checks remain on the unchecked test plan** (wire-compatible by design, but the JS origin-id plumbing is newly executed).
+
+A `chore: release` PR (#1338, moq-bot) was refreshed at Apr 23 23:42 UTC to pick up the version bumps. PR #1322 was authored with Claude Code (see the `🤖 Generated with [Claude Code]` trailer in the description) — the largest Claude Code–authored PR to land on moq-dev `main` to date.
+
 ## Python Examples: clock + announced (PR #1345, Apr 23)
 - **PR #1345** (open, Apr 23 20:39 UTC, +108/0) — `py/moq-lite: add clock + announced examples`. Two new CLI examples in the Python binding:
   - `examples/clock.py` — Python twin of `rs/moq-clock` with `publish` / `subscribe` subcommands; publishes UTC timestamps at one group per minute, one frame per second.
@@ -75,7 +91,7 @@ Four-PR burst by [[luke-curley]] on `main`:
 - **Issue #1342** (open, Apr 23) — *"Raw QUIC doesn't support paths"*: No PATH SETUP parameter means only WebTransport works with path-based auth today.
 
 ## Hop-Based Clustering, MSF Catalog, DNS Bind (Apr 19–20)
-- **PR #1322** (open, Apr 19): Major refactor — ports the hop-based clustering design from `origin/dev` (#1082 + #1152) to `main`. Replaces three-tier `primary`/`secondary`/`combined` origin model and `cluster: bool` token flag with a single `OriginProducer` per relay tagged with a stable `OriginId`. Every `Broadcast` now carries `hops: Vec<OriginId>` so loops are refused and the shortest path wins. `Lite04` `Announce` changes to `Vec<OriginId>`; `Lite03` decodes as `UNKNOWN` placeholders. `MAX_HOPS` tightened 256 → 32. CLI: `--cluster-root`/`--cluster-node`/`--cluster-prefix` collapse into `--cluster-connect` for a full mesh, plus optional `--cluster-origin-id`. `Claims::cluster` is now `#[deprecated]`. Browser clients generate random 53-bit non-zero `originId` per session. Flagged as a `cargo-semver-checks` **breaking change** on `moq-lite` and `moq-relay`. +857/-900 lines.
+- **PR #1322** (**merged Apr 23 23:26 UTC** — see top of this page): Major refactor — ports the hop-based clustering design from `origin/dev` (#1082 + #1152) to `main`. Replaces three-tier `primary`/`secondary`/`combined` origin model and `cluster: bool` token flag with a single `OriginProducer` per relay tagged with a stable `OriginId`. Every `Broadcast` now carries `hops: Vec<OriginId>` so loops are refused and the shortest path wins. `Lite04` `Announce` changes to `Vec<OriginId>`; `Lite03` decodes as `UNKNOWN` placeholders. `MAX_HOPS` tightened 256 → 32. CLI: `--cluster-root`/`--cluster-node`/`--cluster-prefix` collapse into `--cluster-connect` for a full mesh, plus optional `--cluster-origin-id`. `Claims::cluster` is now `#[deprecated]`. Browser clients generate random 53-bit non-zero `originId` per session. Flagged as a `cargo-semver-checks` **breaking change** on `moq-lite` and `moq-relay`. +857/-900 lines.
 - **PR #1330** (open, Apr 19–20): **MSF catalog format support** with auto-negotiation. New `@moq/msf` package with Zod-validated schema + encode/decode/fetch helpers. `js/watch/src/msf.ts` converts MSF catalogs into the internal Hang shape. `<moq-watch>` gains a `catalog="hang"|"msf"|"auto"` attribute. Negotiation: Hang gets a 100ms head start, then `Promise.any()` picks the first successful catalog; winner continues for subsequent updates.
 - **PR #1335** (open, Apr 19): Raise WebSocket fallback head start 200ms → 500ms to give QUIC more runway; adds a synchronous check so the WebSocket connect attempt bails out when WebTransport has already won the race.
 - **PR #1332** (merged Apr 19): `moq-native` resolves DNS hostnames in `--server-bind` — accepts `host:port` inputs like `fly-global-services:443` on Fly.io. `ServerConfig::bind` changes from `SocketAddr` to `String`; first resolved address is used since Quinn can't bind to multiple addresses.

@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -41,11 +41,11 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-23)
+# Active Issues (as of 2026-04-24)
 
 ## Design Issues
-- **#1612** - What happens to Joining FETCH if fwd changes to 0? (opened Apr 23 by [[martin-duke]]; asks for explicit spec behaviour)
-- **#1603** - What is the use case for required-request-id. **Apr 23**: [[martin-duke]] escalated with a **DoS concern** — "a malicious client could use every other request ID to maximize my state" (request IDs multiply via REQUEST_UPDATE even on one stream). Martin's proposed resolution: eliminate RRID except for REQUEST_UPDATE and FETCH, move Joining FETCH to the SUBSCRIBE stream (per PR #1604), use SWITCH or accept REQUEST_ERROR for ordering.
+- **#1612** - What happens to Joining FETCH if fwd changes to 0? Opened Apr 23 by [[martin-duke]]. **Apr 23 21:02 UTC**: [[alan-frindell]] replied: "Changing the subscription from 1 to 0 after joining fetch has no effect on the FETCH. We can update the spec. Though now it seems like requiring fwd=1 is causing a lot of problems. I wonder if we should just allow fwd=0." **Apr 23 20:57**: PR #1604 description updated to "Now fixes #1612 as well".
+- **#1603** - What is the use case for required-request-id. **Apr 23**: [[martin-duke]] escalated with a **DoS concern** — "a malicious client could use every other request ID to maximize my state" (request IDs multiply via REQUEST_UPDATE even on one stream). Martin's proposed resolution: eliminate RRID except for REQUEST_UPDATE and FETCH, move Joining FETCH to the SUBSCRIBE stream (per PR #1604), use SWITCH or accept REQUEST_ERROR for ordering. **Apr 23 23:10**: [[alan-frindell]] responded with PR #1613 adding per-stream flow control for REQUEST_UPDATE.
 - **#1602** - Joining Fetch should be on the SUBSCRIBE/PUBLISH stream (addressed by PR #1604)
 - **#1601** - Joining FETCH session errors are subject to a race condition (addressed by PR #1609)
 - **#1598** - Why PUBLISH_OK not REQUEST_OK? (addressed by PR #1611)
@@ -59,13 +59,14 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **#1405** - Single Object Subgroups don't need a Subgroup ID (**closed by PR #1608**)
 
 ## Open PRs
+- **PR #1613** (Apr 23 23:10 UTC, [[alan-frindell]], +30/0, label: `Design`) — *Add MAX_REQUEST_UPDATES setup option and TOO_MANY_REQUEST_UPDATES error* (references #1063). Adds **per-stream flow control** for REQUEST_UPDATE messages via a new `MAX_REQUEST_UPDATES` Setup Option; each REQUEST_OK / REQUEST_ERROR response restores one unit of capacity; default is 1 if not present. **Apr 23 23:28–23:31 UTC**: [[martin-duke]] initially pushed back — "this doesn't solve the problem at all… if the sender sends 1,000 REQUEST_UPDATES skipping valid IDs each time, and each is OKed, I still have credit to do more requests, but the receiver still has to store 1,000 request IDs in case there is a reference to them later". **Apr 24 00:42 UTC**: After an offline chat, Martin posted "OK, we chatted online and I get it now. Given the number of authorized streams, there's a cap on the maximum possible request ID assuming the peer isn't skipping request IDs, which it shouldn't. So this does finitely bound the non-contiguous request ID table. However, this PR is missing any text that endpoints have to check the request ID against this theoretical maximum. That's crucial, and a little tricky to write." Direct response to the RRID DoS escalation in #1603; now the alternative-frame to PR #1604's structural reshuffling.
 - **PR #1611** (Apr 23, [[alan-frindell]]) — *Remove PUBLISH_OK message type, make it a REQUEST_OK alias* (fixes #1598, +11/−30). **Wire format change**: PUBLISH_OK has the same wire format as REQUEST_OK (no Track Properties, only Parameters), so the code point is removed and PUBLISH_OK becomes a textual shorthand. Author note: retarget main branch after #1610 lands.
 - **PR #1610** (Apr 23, [[alan-frindell]]) — *Define textual aliases for REQUEST_OK by request type* (+22/−17). Editorial: introduces `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK` as shorthand for `REQUEST_OK (in response to X)`.
 - **PR #1609** (Apr 23, [[alan-frindell]]) — *Joining Fetch forward state mismatch is a request error* (fixes #1601, +3/−2). Downgrades session-fatal forward-state mismatch (race between REQUEST_UPDATE fwd=1 and joining FETCH on different streams) to a request error.
 - **PR #1608** (Apr 23, [[ian-swett]] via Jules AI) — *Make Subgroup ID identical to first Object Id in the Subgroup* (fixes #1405, closes #1593, +9/−10). Follow-up to Ian's Apr 23 01:29 UTC comment on #1607. First review comment from [[alan-frindell]]: "still relevant if you have a group with SG=0 and datagrams."
 - **PR #1607** (Apr 18) - [Draft/RFC] Largest Available Group filter ([[victor-vasiliev|Victor Vasiliev]]). Simpler alternative to REWIND: current group only, always serves complete group, no relay-side backfill. Coalescing point of the Apr 17–18 mailing-list convergence on LargestGroup/CurrentGroup. **Apr 19**: [[luke-curley]] left the first review — pushes back on the "MUST serve a complete group" / "full cache only" framing. **Apr 23**: [[suhas-nandakumar]] marked the PR **CHANGES_REQUESTED** (15:07 UTC, the first hard blocker). Separately, [[ian-swett]]'s Apr 23 inline "force Subgroup ID = first Object ID" suggestion has now been split into standalone PR #1608. See [[joining-fetch-dissent]].
 - **PR #1605** - Split DELIVERY_TIMEOUT into two types of timeout ([[victor-vasiliev|Victor Vasiliev]], Apr 14). `OBJECT_DELIVERY_TIMEOUT` replaces existing `DELIVERY_TIMEOUT`; new `SUBGROUP_DELIVERY_TIMEOUT` covers subgroups that have been fully queued but not yet fully delivered. Fixes #667 and #606. **Apr 23 morning**: First review by [[ian-swett]] — "this looks reasonable, but I don't intuitively understand why two timeouts are necessary". **Apr 23 afternoon**: [[alan-frindell]] added three suggestions — explicitly permit cancellation of retransmissions after delivery timeout, and evaluate delivery timeout "as late as possible" after internal queuing. On the Apr 27 interim agenda.
-- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378. **Apr 23**: [[alan-frindell]] asked [[martin-duke]] for thoughts on Gwendal's FETCH+PUBLISH_DONE race proposal; Martin replies that REQUEST_UPDATE ordering is a general problem and orthogonal to this PR.
+- **PR #1604** - Joining FETCH with subscription (implements #1602) — active review; Gwendal Simon (Apr 16) notes this is the subscriber-initiated sibling of the relay-initiated PUBLISH+catch-up pattern in SWITCH #1378. **Apr 23**: [[alan-frindell]] asked [[martin-duke]] for thoughts on Gwendal's FETCH+PUBLISH_DONE race proposal; Martin replies that REQUEST_UPDATE ordering is a general problem and orthogonal to this PR. **Apr 23 20:55 UTC**: Martin added text that "killing SUBSCRIBE also kills the FETCH. I'm not sure how else to do it; there's no other way to turn off the SUBSCRIBE." **Apr 23 20:57 UTC**: Martin noted the PR "Now fixes #1612 as well". Branch is `dirty` (merge conflict with `main`).
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID (now set to be **closed by #1608**).
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme

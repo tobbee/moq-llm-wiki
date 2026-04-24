@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-23
+last_updated: 2026-04-25
 status: current
 ---
 
@@ -26,7 +26,7 @@ Posted to datatracker and announced on the MoQ mailing list by [[martin-duke]] o
 2. **PR #1586** — Delta-encode Object ID and Group ID in FETCH responses ([[ian-swett]]).
 3. **Issue #1604 / Issue #1602** — Placement of Joining FETCH on the SUBSCRIBE stream (noted as having complications).
 4. **PR #1605** — Split `DELIVERY_TIMEOUT` into `OBJECT_DELIVERY_TIMEOUT` and `SUBGROUP_DELIVERY_TIMEOUT` ([[victor-vasiliev|Victor Vasiliev]]); potentially resolves #1476.
-5. **PR #1603 / Issue #1519** — Required request ID for draft-17.
+5. **PR #1603 / Issue #1519** — Required request ID for draft-17. Now a **three-way fork** after Apr 23–24 activity: (a) keep status quo; (b) PR #1604 moves Joining FETCH onto SUBSCRIBE stream so RRID stops multiplying; (c) PR #1613 ([[alan-frindell]], Apr 23 23:10 UTC) keeps RRID but adds a `MAX_REQUEST_UPDATES` Setup Option for per-stream flow control on REQUEST_UPDATE. Martin Duke's Apr 24 00:42 UTC comment on #1613 accepts the bound argument but flags missing enforcement text.
 6. **General discussion** — Whether removing Message Parameters was a mistake.
 
 Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to post issue slides.

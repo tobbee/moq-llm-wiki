@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
@@ -42,7 +42,14 @@ Major push toward draft-16 compliance. PRs merged April 14–16:
 
 **Open**:
 - **PR #169**: "Fix/message parameters fix" — update fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (older drafts' key-value pairs were still in place).
-- **PR #168**: Feature/draft16 fetch object — still in progress. **Apr 23 19:49–19:56 UTC**: @ctllmp resolved conflicts and merged `draft-16` back into the feature branch (`0570542`, `bf84690`, `1f967c1`), rebase work ahead of a push to land. +1094/−443 lines implementing draft-16 §10.4.4 fetch-object serialization with bitmask-based serialization flags, delta encoding, and end-of-range markers.
+- **PR #168**: Feature/draft16 fetch object — still in progress. **Apr 23 19:49–19:56 UTC**: @ctllmp resolved conflicts and merged `draft-16` back into the feature branch (`0570542`, `bf84690`, `1f967c1`), rebase work ahead of a push to land. **Apr 23 20:01 UTC**: @beyzademirr posted a detailed status comment on the PR describing the final wire-format and API shape (author's canonical PR description):
+  - FETCH_HEADER (Type=0x05, Request ID) unchanged.
+  - Replaced the fixed field sequence with a **Serialization Flags varint up front**: low 2 bits = subgroup mode (zero / prior / prior+1 / explicit); 0x04 `object_id` present (else prior+1); 0x08 `group_id` (else prior); 0x10 `priority` (else prior); 0x20 extensions; 0x40 datagram. 0x8C = End of Non-Existent Range, 0x10C = End of Unknown Range (§10.4.4.2). Any other value ≥ 128 → `ProtocolViolation`.
+  - **FETCH objects no longer carry Object Status**; zero-length payload = zero-length Normal object.
+  - **API**: Fetch stream entries are now a sum type. Rust: `enum FetchObject { Object(FetchObjectPayload), EndOfRange { kind, group_id, object_id } }`. TS: `FetchObject` class with `kind: 'object' | 'end_of_range'` and `newObject` / `newEndOfRange` factories. Added `FetchObjectContext` threaded through serialize/deserialize on both sides, mirroring the existing `previous_object_id` pattern used for `SubgroupObject`. Encoder emits the compact form by diffing against prior context; first object on a stream must be fully explicit.
+  - **Datagram bit**: added `forwarding_preference` to `FetchObjectPayload` so FETCH-carried datagram objects round-trip without losing that metadata; drops the old kludge in `try_into_fetch` that stuffed `object_id` into `subgroup_id`.
+  - Files touched: Rust `libs/moqtail-rs/src/model/data/{fetch_object.rs,object.rs}`, `libs/moqtail-rs/src/transport/data_stream_handler.rs`, `apps/relay/src/server/{track_cache.rs,message_handlers/fetch_handler.rs}`; TS `libs/moqtail-ts/src/model/data/{fetch_object.ts,object.ts}`, `libs/moqtail-ts/src/client/{data_stream.ts,publication/fetch.ts,client.ts}`. Relay cache now stores `FetchObjectPayload`; `EndOfRange` is wire-level-only. The client-js / meet / Rust client apps stay source-compatible — the enum transform is internal to the libs.
+  +1094/−443 overall.
 - **PR #145**: Umbrella draft-16 tracking PR (+12,200 / −10,236, zafergurel).
 
 A v0.9.1 release is pending (PR #173), including a fix for a race condition causing negative object deltas.
