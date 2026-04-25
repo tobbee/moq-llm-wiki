@@ -7,7 +7,10 @@ const config: QuartzConfig = {
     pageTitleSuffix: " | MOQ Protocol Tracker",
     enableSPA: true,
     enablePopovers: true,
-    analytics: null,
+    analytics: {
+      provider: "goatcounter",
+      websiteId: "moq-llm-wiki",
+    },
     locale: "en-US",
     baseUrl: "tobbee.github.io/moq-llm-wiki",
     ignorePatterns: ["private", "templates", ".obsidian"],
