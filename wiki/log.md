@@ -2,11 +2,59 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-25 - Luke Curley joins the pre-interim design debate, PR #1610 quietly merged Apr 23, interim slides posted, interop hits new April high at 24/67/14
+
+**Operation**: Update
+**Sources**:
+- Slack: MCP verified working. `#moq` / `#moq-rs` / `#moq-js` / `#libquicr` all quiet — no new posts since [[ian-swett]]'s Apr 23 14:12 UTC i18n review request on PR #1588.
+- GitHub moq-wg repos:
+  - **moq-transport**:
+    - **PR #1610 noted as MERGED** Apr 23 21:03 UTC by [[alan-frindell]] (+22/−17, *Define textual aliases for REQUEST_OK by request type*). The Apr 24 log entry incorrectly recorded this as still open; the merge happened ~2 hours after the PR opened, after a one-line `LGTM` from [[ian-swett]]. Unblocks PR #1611 (PUBLISH_OK removal) which had been parked behind it.
+    - **PR #1608 review thread** (Subgroup ID = first Object Id) — three Apr 24 comments approaching consensus: [[ian-swett]] 12:26 UTC ("That's what I mean, so I guess I should be more explicit"), [[suhas-nandakumar]] 17:43 UTC suggested-text `Original publishers SHOULD assign each Subgroup a Subgroup ID equal to the Object ID`, [[ian-swett]] 18:17 UTC ("Actually, re-reading the text, isn't that what it says?").
+    - **PR #1586 review thread** (delta-encoded Object/Group ID in FETCH) — [[ian-swett]] Apr 24 18:15 UTC pushed two suggested-text patches addressing the Apr 23 ambiguity flagged by afrind, asking for re-review. Key clarification: `If there is a prior Object in the Group and the Object ID Delta field is present, the Object ID is the prior Object's ID plus the Object ID Delta.`
+    - **Issue #1603 / PR #1607 / Issue #1358 — [[luke-curley]] returns to the spec debate**: Three substantive comments in 52 minutes on Apr 24 evening UTC.
+      - **#1603 (RRID DoS), Apr 24 22:44 UTC**: "I don't understand why it's on so many messages either. … +1 Martin's concern about DoS. I don't think it's a major issue in this instance because of MAX_STREAMS, but I'm not a fan of blocking on arbitrary IDs like Track Alias and Required Request ID in general (oops forgot a timeout)." Lines up with Martin's structural-fix camp (PR #1604).
+      - **PR #1607 (Largest Available Group filter), Apr 24 23:10 UTC**: Concrete defense against Suhas's NextGroup alternative. Two arguments: (1) catalogs MUST use LargestGroup (NextGroup never resolves on dormant tracks, NGR for catalogs sends every existing subscriber a duplicate copy); (2) Twitch TTV math — at 1s into a 2s GoP with 1.5 Mb/s media on 3 Mb/s network, race-to-startup is 0.66s vs 1s wait = **333 ms faster startup**, plus warmed congestion controller. Proposes the combined `CurrentGroup + NGR` race idiom.
+      - **Issue #1358 (Subscribing to start of current Group), Apr 24 23:36 UTC**: Opens a new design problem — *with subscriber priorities, a JOINING FETCH will never be deprioritized even when a new group starts*. Walks through TTV=1.33s for JOINING FETCH vs TTV=0.5s for hypothetical `SUBSCRIBE filter=LargestGroup order=DESC` in his concrete example.
+    - **PR #1611 / #1609 / #1604 / #1613**: Quiet since Apr 24 log entry.
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass: no activity.
+- Implementation repos:
+  - **moq-dev/moq**:
+    - **PR #1343** (subdomain-based slug routing for customer isolation, +248/−27) opened Apr 23 by [[luke-curley]]; updated Apr 24 22:22 UTC. CodeRabbit flagged a 🔴 **Critical** issue Apr 23: the WebSocket and web auth handlers build `AuthParams` directly without consulting `Auth::domains`, which would leak the slug-based isolation in the WebSocket path. Awaiting Luke's response.
+    - **PR #1347** opened Apr 24 17:04 UTC by dependabot[bot] — bump `rustls-webpki` 0.103.12 → 0.103.13.
+    - **Issue #1346** opened Apr 24 08:24 UTC by @kubo6472 — first externally-reported bug exercising the new `<moq-watch catalog-format="msf">` element (PR #1330, Apr 20). User points the element at the Cloudflare draft-14 endpoint; hits `Cloudflare relay does not support broadcast discovery yet; skipping subscribe_namespace` warning + `subscribe error: id=0 broadcast=room/bbb track=catalog error=SUBSCRIBE error: code=0 reason=internal error: Internal error`. No reply yet from Luke. Confirms cross-impl friction at the catalog discovery layer between moq-lite/moq-dev clients and the Cloudflare moq-rs relay (which still doesn't implement `SUBSCRIBE_NAMESPACE`).
+    - No new merges to `main` since PR #1322 (hop-based clustering, Apr 23 23:26 UTC).
+  - **cloudflare/moq-rs**, **video-dev/moq-js**, **moqtail/moqtail**, **birneee/quiche_moq**: Quiet.
+  - **google/quiche (moqt)**: No new moqt-specific commits since the Apr 22 batch by [[martin-duke]] (`MoqtClient`/`MoqtServer` session parameters API + `moqt_messages.h` cleanup).
+- Mailing list: **[[alan-frindell]] replied Apr 24 18:26 PDT (Apr 25 01:26 UTC)** to Martin's "Monday's agenda is ready" thread with the slides folder link. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms [[victor-vasiliev|Victor Vasiliev]] will present a **competing proposal to RRID** at the Apr 27 interim. Headline agenda items now have published slides for **#1608**, **#1519/#1603**, **#1613**, **#1605**; time permitting: Joining FETCH Dissent.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- Interop runner: **Apr 25 00:32 UTC run = 24 / 67 / 14** — second consecutive day of improvement and a **new April 2026 high-water mark** (Apr 15–16 baseline was 23/68/14). One more test flipped fail → pass. First time since draft-17 publication that the matrix has improved on two consecutive days.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: None open.
+
+**Pages updated**: discussions/discussions-2026-04.md, discussions/interim-meetings.md, drafts/moq-transport.md, implementations/moq-dev.md, interop/interop-runner.md
+
+**Key findings**:
+
+*Luke Curley returns to moq-transport spec PRs in force* — After being mostly absent from the `moq-wg/moq-transport` thread (concentrating on his own moq-dev / moq-lite codebase), Luke posted three substantive comments in 52 minutes on Apr 24 evening UTC, weighing in on three of the four headline Apr 27 interim agenda items. The pattern is striking: Luke (1) **+1'd Martin's RRID DoS concern** (#1603), aligning with the structural-fix camp behind PR #1604 over Alan's flow-control camp behind PR #1613; (2) **provided the strongest deployment-rooted defense yet** for PR #1607 (Largest Available Group filter), with concrete Twitch TTV math (333 ms median startup-time savings) and the catalog-track use case that *requires* it; and (3) **opened a new design problem** with JOINING FETCH and subscriber priorities, showing TTV=1.33s for JOINING FETCH vs TTV=0.5s for a hypothetical `SUBSCRIBE filter=LargestGroup order=DESC` because the SUBSCRIBE can immediately reprioritize to a new group while a JOINING FETCH cannot. Net effect heading into the interim: PR #1607 has its strongest pro-merge advocate yet, PR #1604 vs #1613 leans toward #1604, and the JOINING-FETCH-vs-LargestGroup-SUBSCRIBE ergonomic comparison just got a lot sharper.
+
+*PR #1610 was actually merged Apr 23, not still open as the Apr 24 log claimed* — A factual correction to yesterday's log: the editorial REQUEST_OK textual-aliases PR was merged at Apr 23 21:03 UTC, ~2 hours after opening, after a one-line `LGTM` from Ian Swett. This unblocks PR #1611 (Remove PUBLISH_OK message type, make it a REQUEST_OK alias), which had been parked waiting on the rename to land first. Wiki has been corrected — moq-transport's Recently Merged section now lists #1610 above #1606.
+
+*Apr 27 interim slides are posted; Victor Vasiliev will present an RRID alternative* — Alan's mailing-list reply locks in the agenda 60 hours before the meeting and explicitly flags that Victor will ship updated slides on **two** topics: delivery timeout proposals (PR #1605) and **request ID alternatives**. The "request ID alternatives" line is the new piece of information — it confirms there will be a third design proposal on the table beyond Martin's PR #1604 (move Joining FETCH onto SUBSCRIBE stream) and Alan's PR #1613 (MAX_REQUEST_UPDATES flow control). The interim is now positioned to choose between (a) status quo, (b) #1604, (c) #1613, or (d) Victor's still-private proposal.
+
+*moq-relay subdomain routing lands on the roadmap with a critical auth bug* — Luke's PR #1343 adds the first SaaS-style multi-tenancy primitive in moq-relay: `<slug>.<suffix>` host pattern is rewritten to `<suffix>/<slug>/...` before auth runs. CodeRabbit caught a 🔴 Critical issue at PR-open time — the WS and web auth handlers build `AuthParams` directly without consulting `Auth::domains`, leaving a slug-isolation bypass on the WebSocket fallback path. Luke has not yet responded; the PR remains open. This is directly relevant to anyone running moq-relay behind a wildcard certificate (notably the `cdn.moq.dev` hosted relay).
+
+*First externally-reported @moq/watch + MSF cross-impl bug* — Issue #1346 (kubo6472) is the first externally-reported bug exercising the catalog-format negotiation that Luke landed in PR #1330 (Apr 20). The user pointed `<moq-watch>` with `catalog-format="msf"` at the Cloudflare draft-14 endpoint, and hit two errors on the catalog discovery flow: a `Cloudflare relay does not support broadcast discovery yet; skipping subscribe_namespace` warning followed by an internal SUBSCRIBE error on the catalog track. Confirms the moq-lite ↔ moq-rs catalog-discovery interop gap is now exposed at the user-facing layer in the new browser element.
+
+*Interop matrix at new April high; entering the interim at peak strength* — 24/67/14 at Apr 25 00:32 UTC is the strongest April reading and the first time since draft-17 publication that the matrix has improved on two consecutive days (22 → 23 → 24). With no new moq-dev/moq merges to `main` between the Apr 24 and Apr 25 runs (PR #1322 was the most recent landing, and was already counted toward yesterday's tick), the gain is most likely attributable to ongoing moqtail or moq-rs container rebuilds. The matrix enters the Apr 27 interim at its strongest April reading — a counter-narrative to the otherwise unresolved spec design debate.
+
+---
 
 # 2026-04-24 - Hop-based clustering MERGED on moq-dev, PR #1613 flow-control response to RRID DoS, interop finally ticks up to 23/68/14, moqtail FETCH wire format finalized
 

@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
@@ -30,6 +30,8 @@ Posted to datatracker and announced on the MoQ mailing list by [[martin-duke]] o
 6. **General discussion** — Whether removing Message Parameters was a mistake.
 
 Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to post issue slides.
+
+**Apr 24 18:26 PDT (Apr 25 01:26 UTC) update**: [[alan-frindell]] replied to Martin's agenda thread on the mailing list with the slides folder link. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms [[victor-vasiliev|Victor Vasiliev]] will present a **competing proposal to RRID** at the interim, complementing Martin's PR #1604 and Alan's PR #1613. Headline agenda items now have published slides for **#1608** (Subgroup ID = first Object ID), **#1519/#1603** (Required Request ID), **#1613** (MAX_REQUEST_UPDATES), **#1605** (delivery timeout split). Time permitting: Joining FETCH Dissent.
 
 ## London Interim (June 11-12)
 

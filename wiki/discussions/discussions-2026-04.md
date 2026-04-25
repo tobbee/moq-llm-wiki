@@ -2,11 +2,50 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 24–25 UTC)
+
+## moq-wg/moq-transport — Luke Curley Joins the Pre-Interim Design Debate (Apr 24 22:44 → 23:36 UTC)
+After being mostly absent from moq-transport spec PRs in recent weeks (concentrating on moq-dev / moq-lite), [[luke-curley]] posted three substantive comments in 52 minutes on Apr 24 evening UTC, weighing in on three of the four headline Apr 27 interim agenda items:
+
+- **[Issue #1603](https://github.com/moq-wg/moq-transport/issues/1603)** (RRID DoS, Apr 24 22:44 UTC) — "I don't understand why it's on so many messages either. One use-case could be to make sure that you don't issue a duplicate `SUBSCRIBE track=video` until the previous one has finished (FIN/RST received), but that doesn't even work. It did work when UNSUBSCRIBE was a separate message. **IMO it needs a rethink.** And I +1 Martin's concern about DoS. I don't think it's a major issue in this instance because of MAX_STREAMS, but I'm not a fan of blocking on arbitrary IDs like Track Alias and Required Request ID in general (oops forgot a timeout)." Lines up with Martin's structural-fix camp (PR #1604) over Alan's flow-control camp (PR #1613).
+- **[PR #1607](https://github.com/moq-wg/moq-transport/pull/1607)** (Largest Available Group filter, Apr 24 23:10 UTC) — Concrete defense against Suhas Nandakumar's "use NextGroup instead" suggestion. Two arguments: (1) **Catalogs require it**: "`NextGroup` will never resolve; you MUST do a JOINING FETCH or SUBSCRIBE LargestGroup. A NGR for catalogs is extremely wasteful; every existing subscriber will get a duplicate copy of the old catalog." (2) **TTV race math** (Twitch-rooted): "let's say we're 1s into a 2s group. We want to use LargestGroup to race: 1. Downloading/decoding 1s+ of old media (at network speed) to catch up from behind. 2. Or wait 1s. As a concrete example, let's say the media is 1.5Mb/s (360p) and our network can do 3Mb/s. It'll take something like 0.66s to start playback instead of 1s if we waited, plus the congestion controller will be warmed. **333ms faster startup time is HUGE**." And the combined idiom: "Ideally, you combine CurrentGroup + NGR. Again it's a race: 1. Download/decode x seconds of old media at network speed. 2. Or wait for a new group."
+- **[Issue #1358](https://github.com/moq-wg/moq-transport/issues/1358)** (Subscribing to start of current Group, Apr 24 23:36 UTC) — Opens a **new design problem with JOINING FETCH and subscriber priorities**: "**when using subscriber priorities, a JOINING FETCH will never be deprioritized, even if there's a new group.**" Walks through a concrete example: at 1.5s into a 2s GoP with 3Mb/s media on 4.5Mb/s network, JOINING FETCH delivers TTV=1.33s while a hypothetical `SUBSCRIBE filter=LargestGroup order=DESC` delivers TTV=0.5s, because the SUBSCRIBE can immediately reprioritize to a new group while a JOINING FETCH cannot. Concludes: "I think you could work around this with JOINING FETCH by relying on publisher priorities. But I don't really feel like consulting the draft to see how FETCH/SUBSCRIBE priorities are supposed to interact." This issue had been dormant since Nov 2025 — Luke just made it relevant to PR #1607's discussion.
+
+Net effect: PR #1607 (Largest Available Group filter) gets its strongest pro-merge advocate yet, with deployment-rooted numbers; PR #1604 vs PR #1613 leans further toward #1604; and the JOINING-FETCH-vs-LargestGroup-SUBSCRIBE ergonomic comparison is now part of the debate. Expect Luke's analysis to surface in the Apr 27 interim discussion. See [[moq-transport]].
+
+## moq-wg/moq-transport — PR #1610 Merged Editorial REQUEST_OK Aliases (Apr 23 21:03 UTC)
+Quietly merged 12 minutes after [[ian-swett]]'s `LGTM` review: [[alan-frindell]] landed **[PR #1610](https://github.com/moq-wg/moq-transport/pull/1610)** ("Define textual aliases for REQUEST_OK by request type", +22/−17). Introduces the shorthand names `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK` so the spec stops saying "REQUEST_OK (in response to X)". Purely editorial, but it unblocks **PR #1611** (Remove PUBLISH_OK message type, make it a REQUEST_OK alias) which had been parked waiting on this rename to land first. (The Apr 24 log entry incorrectly listed #1610 as still open.)
+
+## moq-wg/moq-transport — Editorial Refinement on PR #1608 and PR #1586 (Apr 24)
+- **[PR #1608](https://github.com/moq-wg/moq-transport/pull/1608)** (Subgroup ID = first Object Id) — Three new comments. [[ian-swett]] Apr 24 12:26 UTC: "That's what I mean, so I guess I should be more explicit." (responding to afrind's SG=0 + datagram concern). [[suhas-nandakumar]] Apr 24 17:43 UTC suggested-text: `Original publishers SHOULD assign each Subgroup a Subgroup ID equal to the Object ID`. [[ian-swett]] Apr 24 18:17 UTC: "Actually, re-reading the text, isn't that what it says?" PR appears to be approaching consensus on tightening the Subgroup ID = first Object ID requirement to a SHOULD.
+- **[PR #1586](https://github.com/moq-wg/moq-transport/pull/1586)** (delta-encoded Object/Group ID in FETCH) — [[ian-swett]] Apr 24 18:15 UTC pushed two suggested-text patches addressing the Apr 23 ambiguity flagged by afrind, with the comment "PTAL a the suggestions below to see if they're correct?". Key clarification text: `If there is a prior Object in the Group and the Object ID Delta field is present, the Object ID is the prior Object's ID plus the Object ID Delta. When the...`. Awaiting afrind re-review.
+
+## moq-dev/moq — PR #1343: Subdomain-Based Slug Routing for Customer Isolation (Apr 23 → 24)
+[[luke-curley]] opened **[PR #1343](https://github.com/moq-dev/moq/pull/1343)** at Apr 23 00:24 UTC (+248/−27) — *relay: add subdomain-based slug routing for customer isolation*. Adds a new `--auth-domain` flag (env `MOQ_AUTH_DOMAIN`, TOML key `domains`) to configure a list of host suffixes; when a connection's URL host matches `<slug>.<suffix>`, the slug is prepended to the path before auth runs, so `customer.cdn.moq.dev/foo` is equivalent to `cdn.moq.dev/customer/foo`. Multi-label slugs (`a.b.<suffix>`) are rejected as `400 InvalidHost` to keep customer isolation unambiguous. Hosts that match no suffix fall back to plain path routing. CodeRabbit flagged a **🔴 Critical** issue at Apr 23 00:30 UTC: the WebSocket and web handlers build `AuthParams` directly without consulting `Auth::domains`, which would leak the slug-based isolation in the WS path. Last activity Apr 24 22:22 UTC. This is the first SaaS-style multi-tenancy primitive in moq-relay — directly relevant to Cloudflare's hosted relay design and to anyone running moq-relay behind a wildcard certificate. See [[moq-dev]].
+
+## moq-dev/moq — Issue #1346: First @moq/watch + MSF Catalog Cross-Impl Bug Report (Apr 24 08:24 UTC)
+@kubo6472 opened **[issue #1346](https://github.com/moq-dev/moq/issues/1346)** ("Q: how to build something with this?") with a `<moq-watch-ui>` snippet pointing the new `@moq/watch` element at the Cloudflare draft-14 endpoint:
+```html
+<moq-watch url="https://draft-14.cloudflare.mediaoverquic.com" name="room/bbb" catalog-format="msf">
+```
+Hits two errors: **`Cloudflare relay does not support broadcast discovery yet; skipping subscribe_namespace`** (warning), then `subscribe error: id=0 broadcast=room/bbb track=catalog error=SUBSCRIBE error: code=0 reason=internal error: Internal error`. First externally-reported bug exercising the `catalog-format` negotiation Luke landed in PR #1330 (Apr 20) against a non-moq-dev relay. Confirms cross-impl friction at the catalog discovery layer between moq-lite/moq-dev clients and the Cloudflare moq-rs relay (which still doesn't implement `SUBSCRIBE_NAMESPACE`). No reply yet from Luke. See [[moq-dev]] and [[moq-rs]].
+
+## Mailing List — Alan Frindell Posts Apr 27 Interim Slides Link (Apr 24 18:26 PDT / Apr 25 01:26 UTC)
+After ~2.5 calendar days of silence, [[alan-frindell]] replied to [[martin-duke]]'s Apr 22 "Monday's agenda is ready" with the slides folder link on the IETF datatracker. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms that **Victor Vasiliev will present a competing proposal to RRID** at the interim, complementing Martin's PR #1604. The agenda items now have published slides for: **#1608** (Subgroup ID alignment), **#1519/#1603** (Required Request ID), **#1613** (MAX_REQUEST_UPDATES), **#1605** (delivery timeout). Time permitting: Joining FETCH Dissent. Closing call: *"please review materials beforehand to maximize our discussion time"*. See [[interim-meetings]].
+
+## Interop Runner — Second Consecutive Up-Tick (Apr 25 00:32 UTC = 24/67/14)
+The Apr 25 00:32 UTC run shows **24 / 67 / 14**, up one more pass from the Apr 24 result of 23/68/14. **First time since draft-17 publication that the matrix has improved on two consecutive days** — and the new high-water mark for April 2026 (Apr 15–16 peak was 23/68/14). One test flipped fail → pass; the summary report doesn't expose the pair diff, but the timing aligns with continued moq-dev-rs / moq-dev-js docker rebuilds picking up the hop-clustering merge and possibly other recent moq-dev fixes. See [[interop-runner]].
+
+## Slack, Datatracker, MoQ Monthly — Quiet
+- **Slack** `#moq` / `#moq-rs` / `#moq-js` / `#libquicr`: No new posts since Ian Swett's Apr 23 i18n review request — Slack remains the quietest channel on the eve of the interim.
+- **Datatracker**: No new WG or individual draft versions since moq-lite-04 (Apr 9).
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
 
 # Implementation Activity (Apr 24 UTC)
 

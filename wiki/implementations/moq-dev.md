@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 status: current
 ---
 
@@ -57,6 +57,11 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Subdomain Routing Activity + First External MSF Bug Report (Apr 24 UTC)
+- **PR #1343** (open) — Subdomain-based slug routing (see Apr 22–23 burst section below). Updated Apr 24 22:22 UTC after CodeRabbit flagged a 🔴 Critical issue (the WS/web auth handlers build `AuthParams` directly without consulting `Auth::domains`, leaking the slug-based isolation in the WebSocket path). Awaiting Luke's response.
+- **PR #1347** (open, Apr 24 17:04 UTC, dependabot[bot]) — Bump `rustls-webpki` from 0.103.12 to 0.103.13 in the cargo group.
+- **Issue #1346** (open, Apr 24 08:24 UTC, @kubo6472) — *"Q: how to build something with this?"*. First externally-reported bug exercising the new `<moq-watch catalog-format="msf">` element (PR #1330, Apr 20). User pointed `<moq-watch url="https://draft-14.cloudflare.mediaoverquic.com" name="room/bbb" catalog-format="msf">` at the Cloudflare draft-14 endpoint, hits `Cloudflare relay does not support broadcast discovery yet; skipping subscribe_namespace` warning + `subscribe error: id=0 broadcast=room/bbb track=catalog error=SUBSCRIBE error: code=0 reason=internal error: Internal error`. Confirms cross-impl friction at the catalog discovery layer between moq-lite/moq-dev clients and the Cloudflare moq-rs relay (which still doesn't implement `SUBSCRIBE_NAMESPACE`). No reply yet from Luke.
 
 ## Hop-Based Clustering MERGED (PR #1322, Apr 23 23:26 UTC)
 After four days of work on the `hops-port` branch (opened Apr 19), [[luke-curley]] **merged [PR #1322](https://github.com/moq-dev/moq/pull/1322)** (+961/−979 on the final diff) — the full port of the hop-based clustering design from `origin/dev` (#1082 + #1152) onto `main`. This is the **first substantive protocol change merge to `main` in weeks** and a structural rework of moq-relay's cluster plane:
