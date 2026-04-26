@@ -9,7 +9,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: {
       provider: "goatcounter",
-      websiteId: "moq-llm-wiki",
+      websiteId: "moq-wiki",
     },
     locale: "en-US",
     baseUrl: "tobbee.github.io/moq-llm-wiki",
