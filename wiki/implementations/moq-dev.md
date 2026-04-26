@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 status: current
 ---
 
@@ -57,6 +57,12 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Apr 25 Merges + PR #1343 Self-Review + Issue #1346 Root-Cause (Apr 25 UTC)
+- **PR #1345 MERGED** Apr 25 15:13 UTC by [[luke-curley]] (+108/−0) — *py/moq-lite: add clock + announced examples*. Adds two Python examples for the moq-lite Python bindings.
+- **PR #1347 MERGED** Apr 25 14:47 UTC by dependabot[bot] (+2/−2) — Bump `rustls-webpki` 0.103.12 → 0.103.13. Routine.
+- **PR #1343** (subdomain-based slug routing) — still **OPEN**. Luke posted **two self-review rounds** on Apr 25 (22:09 UTC, 22:40 UTC) with five inline comments addressing CodeRabbit's earlier feedback ("IMO do one strip_suffix call." / "Maybe add the leading . to the domain after parsing the config file?" / "We could replace . with / to support multiple paths." / "We should also lowercase and add a . prefix here." / "Why is this public? IDK seems like it's too specific."). A new CodeRabbit review (Apr 24 22:22 UTC) suggests pre-canonicalizing suffixes to lowercase in `Auth::new`. The 🔴 Critical WS/web auth-handler bypass is **still not addressed in pushed code** — these self-review notes signal an incoming rework before the next push.
+- **Issue #1346** (catalog-discovery / "how to build something with this") — saw ~7 substantive exchanges between @kubo6472 and Luke on Apr 25 14:17–19:15 UTC. kubo6472 reported tearing/lagging on `moq.dev/watch` (Chrome/Android 12; Firefox on Linux Mint with a GTX1080) and a black screen against the Cloudflare relay. Luke pushed back on the tearing as a browser/GPU/driver issue and pointed at the OBS plugin and the moq.dev blog. **Root cause confirmed at 19:15 UTC**: kubo6472 switched to Chromium on Linux Mint and both `/watch/live` and `moq.dev/watch` started working — original tearing was a Firefox/GPU/driver issue. Luke also confirmed *"I'm working on DVR (rewind). It'll be at least a few months."* The underlying cross-impl Cloudflare-relay catalog-discovery bug (`SUBSCRIBE_NAMESPACE` not implemented) and the docs gap remain. Issue still OPEN.
 
 ## Subdomain Routing Activity + First External MSF Bug Report (Apr 24 UTC)
 - **PR #1343** (open) — Subdomain-based slug routing (see Apr 22–23 burst section below). Updated Apr 24 22:22 UTC after CodeRabbit flagged a 🔴 Critical issue (the WS/web auth handlers build `AuthParams` directly without consulting `Auth::domains`, leaking the slug-based isolation in the WebSocket path). Awaiting Luke's response.

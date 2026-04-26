@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **April 25, 2026** | **105** | **24** | **67** | **14** |
+| **April 26, 2026** | **105** | **22** | **69** | **14** |
+| April 25, 2026 | 105 | 24 | 67 | 14 |
 | April 24, 2026 | 105 | 23 | 68 | 14 |
 | April 23, 2026 | 105 | 22 | 69 | 14 |
 | April 22, 2026 | 105 | 22 | 69 | 14 |
@@ -75,6 +76,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **April 24**: **23 / 68 / 14** at 00:35 UTC — matrix finally ticks up one pass, matching the Apr 15–16 baseline. A single test flipped fail → pass since the Apr 23 run; pair-level diff not directly exposed in the summary report, but the timing is consistent with the moq-dev/moq hop-based-clustering merge (PR #1322, Apr 23 23:26 UTC) flowing through moq-dev-rs / moq-dev-js docker rebuilds. Still well below the 105-test theoretical ceiling — the draft-17 matrix remains far from complete.
 
 **April 25**: **24 / 67 / 14** at 00:32 UTC — second consecutive day of improvement and a **new April 2026 high-water mark** (Apr 15–16 baseline was 23/68/14). One more test flipped fail → pass. This is the first time since draft-17 publication that the matrix has improved on two consecutive days. No moq-dev/moq merges to `main` happened between the Apr 24 and Apr 25 runs (PR #1322 was the most recent landing); the gain is more likely attributable to ongoing moqtail or moq-rs container rebuilds. Eve of the Apr 27 IETF interim — the matrix enters the meeting at its strongest April reading.
+
+**April 26**: **22 / 69 / 14** at 00:34 UTC — **two-test regression** from the Apr 25 high-water mark, breaking the three-day improvement arc (22 → 23 → 24 → 22) and dropping back to the Apr 21–23 plateau. The two flipped tests are not exposed in the summary report. Implementation activity in the Apr 25 02:00 UTC → Apr 26 00:34 UTC window: moqtail merged PR #168 + PR #169 into the **`draft-16` integration branch** (not yet on `main`, so docker images shouldn't have changed); moq-dev/moq merged a Python examples PR (#1345) and a dependabot bump (#1347) — neither of which touches the wire path. Most likely a flaky test or an upstream image rebuild for one of the other matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic). The matrix enters the **Apr 27 IETF interim at the Apr 21–23 plateau**, not at peak strength.
 
 # Best Performing Pairs
 

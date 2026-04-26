@@ -2,11 +2,51 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-26 - Pre-interim lull on the spec side; moqtail draft-16 branch absorbs two big merges (#168 + #169, ~2.1k LOC); moq-dev #1346 root-caused as browser/GPU; interop regresses to 22/69/14
+
+**Operation**: Update
+**Sources**:
+- Slack: MCP verified working. `#moq` / `#moq-rs` / `#moq-js` / `#libquicr` all quiet — no new posts in any channel since [[ian-swett]]'s Apr 23 14:12 UTC i18n review request. Three-plus calendar days of silence on the eve of the Apr 27 interim.
+- GitHub moq-wg repos:
+  - **moq-transport, msf, loc, secure-objects, cmsf, catalog-format, privacy-pass**: **No new issues, no new PRs, no new comments since the Apr 25 log entry.** Pre-interim lull — the headline interim agenda PRs (#1603 / #1604 / #1605 / #1607 / #1608 / #1609 / #1611 / #1613) are all quiet; discussion has likely moved to the meeting itself or offline conversations.
+- Implementation repos:
+  - **moq-dev/moq**:
+    - **PR #1345 MERGED** Apr 25 15:13 UTC by [[luke-curley]] (+108/−0) — *py/moq-lite: add clock + announced examples*. Adds two Python examples for the moq-lite Python bindings.
+    - **PR #1347 MERGED** Apr 25 14:47 UTC by dependabot[bot] (+2/−2) — Bump `rustls-webpki` 0.103.12 → 0.103.13. Routine.
+    - **PR #1343** (subdomain-based slug routing) — still **OPEN**. Luke posted **two self-review rounds** on Apr 25 (22:09 UTC and 22:40 UTC) with five inline comments addressing CodeRabbit's earlier feedback ("IMO do one strip_suffix call." / "Maybe add the leading . to the domain after parsing the config file?" / "We could replace . with / to support multiple paths." / "We should also lowercase and add a . prefix here." / "Why is this public? IDK seems like it's too specific."). A new CodeRabbit review (Apr 24 22:22 UTC) suggests pre-canonicalizing suffixes to lowercase in `Auth::new`. The 🔴 Critical WS/web auth-handler bypass is still not addressed in pushed code.
+    - **Issue #1346** (catalog-discovery / "how to build something with this") — saw ~7 substantive exchanges between @kubo6472 and Luke on Apr 25 14:17–19:15 UTC. **Root cause confirmed at 19:15 UTC**: kubo6472 switched to Chromium on Linux Mint and both `/watch/live` and `moq.dev/watch` started working — original tearing was a Firefox/GPU/driver issue, not a moq-lite or @moq/watch defect. Luke confirmed *"I'm working on DVR (rewind). It'll be at least a few months."* The underlying cross-impl Cloudflare-relay catalog-discovery bug (`SUBSCRIBE_NAMESPACE` not implemented) and the docs gap remain. Issue still OPEN.
+  - **moqtail/moqtail**: **Two large merges into the `draft-16` integration branch** within 2 minutes on Apr 25 afternoon UTC:
+    - **PR #168 MERGED** Apr 25 17:15 UTC by @ctllmp (+1094/−443) — closes #115. Lands the FETCH-object wire format finalized in the Apr 23 PR comment.
+    - **PR #169 MERGED** Apr 25 17:17 UTC by @fatih-alperen (+994/−593). Migrates `FETCH`, `SUBSCRIBE_NAMESPACE`, `PUBLISH_NAMESPACE`, and `TRACK_STATUS` messages from older-draft key-value pairs to draft-16 Message Parameters.
+    - Together: ~2.1k lines across `moqtail-rs` + `moqtail-ts` in lockstep — largest moqtail draft-16 day since the Apr 14–16 burst. The umbrella PR #145 (zafergurel) remains open against `main`.
+  - **cloudflare/moq-rs**, **video-dev/moq-js**, **google/quiche (moqt)**, **birneee/quiche_moq**: No activity in the window.
+- Mailing list: **No new posts** since [[alan-frindell]]'s Apr 24 18:26 PDT (Apr 25 01:26 UTC) reply with the slides folder link. Three-plus calendar days of silence ahead of the Apr 27 interim.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- Interop runner: **Apr 26 00:34 UTC run = 22 / 69 / 14** — **two-test regression** from the Apr 25 high-water mark of 24/67/14, dropping back to the Apr 21–23 plateau. Breaks the three-day improvement arc. Most likely a flaky test or an upstream image rebuild for one of the other matrix entries — moqtail's draft-16 work landed on the integration branch, not `main`, so docker images shouldn't have changed; moq-dev/moq merged only a Python examples PR and a dep bump, neither of which touches the wire path.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: None open.
+
+**Pages updated**: discussions/discussions-2026-04.md, implementations/moq-dev.md, implementations/moqtail.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*Pre-interim lull on the spec side* — Zero activity across all moq-wg repos in the Apr 25 02:00 UTC → Apr 26 00:34 UTC window: no new issues, no new PRs, and no new comments on any of the eight headline Apr 27 interim agenda PRs (#1603 RRID DoS, #1604 Joining FETCH onto SUBSCRIBE, #1605 delivery timeout, #1607 Largest Available Group filter, #1608 Subgroup ID alignment, #1609 forward-state-mismatch error, #1611 PUBLISH_OK removal, #1613 MAX_REQUEST_UPDATES). After the Apr 24 burst when Luke Curley posted three substantive comments in 52 minutes weighing in on the design, the editors and contributors have gone silent — three-plus calendar days of mailing-list silence too. Discussion has clearly moved offline or to the live meeting tomorrow. The interim agenda is now frozen-in-place: published slides for #1608, #1519/#1603, #1613, #1605; Victor Vasiliev's still-private RRID alternative will be the wildcard.
+
+*moqtail's draft-16 branch absorbs two big merges in 2 minutes* — Apr 25 17:15 UTC and 17:17 UTC saw PR #168 (FETCH-object bitmask + delta encoding, +1094/−443, by @ctllmp) and PR #169 (Message Parameters migration for FETCH / SUBSCRIBE_NAMESPACE / PUBLISH_NAMESPACE / TRACK_STATUS, +994/−593, by @fatih-alperen) merged into the `draft-16` integration branch. Together ~2.1k LOC across `moqtail-rs` and `moqtail-ts` — the largest moqtail day for draft-16 since the Apr 14–16 burst, and the cleanest single-day signal that moqtail is chasing draft-16 conformance for both languages in lockstep. Umbrella PR #145 (zafergurel) still open against `main`; until that lands, draft-16 work won't appear in the moqtail interop docker image.
+
+*moq-dev #1343 self-review rather than push* — Luke posted two self-review rolls on PR #1343 (subdomain-based slug routing) at Apr 25 22:09 UTC and 22:40 UTC with five inline TODOs ("do one strip_suffix call", "lowercase and add a . prefix here", "replace . with / to support multiple paths", etc.). No code push yet; the Apr 23 🔴 Critical WS/web auth-handler bypass is still on the table. This is rework-in-thinking, not rework-in-code. The PR is the first SaaS-style multi-tenancy primitive in moq-relay and remains gated.
+
+*Issue #1346 root-caused as browser/GPU, not moq-lite* — The Apr 24 first-externally-reported `<moq-watch>` + MSF cross-impl bug saw heavy back-and-forth Apr 25 afternoon UTC. After Luke pushed back on the tearing as a browser/GPU/driver issue, kubo6472 confirmed at 19:15 UTC: *"tried chromium on said linux and now it works on both the /watch/live and the moq.dev/watch, cool"*. So the visible playback regression turns out to be a Firefox-on-Linux/GPU-driver issue, not a defect in moq-lite or `@moq/watch`. The original cross-impl Cloudflare-relay catalog-discovery bug (`Cloudflare relay does not support broadcast discovery yet`) and the docs gap kubo6472 surfaced (had to paste `live.vue` source code asking "what am I doing wrong?") remain unresolved.
+
+*Interop matrix regresses 2 tests overnight* — Apr 26 00:34 UTC = 22/69/14 — back to the Apr 21–23 plateau and below the Apr 15–16 baseline of 23/68/14. The two flipped tests aren't exposed in the summary report. Because moqtail's two big merges hit the `draft-16` integration branch (not `main`, so docker images shouldn't have changed) and moq-dev/moq merged only a Python examples PR + a dep bump, neither of which touches the wire path, the regression is more plausibly explained by an upstream rebuild on one of the other matrix entries (moq-rs / moq-rs-draft-16 / moqx / quiche-moq / libquicr / xquic / imquic) or by a flaky test. The matrix now enters the Apr 27 interim at the Apr 21–23 plateau rather than at peak strength — the optimistic "matrix entering the meeting at its strongest April reading" framing from yesterday's log no longer holds.
+
+---
 
 # 2026-04-25 - Luke Curley joins the pre-interim design debate, PR #1610 quietly merged Apr 23, interim slides posted, interop hits new April high at 24/67/14
 

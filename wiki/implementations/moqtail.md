@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-24
+last_updated: 2026-04-26
 status: current
 ---
 
@@ -40,9 +40,11 @@ Major push toward draft-16 compliance. PRs merged April 14–16:
 - **PR #164 (merged Apr 16)**: `refactor: request error` — unified all ERROR messages under REQUEST_ERROR per draft-16 (fatih-alperen)
 - **PR #165 (merged Apr 16)**: Removed draft-14-era hack that used a fake SUBSCRIBE to establish subscriptions with PUBLISH. Draft-16 publish-update makes the hack unnecessary (fatih-alperen).
 
-**Open**:
-- **PR #169**: "Fix/message parameters fix" — update fetch, subscribe-namespace, publish-namespace, and track-status messages to use the new message parameters (older drafts' key-value pairs were still in place).
-- **PR #168**: Feature/draft16 fetch object — still in progress. **Apr 23 19:49–19:56 UTC**: @ctllmp resolved conflicts and merged `draft-16` back into the feature branch (`0570542`, `bf84690`, `1f967c1`), rebase work ahead of a push to land. **Apr 23 20:01 UTC**: @beyzademirr posted a detailed status comment on the PR describing the final wire-format and API shape (author's canonical PR description):
+**Merged Apr 25** (both into the `draft-16` integration branch via PR #145):
+- **PR #168 MERGED** Apr 25 17:15 UTC by @ctllmp (+1094/−443) — closes [#115](https://github.com/moqtail/moqtail/issues/115). Lands the FETCH-object wire format finalized in the Apr 23 PR comment: bitmask `FetchObjectSerializationFlags`, delta encoding, `0x8C`/`0x10C` end-of-range markers, datagram-forwarded objects (bit `0x40`), first-object-must-be-fully-explicit `ProtocolViolation` enforcement, and the Rust `enum FetchObject { Object, EndOfRange }` / TS `FetchObject` class API in both `moqtail-rs` and `moqtail-ts`.
+- **PR #169 MERGED** Apr 25 17:17 UTC by @fatih-alperen (+994/−593). Migrates `FETCH`, `SUBSCRIBE_NAMESPACE`, `PUBLISH_NAMESPACE`, and `TRACK_STATUS` messages from older-draft key-value pairs to the draft-16 **Message Parameters** encoding. Validated by running the meet application before merge.
+
+**PR #168 history** (merged Apr 25 17:15 UTC; details preserved here for reference): **Apr 23 19:49–19:56 UTC**: @ctllmp resolved conflicts and merged `draft-16` back into the feature branch (`0570542`, `bf84690`, `1f967c1`), rebase work ahead of the push that landed Apr 25. **Apr 23 20:01 UTC**: @beyzademirr posted a detailed status comment on the PR describing the final wire-format and API shape (author's canonical PR description):
   - FETCH_HEADER (Type=0x05, Request ID) unchanged.
   - Replaced the fixed field sequence with a **Serialization Flags varint up front**: low 2 bits = subgroup mode (zero / prior / prior+1 / explicit); 0x04 `object_id` present (else prior+1); 0x08 `group_id` (else prior); 0x10 `priority` (else prior); 0x20 extensions; 0x40 datagram. 0x8C = End of Non-Existent Range, 0x10C = End of Unknown Range (§10.4.4.2). Any other value ≥ 128 → `ProtocolViolation`.
   - **FETCH objects no longer carry Object Status**; zero-length payload = zero-length Normal object.
@@ -50,7 +52,9 @@ Major push toward draft-16 compliance. PRs merged April 14–16:
   - **Datagram bit**: added `forwarding_preference` to `FetchObjectPayload` so FETCH-carried datagram objects round-trip without losing that metadata; drops the old kludge in `try_into_fetch` that stuffed `object_id` into `subgroup_id`.
   - Files touched: Rust `libs/moqtail-rs/src/model/data/{fetch_object.rs,object.rs}`, `libs/moqtail-rs/src/transport/data_stream_handler.rs`, `apps/relay/src/server/{track_cache.rs,message_handlers/fetch_handler.rs}`; TS `libs/moqtail-ts/src/model/data/{fetch_object.ts,object.ts}`, `libs/moqtail-ts/src/client/{data_stream.ts,publication/fetch.ts,client.ts}`. Relay cache now stores `FetchObjectPayload`; `EndOfRange` is wire-level-only. The client-js / meet / Rust client apps stay source-compatible — the enum transform is internal to the libs.
   +1094/−443 overall.
-- **PR #145**: Umbrella draft-16 tracking PR (+12,200 / −10,236, zafergurel).
+
+**Still open**:
+- **PR #145**: Umbrella draft-16 tracking PR against `main` (+12,200 / −10,236, zafergurel) — absorbed PR #168 + PR #169 on Apr 25 17:15/17:17 UTC; still has not landed on `main`.
 
 A v0.9.1 release is pending (PR #173), including a fix for a race condition causing negative object deltas.
 
