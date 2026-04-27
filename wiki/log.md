@@ -8,6 +8,35 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-04-27b - User-requested deep-dive: data-model and wire-format diff across draft-ietf-moq-transport -14, -16, -17
+
+**Operation**: User query — "Scrutinize the concepts page and the description of the groups, subgroups, objects for their definitions and encoding. … description of any differences between draft 14, 16, 17. The same goes for channels and streams."
+
+**Sources read**:
+- `sources/ietf-drafts/draft-ietf-moq-transport-14.txt`
+- `sources/ietf-drafts/draft-ietf-moq-transport-17.txt`
+- `sources/ietf-drafts/draft-ietf-moq-transport-16.txt` (downloaded fresh from `https://www.ietf.org/archive/id/draft-ietf-moq-transport-16.txt` — this version was missing from the local source mirror).
+
+**Sections compared** in each draft: §1.3 Stream Management Terms, §2 Object Data Model (incl. §2.1 Objects, §2.2 Subgroups, §2.3 Groups, §2.4 Track Naming, §2.5 Extension Headers/Properties), §10.1 Track Alias, §10.2 Objects, §10.2.1 Object Status / Extension Headers / Properties, §10.3 Datagrams, §10.4 Streams (incl. §10.4.2 Subgroup Header and the FETCH per-Object format).
+
+**Pages updated**:
+- `concepts/subgroups-and-objects.md` — major rewrite. Now contains version-by-version wire-format diagrams for SUBGROUP_HEADER + Object, OBJECT_DATAGRAM, and FETCH per-Object header across 14/16/17, plus a delta-encoding summary table covering Group ID / Subgroup ID / Object ID / Publisher Priority / Properties on each stream type. Calls out PR #1586 (FETCH delta encoding, merged Apr 27) and PR #1608 (Subgroup ID = first Object ID).
+- `concepts/track-properties.md` — added the "Naming Evolution" table (Object Extension Headers → Extension Headers → Properties), the delta-encoded KVP Type rule new in draft-16, and draft-17's reserved application-private code-point ranges.
+- `concepts/streams-and-framing.md` — **new page**. Covers the bidi-stream architecture change in draft-17 (control stream → SETUP unidirectional pair + bidi-per-request), the unidirectional Stream-Type code-point table (`0x05` FETCH, `0x10..0x1D` SUBGROUP, `0x2F00` SETUP), the OBJECT_DATAGRAM bit-flag layout, and the Stream Cancellation reset-code registry across 14/16/17.
+- `index.md` — added [[streams-and-framing]] to Protocol Concepts; tagged subgroups-and-objects and track-properties with their version-diff scope.
+
+**Sources mirror updated**: added `draft-ietf-moq-transport-16.txt` (237 KB, 4988 lines) — the previously-missing intermediate version.
+
+**Key findings (synthesized)**:
+
+1. **Conceptual data model is stable across 14/16/17.** Track / Group / Subgroup / Object definitions are essentially the same. Wording polish in 16/17 only — the only substantive changes are: (a) the three-state Object existence model added in 16; (b) Track Namespace gaining an explicit on-wire structure in 16, then the lower bound dropping from 1 to 0 fields in 17; (c) "forwarding preference" moving from Track-level (14) to per-Object (16+).
+
+2. **draft-15/16 was the wire-format upheaval.** SUBGROUP_HEADER and OBJECT_DATAGRAM Type fields moved from enumerated values to bit-flag layouts, gaining the `DEFAULT_PRIORITY` flag that lets Publisher Priority be inherited from the subscription. Extensions wrapped in a named `Extensions { Length, Headers }` struct. Subgroup ID encoding moved to a 2-bit `SUBGROUP_ID_MODE` field. **FETCH per-Object header was completely redesigned**: a single `Serialization Flags` varint gates the presence of every field and supports delta encoding from the prior Object, with two reserved values `0x8C` / `0x10C` for End-of-Non-Existent-Range / End-of-Unknown-Range. **Object Status was removed from FETCH responses** and SUBSCRIPTION-only thereafter. KVP types delta-encoded.
+
+3. **draft-17 is mostly a rename + cleanup, with one big architectural change.** Wire-byte layout of subgroup objects, datagrams, and FETCH per-Object framing is *byte-identical* to draft-16. The data-plane changes are: `Extension Headers` → `Properties` everywhere (including the bit name in the Type field); `(i)` → `(vi64)` annotation backed by a self-contained varint definition (§1.4.1) that **extends the integer range from RFC-9000's 2⁶²−1 to 2⁶⁴−1** via a new 9-byte encoding (prefix `11111111`), omits the 7-byte length, and reserves `11111100` as invalid (PR #1595). The architectural change is **bidirectional-stream-per-request**: SETUP moves from a single bidi control stream to a pair of unidirectional control streams (new code point `0x2F00`), and SUBSCRIBE / PUBLISH / FETCH / PUBLISH_NAMESPACE / SUBSCRIBE_NAMESPACE / TRACK_STATUS each open their own bidirectional request stream. Plus a new normative datagram check (`STATUS + PROPERTIES` with non-Normal status → PROTOCOL_VIOLATION) and a clarification of "prior Object" semantics across End-of-Range markers in FETCH.
+
+4. **PR #1586 (merged Apr 27 2026, into post-17 main, +32/−23)** is a textual cleanup of the FETCH-response delta-encoding rule already introduced in draft-16. Final normative wording: *"If the Group ID Delta field is present, the Object ID is the value of Object ID Delta if present. When the Group ID Delta field is not present, the Object ID is the prior Object's ID plus the Object ID Delta if present."* Closes Martin Duke's long-running #877 "Pack the bits". Not a redesign of the draft-16 Serialization Flags scheme.
+
 # 2026-04-27 - Interim day; PR #1586 merges (closes Martin's #877 "Pack the bits"); Suhas reviews PR #1542, Vasilvv reviews #1534/#1544 in pre-interim warm-up; moq-dev/moq lands #1340 + #1343, opens FETCH-readiness #1348; external PR #1349 from skirsten; interop recovers one test to 23/68/14
 
 **Operation**: Update
