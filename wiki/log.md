@@ -2,11 +2,54 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-04-27 - Interim day; PR #1586 merges (closes Martin's #877 "Pack the bits"); Suhas reviews PR #1542, Vasilvv reviews #1534/#1544 in pre-interim warm-up; moq-dev/moq lands #1340 + #1343, opens FETCH-readiness #1348; external PR #1349 from skirsten; interop recovers one test to 23/68/14
+
+**Operation**: Update
+**Sources**:
+- Slack: MCP verified working. `#moq` / `#moq-rs` / `#moq-js` / `#libquicr` all quiet — no new posts in any channel since [[ian-swett]]'s Apr 23 14:12 UTC i18n review request. Four+ days of silence on the eve / morning of the interim.
+- GitHub moq-wg repos:
+  - **moq-transport**:
+    - **PR #1586 MERGED** Apr 27 05:24 UTC by [[alan-frindell]] (+32/−23, *Make Object ID and Group ID delta encoded in Fetch responses*). Final suggested-text patch landed at 05:23 UTC immediately before merge. **Closes [[martin-duke]]'s Issue #877 ("Pack the bits")** and Issue #1345 ("Separate the list of reasons for malformed tracks into two lists", yekuiwang) — both closed Apr 27 05:24 UTC.
+    - **PR #1542 review pass** (Split SUBSCRIBE_NAMESPACE / SUBSCRIBE_TRACKS) — [[suhas-nandakumar]] posted **seven inline comments** Apr 27 03:18–03:40 UTC: suggested `SUBSCRIBE_NAMESPACES` plural rename; *"I think we don't allow for the tracks to be echoed by default (sub-ns with self track commit)"*; clarifying-question on REQUEST_UPDATE-prefix-narrowing as error; *"may be you need to add one line that says what does 'First' mean here?"*; *"should we also add a note to say the namespace, namespace done, publish, publish done messages all get sent on the same bidirectional stream?"*; *"why did we remove this?"*. afrind responded Apr 27 04:59–05:23 UTC: *"It is not an error. It is only an error if the new namespace overlaps with a different sub_ns."* / *"It was removed in #1596, I updated here to match."* / suggested-text *"messages for tracks within matching namespaces, excluding tracks published by the subscriber."* / *"🤷 I can spend 45 seconds asking in the interim"* (one item explicitly deferred to live discussion).
+    - **PR #1534 review pass** (Add REDIRECT) — [[suhas-nandakumar]] Apr 27 03:15 UTC: *"I am not sure how a relay would know the right FullTrackName which is application scoped."* (afrind replied "via configuration rules typically, it's not in-band"). [[victor-vasiliev]] reviewed Apr 27 03:52 UTC: *"This overall looks good, but we do need text on relay behavior (forwarding and caching)."* afrind Apr 27 05:00 UTC: *"@vasilvv Do you remember what we agreed to say? Cacheable up to retry interval?"* — Cloudflare/Google relay-caching alignment loop opened ~3 hours pre-interim.
+    - **PR #1544** (Improve Startup Latency and 0-RTT, ianswett, opened Mar 8) — [[victor-vasiliev]] reviewed Apr 27 04:09 UTC: *"I don't understand what forward secrecy has anything to do with the text of this section."* First post-park signal on the PR.
+    - Other interim agenda PRs (#1603 / #1604 / #1605 / #1607 / #1608 / #1609 / #1611 / #1613): no new comments.
+  - **msf, loc, secure-objects, cmsf, catalog-format, privacy-pass**: No new issues, no new PRs, no new comments.
+- Implementation repos:
+  - **moq-dev/moq**:
+    - **PR #1340 MERGED** Apr 26 16:26 UTC by [[luke-curley]] (+182/−5) — *moq-lite: add OriginConsumer::wait_for_broadcast; deprecate consume_broadcast*. Fixes the moq-gst sync-lookup footgun.
+    - **PR #1343 MERGED** Apr 26 16:35 UTC by [[luke-curley]] (+283/−26) — *relay: add subdomain-based slug routing for customer isolation*. The 🔴 Critical WS/web auth-handler bypass that CodeRabbit flagged Apr 23 was resolved before merge. **First SaaS-style multi-tenancy primitive in moq-relay.**
+    - **PR #1348 OPENED** Apr 26 15:38 UTC by [[luke-curley]] (+1049/−471) — *moq-lite: backport Subscription model API for FETCH readiness*. **First FETCH-readiness commit** on `moq-lite-fetch`. Backports `Subscription` / `TrackSubscriber` model-layer API from `dev`'s PR #1134. `Track` loses `priority`; new `Subscription { priority, ordered, max_latency, start, end }` carries it. CodeRabbit flagged 🔴 Critical: aggregator's `start`/`end` reduce treats `None` as "no preference" but the doc says `start: None` = "deliver all cached history" / `end: None` = "no end (live)" — semantics mismatch.
+    - **PR #1349 OPENED** Apr 27 01:32 UTC by **skirsten** (Simon Kirsten, external contributor, +196/−13) — *@moq/watch: add static catalog format*. Third catalog mode beyond `hang` / `msf`: `static` lets callers pass a `Catalog.Root` directly. Promotes `Broadcast.catalog` to writable `Signal<Catalog.Root | undefined>`. CodeRabbit 🟡 Minor: `finally` clears a potentially user-owned signal. **Second contributor-driven catalog-format extension** to `<moq-watch>` after Luke's MSF (PR #1330).
+    - **PR #1341** (Refactor media producers) — Luke posted **8 inline self-review comments** Apr 26 16:08–16:16 UTC: *"release-plz will bump this; don't manually do it."* / *"just call it `init` honestly. Also is there some serde_as thing we could use instead of String?"* / *"Could we avoid making this pub?"* / *"I don't think we should remove these jitter calculations. Maybe make a jitter.rs helper instead of copy-pasting? `jitter` isn't a great name, really it should be `min_frame_duration` or something."* — same self-review pattern as PR #1343 used pre-merge.
+  - **moqtail/moqtail**, **cloudflare/moq-rs**, **video-dev/moq-js**, **google/quiche (moqt)**, **birneee/quiche_moq**: No activity in the window.
+- Mailing list: **Apr 26 Weekly GitHub digest** from Repository Activity Summary Bot (covers Apr 19–26 across moq-charter, moq-transport, moq-requirements, warp-streaming-format, loc, wg-materials). Highlights match what the wiki already tracks: +1 issue (#1612 "What happens to Joining FETCH if fwd changes to 0?"), 1 closed, 5 PRs submitted, 6 receiving 9 comments. No new individual posts since [[alan-frindell]]'s Apr 24 18:26 PDT slides-folder reply.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- Interop runner: **Apr 27 00:34 UTC run = 23 / 68 / 14** — **+1 pass** vs. Apr 26 (22/69/14), but still **−1 below** the Apr 25 high (24/67/14). Matches the Apr 24 reading and the Apr 15–16 baseline. Walking-arc-with-regression: 22 → 23 → 24 → 22 → 23. The flipped test is not exposed in the summary report. Most plausible cause: PR #1340 (`wait_for_broadcast`) flowing through `moq-dev-rs` / `moq-dev-js` docker rebuilds.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: None open.
+
+**Pages updated**: discussions/discussions-2026-04.md, implementations/moq-dev.md, interop/interop-runner.md, drafts/moq-transport.md, index.md
+
+**Key findings**:
+
+*Pre-interim warm-up on PR #1542 / #1534 / #1544* — Suhas Nandakumar conducted a substantial pre-interim review pass on PR #1542 (SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split), posting seven inline comments in 22 minutes (Apr 27 03:18–03:40 UTC) raising semantics questions about self-track-echo, REQUEST_UPDATE-prefix-narrowing-as-error, "First message" definition, and the bidi-stream-pinning convention. afrind responded systematically over 24 minutes (04:59–05:23 UTC), explicitly deferring one item to "the interim itself" with *"🤷 I can spend 45 seconds asking in the interim"*. Separately, Vasilvv reviewed PR #1534 (REDIRECT) approving the structure but flagging missing relay-behavior text — opening a Cloudflare/Google caching-alignment loop that afrind acknowledged with *"@vasilvv Do you remember what we agreed to say? Cacheable up to retry interval?"*. Vasilvv also pushed back on PR #1544's (0-RTT) forward-secrecy framing as a pre-merge blocker. Classic editor warm-up: groom text in PR comments to either land or punt before the call.
+
+*PR #1586 lands and closes "Pack the bits"* — afrind merged the FETCH delta-encoding PR at Apr 27 05:24 UTC, just hours before the interim, and used it to close two long-running issues: Martin Duke's #877 "Pack the bits" (one of the older open Martin issues) and yekuiwang's #1345 (malformed tracks reasons split). Final suggested-text iteration landed at 05:23 UTC immediately before merge. The PR resolves the Apr 23 mid-group-FETCH ambiguity afrind flagged. This is the second `main` merge in the post-draft-17 era after PR #1606 (stream reset codes) on Apr 23 — moving the editor needle on cleanup as the WG approaches the meeting.
+
+*moq-dev/moq big day: #1340 + #1343 merged, #1348 opens for FETCH* — Luke pushed two relay-infra primitives through to `main` Apr 26 16:26–16:35 UTC: `wait_for_broadcast` (fixes the moq-gst sync-lookup footgun) and subdomain-based slug routing (the first SaaS-style multi-tenancy primitive in moq-relay; resolves the Apr 23 🔴 Critical WS/web auth-handler bypass before merge). Then opened the major **FETCH-readiness foundation** PR #1348 at 15:38 UTC: backports the `Subscription` / `TrackSubscriber` model-layer API from `dev`'s PR #1134 onto `moq-lite-fetch` (+1049/−471). Goal stated explicitly: *"Land the API surface FETCH needs without implementing FETCH wire/stream handling — fetch can plug into TrackSubscriber::update once the wire path is added."* Pairs with Luke's Apr 24 spec-side argumentation on issue #1358 about JOINING FETCH priority limitations — Luke wants both API and design clarity locked in before FETCH wire ships. CodeRabbit flagged a 🔴 Critical semantics mismatch in the start/end aggregator that needs fixing before merge.
+
+*External PR #1349 from skirsten — second contributor-driven catalog-format extension* — Simon Kirsten opened PR #1349 at Apr 27 01:32 UTC adding a third catalog mode (`static`) to `<moq-watch>`. After Luke's own MSF mode (PR #1330) and now an external `static` mode, the catalog-format-as-attribute API is gaining contributor mindshare. The PR also promotes `Broadcast.catalog` from getter to writable `Signal<Catalog.Root | undefined>` — a public-API change that needs Luke's review.
+
+*Interop matrix walks back into interim parity at 23/68/14* — Apr 27 00:34 UTC = 23/68/14, +1 from Apr 26 (22/69/14), but −1 below the Apr 25 high (24/67/14). The walking arc is 22 → 23 → 24 → 22 → 23 over five days. Still matches the Apr 24 reading and the Apr 15–16 baseline. Implementation activity in the relevant window includes moq-dev/moq's two `main` merges, of which `wait_for_broadcast` (PR #1340) is the more plausible cause for a `moq-dev-rs` / `moq-dev-js` image rebuild that flipped one pair (it directly affects relay/origin lookups). The matrix walks into the Apr 27 interim **at parity with Apr 24**, neither at peak nor at the Apr 21–23 plateau.
+
+---
 
 # 2026-04-26 - Pre-interim lull on the spec side; moqtail draft-16 branch absorbs two big merges (#168 + #169, ~2.1k LOC); moq-dev #1346 root-caused as browser/GPU; interop regresses to 22/69/14
 

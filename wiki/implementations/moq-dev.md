@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 status: current
 ---
 
@@ -57,6 +57,17 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Apr 26 Big Day: PR #1343 + #1340 MERGED, #1348 Opens for FETCH, External PR #1349 (Apr 26 15:38 → Apr 27 01:32 UTC)
+A productive Apr 26 afternoon UTC, plus a new external contribution overnight:
+
+- **[PR #1340](https://github.com/moq-dev/moq/pull/1340) MERGED** Apr 26 16:26 UTC by [[luke-curley]] (+182/−5) — *moq-lite: add OriginConsumer::wait_for_broadcast; deprecate consume_broadcast*. Lands the announcement-aware lookup that fixes the moq-gst footgun where a sync `consume_broadcast` returned `None` because announcements hadn't arrived over the wire yet. Both `OriginProducer::consume_broadcast` and `OriginConsumer::consume_broadcast` are now deprecated in favor of the new alternative.
+- **[PR #1343](https://github.com/moq-dev/moq/pull/1343) MERGED** Apr 26 16:35 UTC by [[luke-curley]] (+283/−26) — *relay: add subdomain-based slug routing for customer isolation*. The subdomain-routing primitive lands after a week of self-review and CodeRabbit iteration. Adds `--auth-domain`/`MOQ_AUTH_DOMAIN`/TOML `domains` to configure suffix lists for host-based routing. When a connection URL host is `<slug>.<suffix>`, the slug is prepended to the path before auth runs, so `customer.cdn.moq.dev/foo` is equivalent to `cdn.moq.dev/customer/foo`. Multi-label slugs (`a.b.<suffix>`) are rejected as `400 InvalidHost`. The 🔴 Critical WS/web auth-handler bypass that CodeRabbit flagged Apr 23 was resolved before merge. **First SaaS-style multi-tenancy primitive in moq-relay.**
+- **[PR #1348](https://github.com/moq-dev/moq/pull/1348)** OPENED Apr 26 15:38 UTC by [[luke-curley]] (+1049/−471) — *moq-lite: backport Subscription model API for FETCH readiness*. **First FETCH-readiness commit** on `moq-lite-fetch`. Backports the `Subscription` / `TrackSubscriber` model-layer API from `dev`'s PR #1134. Goal is *"to land the API surface FETCH needs without implementing FETCH wire/stream handling — fetch can plug into TrackSubscriber::update once the wire path is added."* Surgery: `Track` loses `priority`; new `Subscription { priority, ordered, max_latency, start, end }` carries that state. New `TrackSubscriber` owns group iteration (`recv_group`, `next_group`, `next_group_ordered`, `read_frame`) and per-subscriber `Subscription` state. CodeRabbit flagged 🔴 Critical: aggregator's `start`/`end` reduce treats `None` as "no preference" — but the struct doc says `start: None` means "deliver all cached history" and `end: None` means "no end (live)" — a semantics mismatch that needs fixing.
+- **[PR #1341](https://github.com/moq-dev/moq/pull/1341)** (Refactor media producers, open since Apr 23) — [[luke-curley]] posted **8 inline self-review comments** Apr 26 16:08–16:16 UTC after the morning merges. Highlights: *"release-plz will bump this; don't manually do it."* / *"just call it `init` honestly. Also is there some serde_as thing we could use instead of String?"* / *"Could we avoid making this pub? I don't want users to accidentally call the wrong methods?"* / *"I don't think we should remove these jitter calculations. Maybe make a jitter.rs helper instead of copy-pasting? `jitter` isn't a great name, really it should be `min_frame_duration` or something."* — same self-review pattern as PR #1343 used before merging.
+- **[PR #1349](https://github.com/moq-dev/moq/pull/1349)** OPENED Apr 27 01:32 UTC by **skirsten** (Simon Kirsten) — *@moq/watch: add static catalog format* (+196/−13). External contributor adds a third catalog mode beyond `hang` and `msf`: a `"static"` mode where callers pass a `Catalog.Root` directly rather than fetching it via a catalog track. Also promotes `Broadcast.catalog` from a getter to a writable `Signal<Catalog.Root | undefined>`. New `demo/web/src/static.html` page with a textarea + Apply button to manually drive `<moq-watch catalog-format="static">`. CodeRabbit flagged 🟡 Minor: `finally` unconditionally clearing a potentially user-owned signal. **Second contributor-driven catalog-format extension** to `<moq-watch>` after Luke's own MSF (PR #1330) — the catalog-format-as-attribute API is gaining contributor mindshare.
+
+Net effect: moq-dev/moq enters the Apr 27 interim with two relay infra primitives merged (slug routing, wait_for_broadcast), a major moq-lite-fetch foundation PR open, a self-reviewed media producers refactor in flight, and the catalog-format API ecosystem extending via external contribution.
 
 ## Apr 25 Merges + PR #1343 Self-Review + Issue #1346 Root-Cause (Apr 25 UTC)
 - **PR #1345 MERGED** Apr 25 15:13 UTC by [[luke-curley]] (+108/−0) — *py/moq-lite: add clock + announced examples*. Adds two Python examples for the moq-lite Python bindings.

@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-04-25
+last_updated: 2026-04-27
 status: current
 draft_version: 17
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -41,7 +41,7 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-04-25)
+# Active Issues (as of 2026-04-27)
 
 ## Design Issues
 - **#1612** - What happens to Joining FETCH if fwd changes to 0? Opened Apr 23 by [[martin-duke]]. **Apr 23 21:02 UTC**: [[alan-frindell]] replied: "Changing the subscription from 1 to 0 after joining fetch has no effect on the FETCH. We can update the spec. Though now it seems like requiring fwd=1 is causing a lot of problems. I wonder if we should just allow fwd=0." **Apr 23 20:57**: PR #1604 description updated to "Now fixes #1612 as well".
@@ -69,12 +69,13 @@ Draft-17 was published 2026-03-02 with significant changes from draft-16:
 - **PR #1593** - RFC: Allow framing single Objects without Subgroup ID (now set to be **closed by #1608**).
 - **PR #1591** - RFC: Add flow control for Subscriptions
 - **PR #1588** - Add internationalization statement for moqt URI scheme
-- **PR #1586** - Make Object ID and Group ID delta encoded in Fetch responses. **Apr 23**: [[alan-frindell]] flagged a "first object in the group" ambiguity for mid-group FETCH starts (17:46 UTC); [[ian-swett]] added a suggestion clarifying the Group-ID-Delta-present semantics (19:44 UTC). **Apr 24 18:15 UTC**: [[ian-swett]] pushed two suggested-text patches addressing the ambiguity, asking afrind to PTAL.
-- **PR #1542** - Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE (0x50, namespace discovery) and SUBSCRIBE_TRACKS (0x51, track subscriptions) ([[alan-frindell]], updated Apr 16). Removes SUBSCRIBE_NAMESPACE_OPTIONS + BOTH mode; adds TRACK_NAMESPACE_PREFIX (0x34) for REQUEST_UPDATE prefix changes. Fixes #1458.
-- **PR #1534** - Add REDIRECT for request errors and established subscriptions. **Apr 23 editor call decision**: remove the REDIRECT message from this PR; use GOAWAY on a bidi stream to mean what REDIRECT did. [[alan-frindell]] will revise.
+- **PR #1542** - Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE (0x50, namespace discovery) and SUBSCRIBE_TRACKS (0x51, track subscriptions) ([[alan-frindell]], updated Apr 16). Removes SUBSCRIBE_NAMESPACE_OPTIONS + BOTH mode; adds TRACK_NAMESPACE_PREFIX (0x34) for REQUEST_UPDATE prefix changes. Fixes #1458. **Apr 27 03:18–05:23 UTC pre-interim review pass**: [[suhas-nandakumar]] posted seven inline comments — suggested-text plural rename to `SUBSCRIBE_NAMESPACES`, "I think we don't allow for the tracks to be echoed by default", clarifying-question on REQUEST_UPDATE-prefix-narrowing as error, and four others. [[alan-frindell]] responded systematically: *"It is not an error. It is only an error if the new namespace overlaps with a different sub_ns."* / *"It was removed in #1596, I updated here to match."* / suggested-text *"messages for tracks within matching namespaces, excluding tracks published by the subscriber."* / *"🤷 I can spend 45 seconds asking in the interim"* (deferring one item to live discussion).
+- **PR #1544** - *Improve Startup Latency and 0-RTT* ([[ian-swett]], opened Mar 8, fixes #420 + #83). Adds sections on startup-latency reduction and 0-RTT. **Apr 27 04:09 UTC**: [[victor-vasiliev]] reviewed *"I don't understand what forward secrecy has anything to do with the text of this section."* — implying the security-considerations text on 0-RTT needs a rewrite before merge. PR had been parked since the original Mar 8 burst; today's review is the first post-park signal.
+- **PR #1534** - Add REDIRECT for request errors and established subscriptions ([[alan-frindell]], +48/−1). **Apr 23 editor call decision**: remove the REDIRECT message from this PR; use GOAWAY on a bidi stream to mean what REDIRECT did. **Apr 27 03:15–05:00 UTC**: [[suhas-nandakumar]] flagged *"I am not sure how a relay would know the right FullTrackName which is application scoped."* (afrind responded the rule is "via configuration rules typically, it's not in-band"). [[victor-vasiliev]] reviewed Apr 27 03:52 UTC: *"This overall looks good, but we do need text on relay behavior (forwarding and caching)."* afrind responded Apr 27 05:00 UTC: *"@vasilvv Do you remember what we agreed to say? Cacheable up to retry interval?"* — Cloudflare/Google relay-caching alignment loop opened ~3 hours pre-interim.
 - **PR #1378** - SWITCH for Client-Side ABR — relay-initiated PUBLISH + inline catch-up design; Apr 16 polish pass by Gwendal Simon. See [[switch-abr]].
 
 ## Recently Merged
+- **PR #1586** - *Make Object ID and Group ID delta encoded in Fetch responses* (**merged Apr 27 05:24 UTC** by [[alan-frindell]], +32/−23). Replaces inline raw IDs with delta encoding for FETCH responses. Final wording: *"If the Group ID Delta field is present, the Object ID is the value of Object ID Delta if present. When the Group ID Delta field is not present, the Object ID is the prior Object's ID plus the Object ID Delta if present."* — directly resolves the Apr 23 ambiguity afrind flagged. afrind's last suggested-text patch landed Apr 27 05:23 UTC immediately before merging. **Closes [[martin-duke]]'s long-running Issue #877 ("Pack the bits")** and Issue #1345 ("Separate the list of reasons for malformed tracks into two lists", yekuiwang).
 - **PR #1610** - *Define textual aliases for REQUEST_OK by request type* (**merged Apr 23 21:03 UTC** by [[alan-frindell]], +22/−17). Editorial: introduces `REQUEST_UPDATE_OK`, `TRACK_STATUS_OK`, `SUBSCRIBE_NAMESPACE_OK`, `PUBLISH_NAMESPACE_OK` as shorthand for `REQUEST_OK (in response to X)`. Unblocks PR #1611 (PUBLISH_OK removal).
 - **PR #1606** - *Generalize stream reset codes to all request streams* (**merged Apr 23 18:32 UTC** by [[alan-frindell]], fixes #1581). Adds `GOING_AWAY` (0x4), `EXPIRED_AUTH_TOKEN` (0x7), `SESSION_CLOSED`; aligns `TOO_FAR_BEHIND` / `EXPIRED` codes between stream-reset and `PUBLISH_DONE` registries. First merge to `main` since draft-17 publication.
 - **PR #1596** - Exclude your own tracks from SUBSCRIBE_NAMESPACE (Apr 16, fixes #1585)
