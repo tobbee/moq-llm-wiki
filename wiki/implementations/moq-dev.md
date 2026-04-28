@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 status: current
 ---
 
@@ -57,6 +57,24 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Apr 27–28 Post-Interim Burst: Three New PRs (#1350, #1352, #1353) + Issue #1351 Closed
+[[luke-curley]] opened **three substantive PRs in <2 hours** after the Apr 27 interim, plus a quick issue cycle:
+
+- **[PR #1350](https://github.com/moq-dev/moq/pull/1350)** OPENED Apr 27 22:24 UTC (+351/−18) — *moq-relay: authenticate HTTPS callers via the cluster mTLS CA*. The QUIC server already short-circuits to `AuthToken::unrestricted()` when a peer presents a client cert signed by `--server-tls-root` (`connection.rs:34`). The HTTPS web server (`/announced`, `/fetch`, `/ws/*`) didn't — it required a JWT in the query string. PR wires the same path through the HTTPS listener: when `--server-tls-root` is set, the listener installs a `WebPkiClientVerifier` (with `.allow_unauthenticated()` so JWT-only callers still work), and a verified peer cert produces `AuthToken::unrestricted()` via a new `WebState::resolve_token` helper. A tiny `MtlsAcceptor` wraps `RustlsAcceptor`; `SetMtlsExtension` middleware injects `Option<MtlsPeer>` per request. Cert hot-reload via SIGUSR1 preserved (`reload_from_pem_file` would silently strip client-cert verification, so the mTLS path re-runs the full builder via `reload_from_config`). 4 new tests in `web::tests`. CodeRabbit flagged 🟠 Major: with `CorsLayer::allow_origin(Any)`, an arbitrary website could read `/announced` and `/fetch` through a browser that auto-selects or has approved a matching client cert.
+- **[PR #1352](https://github.com/moq-dev/moq/pull/1352)** OPENED Apr 27 23:59 UTC (+6/0) — *Handle relays without announcement subscription support*. **Direct response to issue #1346** (kubo6472's Apr 24 cross-impl Cloudflare-relay catalog-discovery bug). Changes `announced` getter type from `Set<Path.Valid>` to `Set<Path.Valid> | undefined`. When connecting to `mediaoverquic.com`, explicitly sets `announced` to `undefined`; broadcast reload logic treats `undefined` as `reload=false`. **Pragmatic move**: hardcodes the Cloudflare relay URL into moq-lite source — preserves user-visible behavior of `<moq-watch catalog-format=msf>` against a Cloudflare endpoint at the cost of a layered hardcode. CodeRabbit flagged hostname-suffix matching false-positive risk; Luke pushed a fix Apr 28 00:07 UTC.
+- **[PR #1353](https://github.com/moq-dev/moq/pull/1353)** OPENED Apr 28 00:27 UTC (+346/−146) — *moq-lite: per-frame buffer + BufMut producer to cut relay memory*. **Production-profiled memory optimization**. Luke profiled a relay with ~66 connections at 2.7 GB RSS on a 4 GB box, attributing:
+  - **~234 MB** to `FrameProducer::create` (per-chunk 32 B `Bytes` headers in `Vec<Bytes>` plus growth)
+  - **~254 MB** to `GroupProducer::create_group` (`VecDeque<FrameProducer>` + retained frame state)
+  - **~446 MB** to `quinn::endpoint::RecvState::poll_socket` — quinn's reassembly arena being **pinned by held `Bytes`** (the returned `Bytes` is a refcounted slice into quinn's arena)
+
+  Replaces `FrameState.chunks: Vec<Bytes>` with `FrameBuf` — a single Arc-shared, fixed-capacity heap allocation per frame. `FrameProducer` now `impl bytes::BufMut`, so the receive path writes quinn stream bytes directly into the pre-allocated buffer via `read_buf` (one memcpy, no per-chunk Bytes headers, no quinn-arena pinning). `FrameConsumer` tracks a byte cursor and materializes transient `Bytes` views via `Bytes::from_owner(buf.clone()).slice(..)`.
+
+- **[Issue #1351](https://github.com/moq-dev/moq/issues/1351)** OPENED Apr 27 23:15 UTC by **metapox** (taku) → CLOSED Apr 28 00:10 UTC by reporter. *"Container.Legacy.Consumer.next() returns undefined after 20-60 frames with multiple concurrent tracks"*. Reported against `@moq/hang` 0.2.4 + `@moq/lite` 0.2.2. Luke replied Apr 27 23:18 UTC: *"recvGroup() should only return undefined when the track has finished. Yeah, I need more information, this should never happen."* metapox couldn't reproduce in clean environment; closed as false alarm with *"The original report was likely caused by an unstable publisher on my side."*
+
+PRs #1349 (skirsten static catalog) and #1348 (moq-lite-fetch Subscription model) remained open with only CodeRabbit re-reviews. **No new merges to `main`** in the Apr 26 → Apr 28 window.
+
+Net: moq-relay entered the post-interim period with the **operational layer being attacked from three directions** — HTTPS auth (mTLS), peer-impl-difference handling (Cloudflare relay specifically), and memory cost-per-connection (production-profiled).
 
 ## Apr 26 Big Day: PR #1343 + #1340 MERGED, #1348 Opens for FETCH, External PR #1349 (Apr 26 15:38 → Apr 27 01:32 UTC)
 A productive Apr 26 afternoon UTC, plus a new external contribution overnight:

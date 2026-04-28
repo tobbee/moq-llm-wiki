@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-25
+last_updated: 2026-04-28
 status: current
 ---
 
@@ -10,15 +10,28 @@ status: current
 
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
-| **interim-2026-moq-14** | **2026-04-27** 16:30 UTC | [Agenda](https://datatracker.ietf.org/doc/agenda-interim-2026-moq-14-moq-01/) posted Apr 22 — "all editor time" ([[martin-duke]]). See below. |
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
-| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day) |
+| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision.** |
 | **interim-2026-moq-09** | **2026-06-12** | London interim |
 | **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim |
 | **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim |
 
-## interim-2026-moq-14 Agenda (Apr 27 16:30 UTC)
+## interim-2026-moq-14 Outcomes (held Apr 27 16:30 UTC)
+
+The Apr 27 virtual interim ran the editor agenda. Decisions emerged on GitHub between Apr 27 18:36 UTC and Apr 28 03:43 UTC (mostly recorded by [[ian-swett]] as PR/issue comments):
+
+1. **Required Request ID — REMOVE from draft-18.** [[ian-swett]] Apr 27 18:42 UTC on issue #1603: *"Conclusion was to remove required-request-id from draft 18 and fix Joining Fetch (if necessary?). Those who believe some functionality in this space is useful, such as for make-before-break, should explore those use cases in more detail and further describe what, if any, dependency structure between requests is needed in MoQ. Tentative plan is to discuss these at the London hybrid interim in June."* The three-way fork (status quo / PR #1604 structural / PR #1613 flow control) collapsed to a fourth, simplest option: **delete the field**. **PR #1615** ([[ian-swett]], +3/−52) opened Apr 27 19:48 UTC implements this; [[victor-vasiliev]] APPROVED. Make-before-break work deferred to **London June 11-12**.
+2. **Subgroup ID = first Object ID (PR #1608) — needs more iteration.** WG agreement on knowing start Object ID; differing concerns about restriction at Original Publisher; confusion about out-of-order subgroup objects.
+3. **PUBLISH_OK removal (PR #1611) — proceed with retarget.** [[ian-swett]] APPROVED with body *"Reminder to retarget this."*
+4. **REDIRECT (PR #1534) — APPROVED by [[victor-vasiliev]]** Apr 27 23:01 UTC. Relay-behavior text the Cloudflare/Google alignment loop opened on hasn't yet been pushed.
+5. **SUBSCRIBE_NAMESPACE split (PR #1542) — APPROVED, near merge.** Approvals from Suhas, Vasilvv pre-interim; afrind addressed the seven inline comments at Apr 27 05:07–05:13 UTC.
+6. **0-RTT / startup latency (PR #1544) — Martin Thomson joins review** at Apr 28 01:46 UTC with substantive rewrite suggestion. Forward-secrecy text removed via Apr 28 01:28 UTC suggestion patch.
+7. **REWIND consensus call (Magnus Westerlund's Apr 16 ballot, deadline May 1)** — discussion thread re-erupted on the list with 9 messages Apr 27–28, two camps emerging: **Luke + Ian favor CurrentGroupFill** (the simplest band-aid sketched by Alan Apr 17); **Martin defends best-effort REWIND** with a compromise framing (best-effort floor, allow more aggressive). See [[discussions-2026-04]].
+
+Slack post by [[alan-frindell]] at meeting open: *"Interim starting now. Small number of participants so far..."*
+
+## interim-2026-moq-14 Agenda (Apr 27 16:30 UTC, posted Apr 22)
 
 Posted to datatracker and announced on the MoQ mailing list by [[martin-duke]] on 2026-04-22 19:41 PDT. "It's all editor time." Working items:
 
@@ -46,6 +59,7 @@ In-person interim at **County Hall / The Riverside Building, Belvedere Road, Lon
 
 | Meeting | Date | Notes |
 |---------|------|-------|
+| **interim-2026-moq-14** | 2026-04-27 16:30 UTC | All-editor virtual interim. **Key decision**: **REMOVE Required Request ID** from draft-18 (PR #1615 by [[ian-swett]], approved by [[victor-vasiliev]]). Make-before-break work deferred to London June interim. Subgroup ID alignment (#1608) needs more iteration. PUBLISH_OK removal (#1611) proceeds. REDIRECT (#1534) approved by Vasilvv. 0-RTT (#1544) drew Martin Thomson into review. See above for full outcomes. |
 | interim-2026-moq-13 | 2026-04-13 | REWIND presentation by [[martin-duke]]. **Key decision**: REWIND will NOT go into core v1; editors land minimal band-aids (FETCH timeouts, subgroup filters). Formal consensus call to follow on 3 options (do nothing / extension / PR). Minutes posted Apr 16. Debate on relay vs. client complexity (Cullen Jennings vs. Will Law); Luke Curley + Victor Vasiliev flagged relay complexity risk. |
 | interim-2026-moq-12 | 2026-03-30 | Post-IETF 125. Minutes posted by Magnus Westerlund (Apr 9). Included SUBSCRIBE_NAMESPACE split discussion. |
 | IETF 125 Shenzhen | 2026-03-14 | 2 WG sessions |

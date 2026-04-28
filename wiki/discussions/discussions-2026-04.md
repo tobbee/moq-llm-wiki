@@ -2,11 +2,83 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 27–28 UTC, post-interim)
+
+## moq-wg/moq-transport — interim-2026-moq-14 Decisions Materialize on GitHub (Apr 27 18:36 → Apr 28 03:43 UTC)
+The Apr 27 interim (16:30 UTC, [[interim-meetings|interim-2026-moq-14]]) produced a clear set of editorial-action decisions, recorded by [[ian-swett]] on individual PRs/issues as the meeting concluded:
+
+- **Required Request ID — REMOVE.** [[ian-swett]] Apr 27 18:42 UTC on issue #1603: *"From today's interim: Conclusion was to remove required-request-id from draft 18 and fix Joining Fetch (if necessary?). Those who believe some functionality in this space is useful, such as for make-before-break, should explore those use cases in more detail and further describe what, if any, dependency structure between requests is needed in MoQ. Tentative plan is to discuss these at the London hybrid interim in June."* **PR #1615 OPENED** Apr 27 19:48 UTC by [[ian-swett]] (+3/−52, *Remove Required Request ID*, label `Control Messages`): *"Removes 'Required Request ID'. Does not remove Request ID, because it is used by Joining Fetch and GOAWAY."* [[victor-vasiliev]] APPROVED. The Apr 27 interim agenda's three-way fork (status quo / PR #1604 structural / PR #1613 flow control) collapsed to a fourth, simplest option: **delete the field**. Make-before-break work is deferred to the **London hybrid interim (June 11-12)**.
+
+- **Subgroup ID = first Object ID — needs more iteration.** [[ian-swett]] Apr 27 18:36 UTC on PR #1608 and (verbatim) issue #1405: *"Feedback from the WG at today's interim was: 1) People agreed it was important to know what the start Object ID of the Subgroup (and possibly Group?) 2) People had different concerns about restricting the Subgroup ID to be starting Object ID at the Original Publisher. 3) There was some confusion about both this proposal and what is possible in today's Object model in terms of publishing Objects in a subgroup 'out of order'."* No merge.
+
+- **PUBLISH_OK removal — proceed with retarget.** [[ian-swett]] Apr 27 19:39 UTC review on PR #1611 (PUBLISH_OK removal): APPROVED with body *"Reminder to retarget this."* — interim greenlight for the retarget against `main`.
+
+- **REDIRECT — APPROVED.** [[victor-vasiliev]] APPROVED PR #1534 at Apr 27 23:01 UTC. The Cloudflare/Google relay-caching alignment loop afrind opened on Apr 27 05:00 UTC ("Cacheable up to retry interval?") is no longer blocking — but the relay-behavior text Vasilvv flagged as missing pre-interim hasn't yet appeared in pushed code.
+
+- **SUBSCRIBE_NAMESPACE split — APPROVED, near merge.** PR #1542 reached APPROVED state from [[victor-vasiliev]] at Apr 27 04:00 UTC pre-interim. Suhas's seven inline comments were addressed by afrind at Apr 27 05:07–05:13 UTC. afrind's Apr 27 04:59–05:23 UTC responses to Suhas's review are now part of the merge-ready text.
+
+- **0-RTT (PR #1544) — Martin Thomson joins review.** [[victor-vasiliev]] continued questioning the security-considerations text's invocation of forward secrecy: Apr 27 22:08 UTC: *"I don't see text like that in RFC 8470. Let's just remove it?"* [[ian-swett]] removed it via suggestion patch Apr 28 01:28 UTC. Then [[martin-thomson]] (former QUIC WG chair, IAB member, very senior IETF security/transport reviewer) joined the review at Apr 28 01:46 UTC with a **substantive rewrite suggestion** for the introductory sentences: rewriting "QUIC 0-RTT provides the option for a client to initiate transactions immediately after attempting to establish a connection..." and clarifying the WebTransport restriction. PR #1544 had been parked since Mar 8 with only Ian Swett activity; the reviewer pool is widening rapidly post-interim.
+
+- **New issue #1614 from Luke Curley** (Apr 27 19:11 UTC, split from his earlier issue #1358): *"(JOINING) FETCH + SUBSCRIBE prioritization"*. Concrete TTV math: at 1.5s into a 2s GoP with 3 Mb/s media on 4.5 Mb/s network, JOINING FETCH delivers TTV=1.33s while a hypothetical `SUBSCRIBE filter=LargestGroup order=DESC` delivers TTV=0.5s. *"Basically, we need order=DESC support for JOINING FETCH. Either some way of prioritizing between the SUBSCRIBE + JOINING FETCH, or cancelling the JOINING FETCH if the next group starts (kinda gross), or add back the LargestGroup filter (pls)."* Self-comment Apr 27 19:16 UTC: *"Effectively, I want to race to determine if it's faster to: Download all of the current group (at network speed), or Wait for the next group. SUBSCRIBE filter=CurrentGroup order=DESC does this perfectly. I don't think it's possible in the current draft."* Renews the pressure for PR #1607 (Largest Available Group filter) and ties the JOINING FETCH design directly to the REWIND consensus thread.
+
+- **New issue #1616 from Dustin Ross (mope-life)** (Apr 28 03:09 UTC): *"Both PUBLISH_NAMESPACE and NAMESPACE are responses to SUBSCRIBE_NAMESPACE"*. Spotted a textual inconsistency between draft §1588-1592 (mandates PUBLISH_NAMESPACE) and §3404-3408 (says NAMESPACE). [[alan-frindell]] Apr 28 03:43 UTC: *"It should only be NAMESPACE since draft-16. We will clean this ul[sic]."* Editorial-cleanup item, not a design change.
+
+## Mailing List — REWIND Consensus Call Re-Erupts (Apr 27 06:55 UTC → Apr 28 02:03 UTC)
+Magnus Westerlund's [Apr 16 consensus call on REWIND](https://mailarchive.ietf.org/arch/msg/moq/MJ3MPP0r9gUPs04_WTGl8vIdBsg/) (deadline May 1) had been **quiet for 9 calendar days** since the Apr 17–18 burst. The interim discussion (which formally ran the Apr 13 REWIND debate again) shoved the design conversation back to the list with **9 messages over 19 hours**:
+
+1. **[[suhas-nandakumar]] Apr 27 06:55 UTC** (reply to Gwendal Simon): *"IIUC REWIND was not addressing this use-case. Looks like the switch needs continuous groups with no gaps as it expects Relay to have cached the objects. REWIND does give up if there are gaps."* — Structural challenge to the framing that REWIND covers ABR-switching scenarios.
+2. **[[luke-curley]] Apr 27 08:33 UTC**: *"Imagine if HTTP operated based on the cache state... a HTTP server was allowed to return a partial response with byte range 68-419."* Argues against cache-state-dependent behavior. Would support REWIND if it required **best-effort upstream retrieval** (similar to JOINING FETCH).
+3. **Gwendal Simon (Synamedia) Apr 27 16:12 UTC**: Acknowledges Luke's PR #1378 feedback. *"REWIND delivery begins at the start of the latest gap-free run of Groups, skipping earlier Groups with gaps."* Notes SWITCH has stricter requirement: *"for every Group in the range, if available on current Track, must be available on target Track"*. Symmetric gaps OK. Commits to updating PR #1378 with explicit cache-continuity condition.
+4. **[[martin-duke]] Apr 27 12:23 UTC**: Defends best-effort. *"The 'best-effortness' of REWIND is critical to the design, and is consistent with what I briefed in Boulder."*
+5. **[[luke-curley]] Apr 27 12:46 UTC**: Reiterates HTTP analogy + supports PR #1607 (Largest Available Group filter) as the cleaner cache-state-independent alternative.
+6. **[[martin-duke]] Apr 27 12:52 UTC**: Compromise proposal — *"would you accept something that is still best-effort (i.e. the publisher MAY refuse based on its cache state) but does not preclude the relay doing something more aggressive"* (best-effort floor, allow more aggressive).
+7. **[[luke-curley]] Apr 27 13:18 UTC**: Agrees: *"A relay MUST deliver objects within a sub-group in order (SUBSCRIBE semantics). Otherwise, the relay MUST skip the remainder of the sub-group."*
+8. **[[luke-curley]] Apr 27 13:32 UTC** (clarification): Three-option fragmented-cache options for relays — serve partial sub-groups, request upstream via REWIND/FETCH, or skip sub-groups entirely. *"Skipping entire groups will negatively impact user experience, similar to a FETCH returning an error."*
+9. **[[ian-swett]] Apr 28 02:03 UTC**: *"I'm open to some variant of REWIND, but not very optimistic that we'll get consensus on anything more complex than CurrentGroupFill."* Endorses **CurrentGroupFill** ([[alan-frindell]]'s sketched alternative). Notes the main rationale for pursuing more complex REWIND variants would be enabling removal of the Joining Fetch mechanism entirely. Would support removing Joining Fetch if CurrentGroupFill adopted, but uncertain about WG support.
+
+The thread crystallizes two camps: **Luke + Ian favor CurrentGroupFill** as the simplest band-aid; **Martin defends REWIND's best-effort semantics** but accepts the compromise framing (best-effort floor, allow more aggressive). The HTTP-style "publisher MUST attempt upstream retrieval" framing Luke initially pushed has been **weakened to a sub-group-ordering MUST** that both Luke and Martin agreed to. **The May 1 ballot deadline is now 3 days away.** See [[joining-fetch-dissent]] and [[interim-meetings]].
+
+## moq-dev/moq — Luke's Post-Interim Burst (Apr 27 22:24 → Apr 28 00:27 UTC)
+[[luke-curley]] opened **three substantive PRs in <2 hours after the interim**, none yet merged:
+
+- **[PR #1350](https://github.com/moq-dev/moq/pull/1350)** OPENED Apr 27 22:24 UTC (+351/−18) — *moq-relay: authenticate HTTPS callers via the cluster mTLS CA*. The QUIC server already short-circuits to `AuthToken::unrestricted()` when a peer presents a client cert signed by `--server-tls-root` (`connection.rs:34`). The HTTPS web server (`/announced`, `/fetch`, `/ws/*`) didn't — it required a JWT in the query string. So on a relay host you couldn't hit `/announced` with the local `cluster.crt` even though the moq layer treats that cert as full access. PR wires the same path through the HTTPS listener: when `--server-tls-root` is set, the listener installs a `WebPkiClientVerifier` (with `.allow_unauthenticated()` so JWT-only callers still work), and a verified peer cert produces `AuthToken::unrestricted()` via a new `WebState::resolve_token` helper. A tiny `MtlsAcceptor` wraps `RustlsAcceptor` and, after the handshake, installs a per-connection tower middleware (`SetMtlsExtension`) that injects an `Option<MtlsPeer>` request extension. Cert hot-reload via SIGUSR1 preserved. CodeRabbit flagged 🟠 Major: combined with the existing `CorsLayer::allow_origin(Any)`, an arbitrary website could read `/announced` and `/fetch` through a browser that auto-selects or has approved a matching client cert. Luke posted six self-review comments Apr 27 23:15–23:28 UTC.
+- **[PR #1352](https://github.com/moq-dev/moq/pull/1352)** OPENED Apr 27 23:59 UTC (+6/0) — *Handle relays without announcement subscription support*. **Direct response to issue #1346** (kubo6472's Apr 24 cross-impl Cloudflare-relay catalog-discovery bug). Changes `announced` getter type from `Set<Path.Valid>` to `Set<Path.Valid> | undefined`. When connecting to `mediaoverquic.com`, the system explicitly sets `announced` to `undefined` instead of silently skipping announcement subscriptions; broadcast reload logic treats `undefined` announced state as `reload=false`, preventing indefinite waiting for announcements that will never arrive. CodeRabbit flagged hostname-suffix matching false-positive risk (`endsWith("mediaoverquic.com")` could match lookalike domains); Luke pushed a fix Apr 28 00:07 UTC. **Pragmatic move**: hardcodes a single relay URL (Cloudflare's) into moq-lite — preserves user-visible behavior of `<moq-watch catalog-format=msf>` against a Cloudflare endpoint at the cost of a layered hardcode.
+- **[PR #1353](https://github.com/moq-dev/moq/pull/1353)** OPENED Apr 28 00:27 UTC (+346/−146) — *moq-lite: per-frame buffer + BufMut producer to cut relay memory*. **Production-profiled memory optimization**. Luke profiled a relay with ~66 connections at 2.7 GB RSS on a 4 GB box, attributing:
+  - **~234 MB** to `FrameProducer::create` (per-chunk 32 B `Bytes` headers in `Vec<Bytes>` plus growth)
+  - **~254 MB** to `GroupProducer::create_group` (`VecDeque<FrameProducer>` + retained frame state)
+  - **~446 MB** to `quinn::endpoint::RecvState::poll_socket` — quinn's reassembly arena being **pinned by held `Bytes`** (the returned `Bytes` is a refcounted slice into quinn's arena)
+
+  Replaces `FrameState.chunks: Vec<Bytes>` with `FrameBuf` — a single Arc-shared, fixed-capacity heap allocation per frame. `FrameProducer` now `impl bytes::BufMut`, so the receive path writes quinn stream bytes directly into the pre-allocated buffer via `read_buf` (one memcpy, no per-chunk Bytes headers, no quinn-arena pinning). `FrameConsumer` tracks a byte cursor and materializes transient `Bytes` views via `Bytes::from_owner(buf.clone()).slice(..)` — nothing accumulates in `FrameState`.
+
+- **Issue #1351 OPENED+CLOSED** Apr 27 23:15 UTC → Apr 28 00:10 UTC by **metapox** (taku): *"Container.Legacy.Consumer.next() returns undefined after 20-60 frames with multiple concurrent tracks"*. Reported against `@moq/hang` 0.2.4 + `@moq/lite` 0.2.2 against `moq-relay` 0.10. Luke replied Apr 27 23:18 UTC: *"recvGroup() should only return undefined when the track has finished. Can you verify this is not happening? Yeah, I need more information, this should never happen."* metapox followed up Apr 28 00:08 UTC: *"After further investigation, I was unable to reproduce this issue in a clean environment... The original report was likely caused by an unstable publisher on my side. Sorry for the noise — feel free to close this."* — false-alarm closure. Notable as another externally-reported bug exercising recent moq-lite work.
+
+No new merges to `main` since Apr 26 (PRs #1340 + #1343).
+
+## moq-wg/msf — Suhas Pushes Two Open PRs Forward (Apr 27 18:56 / 19:19 UTC)
+[[suhas-nandakumar]] pinged @wilaw on two long-open MSF PRs after the interim — the first MSF activity since the spec-side has been chasing draft-17 in moq-transport:
+- **[PR #133](https://github.com/moq-wg/msf/pull/133)** ("Add SCTE-35 support and CEA-608/708 accessibility fields", fixes #95, +259/0) — open since Feb 27. Adds accessibility field for CEA-608/708 closed captions per SCTE 214-1; defines well-known event timeline types for SCTE-35 ad markers and out-of-band captions; adds catalog example with embedded captions and SCTE-35 events. suhas: *"@wilaw latest commit should address your feedback. please check and let me know."*
+- **[PR #122](https://github.com/moq-wg/msf/pull/122)** ("initial text on zapping", fixes #110, +2627/0) — open since Feb 19. suhas: *"I think i have addressed your feedback in the last commit. Please give another read and see if it makes sense."*
+
+These are MSF's two largest open PRs. The relative dormancy of msf vs moq-transport remains striking (msf draft is still draft-00 from Jan 19, with no new versions in 2026-Q2).
+
+## Slack — Two Posts During the Interim
+- [[alan-frindell]] Apr 27 16:32 UTC: *"Interim starting now. Small number of participants so far..."* — first-ever moderator-style channel post about a live interim, signaling low live attendance. Three calendar days of mailing-list-only activity preceded the meeting.
+- Giovanni Marzot Apr 27 16:50 UTC: single 😞 reaction emoji. No follow-up.
+
+`#moq-rs` / `#moq-js` / `#libquicr` quiet.
+
+## Interop Runner — One-Test Regression (Apr 28 00:37 UTC = 22/69/14)
+The Apr 28 00:37 UTC run shows **22 / 69 / 14**, **−1 pass from Apr 27 (23/68/14)**, regressing back to the Apr 21–23 / Apr 26 plateau. Walking arc since draft-17 publication: 22 → 23 → 24 → 22 → 23 → 22. None of moq-dev/moq's Apr 27 PRs have merged to `main`, so docker images shouldn't have rebuilt. Most likely a flaky test or an unrelated impl rebuild. The matrix neither at the Apr 25 peak (24) nor at the Apr 19–20 trough (18) — stuck at the post-draft-17 plateau. See [[interop-runner]].
+
+## Datatracker, MoQ Monthly — Quiet
+- **Datatracker**: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
 
 # Implementation Activity (Apr 26–27 UTC, interim-day morning)
 
