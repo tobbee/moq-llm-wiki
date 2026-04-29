@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 status: current
 ---
 
@@ -57,6 +57,34 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Apr 28–29 Post-Interim Wave: Two Merges (#1352, #1353) + Five New PRs (#1356–#1360) + ksletmoe-aws + Qizot
+
+[[luke-curley]] turned both Apr 27's open PRs into merged code, then **opened five more substantive PRs** in the same window. External contributors `Qizot` and `ksletmoe-aws` (AWS) also landed activity.
+
+### Two merges (post-interim PRs land)
+
+- **[PR #1352](https://github.com/moq-dev/moq/pull/1352) MERGED** Apr 29 01:32:29 UTC by [[luke-curley]] (final +10/−2) — *Handle relays without announcement subscription support*. Lands the `mediaoverquic.com`-specific announcementless-relay handling (issue #1346 fix). Final size grew by 4 lines vs the original +6/0 after the CodeRabbit suffix-match-false-positive fix.
+- **[PR #1353](https://github.com/moq-dev/moq/pull/1353) MERGED** Apr 29 01:49:24 UTC by [[luke-curley]] (final +347/−147) — *moq-lite: per-frame buffer + BufMut producer to cut relay memory*. The production-profiled memory optimization (~234 MB / ~254 MB / ~446 MB attribution) lands, replacing `Vec<Bytes>` per-frame chunks with single `Arc<FrameBuf>` allocations and `BufMut`-driven direct writes from quinn streams. **First memory-cost-per-connection optimization to land in moq-relay.**
+- **PR #1350** (mTLS for HTTPS callers) — **still OPEN**. Last activity Apr 27 23:33 UTC. The CodeRabbit-flagged 🟠 Major (CORS+browser-readable-GET issue) hasn't been addressed in pushed code yet.
+- **[PR #1355](https://github.com/moq-dev/moq/pull/1355) MERGED** Apr 28 20:04:23 UTC by [[luke-curley]] (+7/−2, author **Qizot**) — *Add encoder's AudioContext sampleRate override*. Routine fix.
+
+### Five new PRs from Luke (Apr 28 16:11 UTC → 23:55 UTC)
+
+- **[PR #1356](https://github.com/moq-dev/moq/pull/1356) OPENED** Apr 28 16:11 UTC (+27/−86) — *moq-lite: switch insert_track to take TrackConsumer*. Changes `BroadcastProducer::insert_track` to take `TrackConsumer` (by value) instead of `&TrackProducer`. Removes `TrackConsumer::produce()` (added in #1300 as a workaround). Adds `TrackConsumer::weak()` (`pub(crate)`).
+- **[PR #1357](https://github.com/moq-dev/moq/pull/1357) OPENED** Apr 28 16:33 UTC (+319/−24) — *moq-lite: add fetch_group API + TrackDynamic*. **Ties together the FETCH-readiness work.** New `TrackConsumer::fetch_group(seq) -> Result<GroupConsumer>` — first-class FETCH path at the track level. *"The breaking API change is captured here so the wire-side hookup (lite ControlType::Fetch, ietf::run_fetch_stream) can land as a clean follow-up."* Pairs with PR #1348 (Subscription model API).
+- **[PR #1358](https://github.com/moq-dev/moq/pull/1358) OPENED** Apr 28 19:20 UTC (+994/−1289) — *moq-lite: rewrite Origin as a poll-driven, conducer-based model*. **Massive rewrite**: replaces `OriginNode`/`NotifyNode` tree, per-publish `web_async::spawn` cleanup, and per-consumer `mpsc` fan-out with a flat `HashMap<PathOwned, Entry>` behind a `Mutex` plus per-consumer queues. Consumers register a single `conducer::Waiter` on both the shared state and each tracked entry. Net −295 lines.
+- **[PR #1360](https://github.com/moq-dev/moq/pull/1360) OPENED** Apr 28 23:55 UTC (+29/−10) — *moq-native: relocate jemalloc helper; wire it into moq-boy*. Moves the `jemalloc` SIGUSR1-dump helper from `moq-relay` into `moq-native` behind a `jemalloc` feature, re-exports `tikv_jemallocator`. Wires `moq-boy` for jemalloc heap profiling — *"its 6 production instances..."* suggests **moq-boy is now in production at 6+ instances**.
+
+### External contributor activity
+
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) OPENED** Apr 28 21:22 UTC by **ksletmoe-aws** (Karl Sletmoe, AWS) (+64/−67) — *fix(watch): process CMAF groups sequentially in WebCodecs decoder*. *"The CMAF WebCodecs decoder path in `js/watch/src/video/decoder.ts` and `audio/decoder.ts` spawns a concurrent async task per MoQ group via `effect.spawn()`. When groups contain a single large frame (e.g. CMAF passthrough where each group is one moof+mdat blob), `readFrame()` resolves immediately..."* — concrete bug exposed by CMAF passthrough where each group is one moof+mdat blob. **First moq-dev/moq PR from an AWS contributor.**
+- **[PR #1354](https://github.com/moq-dev/moq/pull/1354) OPENED** Apr 28 07:23 UTC by **Qizot** (+21/−11) — *Fix missing channel samples for audio encoder*. **iOS Safari WebCodecs/getUserMedia mismatch.** *"On iOS safari the line `channelCount: settings.channelCount ?? root.channelCount,` resolves to `2`, but afterwards we receive mono audio in `onmessage`. Since the number of channels in `AudioData` must match the number of channels the encoder has been initialized with, we are fixing the `AudioData` by copying the active channel to the missing one."*
+- **Issues #1310 (worklet plugin) + #1328 (js tooling)** — beeequeue's longstanding tooling questions saw substantive Luke replies Apr 28 → Apr 29 01:24 UTC about Vite-specific URL resolution.
+
+### Net effect
+
+The merge wave continues the SaaS-multi-tenancy push from Apr 26. The five new PRs split into two threads: **moq-lite-fetch readiness API** (#1356/#1357 build the TrackConsumer/`fetch_group` surface PR #1348 is meant to consume) and **runtime substrate** (#1358 Origin rewrite, #1359 ksletmoe-aws decoder fix, #1360 jemalloc-in-moq-native for moq-boy production heap profiling). External contributors (`Qizot`, `ksletmoe-aws`, earlier `skirsten` on #1349, earlier `kubo6472` on issue #1346) are now driving 4 of the last 12 PRs/issues — the contributor base is widening rapidly.
 
 ## Apr 27–28 Post-Interim Burst: Three New PRs (#1350, #1352, #1353) + Issue #1351 Closed
 [[luke-curley]] opened **three substantive PRs in <2 hours** after the Apr 27 interim, plus a quick issue cycle:

@@ -2,13 +2,73 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
-# 2026-04-28 - interim-2026-moq-14 happens; WG decision: REMOVE Required Request ID (PR #1615); REWIND consensus thread re-erupts on the list (9 messages Apr 27-28); Luke's moq-relay big day (#1350 mTLS + #1352 announcementless-relay + #1353 per-frame buffer); interop drops back to 22/68/14
+# 2026-04-29 - Post-interim editorial wave: PR #1611 (PUBLISH_OK removal) + PR #1609 (Joining FETCH fwd race → request error) MERGED; PR #1608 (Subgroup ID = first Object ID) CLOSED unmerged → replaced by PR #1618 (FIRST_OBJECT bit); five new afrind PRs (#1617/#1618/#1619/#1620/#1621); moq-dev/moq lands #1352 + #1353; five new Luke PRs (#1356-#1360); ksletmoe-aws + Qizot external PRs; chair Magnus asks for explicit ballot positions; interop +1 → 23/68/14
+
+**Operation**: Update
+**Sources**:
+- Slack: MCP working. `#moq` — no new posts since Apr 27 18:50 CEST (Giovanni Marzot's 😞). `#moq-rs` / `#moq-js` / `#libquicr` quiet.
+- GitHub moq-wg repos:
+  - **moq-transport** — **9-PR wave from afrind over ~8 hours** (5 new + 2 merges + 1 close + duplicate-closure):
+    - **PR #1611 MERGED** Apr 29 00:04:05 UTC by [[alan-frindell]] (+11/−30, *Remove PUBLISH_OK message type, make it a REQUEST_OK alias*, fixes #1598). Wire-format change: removes the `PUBLISH_OK` code point. Approvals from [[ian-swett]] (Apr 27 19:39 UTC, post-interim greenlight), Suhas Sathyanarayana (`@sharmafb`, Apr 28 23:42 UTC), `@sandarsh` (Apr 28 23:55 UTC). Closes Issue #1598.
+    - **PR #1609 MERGED** Apr 29 00:03:07 UTC by [[alan-frindell]] (+3/−2, *Joining Fetch forward state mismatch is a request error*, fixes #1601). Approvals from [[ian-swett]], `@sharmafb`, `@sandarsh`. **Unblocks PR #1615** per afrind's Apr 28 21:17 UTC comment: *"Removing RRID creates races between REQUEST_UPDATE FWD=1 and Joining FETCH (rejoining a paused subscription). At least #1609 is required, so it's a request rather than a session error."*
+    - **PR #1608 CLOSED unmerged** Apr 28 21:19 UTC. afrind: *"Discussed 4/27: The working group didn't think this was the right approach, but agreed we need a way to know if a subgroup contains the beginning."* Issue #1405 stays open. yuyou's Apr 28 07:29 UTC review comment on #1608 anticipated the FIRST_OBJECT bit alternative: *"To solve the original problem of identifying the first Object ID, may it be an alternative approach to explicitly signal the starting Object ID in the Subgroup header instead of tying it to the Subgroup ID field. By keeping the Subgroup ID logically decoupled from the Object ID, publishers can maintain consistent data structures."*
+    - **PR #1617 OPENED** Apr 28 16:21 UTC by [[alan-frindell]] (+85/−73): *Allow GOAWAY on request streams to migrate individual requests* (fixes #1481 — fluffy's Feb 9 issue). Per-request GOAWAY with zero-length URI for client; on receipt the endpoint re-issues that request on a session at the specified URI and closes the old stream.
+    - **PR #1618 OPENED** Apr 28 21:33 UTC by [[alan-frindell]] (+20/−10): *Add FIRST_OBJECT bit to SUBGROUP_HEADER type*. *"Add bit 6 (0x40) to signal that the subgroup contains the first object published in the subgroup by the original publisher. The type format expands from 0b00X1XXXX to 0b0XX1XXXX. All valid type values still fit in a 1-byte varint."* **The replacement for PR #1608**, honoring yuyou's alternative-approach comment.
+    - **PR #1619 OPENED** Apr 28 22:05 UTC by [[alan-frindell]] (+1/−1): *Fix SUBSCRIBE_NAMESPACE response message name* (fixes #1616). Implements afrind's Apr 28 03:43 UTC commitment to mope-life.
+    - **PR #1620 OPENED** Apr 28 23:25 UTC by [[alan-frindell]] (+2/0): *Clarify Joining FETCH is unaffected by fwd changing to 0* (fixes #1612).
+    - **PR #1621 OPENED** Apr 28 23:50 UTC by [[alan-frindell]] (+8/−1): *Forbid relays from lying about LARGEST_OBJECT* (fixes #1386 — ianswett's Dec 7 2025 issue). *"If we want to serve cached objects in response to SUBSCRIBE, lying is not the correct approach."*
+    - **Issue #1602** (martinduke, Joining Fetch should be on the SUBSCRIBE/PUBLISH stream) **CLOSED** Apr 28 23:31 UTC by afrind as **duplicate of #1313** (ianswett's Joining-FETCH-as-separate-control-message issue from Oct 15).
+    - **PR #1615** (Remove Required Request ID) — still OPEN. afrind's Apr 28 21:17 UTC comment confirms PR #1609 was the precondition; now unblocked.
+  - **msf, loc, secure-objects, cmsf, catalog-format, privacy-pass**: no activity.
+- Implementation repos:
+  - **moq-dev/moq** — two interim PRs land plus a wide push from Luke and external contributors:
+    - **PR #1352 MERGED** Apr 29 01:32:29 UTC (+10/−2, *Handle relays without announcement subscription support*) — final size grew by 4 lines vs the original +6/0 after the CodeRabbit suffix-match-false-positive fix. Issue #1346 (kubo6472's cross-impl Cloudflare-relay catalog-discovery friction) effectively resolved at the moq-lite layer.
+    - **PR #1353 MERGED** Apr 29 01:49:24 UTC (+347/−147, *moq-lite: per-frame buffer + BufMut producer to cut relay memory*) — production-profiled memory optimization (~234 MB / ~254 MB / ~446 MB attribution) lands. **First memory-cost-per-connection optimization to land in moq-relay.**
+    - **PR #1355 MERGED** Apr 28 20:04:23 UTC by [[luke-curley]] (author Qizot, +7/−2): *Add encoder's AudioContext sampleRate override*. Routine.
+    - **PR #1356 OPENED** Apr 28 16:11 UTC (+27/−86): *moq-lite: switch insert_track to take TrackConsumer*. Removes `TrackConsumer::produce()` (added in #1300 as a workaround).
+    - **PR #1357 OPENED** Apr 28 16:33 UTC (+319/−24): *moq-lite: add fetch_group API + TrackDynamic*. New `TrackConsumer::fetch_group(seq) -> Result<GroupConsumer>` first-class FETCH path. *"The breaking API change is captured here so the wire-side hookup (lite ControlType::Fetch, ietf::run_fetch_stream) can land as a clean follow-up."*
+    - **PR #1358 OPENED** Apr 28 19:20 UTC (+994/−1289): *moq-lite: rewrite Origin as a poll-driven, conducer-based model*. Massive rewrite: replaces `OriginNode`/`NotifyNode` tree, per-publish `web_async::spawn` cleanup, and per-consumer `mpsc` fan-out with a flat `HashMap<PathOwned, Entry>` behind a `Mutex` + per-consumer queues + `conducer::Waiter`.
+    - **PR #1360 OPENED** Apr 28 23:55 UTC (+29/−10): *moq-native: relocate jemalloc helper; wire it into moq-boy*. Wires `moq-boy` for jemalloc heap profiling — *"its 6 production instances..."* — **moq-boy is now in production at 6+ instances**.
+    - **External — PR #1359 OPENED** Apr 28 21:22 UTC by **ksletmoe-aws** (Karl Sletmoe, AWS) (+64/−67): *fix(watch): process CMAF groups sequentially in WebCodecs decoder*. Concrete bug exposed by CMAF passthrough where each group is one moof+mdat blob — concurrent `effect.spawn()` per MoQ group caused issues. **First moq-dev/moq PR from an AWS contributor.**
+    - **External — PR #1354 OPENED** Apr 28 07:23 UTC by **Qizot** (+21/−11): *Fix missing channel samples for audio encoder*. iOS Safari WebCodecs/getUserMedia mismatch — `channelCount` resolves to 2 but the encoder receives mono audio.
+    - **PR #1350** (mTLS for HTTPS callers) — still OPEN, last activity Apr 27 23:33 UTC. The CodeRabbit-flagged 🟠 Major (CORS+browser-readable-GET) hasn't been addressed.
+    - **Issues #1310/#1328** (beeequeue, JS tooling) — substantive Luke replies Apr 28→Apr 29 about Vite-specific URL resolution.
+  - **cloudflare/moq-rs**, **video-dev/moq-js**, **moqtail/moqtail**, **google/quiche (moqt)**, **birneee/quiche_moq**: No activity in the window.
+- Mailing list — **Four new messages Apr 28** continuing the REWIND thread plus interim minutes:
+  - **[[luke-curley]] Apr 28 08:43 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/itiruoCeL0utBXju20PDtPVcAvs/)): Three paths for merging CurrentGroup proposals — (1) status quo with Joining FETCH, (2) replace Joining FETCH with REWIND or modified SUBSCRIBE with `Start_Group` parameter, (3) remove Joining FETCH entirely. Personal preference for option 2.
+  - **Gwendal Simon (Synamedia) Apr 28 10:38 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/FQ1tdKIZTGeWxySc6qhF7YIbFu0/)): **Pushes back on Joining FETCH removal.** *"Joining FETCH was added via explicit WG consensus to address live streaming requirements"*. Argues CurrentGroupFill addresses the current group only while Joining FETCH enables fast buffer filling at join (multiple past groups). **Alternative**: proactive past-object inline delivery on SUBSCRIBE/PUBLISH; a parameter in SUBSCRIBE_OK communicates `[Start_Group, Live_Edge)`, eliminating subscriber round trip. First substantive defense of Joining FETCH from a live-streaming-deployment perspective.
+  - **Magnus Westerlund (chair) Apr 28 10:49 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/NnfEdDCSLHCPweWJaW_Rw5_rJfA/)): **Chair note** — difficulty interpreting consensus because participants have discussed numerous related topics without clearly stating positions on the actual consensus question. Requests explicit ballot positions. With **3 days left until the May 1 ballot deadline**, the consensus call is at risk of producing no clear outcome.
+  - **Magnus Westerlund Apr 28 12:34 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/s2UNChEeHEiuekdHBWE3KuxeS88/)): *"Minutes from Interim meeting 27 of April 2026"* — formally publishes the interim-14 minutes on the datatracker.
+- IETF Datatracker: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- Interop runner: **Apr 29 00:38 UTC run = 23 / 68 / 14** — **+1 pass from Apr 28 (22/69/14)**, back to the Apr 24 / Apr 27 reading. Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23. The two interim-PR merges (#1611, #1609) are spec-only; the moq-dev/moq merges (#1352, #1353, #1355) merged after the Apr 29 00:38 UTC run. Most likely a flaky test or an upstream image rebuild.
+- MoQ Monthly: Still only issue #0 (Mar 4).
+- tobbee/moq-llm-wiki issues: None open (3 closed).
+
+**Pages updated**: discussions/discussions-2026-04.md, drafts/moq-transport.md, implementations/moq-dev.md, interop/interop-runner.md, index.md
+
+**Key findings**:
+
+*Editorial-cleanup wave is the dominant story.* afrind opened **5 new PRs and merged 2 in ~8 hours** (Apr 28 16:21 UTC → Apr 29 00:04 UTC). The volume is unusually concentrated. Three of the new PRs implement specific interim-14 outcomes; two close longer-running 2025-era design issues (#1481 individual-track GOAWAY; #1386 LARGEST_OBJECT lying). The merge wave is conspicuously **all-afrind on the new-PR side** (5/5), with concurring approvals from `@sharmafb` (Suhas Sathyanarayana, who's been driving recent reviews) and `@sandarsh`. PR #1615 (RRID removal) is the sole interim-driven PR not yet merged — **now unblocked** because afrind's stated precondition (PR #1609) merged Apr 29 00:03 UTC.
+
+*PR #1608 → PR #1618 design pivot driven by yuyou's review comment.* The "Subgroup ID = first Object ID" approach was closed unmerged after WG pushback at the interim. yuyou's Apr 28 07:29 UTC review comment on #1608 is now the **template for the replacement design** (PR #1618): explicitly signal the first-Object property via a header bit rather than encoding it in the Subgroup ID. The header type byte gains bit 6 (0x40), expanding the format from `0b00X1XXXX` to `0b0XX1XXXX` while still fitting in a 1-byte varint. This is the cleanest "WG identified the requirement, then someone unrelated to the original PR proposed a better mechanism" sequence in the wiki record so far this month.
+
+*REWIND consensus call enters chair-arbitration territory.* With 3 days to the May 1 ballot deadline, chair Magnus Westerlund posted an unusual mid-thread intervention asking participants to **state explicit ballot positions** rather than continuing the design debate. Gwendal Simon's same-day message **defends Joining FETCH from a live-streaming-deployment perspective** — the first substantive pushback on the Luke + Ian "remove Joining FETCH" framing. Gwendal's proactive-past-object-delivery proposal (a parameter in SUBSCRIBE_OK communicating `[Start_Group, Live_Edge)`) is a third structural option that the thread hadn't surfaced before. The ballot may produce no clear outcome under these conditions.
+
+*moq-dev/moq external contributor base widening rapidly.* Four of the last 12 PRs/issues come from non-Luke contributors: `Qizot` (audio-encoder, iOS Safari), `ksletmoe-aws` (Karl Sletmoe / AWS, CMAF passthrough decoder), `skirsten` (static catalog), `kubo6472` (cross-impl Cloudflare bug). The AWS PR is the **first moq-dev/moq PR from an AWS-affiliated contributor**. Combined with the moq-boy production-profile context in PR #1360 (*"its 6 production instances"*), Luke's stack is now seeing both production deployment scaling and external contribution at a scale not seen earlier in 2026.
+
+*moq-lite-fetch readiness API takes shape.* Three PRs in flight build the FETCH path at the model layer: PR #1348 (Subscription API, Apr 26), #1356 (insert_track takes TrackConsumer), #1357 (fetch_group + TrackDynamic). Luke explicitly states the design pattern in #1357: *"The breaking API change is captured here so the wire-side hookup (lite ControlType::Fetch, ietf::run_fetch_stream) can land as a clean follow-up."* This is unusual scaffolding-first-then-wire ordering — Luke wants the API surface settled before FETCH semantics are implemented on the wire. Pairs with his Apr 27 issue #1614 spec-side argumentation about JOINING FETCH prioritization.
+
+*Interop matrix +1 to 23/68/14.* Recovery from Apr 28's 22/69/14 dip. Neither the spec merges (#1611, #1609) nor the moq-dev/moq merges (#1352, #1353, #1355) explain it — the latter merged after the Apr 29 00:38 UTC interop run. Most likely a flaky test or upstream image rebuild. The matrix continues to walk between 22 and 24 since draft-17 publication; no new ground broken in either direction.
+
+---
+
+# 2026-04-28 - interim-2026-moq-14 happens; WG decision: REMOVE Required Request ID (PR #1615); REWIND consensus thread re-erupts on the list (9 messages Apr 27-28); Luke's moq-relay big day (#1350 mTLS + #1352 announcementless-relay + #1353 per-frame buffer); interop drops back to 22/69/14
 
 **Operation**: Update
 **Sources**:
