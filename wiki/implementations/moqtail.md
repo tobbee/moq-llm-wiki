@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-26
+last_updated: 2026-04-30
 status: current
 ---
 
@@ -62,6 +62,11 @@ A v0.9.1 release is pending (PR #173), including a fix for a race condition caus
 - **Issue #176 (opened Apr 21)**: *"Implement the scheduling algorithm (Draft 16 Section 7.2)"*. The current relay does not honor subscribe/publish message priorities (zafergurel).
 
 Draft-16 tracking PR: [#145](https://github.com/moqtail/moqtail/pull/145) (zafergurel)
+
+## Apr 29 New PRs (Scheduling Algorithm + Firefox Private-CA Docs)
+
+- **[PR #178](https://github.com/moqtail/moqtail/pull/178) OPENED** Apr 29 08:54:49 UTC by **zafergurel** (+455/−62) — *feat: implementation of the scheduling algorithm in the relay*. Body: *"This PR implements the scheduling algorithm in the relay defined in the draft. Look at the comments for a detailed explanation of how priorities are computed based on the subscriber and publisher priorities."* Implements draft-17's prioritization scheduling at the relay layer. **First moqtail PR implementing a draft-17-specific feature** rather than chasing draft-16 conformance. Addresses Issue #176.
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) OPENED** Apr 29 09:44:42 UTC by **davemevans** (David Evans) (+11/−2) — *docs: add instructions for Firefox testing using private CA*. Firefox-specific HTTP/3 trust-quirk workaround: `network.http.http3.disable_when_third_party_roots_found` must be set when using mkcert + private CA. **First moqtail PR from David Evans** (new external contributor).
 
 # Known Issues
 

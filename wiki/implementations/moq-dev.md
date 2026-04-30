@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 status: current
 ---
 
@@ -57,6 +57,36 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April 2026)
+
+## Apr 29–30 Continued Wave: Four MERGES (#1357 fetch_group + #1350 mTLS + #1349 static catalog + #1360 jemalloc); Qizot replaces #1354 with #1362; ksletmoe-aws pivots #1359 to generic OrderedConsumer refactor; metapox opens issue #1363
+
+[[luke-curley]] turned all four open Apr 28 PRs into merged code in a ~16-hour window (Apr 29 16:08 UTC → Apr 30 00:01 UTC). Two external contributor PRs were redesigned in flight, and a new external bug arrived.
+
+### Four merges to `main`
+
+- **[PR #1357](https://github.com/moq-dev/moq/pull/1357) MERGED** Apr 30 00:01:46 UTC by [[luke-curley]] (final +427/−133) — *moq-lite: add fetch_group API + TrackDynamic*. **First FETCH path API at the track level lands.**
+  - New `TrackConsumer::fetch_group(seq) -> Result<GroupConsumer>` with three branches: cache hit returns the cached consumer; cache miss + no fetch handler returns `Err(NotFound)`; cache miss + handler queues a request and returns a consumer that fills as the publisher writes frames. **Concurrent fetches for the same sequence share the in-flight group.**
+  - New `TrackConsumer::latest_group() -> Option<GroupConsumer>` (replaces `latest()` returning `Option<u64>`).
+  - New `TrackProducer::dynamic() -> TrackDynamic` mirrors `BroadcastProducer::dynamic()`. Drop the last dynamic and pending requests are aborted with `Error::Cancel`.
+  - New `TrackDynamic::poll_requested_group` / `requested_group` yields `GroupProducer` for the publisher to fill.
+  - Caller migrations: `moq-relay/src/web.rs` fetch handler drops the upfront `subscribe_track` round-trip; `lite/publisher.rs` and `ietf/publisher.rs` use `latest_group()` for the LargestObject case.
+  - 8 new unit tests (`fetch_group_cache_hit`, `fetch_group_no_handler_returns_not_found`, `fetch_group_via_dynamic_handler`, `fetch_group_shares_in_flight`, `fetch_group_aborted_by_publisher`, `fetch_pending_aborted_when_dynamic_dropped`, `latest_group_returns_max_sequence_consumer`, `latest_group_none_on_empty_track`). `cargo test --workspace` = 290 moq-lite tests pass (up from 282).
+  - **Wire-side FETCH hookup intentionally still returns errors**: `lite::ControlType::Fetch` returns `Error::UnexpectedStream`; `ietf::run_fetch_stream` Standalone returns "not supported". The breaking API change captures the in-process API; the wire format choice is its own conversation.
+- **[PR #1350](https://github.com/moq-dev/moq/pull/1350) MERGED** Apr 29 16:46:18 UTC by [[luke-curley]] — *moq-relay: authenticate HTTPS callers via the cluster mTLS CA*. **mTLS HTTPS auth lands.** The CodeRabbit-flagged 🟠 Major (CORS+browser-readable-GET) was apparently resolved offline.
+- **[PR #1349](https://github.com/moq-dev/moq/pull/1349) MERGED** Apr 29 16:08:52 UTC by [[luke-curley]] (skirsten's *@moq/watch: add static catalog format*). Third catalog mode lands — `<moq-watch catalog-format="static">` plus writable `Signal<Catalog.Root | undefined>` for `Broadcast.catalog`.
+- **[PR #1360](https://github.com/moq-dev/moq/pull/1360) MERGED** Apr 29 16:29:05 UTC by [[luke-curley]] (+29/−10) — *moq-native: relocate jemalloc helper; wire it into moq-boy*. **moq-boy now production-instrumented for jemalloc heap profiling at 6+ instances.**
+- **PR #1361 OPENED+CLOSED** Apr 29 16:17 → 16:29 UTC by [[luke-curley]] — *moq-native: move jemalloc profiling helper from moq-relay*. Replaced by PR #1360.
+
+### External contributor activity Apr 29–30
+
+- **[PR #1354](https://github.com/moq-dev/moq/pull/1354) CLOSED unmerged** Apr 29 16:54:30 UTC by Qizot. Closing comment: *"This was wrong approach, we should have reconfigured the encoder instead."*
+- **[PR #1362](https://github.com/moq-dev/moq/pull/1362) OPENED** Apr 29 17:04:41 UTC by Qizot (+40/−17) — *Add audio encoder reconfiguration*. **Replaces PR #1354.** When iOS Safari mismatch is detected (worklet's `channelCount` resolves to 2 but `onmessage` receives mono), the encoder is **reconfigured** rather than padding the AudioData. Cleaner solution. Open under CodeRabbit review.
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) — TITLE CHANGED + RESCOPED.** Originally *"fix(watch): process CMAF groups sequentially in WebCodecs decoder"* (+64/−67). **Now *"feat(hang): unify OrderedConsumer across container formats"* (+971/−...).** After Luke's Apr 28 23:00 UTC review comment: *"I think we need a generic `OrderedConsumer`. The problem is that `recvGroup` (and MoQ in general) returns groups out-of-order. The idea behind `OrderedConsumer` is that we skip groups based on the target latency, which requires timestamp information unfortunately."* and Apr 29 00:29 UTC: *"On the Rust side, I made an interface to parse the timestamp out of each frame. Then OrderedConsumer can be reusable."* — **ksletmoe-aws (AWS) rewrote the PR as a generic `OrderedConsumer<F: Container>` refactor** that unifies Legacy + CMAF containers behind a `ContainerFormat` strategy interface. Mirrors the Rust `moq-mux` `Consumer<F: Container>` pattern. New files: `container/format.ts`, `container/consumer.ts`, `container/cmaf/format.ts`, `container/consumer.test.ts` (25 tests). 4 watch decoders migrated. Apr 30 01:43 UTC ksletmoe-aws addressed CodeRabbit nitpicks. **First instance of an external moq-dev/moq contributor's PR being expanded in scope at the maintainer's request** to align JS-side architecture with the Rust side.
+- **[Issue #1363](https://github.com/moq-dev/moq/issues/1363) OPENED** Apr 30 00:43:26 UTC by **metapox** (taku): *"feat(lite): JS Subscriber lacks SUBSCRIBE_UPDATE support for dynamic priority changes"*. Concrete use case: **multi-camera streaming where the viewer switches focus** between cameras. Each camera has a subscription, and the focused one should get higher priority — but the close→re-subscribe path causes a 1s keyframe-wait gap on every switch, while SUBSCRIBE_UPDATE would be seamless. **Rust subscriber already handles this** via `TrackSubscriber::update()`; JS subscriber is missing the equivalent. Issue includes a proposed implementation (track.ts adds priority Signal + updatePriority; lite/subscriber.ts watches for priority changes and sends SubscribeUpdate; lite/publisher.ts applies received priority). Tested in metapox's [moq-multicam](https://github.com/metapox/moq-multicam) app. Total diff: 30 inserts/4 deletes across 3 files. Second time metapox surfaces a moq-lite/JS issue (after Apr 27 #1351 false-alarm).
+
+### Net effect
+
+moq-relay's operational layer is substantially upgraded — mTLS HTTPS auth, jemalloc heap profiling, FETCH-readiness API, third catalog mode all merged in one ~16-hour window. The model layer is fully scaffolded for FETCH; only wire-side hookup remains. External contributors are now driving non-trivial design redesigns (ksletmoe-aws's #1359 rescoping is unprecedented in moq-dev/moq), and metapox's #1363 issue brings a multi-camera streaming use case to JS-side priority handling.
 
 ## Apr 28–29 Post-Interim Wave: Two Merges (#1352, #1353) + Five New PRs (#1356–#1360) + ksletmoe-aws + Qizot
 

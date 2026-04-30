@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **April 29, 2026** | **105** | **23** | **68** | **14** |
+| **April 30, 2026** | **105** | **23** | **68** | **14** |
+| April 29, 2026 | 105 | 23 | 68 | 14 |
 | April 28, 2026 | 105 | 22 | 69 | 14 |
 | April 27, 2026 | 105 | 23 | 68 | 14 |
 | April 26, 2026 | 105 | 22 | 69 | 14 |
@@ -85,6 +86,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **April 27**: **23 / 68 / 14** at 00:34 UTC — **one-test recovery** from the Apr 26 dip, matching the Apr 24 reading and the Apr 15–16 baseline. Still **−1 below** the Apr 25 high (24/67/14). Improvement-arc-with-regression: 22 → 23 → 24 → 22 → 23. The flipped test is not exposed in the summary report. Implementation activity in the Apr 26 02:00 UTC → Apr 27 00:34 UTC window includes moq-dev/moq's two `main` merges: PR #1340 (`wait_for_broadcast` / deprecate `consume_broadcast` — directly affects relay/origin lookups) and PR #1343 (subdomain-based slug routing — affects connection URL handling but not the matrix's connection URLs). PR #1340 is the more plausible cause for a `moq-dev-rs` / `moq-dev-js` image rebuild that flipped one pair. The matrix walks into the Apr 27 interim **at parity with Apr 24**, neither at peak nor at the Apr 21–23 plateau.
 
 **April 29**: **23 / 68 / 14** at 00:38 UTC — **+1 pass recovery** from Apr 28 (22/69/14), back to the Apr 24 / Apr 27 reading. Walking arc since draft-17 publication: 22 → 23 → 24 → 22 → 23 → 22 → 23. Still −1 below the Apr 25 high (24/67/14). The two interim-PR merges (moq-transport #1611, #1609) merged Apr 29 00:03–00:04 UTC are **spec-only** and don't trigger an implementation rebuild; the moq-dev/moq merges (#1352, #1353, #1355) merged after the Apr 29 00:38 UTC run, so they couldn't have driven the +1. Most likely a flaky test or an upstream image rebuild for one of the other matrix entries.
+
+**April 30**: **23 / 68 / 14** at 00:38 UTC — **unchanged from Apr 29**. Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23. The four moq-dev/moq merges (PRs #1357 fetch_group + #1350 mTLS HTTPS + #1349 static catalog + #1360 jemalloc) all landed Apr 29 16:08 UTC → Apr 30 00:01 UTC, **after** the Apr 30 00:38 UTC interop run. Apr 30 spec-only merge PR #1619 (NAMESPACE response name) doesn't drive interop. Expect possible matrix shift in the May 1 → May 2 window from `moq-dev-rs` / `moq-dev-js` image rebuilds.
 
 # Best Performing Pairs
 

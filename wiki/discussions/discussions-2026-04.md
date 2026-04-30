@@ -2,11 +2,123 @@
 title: "Discussions - April 2026"
 tags: [discussions, slack, github]
 date: 2026-04-14
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during April 2026.
+
+# Implementation Activity (Apr 29–30 UTC, editorial wave continues)
+
+## moq-wg/moq-transport — PR #1619 MERGED, PR #1593 + Issue #1365 CLOSED, ianswett opens issue #1622 + PR #1623, suhasHere opens PR #1624 + #1625, four PRs reach APPROVED (Apr 29 17:29 → Apr 30 06:00 UTC)
+
+The post-interim editorial cleanup wave continues. Six new PRs and issues opened, multiple approvals, PR #1593 closed unmerged, and the long-running ABR-grouping issue #1365 closed as NotTransport.
+
+### Merges and closures
+
+- **[PR #1619](https://github.com/moq-wg/moq-transport/pull/1619) MERGED** Apr 29 20:44:21 UTC by [[ian-swett]] (+1/−1, *Fix SUBSCRIBE_NAMESPACE response message name*, fixes #1616, label `Editorial`). Closes Issue #1616 (mope-life's Apr 28 textual inconsistency report).
+- **[PR #1593](https://github.com/moq-wg/moq-transport/pull/1593)** (*RFC: Allow framing single Objects without Subgroup ID*, ianswett, opened Apr 2) **CLOSED unmerged** Apr 29 17:29:35 UTC. The PR proposed a different mechanism (OBJECT_STREAM type omitting Subgroup ID + Object Length, FETCH_HEADER moved 0x05→0x50). After afrind's Apr 3 review pushback (*"Datagrams and FETCH_HEADER never appear in the same context. … there's already a way to omit the subgroup id in single-object subgroups -- set the mode bits to '01' and the sg-id == object id."*) and the Apr 27 interim disposition on PR #1608, #1593 became OBE. The "knowing the start of a Subgroup" problem moves to **PR #1618** (FIRST_OBJECT bit).
+- **[Issue #1365](https://github.com/moq-wg/moq-transport/issues/1365) CLOSED** Apr 30 01:46:16 UTC by [[ian-swett]] (*"If you can't deliver an entire Group, should you send any Objects for a Track?"*, opened Nov 6 2025). Apr 23 17:00 UTC closing comment: *"I'm inclined to close this with no action right now or declare it as NotTransport since it's something Sender side ABR would need to do."* Existing DELIVERY_TIMEOUT and Data-Forwarding-prioritization text judged sufficient. **ABR-grouping decision deferred to "sender-side ABR" extension territory.**
+
+### Four PRs reach APPROVED (ready to merge)
+
+- **[PR #1542](https://github.com/moq-wg/moq-transport/pull/1542)** (Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE + SUBSCRIBE_TRACKS) — [[suhas-nandakumar]] **APPROVED** Apr 29 17:52:16 UTC after a brief comment pass (17:51-17:52 UTC). Now has Vasilvv (pre-interim) + suhasHere approvals.
+- **[PR #1534](https://github.com/moq-wg/moq-transport/pull/1534)** (Add REDIRECT) — [[suhas-nandakumar]] **APPROVED** Apr 29 17:56:52 UTC with one suggestion-text patch (`Track Namespace`/`Track Name Length`/`Track Name` formatting). Now has Vasilvv (Apr 27 23:01 UTC) + suhasHere approvals.
+- **[PR #1620](https://github.com/moq-wg/moq-transport/pull/1620)** (Clarify Joining FETCH unaffected by fwd→0) — [[ian-swett]] **APPROVED** Apr 29 20:40:08 UTC. Two approvals → ready to merge.
+- **[PR #1618](https://github.com/moq-wg/moq-transport/pull/1618)** (FIRST_OBJECT bit in SUBGROUP_HEADER type) — [[suhas-nandakumar]] **APPROVED** Apr 29 23:45:55 UTC: *"Looks fine to me"*. ianswett added an Apr 29 20:48 UTC inline comment: *"Ideally, I'd like this to be required, which was a perk of my other proposal to force the Subgroup ID==First Object ID"*. Long Apr 29 20:54-22:04 UTC issue-track ianswett comments still re-litigating the closed PR #1608 approach: *"I looked at #1618 and I think this approach has some benefits: 1) It's required that one use it. 2) You can tell when you Don't have the first Object of a Subgroup."* afrind Apr 29 22:25 UTC: *"An original publisher really ought to know if it's the beginning or not. … its primary value is to know when it's safe to serve the beginning of a subgroup from cache vs going upstream."* PR is approved + ready to merge despite the parallel list-debate.
+
+### New issues + PRs
+
+- **[Issue #1622](https://github.com/moq-wg/moq-transport/issues/1622) OPENED** Apr 30 00:52:40 UTC by [[ian-swett]] (label `Handshake and Session`): *"Request ID in GOAWAY isn't useful"*. Body: *"After more thought (yes I approved #1559), I don't think the Request ID in GOAWAY is actionable in MoQ. … MoQ is not HTTP, and that's intentional. … Now that we're removing Required Request ID (#1615) and we've already removed Request ID flow control, GOAWAY is one of the two remaining uses of Request ID (the other is Joining Fetch). Filing this now because #1559 landed relatively recently (hasn't even been published in a draft) to address #1549. … @vasilvv noted reluctance to relying on Request ID on the PR as well, but I think we all thought this would be useful at the time."* **Walks back PR #1559 — which ianswett himself approved.** Triggered by ianswett's Apr 29 18:10 UTC comment on PR #1617: *"I think we should remove Request ID from GOAWAY entirely, since I don't think it has much practical value."*
+- **[PR #1623](https://github.com/moq-wg/moq-transport/pull/1623) OPENED** Apr 30 01:38:30 UTC by [[ian-swett]] (+0/−10, *Remove Request ID from GOAWAY*, label `Handshake and Session`). Body: *"Reverts #1559. Fixes #1622. Related to #1617 which adds GOAWAY for individual Requests."* Pure-removal patch. Pairs with PR #1615 (RRID removal) and the Apr 27 interim direction.
+- **[PR #1624](https://github.com/moq-wg/moq-transport/pull/1624) OPENED** Apr 30 05:17:57 UTC by [[suhas-nandakumar]] (+11/0, *Add provisional registry for LOC properties*, fixes #1550). Tiny fix that addresses the LOC property-type collision (#1550).
+- **[PR #1625](https://github.com/moq-wg/moq-transport/pull/1625) OPENED** Apr 30 05:59:02 UTC by [[suhas-nandakumar]] (+132/−1, *Rebased and Update Security Considerations PR from Magnus Westerlund*). Body: *"This PR adds a few fixes and addition to @gloinul PR #1455"*. Rebases and extends Magnus Westerlund's long-parked Security Considerations PR. Self-comment Apr 30 06:00 UTC: *"@gloinul please give it a read and let me know if this is heading in the right direction"*.
+
+### Other notable activity
+
+- **PR #1607** (Largest Available Group filter) — [[suhas-nandakumar]] reply Apr 30 03:57:02 UTC pushing back on Luke's catalog-track use case from Apr 24 23:10 UTC: *"NGR is not used for catalog typically. Also if new group generates the same catalog, it is application problem. Regardless, fetching existing catalog seems a fine solution."* — keeps PR #1607 in CHANGES_REQUESTED state.
+- **PR #1544** (0-RTT) — significant editorial back-and-forth with [[martin-thomson]]. After Thomson's Apr 28 01:30 UTC rewrite suggestion, [[ian-swett]] posted **6 inline reply/suggestion comments** Apr 30 02:12-02:29 UTC. Highlights: defends gRPC-style 0-RTT WT (*"Technically I could 0-RTT a WebTransport session if I declare my request as safe in the client library."*), two suggestion patches around cache-expiry semantics, and a rewrite for resource-exhaustion mitigation (*"Relays MAY defer initiating upstream subscriptions until the handshake is complete or reject 0-RTT entirely to mitigate resource exhaustion from replayed packets."*). Thomson Apr 30 03:25 UTC asks: *"Do you have a specific response code that a relay could use so that the client can know that this was something that can be retried? Or is it always possible to retry a subscription? Surely there are classes of rejection that are permanent and others that are temporary."* The 0-RTT review is now in serious dialogue.
+- **Issue #1453** (Send Rate parameter, wilaw) — labeled `Parked` by [[ian-swett]] Apr 30 01:52:15 UTC. Closing rationale: *"we might want to park this until someone implements and deploys Netflix style pacing that uses MoQ."*
+
+### Net effect
+
+The Apr 28-29 editorial wave continues into Apr 30. Six new PRs/issues open, four PRs reach APPROVED state. ianswett's drilling into Request ID's remaining uses is the noteworthy structural shift — **with PR #1615 (RRID removal) and PR #1623 (GOAWAY-Request-ID removal) both in flight, Joining FETCH becomes the only remaining use of Request ID across the protocol.** Combined with Mo + Cullen's pushback on PR #1608/#1618 on the list (see below), the editorial cycle is moving from broad design questions to detailed wire-format cleanup.
+
+## Mailing List — "Knowing the start of a Subgroup" New Thread + REWIND Cullen Vote (Apr 28 → Apr 30)
+
+**Two new threads + six new messages on the list since the Apr 29 log entry.**
+
+### "Knowing the start of a Subgroup" thread (Apr 29 → Apr 30, 3 messages)
+
+- **[[ian-swett]] Apr 29** ([msg](https://mailarchive.ietf.org/arch/msg/moq/S4SA8G1Brd807AaMfD_H-WSsvcI/)): Re-litigates the closed PR #1608 vs. open PR #1618 design choice on the list. ianswett still prefers his closed-PR-#1608 approach (Subgroup ID == first Object ID): mandatory, plus enables receivers to detect when they don't have the first Object. Notes #1618 (FIRST_OBJECT bit) is *"less effective"*. **Asks for community feedback, particularly from those with concerns about #1608.**
+- **[[alan-frindell]] Apr 29** ([msg](https://mailarchive.ietf.org/arch/msg/moq/znrcAgMSZf1dbppkvGD1KiXY7J8/)): Supports #1608 over #1618. *"It's not clear to me why that's a problem"* (re removing application surface). Notes that *Mo, Cullen, Magnus, and Suhas objected during the Monday interim meeting*, and **explicitly asks them to provide examples of what would be broken by #1608**.
+- **Cullen Fluffy Jennings Apr 30 ~14:00 MDT** ([msg](https://mailarchive.ietf.org/arch/msg/moq/W6043G0SUOKJSXR7MXcwBajURMM/)): Three critiques of #1608: (1) *"mirror existing end-marker logic — publishers should explicitly signal the start of tracks, groups, and subgroups when known"*; (2) implementation feasibility — *"I'm just not seeing how it works in this case"* re. catalogs needing stable Subgroup IDs while incrementing object IDs within groups; (3) opposes the conflation of Subgroup ID with first Object ID — prefers explicit signaling rather than *"pinning to very weird implicit signaling"*. Clearly favors the **#1618 FIRST_OBJECT-bit approach** over #1608.
+
+### REWIND Consensus Call — Cullen explicit option-#1 vote, ianswett clarifies "individual position"
+
+- **[[ian-swett]] Apr 29 17:27 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/CpykRsXJqj0R8AtaH4qE_t9echw/)): Clarifies his Apr 28 02:03 UTC CurrentGroupFill endorsement was *"his individual position"* as an editor, not an editorial mandate. Endorses *"some variant of option 3"* (use REWIND as basis for a PR), specifically afrind's CurrentGroupFill proposal as *"a strict improvement on the current draft"*. Reiterates: *"I'm open to some variant of REWIND, but not very optimistic that we'll get consensus on anything more complex than CurrentGroupFill."* Direct response to chair Magnus's "please state explicit positions" intervention.
+- **Cullen Fluffy Jennings Apr 29 ~14:54 MDT** ([msg](https://mailarchive.ietf.org/arch/msg/moq/n_EDW8ZW62N-mtZlyXrth_nhepc/)): **Explicitly endorses option #1**: *"I support option #1. I do not think we should not take on Rewind until we have MoQT wrapped up."* Adds: *"when the working group eventually addresses this topic, we need to start with the use case we are trying solve."* **First explicit option-#1 ballot vote on the list.**
+
+### Interim minutes follow-up
+
+- **Magnus Westerlund (chair) Apr 29** ([msg](https://mailarchive.ietf.org/arch/msg/moq/RmNpJ7bcFGxCpGNYG3dBTrfj7HY/)): Re: Minutes from Interim 14. Notes Martin Duke submitted a correction to the AI-generated summary's representation of his technical argument. Magnus expresses **satisfaction with AI-assisted minutes** overall. Invites group feedback on whether participants' points were "fairly represented".
+
+### Newly surfaced pre-interim list activity (Apr 27)
+
+- **Mo Zanaty Apr 27 14:43 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/BSTWelz12xXk6wz6PCu96weVXHI/)): *"1608 is a major change to the core data model that makes subgroups semantically meaningless, as they would encode transport irregularities that destroy the app's semantic meaning."* Argues subgroup IDs are meaningful video-layer identifiers (LOC use case), and proposes alternative subgroup-header type values for indicating start.
+- **[[alan-frindell]] Apr 27 16:04 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/RXvgdx51hdu08F9xd4Lwuu_GRn0/)) reply: *"Do you have an application that uses subgroup IDs with specific semantic values that would break if this change were adopted? Can you explain how it works?"* — establishing the burden of proof shift that ultimately led to PR #1608's closure.
+
+### Net effect
+
+The PR #1608 vs. PR #1618 design dispute moves from GitHub to the IETF list. Mo and Cullen are publicly relitigating the WG's interim decision. Meanwhile, **PR #1618 reached APPROVED state Apr 29 23:45 UTC from suhasHere**, so it's about to merge in parallel with the list debate. Likely outcome: #1618 lands but the FIRST_OBJECT semantics get carefully documented to constrain future relay behavior. The REWIND ballot now has at least one explicit option-#1 vote (Cullen) plus several option-3-with-CurrentGroupFill positions (Luke, Ian Swett individually); chair Magnus will need to interpret a split outcome ahead of the **May 1 deadline (in 1 day)**.
+
+## moq-dev/moq — Four Merges + Qizot Replaces #1354 with #1362 + ksletmoe-aws Pivots #1359 to Generic Refactor + New Issue from metapox (Apr 29 16:08 UTC → Apr 30 00:43 UTC)
+
+[[luke-curley]] turned all four open Apr 28 PRs into merged code, two external contributor PRs were redesigned in flight, and a new external bug arrived.
+
+### Four merges to `main`
+
+- **[PR #1357](https://github.com/moq-dev/moq/pull/1357) MERGED** Apr 30 00:01:46 UTC by [[luke-curley]] (final +427/−133) — *moq-lite: add fetch_group API + TrackDynamic*. **First FETCH path API at the track level lands.** New `TrackConsumer::fetch_group(seq) -> Result<GroupConsumer>` with cache-hit / cache-miss-no-handler / cache-miss-with-handler branches. Concurrent fetches for the same sequence share the in-flight group. New `TrackProducer::dynamic() -> TrackDynamic` mirrors `BroadcastProducer::dynamic()`. New `TrackDynamic::poll_requested_group` / `requested_group` yields `GroupProducer` for the publisher to fill. 8 new unit tests in `rs/moq-lite/src/model/track.rs`. `cargo test --workspace` = 290 moq-lite tests pass (up from 282). **Wire-side FETCH hookup intentionally still returns errors** — the breaking API change captures the in-process API; the wire format choice for response framing is a separate conversation.
+- **[PR #1350](https://github.com/moq-dev/moq/pull/1350) MERGED** Apr 29 16:46:18 UTC by [[luke-curley]] — *moq-relay: authenticate HTTPS callers via the cluster mTLS CA*. **mTLS HTTPS auth lands.** The Apr 27-flagged 🟠 Major (CORS+browser-readable-GET) was apparently resolved offline.
+- **[PR #1349](https://github.com/moq-dev/moq/pull/1349) MERGED** Apr 29 16:08:52 UTC by [[luke-curley]] (skirsten's *@moq/watch: add static catalog format*). Third catalog mode lands — `<moq-watch catalog-format="static">` plus writable `Signal<Catalog.Root | undefined>` for `Broadcast.catalog`.
+- **[PR #1360](https://github.com/moq-dev/moq/pull/1360) MERGED** Apr 29 16:29:05 UTC by [[luke-curley]] (+29/−10) — *moq-native: relocate jemalloc helper; wire it into moq-boy*. **moq-boy now production-instrumented for jemalloc heap profiling at 6+ instances.**
+
+### Closed/superseded PRs
+
+- **PR #1361 OPENED+CLOSED** Apr 29 16:17 UTC → 16:29 UTC by [[luke-curley]] — *moq-native: move jemalloc profiling helper from moq-relay*. Replaced by PR #1360 (broader scope including HTTPS mTLS). Closed superseded.
+- **[PR #1354](https://github.com/moq-dev/moq/pull/1354) CLOSED unmerged** Apr 29 16:54:30 UTC by Qizot. Closing comment: *"This was wrong approach, we should have reconfigured the encoder instead."*
+
+### New external PR + issue + redesigned PR
+
+- **[PR #1362](https://github.com/moq-dev/moq/pull/1362) OPENED** Apr 29 17:04:41 UTC by Qizot (+40/−17) — *Add audio encoder reconfiguration*. **Replaces PR #1354.** New approach: when iOS Safari mismatch is detected (worklet's `channelCount` resolves to 2 but `onmessage` receives mono), the encoder is **reconfigured** rather than padding the AudioData. Cleaner solution. Open under CodeRabbit review.
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) — TITLE CHANGED + RESCOPED.** Originally *"fix(watch): process CMAF groups sequentially in WebCodecs decoder"* (+64/−67). **Now *"feat(hang): unify OrderedConsumer across container formats"* (+971/−...).** After Luke's Apr 28 23:00 UTC review comment: *"I think we need a generic `OrderedConsumer`. The problem is that `recvGroup` (and MoQ in general) returns groups out-of-order. The idea behind `OrderedConsumer` is that we skip groups based on the target latency, which requires timestamp information unfortunately."* and Apr 29 00:29 UTC: *"On the Rust side, I made an interface to parse the timestamp out of each frame. Then OrderedConsumer can be reusable."* — ksletmoe-aws (Karl Sletmoe, AWS) **rewrote the PR as a generic `OrderedConsumer<F: Container>` refactor** that unifies Legacy + CMAF containers behind a `ContainerFormat` strategy interface. Mirrors the Rust `moq-mux` `Consumer<F: Container>` pattern. New files: `container/format.ts`, `container/consumer.ts`, `container/cmaf/format.ts`, `container/consumer.test.ts` (25 tests). 4 watch decoders migrated. Apr 30 01:43 UTC ksletmoe-aws addressed CodeRabbit nitpicks. **First instance of an external moq-dev/moq contributor's PR being expanded in scope at the maintainer's request.**
+- **[Issue #1363](https://github.com/moq-dev/moq/issues/1363) OPENED** Apr 30 00:43:26 UTC by **metapox** (taku): *"feat(lite): JS Subscriber lacks SUBSCRIBE_UPDATE support for dynamic priority changes"*. Concrete use case: **multi-camera streaming where the viewer switches focus** between cameras; each camera has a subscription, and the focused one should get higher priority — but the close→re-subscribe path causes a 1s keyframe-wait gap on every switch, while SUBSCRIBE_UPDATE would be seamless. **Rust subscriber already handles this** via `TrackSubscriber::update()`. JS subscriber is missing the equivalent. Issue includes a proposed implementation in three files (track.ts adds priority Signal + updatePriority; lite/subscriber.ts watches for priority changes and sends SubscribeUpdate; lite/publisher.ts applies received priority). Tested in metapox's [moq-multicam](https://github.com/metapox/moq-multicam) app. Total diff: 30 inserts/4 deletes across 3 files. Second time metapox surfaces a moq-lite/JS issue (after Apr 27 #1351 false-alarm).
+
+### Net effect
+
+moq-relay's operational layer is now substantially upgraded — mTLS HTTPS auth, jemalloc heap profiling, FETCH-readiness API, third catalog mode all merged in one ~16-hour window. The model layer is fully scaffolded for FETCH; only wire-side hookup remains. External contributors are now driving non-trivial design redesigns (ksletmoe-aws's #1359 rescoping is unprecedented in moq-dev/moq), and metapox's #1363 issue brings a multi-camera streaming use case to JS-side priority handling.
+
+## moqtail/moqtail — Two New PRs Apr 29 (Scheduling Algorithm + Firefox Private-CA Docs)
+
+After two big draft-16 merges Apr 25, moqtail opens two new PRs Apr 29 morning UTC:
+
+- **[PR #178](https://github.com/moqtail/moqtail/pull/178) OPENED** Apr 29 08:54:49 UTC by **zafergurel** (+455/−62) — *feat: implementation of the scheduling algorithm in the relay*. Body: *"This PR implements the scheduling algorithm in the relay defined in the draft. Look at the comments for a detailed explanation of how priorities are computed based on the subscriber and publisher priorities."* Implements draft-17's prioritization scheduling at the relay layer. **First moqtail PR implementing a draft-17-specific feature** rather than chasing draft-16 conformance.
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) OPENED** Apr 29 09:44:42 UTC by **davemevans** (David Evans) (+11/−2) — *docs: add instructions for Firefox testing using private CA*. Firefox-specific HTTP/3 trust-quirk workaround (`network.http.http3.disable_when_third_party_roots_found` must be set when using mkcert + private CA). **First moqtail PR from David Evans** (new external contributor).
+
+The umbrella draft-16 PR #145 (zafergurel) for `main` remains open; until that lands, draft-16 work won't appear in the moqtail interop docker image.
+
+## Slack — Quiet (no posts since Apr 27 18:50 CEST)
+
+`#moq` had no new posts since Giovanni Marzot's 😞 emoji at the interim open. `#moq-rs` / `#moq-js` / `#libquicr` quiet.
+
+## Datatracker, MoQ Monthly — Quiet
+
+- **Datatracker**: No new WG or individual draft versions since moq-lite-04 (Apr 9). draft-ietf-moq-transport-17 still the latest WG transport draft.
+- **MoQ Monthly**: Still only issue #0 (Mar 4).
+
+## Interop Runner — Unchanged at 23/68/14 (Apr 30 00:38 UTC)
+
+Apr 30 00:38 UTC run = **23 / 68 / 14** — **unchanged from Apr 29**. Walking arc since draft-17 publication: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23. The four moq-dev/moq merges (PRs #1357, #1350, #1349, #1360) all landed after the Apr 30 00:38 UTC run, so they couldn't have shifted the matrix yet. Expect possible movement in the next run from `moq-dev-rs` / `moq-dev-js` image rebuilds. See [[interop-runner]].
 
 # Implementation Activity (Apr 28–29 UTC, post-interim cleanup wave)
 
