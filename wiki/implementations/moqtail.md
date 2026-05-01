@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 status: current
 ---
 
@@ -63,10 +63,11 @@ A v0.9.1 release is pending (PR #173), including a fix for a race condition caus
 
 Draft-16 tracking PR: [#145](https://github.com/moqtail/moqtail/pull/145) (zafergurel)
 
-## Apr 29 New PRs (Scheduling Algorithm + Firefox Private-CA Docs)
+## Apr 29 → 30 PRs (Scheduling Algorithm Lands, SUBSCRIBE_NAMESPACE Stream Split, Firefox Private-CA Docs)
 
-- **[PR #178](https://github.com/moqtail/moqtail/pull/178) OPENED** Apr 29 08:54:49 UTC by **zafergurel** (+455/−62) — *feat: implementation of the scheduling algorithm in the relay*. Body: *"This PR implements the scheduling algorithm in the relay defined in the draft. Look at the comments for a detailed explanation of how priorities are computed based on the subscriber and publisher priorities."* Implements draft-17's prioritization scheduling at the relay layer. **First moqtail PR implementing a draft-17-specific feature** rather than chasing draft-16 conformance. Addresses Issue #176.
-- **[PR #179](https://github.com/moqtail/moqtail/pull/179) OPENED** Apr 29 09:44:42 UTC by **davemevans** (David Evans) (+11/−2) — *docs: add instructions for Firefox testing using private CA*. Firefox-specific HTTP/3 trust-quirk workaround: `network.http.http3.disable_when_third_party_roots_found` must be set when using mkcert + private CA. **First moqtail PR from David Evans** (new external contributor).
+- **[PR #178](https://github.com/moqtail/moqtail/pull/178) MERGED** Apr 30 12:23:13 UTC by **zafergurel** (+455/−62) — *feat: implementation of the scheduling algorithm in the relay*. Body: *"This PR implements the scheduling algorithm in the relay defined in the draft. Look at the comments for a detailed explanation of how priorities are computed based on the subscriber and publisher priorities."* Lands draft-17 §7.2 prioritization scheduling at the relay layer. **First moqtail merge implementing a draft-17-specific feature** rather than chasing draft-16 conformance. Closes Issue #176.
+- **[PR #180](https://github.com/moqtail/moqtail/pull/180) OPENED** Apr 30 18:51:59 UTC by **zafergurel** (+1150/−488) against the `draft-16` branch — *feat: separate stream for subscribe_namespace*. Major refactor moving SUBSCRIBE_NAMESPACE handling onto its own bidirectional stream — anticipates the [[moq-transport]] PR #1542 SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split that is now APPROVED upstream. Reviewer: DenizUgur. **First moqtail PR adopting the post-Apr-29 SUBSCRIBE_NAMESPACE split design** before it lands in draft-18.
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) OPENED** Apr 29 09:44:42 UTC by **davemevans** (David Evans) (+11/−2) — *docs: add instructions for Firefox testing using private CA*. Firefox-specific HTTP/3 trust-quirk workaround: `network.http.http3.disable_when_third_party_roots_found` must be set when using mkcert + private CA. **First moqtail PR from David Evans** (new external contributor). Still open as of May 1.
 
 # Known Issues
 

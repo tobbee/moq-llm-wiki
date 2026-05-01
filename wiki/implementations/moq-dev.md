@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 status: current
 ---
 
@@ -56,7 +56,13 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `cdn.moq.dev/anon` — browser pub/sub testing (QUIC + WebTransport)
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
-# Recent Activity (April 2026)
+# Recent Activity (April–May 2026)
+
+## May 1 Audio Polish + Cloudflare Relay Bug Report (May 1 01:38 → Apr 30 21:16 UTC)
+
+- **[PR #1365](https://github.com/moq-dev/moq/pull/1365) MERGED** May 1 01:38:38 UTC by **skirsten** (Simon Kirsten) (+11/0) — *@moq/watch: expose AudioContext on the audio backend*. Body: *"The WebCodecs decoder owns its own AudioContext but doesn't surface it past the Decoder class. Browsers create the context in `suspended` state when there's no user gesture, and applications need a handle on it to prompt the user (e.g. a 'click to enable audio' button) and call `resume()` from within the gesture handler."* Companion to PR #1349 (static catalog format) and PR #1355 (sampleRate override) — completes the Hang/moq-watch audio-handling polish for end users hitting browser autoplay policies.
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) STILL OPEN** — ksletmoe-aws posted self-summary Apr 30 21:16:33 UTC: *"This PR grew a bit from the original fix — I took the opportunity to create a unified `Consumer` that mirrors the Rust `Consumer<F: Container>` pattern."* Apr 30 22:10:45 UTC follow-up: *"Sorry for the churn on this one — the commit history is messier than it should be."* **[[luke-curley]] Apr 30 22:29:47 UTC**: *"No worries, I'll take a look at it soon."* PR remains open with major scope increase per Luke's design suggestion (1083 +/1173 −).
+- **New Issue [#1364](https://github.com/moq-dev/moq/issues/1364)** *"Cloudflare Relay"* opened Apr 30 14:20:51 UTC by **danrossi** (David Ross). Reports moq-js can't connect to Cloudflare's draft-14/draft-07 relays from `moqlivemock` URLs. CodeRabbit auto-flagged as possible duplicate of #586. Same class of cross-impl friction as Issue #1346 (kubo6472, Apr 24).
 
 ## Apr 29–30 Continued Wave: Four MERGES (#1357 fetch_group + #1350 mTLS + #1349 static catalog + #1360 jemalloc); Qizot replaces #1354 with #1362; ksletmoe-aws pivots #1359 to generic OrderedConsumer refactor; metapox opens issue #1363
 

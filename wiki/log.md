@@ -2,11 +2,66 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-05-01 - Editorial wave culminates + secure-objects 30-hour cleanup wave: moq-transport PR #1534 (REDIRECT, +50/−1) MERGED May 1 01:11:59 UTC by afrind, closes Issue #1481; PR #1624 (LOC properties registry, +11/0) MERGED Apr 30 18:10:18 UTC, closes Issue #1550 (cross-draft 0x02/0x04 collision saga); afrind Apr 30 18:31 UTC pushes back on Issue #1622 walk-back ("trivial to put in goaway, might be useful, can speed up retry when racing GOAWAY") — PR #1623 now contested; "Knowing the start of a Subgroup" mailing-list thread expands from 3→10 messages with Magnus, Mo Zanaty (AV1 example, calls #1608 "footgun for devs"), Suhas, Luke (proposes 0-indexed per-subgroup counter as third design); **moq-wg/secure-objects MASSIVE editorial wave**: 4 PRs MERGED (#79 fixed-width int AAD, #80 Publisher Priority in E2E, #75 track-extension guidance, #76 32-bit Object ID nonce), 5 issues CLOSED (#74 Authentication of Track Properties → consensus option #1 = no E2E for track properties, #58 Varints, #61 Private extensions, #70 Object ID nonce, #71 Publisher priority), 6 PRs OPENED (#77 threat model, #78 fan-out attack DO-NOT-MERGE, #82 byte-boundary padding, #83 SFRAME RFC ref, #84 test vectors, #85 dash fix), commit `87a95f77` removes Track Namespace + Track Name from AAD (closed PR #81 simplification landed via direct commit) — secure-objects converging on -01; moq-dev/moq PR #1365 (skirsten AudioContext) MERGED May 1 01:38 UTC; ksletmoe-aws PR #1359 self-summary + apology — Luke says "I'll take a look soon"; new issue #1364 (danrossi: Cloudflare relay connection bug); moqtail PR #178 (relay scheduling algorithm +455/−62) MERGED Apr 30 12:23 UTC — first draft-17-specific feature merged; moqtail PR #180 OPENED (zafergurel +1150/−488, separate stream for SUBSCRIBE_NAMESPACE) — first impl adopting post-Apr-29 SUBSCRIBE_NAMESPACE split; interop runner +1 to 24/67/14; draft-cenzano-moq-media-interop-03 EXPIRED Apr 23 with no -04 published
+
+**Operation**: Update
+**Sources**:
+- Slack: `#moq` — no new posts since Apr 27 18:50 CEST. `#moq-rs` / `#moq-js` / `#libquicr` quiet.
+- GitHub moq-wg repos:
+  - **moq-transport**:
+    - **PR #1534 MERGED** May 1 01:11:59 UTC by afrind (+50/−1, *Add REDIRECT for request errors and established subscriptions*). Lands both: REDIRECT error code on REQUEST_ERROR + standalone REDIRECT message for established subscriptions. **Closes Issue #1481** (per-track move).
+    - **PR #1624 MERGED** Apr 30 18:10:18 UTC by afrind (+11/0, *Add provisional registry for LOC properties*, suhasHere). Closes Issue #1550 (cross-draft 0x02/0x04 collision saga). Provisional IANA registry coordinates LOC + MOQT codepoints.
+    - **Issue #1622** *"Request ID in GOAWAY isn't useful"* (ianswett) — afrind counter Apr 30 18:31:57 UTC: *"trivial to put the request ID in goaway, and might be useful. If nothing else it can speed up retry when a new request is racing a GOAWAY."* PR #1623 (revert) now contested. First explicit pushback against the walk-back.
+    - **PR #1607** (Largest Available Group filter, vasilvv) — suhasHere counter Apr 30 03:57 UTC on Luke's Apr 24 catalog use-case: *"NGR is not used for catalog typically. Also if new group generates the same catalog, it is application problem."* Stays in CHANGES_REQUESTED.
+    - **PR #1544** (0-RTT, ianswett) — 6 inline reply/suggestion comments Apr 30 02:12-02:29 UTC working through Thomson's rewrite (already captured in Apr 30 entry).
+  - **moq-wg/secure-objects** — **MASSIVE editorial wave Apr 29 → May 1**:
+    - **PR #79** MERGED May 1 03:02:45 UTC (suhasHere, *Use fixed-width integers for AAD and nonce formation to avoid varint ambiguity*). Closes Issue #58.
+    - **PR #80** MERGED May 1 03:04:41 UTC (suhasHere, *Add Publisher Priority to E2E authenticated data*). Closes Issue #71.
+    - **PR #75** MERGED May 1 03:24:17 UTC (fluffy, *guidance on track extentions*).
+    - **PR #76** MERGED May 1 03:24:52 UTC (fluffy, *Explain 32-bit object ID nonce limitation*). Closes Issue #70.
+    - Commit `87a95f77` (suhasHere May 1 03:17:34 UTC): *"Remove Track Namespace and Track Name from AAD structure"* — landed via direct commit after PR #81 was closed unmerged. **Most consequential wire-format change of the wave.**
+    - Commit `56248619` (suhasHere May 1 03:01:33 UTC): *"make object id 32 bits"*.
+    - **Issue #74** *"Authentication of Track Properties"* CLOSED May 1 03:24:18 UTC by suhasHere/fluffy with consensus: option #1 — *"Don't provide end to end security for track properties. Applications will just add properties that need end to end security as object properties to first object of the group."*
+    - 6 new open PRs: #77 (threat model, fluffy, fixes #49), #78 (fan-out attack DO-NOT-MERGE, fluffy), #82 (padding for byte boundary, suhasHere, fixes #54), #83 (SFRAME RFC ref, fluffy), #84 (test vectors, fluffy), #85 (dash fix, fluffy).
+    - PR #81 (Simplify SECURE_OBJECT_AAD) CLOSED unmerged May 1 03:19:20 UTC, but the change landed via commit 87a95f77.
+  - **moq-wg/msf, loc, cmsf, catalog-format**: No new activity since Apr 29 wave.
+- GitHub implementations:
+  - **moq-dev/moq**:
+    - **PR #1365 MERGED** May 1 01:38:38 UTC (skirsten, *@moq/watch: expose AudioContext on the audio backend*, +11/0). Completes the Hang/moq-watch audio-handling polish (after PRs #1349 + #1355) for browser autoplay constraints.
+    - **PR #1359** (ksletmoe-aws OrderedConsumer refactor) — author self-summary Apr 30 21:16:33 UTC + apology Apr 30 22:10:45 UTC for messy commit history; Luke Apr 30 22:29:47 UTC: *"No worries, I'll take a look at it soon."* PR remains open.
+    - **Issue #1364** *"Cloudflare Relay"* opened Apr 30 14:20:51 UTC by danrossi — moq-js can't connect to Cloudflare draft-14/draft-07 relays. CodeRabbit auto-flagged as possible duplicate of #586. Same class of friction as Issue #1346 (kubo6472).
+  - **moqtail/moqtail**:
+    - **PR #178 MERGED** Apr 30 12:23:13 UTC by zafergurel (+455/−62, *feat: implementation of the scheduling algorithm in the relay*). **First draft-17-specific feature merged.** Closes Issue #176.
+    - **PR #180 OPENED** Apr 30 18:51:59 UTC by zafergurel (+1150/−488, *feat: separate stream for subscribe_namespace*) against `draft-16` branch. Major refactor anticipating moq-transport PR #1542 split. **First moqtail PR adopting the post-Apr-29 SUBSCRIBE_NAMESPACE split design.**
+  - **cloudflare/moq-rs**: No new commits since Apr 13.
+  - **video-dev/moq-js**: Quiet since mid-March.
+  - **google/quiche** (`quiche/quic/moqt` dir): No new commits since Apr 22.
+- Mailing list:
+  - **"Knowing the start of a Subgroup"** thread (Apr 29 → Apr 30): expanded from 3 messages to 10 with 7 Apr 30 additions. Magnus Westerlund, Ian Swett follow-up, Luke Curley (proposes 0-indexed per-subgroup counter as third design alternative — *"only helps REWIND for the first object… you still need a plan to handle the rest of the gaps"*), Alan Frindell, Suhas Nandakumar, Luke follow-up, **Mo Zanaty Apr 30 22:06 UTC** (endorses #1618 over #1608 with concrete AV1 temporal-layering example showing frame numbers ≠ layer numbers; calls #1608 *"a footgun for devs to screw up"*; *"even the working group fell into this trap"*; on subgroup-vs-datagram tie-breaking: *"subgroup wins"*).
+  - **REWIND Consensus Call**: deadline reached today (May 1, 2026). Chair Magnus Westerlund will need to interpret a split outcome (Cullen explicit option-#1, Luke + Ian-individually for option-3 with CurrentGroupFill, Martin Duke compromise-floor, Gwendal Simon live-streaming pushback). No new messages on this thread Apr 30 – May 1.
+- IETF Datatracker: No new draft versions. WG state: transport-17, msf-00, loc-02, secure-objects-00 (wave indicates -01 imminent), privacy-pass-02, cmsf-00. Notable individual: lite-04 (Apr 9), nmsf-01 (Apr 7).
+- Interop runner: **24 pass / 67 fail / 14 skip** (105 tests, 2026-05-01 00:40 UTC report). +1 pass / -1 fail vs Apr 30's 23/68/14. Gradual recovery from Apr 17 regression continues.
+- MoQ Monthly: Still only #0 (March 4 2026); no #1 yet.
+- tobbee/moq-llm-wiki: No new open issues.
+
+**Pages updated**: discussions-2026-05.md (created), discussions-2026-04.md, moq-transport.md, moq-secure-objects.md, moq-dev.md, moqtail.md, interop-status.md, moq-media-interop.md (marked EXPIRED), index.md, log.md.
+
+**Key findings**:
+- moq-transport: REDIRECT lands (PR #1534) — completes the Feb-9-Issue-#1481 → May-1-merge editorial cycle. LOC properties registry lands (PR #1624) — closes the cross-draft #1550 collision saga.
+- secure-objects: First substantive activity since draft-00 (Mar 2). Wave decided track-property authentication scope (Issue #74 option #1: not in scope), simplified AAD structure (Track Namespace + Track Name removed), nailed down 32-bit Object-ID nonce, brought publisher priority under AEAD. -01 release imminent.
+- "Knowing the start of a Subgroup" debate is now 3-way: PR #1608 (closed but ianswett still backs), PR #1618 (FIRST_OBJECT bit, APPROVED, Cullen + Mo Zanaty support), Luke's per-subgroup counter (newly proposed Apr 30).
+- Request ID in GOAWAY contested: afrind pushes back on ianswett's walk-back. PR #1623 needs WG resolution.
+- moqtail jumps to draft-17 features: PR #178 merged with §7.2 prioritization scheduling. PR #180 already prepares for SUBSCRIBE_NAMESPACE split.
+- moq-dev Hang audio polish complete: skirsten's PR #1365 (AudioContext exposure) closes the autoplay-policy gap left by PRs #1349 and #1355.
+- media-interop draft EXPIRED Apr 23 with no -04. LOC media-interop testing relies on what's already implemented; document marked outdated.
+
+---
 
 # 2026-04-30 - Editorial wave continues: PR #1619 (NAMESPACE response name fix) MERGED; PR #1593 CLOSED unmerged; Issue #1365 ABR-grouping CLOSED as NotTransport; ianswett opens issue #1622 + PR #1623 ("Request ID in GOAWAY isn't useful"); suhasHere opens PR #1624 (LOC properties registry) + PR #1625 (Magnus security considerations); PR #1542 / PR #1534 / PR #1620 / PR #1618 all reach APPROVED; new mailing-list thread "Knowing the start of a Subgroup" (Ian/Alan/Cullen) splits the WG between #1608 and #1618 designs; Cullen Apr 29 chimes in on REWIND for option #1; Luke MERGES PR #1357 (fetch_group + TrackDynamic — first FETCH path API at the track level) + PR #1350 (mTLS HTTPS) + PR #1349 (skirsten static catalog) + PR #1360 (jemalloc into moq-native); Qizot replaces PR #1354 with PR #1362 (audio encoder reconfiguration); ksletmoe-aws expands #1359 from CMAF-specific fix to a generic OrderedConsumer refactor (+971/−...) per Luke's design suggestion; metapox opens issue #1363 (JS Subscriber lacks SUBSCRIBE_UPDATE); moqtail opens PR #178 (relay scheduling algorithm, +455/−62) + PR #179 (Firefox private-CA docs); interop unchanged at 23/68/14
 

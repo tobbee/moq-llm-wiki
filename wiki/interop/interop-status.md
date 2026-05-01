@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-04-18
+last_updated: 2026-05-01
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-04-17): **18 passed / 73 failed / 14 skipped** out of 105 total (regression from 23/68/14 on Apr 16; total test count grew from 93 to 105 since Apr 10).
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-01 00:40 UTC): **24 passed / 67 failed / 14 skipped** out of 105 total (gradual recovery from the Apr 17 regression of 18/73/14; +1 pass / -1 fail vs Apr 30's 23/68/14).
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)
@@ -59,7 +59,7 @@ Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<
 
 # Media Wire Format Interop
 
-**[[moq-media-interop]]** (draft-cenzano-moq-media-interop-03) defines the concrete media wire format used for LOC-based media interop. It specifies how H.264 video, Opus/AAC-LC audio, and text are packaged into MOQT objects with extension headers. This is the format used by Meta's [[moxygen]] relay and is relevant for any LOC-based interop testing. The draft expires 2026-04-23 — check [datatracker](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/) for renewal.
+**[[moq-media-interop]]** (draft-cenzano-moq-media-interop-03) defines the concrete media wire format used for LOC-based media interop. It specifies how H.264 video, Opus/AAC-LC audio, and text are packaged into MOQT objects with extension headers. This is the format used by Meta's [[moxygen]] relay and is relevant for any LOC-based interop testing. **The draft expired 2026-04-23 with no -04 published** — check [datatracker](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/) for any renewal. LOC media-interop testing currently relies on what's already implemented.
 
 # Related
 
