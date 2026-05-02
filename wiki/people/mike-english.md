@@ -2,7 +2,7 @@
 title: "Mike English"
 tags: [person, cloudflare, implementer]
 date: 2026-04-15
-last_updated: 2026-04-15
+last_updated: 2026-05-02
 status: current
 ---
 
@@ -25,3 +25,4 @@ status: current
 - Clarified moq-rs/moq-dev/moq-js fork history and relationships in Slack (2026-04-11)
 - Filed detailed fact-check corrections on this wiki (issue #3)
 - Interop runner results live at englishm.github.io/moq-interop-runner/
+- **[MoQ Monthly #1](https://buttondown.com/moqmonthly/archive/moq-monthly-1/) published May 1, 2026** — *"NAB, interoperability, and a whole lot of catching up"* (~3,500 words). Covers NAB 2026 demos (Qualabs/Ateme/EZDRM C2PA+DRM+MoQ on Cloudflare; Oracle Video@Edge multi-vendor; Wowza→Shaka via CMSF; Norsk native MoQ); names **draft-18 as next interop target**; Safari 26.4 → WebTransport Baseline; OpenMOQ/aiomoqt/Vindral activity; Streaming Tech Sweden May 21 + IETF MoQ Interim June 9–12 London (Cloudflare hosting). **Explicitly cites this wiki** (`tobbee.github.io/moq-llm-wiki/`) and Tobbe's [[moqlivemock]] update.

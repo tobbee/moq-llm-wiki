@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-01 00:40 UTC): **24 passed / 67 failed / 14 skipped** out of 105 total (gradual recovery from the Apr 17 regression of 18/73/14; +1 pass / -1 fail vs Apr 30's 23/68/14).
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-02 00:37 UTC): **25 passed / 66 failed / 14 skipped** out of 105 total (gradual recovery from the Apr 17 regression of 18/73/14; +1 pass / -1 fail vs May 1's 24/67/14 — recovery now at +1/day for 4 consecutive days).
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

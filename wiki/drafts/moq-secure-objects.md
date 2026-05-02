@@ -2,7 +2,7 @@
 title: "End-to-End Secure Objects for MOQT"
 tags: [draft, security, encryption]
 date: 2026-04-10
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-secure-objects/"
@@ -51,6 +51,13 @@ After being quiet since draft-00 was published Mar 2, secure-objects had a coord
 - **[PR #75](https://github.com/moq-wg/secure-objects/pull/75)** — *guidance on track extentions* [sic] ([[fluffy]]). Adds guidance on how track extensions interact with secure-objects authentication.
 - **[PR #76](https://github.com/moq-wg/secure-objects/pull/76)** — *Explain 32-bit object ID nonce limitation* ([[fluffy]]). Closes Issue #70 ([[alan-frindell]] Mar 15). Documents that publishers must rotate keys before exhausting the 32-bit Object-ID space within a key generation.
 
+## Wave wraps May 1 21:05–21:33 UTC (PRs #82, #77, #86)
+
+- **[PR #82](https://github.com/moq-wg/secure-objects/pull/82)** MERGED May 1 21:05:19 UTC by [[fluffy]] ([[suhas-nandakumar]] author, +66/0, *Add padding property for byte boundary alignment*). **Closes Issue #54** (fluffy Nov 2025 — *"add a private header extension for pad to N byte boundary"*).
+- **[PR #77](https://github.com/moq-wg/secure-objects/pull/77)** MERGED May 1 21:06:12 UTC self-merged by [[fluffy]] (+50/0, *describe threat model*). Body: *"This most Fixes #49 but making a separate PR to describe the fan out attacks."* Mostly fixes Issue #49.
+- **[PR #78](https://github.com/moq-wg/secure-objects/pull/78)** CLOSED unmerged May 1 21:29 UTC (the original *"DO NOT MERGE YET"* fan-out attack PR). **Superseded by PR #86.**
+- **[PR #86](https://github.com/moq-wg/secure-objects/pull/86)** OPENED + MERGED in a 6-minute window May 1 21:27:42 → 21:33:18 UTC by [[fluffy]] (opened) → [[suhas-nandakumar]] (merged) (+27/0, *Explain Fan Out Attack*, *"This replaces PR#78 and is part of Fixes #49"*). Closes Issue #49.
+
 ## AAD structural change (commit-only, no merged PR)
 
 - **Commit `87a95f77`** ([[suhas-nandakumar]] May 1 03:17:34 UTC): *"Remove Track Namespace and Track Name from AAD structure"*. PR #81 (*"Simplify SECURE_OBJECT_AAD to contain only Serialized Immutable Properties"*) was closed without merge; the underlying simplification landed via direct commit. **Most consequential wire-format change of the wave.** AAD now authenticates **only the serialized immutable properties**, aligning with the Issue #74 option-#1 decision (track-level data is not authenticated).
@@ -63,19 +70,18 @@ After being quiet since draft-00 was published Mar 2, secure-objects had a coord
 - **#71** — Add publisher priority to e2e (closed via PR #80)
 - **#58** — Varints in AAD (closed via PR #79)
 - **#61** — Private extensions set-up (closed Apr 29)
+- **#54** — Padding for byte boundary alignment (closed via PR #82)
+- **#49** — Describe achieved security properties (closed via PR #77 + PR #86)
 
-## Open PRs (in flight as of May 1)
+## Open PRs (in flight as of May 2)
 
-- **[PR #77](https://github.com/moq-wg/secure-objects/pull/77)** — *describe threat model* ([[fluffy]]); mostly fixes Issue #49 ("Describe achieved security properties").
-- **[PR #78](https://github.com/moq-wg/secure-objects/pull/78)** — *Describe the fan out attack — DO NOT MERGE YET* ([[fluffy]]). Tracks the multi-subscriber AEAD-collision attack class.
-- **[PR #82](https://github.com/moq-wg/secure-objects/pull/82)** — *Add padding property for byte boundary alignment* ([[suhas-nandakumar]]); fixes Issue #54.
 - **[PR #83](https://github.com/moq-wg/secure-objects/pull/83)** — *Change the SFRAME ref to point at the RFC* ([[fluffy]]).
 - **[PR #84](https://github.com/moq-wg/secure-objects/pull/84)** — *Add test vectors in appendix* ([[fluffy]]).
 - **[PR #85](https://github.com/moq-wg/secure-objects/pull/85)** — *fix up inconsistent dash in end-to-end and hop-by-hop* ([[fluffy]]).
 
 ## Trajectory
 
-The remaining open PRs are threat-model, test-vectors, and editorial polish work — secure-objects is converging on a publishable -01 release. The track-property scope decision (Issue #74 option #1) is the most likely point of WG list discussion before -01.
+The remaining open PRs are SFRAME-ref + test-vectors + en-dash editorial polish — secure-objects is now substantively at the -01 release line. **draft-ietf-moq-secure-objects-01 has not yet been published on Datatracker** despite the merge wave; expected imminently. The track-property scope decision (Issue #74 option #1) is the most likely point of WG list discussion before -01.
 
 # Related
 

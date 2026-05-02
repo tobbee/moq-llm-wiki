@@ -2,11 +2,72 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Implementation + WG Activity (May 1 → May 2 04:00 UTC)
+
+## moq-wg/moq-transport — PR #1542 (SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split) MERGED; new Issue #1626 (QMUX version negotiation)
+
+The post-interim editorial wave continued with the most structurally consequential merge of the cycle: the SUBSCRIBE_NAMESPACE / SUBSCRIBE_TRACKS split that moqtail's PR #180 had been preparing for.
+
+- **[PR #1542](https://github.com/moq-wg/moq-transport/pull/1542) MERGED** May 1 22:59:13 UTC by [[alan-frindell]] (+215/−135, *Split SUBSCRIBE_NAMESPACE into SUBSCRIBE_NAMESPACE and SUBSCRIBE_TRACKS*, fixes #1458). Replaces single SUBSCRIBE_NAMESPACE (0x11) with two messages: **SUBSCRIBE_NAMESPACE (0x50)** for namespace discovery and **SUBSCRIBE_TRACKS (0x51)** for track subscriptions. Removes the SUBSCRIBE_NAMESPACE_OPTIONS parameter and the "BOTH" mode entirely. Adds **TRACK_NAMESPACE_PREFIX parameter (0x34)** allowing REQUEST_UPDATE to change the prefix. Approvals from ianswett (Mar 9), vasilvv (Apr 27), and [[suhas-nandakumar]] (final APPROVED May 1 18:32:48 UTC on commit `4aa849a`). Closes Issue #1458 (one of the longest-standing draft-17 design splits). The afrind 3/30 design note framed it as: *"1) We want to remove this option and bake it into the message type: no more 'BOTH'. 2) We want to allow updating the prefix via REQUEST_UPDATE..."*
+- **[Issue #1626](https://github.com/moq-wg/moq-transport/issues/1626) OPENED** May 1 23:50:05 UTC by **sharmafb** (Suhas Sathyanarayana): *"Version negotiation for QMUX"*. Body: *"We have an idea of how version negotiation works for MoQ-over-HTTP/3 and how it works for MoQ-over-QUIC, but do we know how it's going to work for MoQ-over-QMUX?"* **[[alan-frindell]] reply** May 2 02:19:30 UTC: *"We discussed quite a bit last IETF. The plan is to say something like TLS ALPN moqt-18 implies qmux-01"* — first explicit statement of the QMUX/transport ALPN coupling for draft-18.
+- **PR #1608 formally CLOSED** May 1 18:35 UTC ([[alan-frindell]]: *"Closing in favor of 1618"*) — confirms the FIRST_OBJECT bit (PR #1618) as the WG-adopted answer to "Knowing the start of a Subgroup".
+- **Open PR state** (post-May 1): PR #1620 (Joining FETCH unaffected by fwd→0), PR #1618 (FIRST_OBJECT bit), PR #1623 (Remove Request ID from GOAWAY, contested), PR #1625 (Magnus Security Considerations rebase) all remain open.
+
+## moq-wg/secure-objects — Editorial wave largely concludes (PRs #77, #82, #86 MERGED, #78 superseded)
+
+The 30-hour Apr 29 → May 1 wave wrapped up its main body in a coordinated burst on May 1 21:05–21:33 UTC.
+
+- **[PR #82](https://github.com/moq-wg/secure-objects/pull/82) MERGED** May 1 21:05:19 UTC by [[fluffy]] ([[suhas-nandakumar]] author, +66/0, *Add padding property for byte boundary alignment*). **Closes Issue #54** (fluffy Nov 2025 — *"add a private header extension for pad to N byte boundary"*). Adds the byte-boundary alignment property promised since November.
+- **[PR #77](https://github.com/moq-wg/secure-objects/pull/77) MERGED** May 1 21:06:12 UTC self-merged by [[fluffy]] (+50/0, *describe threat model*). Body: *"This most Fixes #49 but making a separate PR to describe the fan out attacks."* **Mostly fixes Issue #49** ("Describe achieved security properties"); the fan-out attack got its own follow-up.
+- **PR #78 CLOSED unmerged** May 1 21:29 UTC (the *"DO NOT MERGE YET"* fan-out attack PR), **superseded by PR #86**.
+- **[PR #86](https://github.com/moq-wg/secure-objects/pull/86) OPENED + MERGED** in the same 6-minute window May 1 21:27:42 → 21:33:18 UTC by [[fluffy]] (opened) → [[suhas-nandakumar]] (merged) (+27/0, *Explain Fan Out Attack*, *"This replaces PR#78 and is part of Fixes #49"*). Closes the fan-out-attack documentation gap.
+- **Open PRs remaining**: #83 (SFRAME RFC ref), #84 (test vectors), #85 (en-dash fix). All editorial polish — secure-objects is now substantively at the -01 release line. **draft-ietf-moq-secure-objects-01 has NOT yet been published on Datatracker** despite the merge wave.
+
+## Mailing List — Cullen opens "Request Synchronization Use Case"; REWIND consensus deadline reached without chair conclusion
+
+The May 1 REWIND consensus call deadline came and went **without a chair-summary message** on the list. Magnus Westerlund, Suhas Nandakumar, and Alan Frindell have not yet posted an interpretation of the split outcome.
+
+- **Cullen Fluffy Jennings** opened a new thread *"Request Synchronization Use Case"* May 1 16:10:06 -0600 (22:10:06 UTC) ([msg](https://mailarchive.ietf.org/arch/msg/moq/YIkbDmf8BZ0Dx41j8QJ7nj0BZMU/)). Three concrete use cases for request ordering: (1) swap tracks in video conference (pause Alice before un-pause Bob to avoid congestion), (2) client-side ABR, (3) rapid pause/unpause where reorders cause opposite-of-desired state. Key quotes:
+  - *"I'm a bit concerned with how the chairs are positioning this... after the call I realized what was happening here was the chairs are going to treat this as we no longer have the consensus we had on drafts up to -17 where there was a way to indicate ordering of requests to the proxy. We had no objections to this in last call of -17. We are trying to get to done and reopening base issues about what the requirements are is not helpful."*
+  - *"I would have objected to bidi if it did not have a way to synchronize - this is a fundamental part of bidi."*
+  - *"I'm fine with punting this to London."*
+- **Net**: this is Cullen's framing of the situation absent a chair message — the absence of formal consensus on draft-17's request-ordering mechanism (now removed via PR #1615 RRID + PR #1623 GOAWAY) reopens what he believed was settled. Likely to drive London hybrid-interim agenda.
+- **"Knowing the start of a Subgroup"** thread: ~1 additional Cullen reply on May 1; PR #1608 was formally closed the same day.
+
+## moq-dev/moq — PR #1368 doc fix MERGED, PR #1367 (pull-mode renderer) + PR #1369 (moqsink EOS fix, sidsethupathi back) OPENED
+
+[[luke-curley]] kept main moving forward with a small doc fix and a flake bump; two new contributor-driven PRs opened on May 1–2.
+
+- **[PR #1368](https://github.com/moq-dev/moq/pull/1368) MERGED** May 1 18:08:59 UTC by [[luke-curley]] (+1/−1, *Update Cloudflare limitation note for latency=real-time*). Single-line doc note clarifying that Cloudflare doesn't support both `reload` AND `latency=real-time`.
+- **[PR #1366](https://github.com/moq-dev/moq/pull/1366) MERGED** May 1 14:58 UTC — flake.lock dependency bump. Routine.
+- **[PR #1367](https://github.com/moq-dev/moq/pull/1367) OPENED** May 1 15:17:12 UTC by **skirsten** (Simon Kirsten) (+46/−4, *@moq/watch: add pull mode to video renderer*). Body: on Chrome with 144Hz+ monitors the existing Renderer caused Chrome to render at 120fps despite the draw logic being correct. Wrapping `requestAnimationFrame` recursively syncs to the monitor's vsync. Adds `mode: "push" | "pull"` prop on Renderer; `"pull"` runs self-recursive rAF and redraws only on frame change. MultiBackend WebCodecs path now uses `mode: "pull"`. skirsten notes *"we can also drop the push mode if you want."* — fourth skirsten PR after #1349, #1355, #1365 (all now merged).
+- **[PR #1369](https://github.com/moq-dev/moq/pull/1369) OPENED** May 2 03:27:40 UTC by **sidsethupathi** (Sid Sethupathi, MLB) (+39/−2, *moq-gst: fix moqsink eos*). Fixes the gst-launch pipeline `videotestsrc num-buffers=120 ! ... ! moqsink` so that EOS from `num-buffers` is honored — previously the pipeline ran indefinitely; with the fix it exits after 2 seconds. **Second sidsethupathi PR** after #1294 (Apr 12 *"use generated name if no sink pad name provided"*) — the moq-gst contributor base is solidifying around MLB engineering.
+
+## moqtail — quiet day after May 1 PR #180 + PR #178 work
+
+No new PRs opened May 1–2 after the heavy Apr 30 day. PR #180 (separate stream for SUBSCRIBE_NAMESPACE) is now structurally aligned with the just-merged moq-transport PR #1542.
+
+## MoQ Monthly #1 published (May 1)
+
+**[MoQ Monthly #1](https://buttondown.com/moqmonthly/archive/moq-monthly-1/)** *"NAB, interoperability, and a whole lot of catching up"* by Mike English (Cloudflare) — first issue since #0 (Mar 4 2026). ~3,500 words. Highlights:
+
+- **NAB 2026 (Apr 18–22)**: Qualabs / Ateme / EZDRM C2PA + DRM + MoQ demo on Cloudflare's global relay; Oracle Video@Edge multi-vendor (Ateme / Broadpeak / Cloudflare / Bitmovin); Wowza OBS → Shaka via CMAF/CMSF; Norsk native MoQ.
+- **Spec status**: Draft-14 widely implemented; Draft-16 interop underway; **Draft-18 named as next interop target**.
+- **Browser support**: Safari 26.4 shipped WebTransport without dev-mode flag → WebTransport now Baseline.
+- **Implementation activity**: OpenMOQ added Vindral; aiomoqt resumed by Giovanni Marzot.
+- **Upcoming**: Streaming Tech Sweden May 21 Stockholm; **IETF MoQ Interim June 9–12 London (Cloudflare hosting)**.
+- **Wiki shout-out**: explicit URL `tobbee.github.io/moq-llm-wiki/`. Phrasing: *"Torbjörn is also running an experiment using Andrej Karpathy's LLM Wiki concept to build a living MoQ ecosystem reference"* — described as *"updated daily from the mailing list, Slack, GitHub, and Datatracker"*. Earlier in the spec section: *"For a current summary of all active drafts and their status, the MoQ LLM Wiki has a useful table."*
+- **moqlivemock shout-out**: *"Torbjörn Einarsson (Eyevinn Technology) has shipped a significant update to moqlivemock and warp-player: draft-14 and draft-16 support with auto-negotiation, DRM (Widevine, PlayReady, FairPlay, ClearKey) following CMSF PR 18, and confirmed working WebTransport on Safari 26.4 including iOS."*
+
+# Interop Runner (May 2 00:37 UTC)
+
+**25 pass / 66 fail / 14 skip** (105 tests). +1 pass / -1 fail vs May 1 00:40 UTC's 24/67/14. Gradual recovery from the Apr 17 regression continues at +1/day.
 
 # Implementation + WG Activity (Apr 30 → May 1 04:00 UTC)
 
