@@ -2,11 +2,46 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Implementation Activity (May 2 → May 3 06:00 UTC)
+
+## moq-dev/moq — Luke REVERTS PR #1357 (fetch_group + TrackDynamic) via PR #1372; metapox opens PR #1370 (PriorityQueue SUBSCRIBE_UPDATE bug); Luke opens PR #1371 (cross-broadcast track refs); PR #1369 MERGED
+
+A surprisingly busy day on `moq-dev/moq`: a notable design U-turn from [[luke-curley]], a substantive bug report from a new external contributor (with a working fix in their fork), and a new feature PR opened.
+
+- **[PR #1372](https://github.com/moq-dev/moq/pull/1372) MERGED** May 2 21:18:50 UTC by [[luke-curley]] — *Revert moq-lite FETCH/Subscription API changes*. **Reverts [PR #1357](https://github.com/moq-dev/moq/pull/1357) (fetch_group API + TrackDynamic) and [PR #1348](https://github.com/moq-dev/moq/pull/1348) (Subscription model API for FETCH readiness).** Body: *"FETCH isn't hooked up yet, so the breaking API change isn't worth it; the API also wasn't quite right."* Hop-based clustering (PR #1322) and per-frame buffer changes (PR #1353) are preserved. **Significant U-turn**: PR #1357 was merged Apr 30 00:01 UTC and was described in the Apr 30 wiki entry as the *"first track-level FETCH path API"*. Three days later Luke pulls it back as not-ready.
+- **[PR #1371](https://github.com/moq-dev/moq/pull/1371) OPENED** May 2 20:28:59 UTC by [[luke-curley]] — *hang: cross-broadcast track references in renditions*. Adds optional `broadcast` field on video/audio rendition configs (e.g. `"../source"`) so a downstream catalog can reference tracks published in another broadcast without republishing bytes. New `PathRelative` type + `Path::resolve` in moq-lite Rust with full unit coverage; mirror `resolveBroadcast` helper for `@moq/hang`. `@moq/watch`'s `Broadcast.trackBroadcast(effect, configBroadcast)` looks up the override broadcast on the same connection; audio/video decoder + MSE backends honor it. PR body explicitly notes *"🤖 Generated with [Claude Code](https://claude.com/claude-code)"*. Use case: worker-style flow where a sidecar catalog aggregates source tracks without re-broadcasting them.
+- **[PR #1370](https://github.com/moq-dev/moq/pull/1370) OPENED** May 2 15:28:56 UTC by **metapox** — *fix(lite): PriorityQueue does not update in-flight groups on SUBSCRIBE_UPDATE*. **Detailed bug report citing [draft-ietf-moq-transport-13 §6.1](https://www.ietf.org/archive/id/draft-ietf-moq-transport-13.html#section-6.1)**: *"When subscriber priority is changed, a best effort SHOULD be made to apply the change to all objects that have not been sent."* In moq-lite, `PriorityQueue::insert()` copies the `track` value at insertion time and provides no API to update it; when `run_track` receives `SUBSCRIBE_UPDATE` and calls `subscriber.update()`, the `PriorityQueue` is not notified — existing `PriorityHandle`s keep their stale position. Real-world impact: *"Under bandwidth constraints, switching camera focus via SUBSCRIBE_UPDATE takes several seconds because old groups from the previously-focused camera continue to be served at high priority, starving the newly-focused camera."* Proposed fix: add `subscription_id` to `PriorityItem`, add `PriorityQueue::update_subscription(subscription_id, new_track)` that re-sorts and notifies all handles via watch channels; widen quinn priority spread to `index * 64`; wrap `write_all` in `tokio::select!` with `priority.next()` so priority changes take effect during blocked writes. metapox confirms: *"We have a working implementation in our fork and can submit a PR if interested."* References related Issues #699 (priority tie-breaking) and #1363 (their own JS SUBSCRIBE_UPDATE issue from Apr 30). **First substantive bug-report-with-fix-offer from metapox**, who previously opened Issue #1363 about JS Subscriber lacking SUBSCRIBE_UPDATE.
+- **[PR #1369](https://github.com/moq-dev/moq/pull/1369) MERGED** May 2 14:53:33 UTC by [[luke-curley]] (sidsethupathi author, +39/−2, *moq-gst: fix moqsink eos*). The gst-launch EOS fix opened May 2 03:27 UTC lands in ~11.5 hours. **sidsethupathi's second merged PR** after #1294 (Apr 12). MLB engineering presence on `moq-gst` is now well-established.
+
+## moqtail — PR #180 MERGED (separate stream for SUBSCRIBE_NAMESPACE) ahead of upstream PR #1542
+
+- **[PR #180](https://github.com/moqtail/moqtail/pull/180) MERGED** May 1 12:45:51 UTC by **zafergurel** (+1150/−488, *feat: separate stream for subscribe_namespace*) into the `draft-16` branch. Reviewer: DenizUgur. **moqtail merged the impl-side SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split design ~10 hours BEFORE moq-transport PR #1542 itself merged** (May 1 22:59 UTC) — first impl actually shipping the split design. Note: still on the `draft-16` branch, not yet in `main` (PR #145 umbrella tracker still open).
+
+## moq-wg/moq-transport — Quiet day, no new commits or PRs
+
+No new merges or PRs opened in the May 2 → May 3 window. Issue #1313 (ianswett's "Joining FETCH as a separate control message creates edge cases and feature gaps") got a comment May 3 06:00 UTC.
+
+## Mailing List — Quiet (no new on-list messages May 2-3 visible)
+
+The REWIND consensus deadline message-of-record from a chair has still **not appeared on the list** as of May 3 06:00 UTC. Cullen's *"Request Synchronization Use Case"* thread (May 1) has had no replies. The "Knowing the start of a Subgroup" thread is also quiet.
+
+## MoQ Monthly — No new issue since #1 (Apr 30 / May 1)
+
+The newsletter archive shows #0 (Mar 3) and #1 (Apr 30) only. No #2 in the May 2-3 window.
+
+# Interop Runner (May 3 00:38 UTC)
+
+**24 pass / 67 fail / 14 skip** (105 tests). **First regression after 4 consecutive +1/day recovery days**: −1 pass / +1 fail vs May 2's 25/66/14. Walking arc since Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → **24**.
+
+The regression coincides roughly with image rebuilds for `moq-dev-rs` / `moq-dev-js` likely picking up the May 1 → May 2 PR landings (PR #1366 flake bump, PR #1368 doc fix, PR #1369 moqsink EOS). The notable revert on May 2 21:18 UTC (PR #1372 reverting #1357 + #1348) happened **after** the May 3 00:38 UTC report, so its effect on the matrix would only show up in the May 4 run.
+
+---
 
 # Implementation + WG Activity (May 1 → May 2 04:00 UTC)
 
