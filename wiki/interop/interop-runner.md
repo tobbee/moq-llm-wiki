@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-03
+last_updated: 2026-05-04
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **May 3, 2026** | **105** | **24** | **67** | **14** |
+| **May 4, 2026** | **105** | **24** | **67** | **14** |
+| May 3, 2026 | 105 | 24 | 67 | 14 |
 | May 2, 2026 | 105 | 25 | 66 | 14 |
 | May 1, 2026 | 105 | 24 | 67 | 14 |
 | April 30, 2026 | 105 | 23 | 68 | 14 |
@@ -93,6 +94,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **April 30**: **23 / 68 / 14** at 00:38 UTC — **unchanged from Apr 29**. Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23. The four moq-dev/moq merges (PRs #1357 fetch_group + #1350 mTLS HTTPS + #1349 static catalog + #1360 jemalloc) all landed Apr 29 16:08 UTC → Apr 30 00:01 UTC, **after** the Apr 30 00:38 UTC interop run. Apr 30 spec-only merge PR #1619 (NAMESPACE response name) doesn't drive interop. Expect possible matrix shift in the May 1 → May 2 window from `moq-dev-rs` / `moq-dev-js` image rebuilds.
 
 **May 3**: **24 / 67 / 14** at 00:38 UTC — **first regression after the 4-day +1/day recovery streak** (−1 pass / +1 fail vs May 2's 25/66/14). Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → **24**. Implementation activity in the May 2 00:37 UTC → May 3 00:38 UTC window: moqtail's PR #180 (separate stream for SUBSCRIBE_NAMESPACE) merged into the `draft-16` branch — but moqtail's docker images point at the `draft-16` branch already, so a rebuild could change the matrix; moq-dev/moq's PR #1366 (flake bump), PR #1368 (doc), and PR #1369 (moqsink EOS) all merged. Luke's notable PR #1372 (revert of fetch_group + TrackDynamic) merged May 2 21:18 UTC, **after** the May 3 00:38 UTC report — its effect would only show up in the May 4 run. Most plausible cause: the moqtail draft-16 branch image rebuild flipped one pair from pass to fail.
+
+**May 4**: **24 / 67 / 14** at 00:38 UTC — **flat day** (identical to May 3 reading). Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → **24**. The May 2 21:18 UTC PR #1372 revert (Luke removing the partial fetch_group / Subscription API merged Apr 30) presumably reached the moq-dev-rs / moq-dev-js builder before this run, so any restoration-effect from undoing the broken-API change is already baked in — net zero on the matrix. Other implementation activity in the May 3 02:00 UTC → May 4 00:38 UTC window: moqtail PR #145 (umbrella draft-16) picked up 3 commits May 3 (two race-condition fixes + a logging refactor) but stayed on the un-merged branch; no `main` merges in moq-dev/moq or moq-transport. The matrix has now stabilized at 24 pass for two consecutive days, with one excursion to 25 on May 2.
 
 # Best Performing Pairs
 

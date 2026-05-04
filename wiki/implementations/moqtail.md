@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-03
+last_updated: 2026-05-04
 status: current
 ---
 
@@ -68,6 +68,14 @@ Draft-16 tracking PR: [#145](https://github.com/moqtail/moqtail/pull/145) (zafer
 - **[PR #178](https://github.com/moqtail/moqtail/pull/178) MERGED** Apr 30 12:23:13 UTC by **zafergurel** (+455/−62) — *feat: implementation of the scheduling algorithm in the relay*. Body: *"This PR implements the scheduling algorithm in the relay defined in the draft. Look at the comments for a detailed explanation of how priorities are computed based on the subscriber and publisher priorities."* Lands draft-17 §7.2 prioritization scheduling at the relay layer. **First moqtail merge implementing a draft-17-specific feature** rather than chasing draft-16 conformance. Closes Issue #176.
 - **[PR #180](https://github.com/moqtail/moqtail/pull/180) MERGED** May 1 12:45:51 UTC by **zafergurel** (opened Apr 30 18:51:59 UTC, +1150/−488) into the `draft-16` branch — *feat: separate stream for subscribe_namespace*. Reviewer: DenizUgur. **moqtail merged the impl-side SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split design ~10 hours BEFORE moq-transport PR #1542 itself merged** (May 1 22:59 UTC) — first impl actually shipping the split design. Still on the `draft-16` branch (PR #145 umbrella tracker still not landed on `main`).
 - **[PR #179](https://github.com/moqtail/moqtail/pull/179) OPENED** Apr 29 09:44:42 UTC by **davemevans** (David Evans) (+11/−2) — *docs: add instructions for Firefox testing using private CA*. Firefox-specific HTTP/3 trust-quirk workaround: `network.http.http3.disable_when_third_party_roots_found` must be set when using mkcert + private CA. **First moqtail PR from David Evans** (new external contributor). Still open as of May 1.
+
+## May 3 PR #145 (umbrella draft-16) gets 3 commits — two race-condition fixes bracketing a logging refactor
+
+- **[PR #145](https://github.com/moqtail/moqtail/pull/145) updated** May 3 with three new commits from zafergurel:
+  - `6f79910` 18:10 UTC — *fix: fixes a race condition*
+  - `ee9f7e0` 19:02 UTC — *refactor: proper logging for moqtail-ts*
+  - `ad78f25` 23:39 UTC — *fix: fixes a race condition*
+  Two race-condition fixes ~5.5 hours apart bracket a logging refactor. PR now at 29 commits, +17187/−11733, 240 files vs. main. Still on the `draft-16` branch — has not landed on `main` despite PR #180 (separate stream for SUBSCRIBE_NAMESPACE) merging into the branch May 1.
 
 # Known Issues
 

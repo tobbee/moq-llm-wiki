@@ -2,11 +2,60 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-05-03
+last_updated: 2026-05-04
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-05-04 - **ianswett OPENS Issue #1627 ("SUBSCRIBE with Joining Fetch") as a competing-design alternative to martinduke's PR #1604** May 3 07:40 UTC — fixes the same four issues (#1039 #1313 #1602 #1612), proposes adding two new modes to SUBSCRIBE instead of carrying Joining FETCH on the SUBSCRIBE stream; ianswett comments on PR #1604 May 3 06:39 + 06:42 UTC: *"This conversation makes me think using a single message would be better"* (proximate trigger for opening #1627 ~1 hour later); mailing list "Knowing the start of a Subgroup" thread reignites — **ianswett May 3 22:38 UTC announces decision to proceed with the FIRST_OBJECT bit (PR #1618)**, formally backing the May 1 PR #1608 closure with an on-list direction message; **Mo Zanaty May 4 04:24 UTC broadens the topic** by calling for a varint-vs-fixed-width audit across the spec ("Subgroup ID could be a single byte"); weekly GitHub digest sent May 3 (first wiki-visible mention of warp-streaming-format SCTE-35/CC accessibility PR work); moq-dev/moq — **PR #1373 OPENED** May 3 16:53 UTC by skirsten (*@moq/watch: fix playback stalls and frame-rate beating*, closes #1367) — supersedes skirsten's own PR #1367 pull-mode renderer two days after opening; PR #1359 (ksletmoe-aws Consumer unify) revised May 3 04:30 UTC addressing Luke's `Frame`/`DecodedFrame` reuse nits; moqtail PR #145 (umbrella draft-16) gets 3 commits May 3 (two race-condition fixes bracketing a logging refactor); moq-transport otherwise quiet (no new commits/PRs); secure-objects/msf/loc/cmsf/catalog-format/privacy-pass quiet; chair-summary message on REWIND consensus still absent (Day +3); MoQ Monthly archive unchanged; interop runner **24/67/14 — flat vs. May 3** (post-revert run shows net-zero matrix change); cloudflare/moq-rs Day +21 of fork quiet; google/quiche moqt Day +12; Slack `#moq` Day +7 of silence; no new draft revisions; no new wiki issues
+
+**Operation**: Update
+**Sources**:
+- Slack: `#moq` — no new posts since Apr 27 18:50 CEST (Day +7). `#moq-rs` / `#moq-js` / `#libquicr` quiet.
+- GitHub moq-wg repos:
+  - **moq-transport**:
+    - **Issue #1627 OPENED** May 3 07:40:15 UTC by [[ian-swett]] — *"SUBSCRIBE with Joining Fetch"*. Body: *"A different take on #1604 that adds two new modes to SUBSCRIBE instead of allowing Joining FETCH to be sent on the SUBSCRIBE stream."* Notes: removable Request ID once #1615 lands; needs text on FETCH_HEADER stream behavior on Subscription cancel; needs prioritization clarification. **Fixes #1039, #1313, #1602, #1612** — same four-issue closure target as [[martin-duke]]'s PR #1604, framed as a competing simpler design.
+    - **PR #1604 (Joining FETCH with subscription) — comments by ianswett** May 3 06:39 + 06:42 UTC. First comment replies to gwendalsimon's Apr 16 SWITCH-relay-proactive-FETCH framing: *"This conversation makes me think using a single message would be better."* Second on prioritization concern: *"I don't think there's a compelling use case for updating the priority separately. You're issuing a message to Join a Track."* Both ~1 hour before opening Issue #1627.
+    - **No new commits or merged PRs** in the May 3 06:00 → May 4 06:00 UTC window.
+  - **moq-wg/secure-objects**: No new activity since May 1 editorial wave. Open PRs remain #83 (SFRAME RFC ref), #84 (test vectors), #85 (en-dash fix).
+  - **moq-wg/msf, loc, cmsf, catalog-format, privacy-pass**: No new activity.
+- GitHub implementations:
+  - **moq-dev/moq**:
+    - **PR #1373 OPENED** May 3 16:53:49 UTC by **skirsten** (+146/−144 across 6 files, *@moq/watch: fix playback stalls and frame-rate beating*, **closes #1367**). Body terse: *"Detailed description of both fixes is in the commits."* Same author as the May 1 PR #1367 (pull-mode renderer for 144Hz+ Chrome) — effectively a rewrite that supersedes #1367. coderabbitai bot review (May 3 17:02): *"No actionable comments were generated."* skirsten now has 4 PRs in the May 1–3 window (#1349 + #1365 merged; #1367 + #1373 open with #1373 superseding).
+    - **PR #1359 revised** May 3 04:30 UTC by **ksletmoe-aws** — now +1002/−1173 across 14 files (vs. earlier reading). Author summary: *"Replace the two separate consumer implementations (Legacy and CMAF) with a single generic `Consumer` class that accepts a `ContainerFormat` strategy for frame parsing. This mirrors the Rust `moq-mux` `Consumer<F: Container>` pattern... Additionally, add a `sequential` delivery mode flag to fix audio stuttering caused by inter-group serialization."* Presumably addresses Luke's May 2 nits about `Frame`/`DecodedFrame` reuse and avoiding `Legacy.LegacyFormat`.
+    - **No merges in window.** Open: PR #1370 (metapox), #1371 (Luke), #1367 (skirsten), #1373 (skirsten), #1359 (ksletmoe-aws), #1362 (Qizot), #1356/#1358/#1341 (Luke).
+  - **moqtail/moqtail**:
+    - **PR #145 (DRAFT: draft-16) updated** with 3 new commits May 3:
+      - `6f79910` 18:10 UTC *fix: fixes a race condition*
+      - `ee9f7e0` 19:02 UTC *refactor: proper logging for moqtail-ts*
+      - `ad78f25` 23:39 UTC *fix: fixes a race condition*
+      Now at 29 commits, +17187/−11733, 240 files vs. main. Two race-condition fixes ~5.5 hours apart bracket the logging refactor. Still not landed on `main`.
+  - **cloudflare/moq-rs**: No new commits since Apr 13 (Day +21 of upstream-fork quiet).
+  - **video-dev/moq-js**: No new commits since Apr 16.
+  - **google/quiche** (`quiche/quic/moqt`): No new commits since Apr 22 (Day +12).
+  - **birneee/quiche_moq**: No new commits since Mar 13.
+- Mailing list:
+  - **[[ian-swett]] May 3 22:38 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/dL1-WD_iTNa4WR-dHfZrHPKhNXA/)) "Re: Knowing the start of a Subgroup" — thanks Mo Zanaty, **announces decision to proceed with the bitfield approach (FIRST_OBJECT bit, PR #1618)**. Reservation: *"having both Subgroup ID and Priority serve as methods for prioritizing objects within a group"* — Subgroup ID creates a much larger namespace than the agreed single-byte priority. Effectively closes the design dispute on-list.
+  - **[[mo-zanaty]] May 4 04:24 UTC** ([msg](https://mailarchive.ietf.org/arch/msg/moq/_OwGvDKV9OaYxgOc6tJH7osmn3I/)) "Re: Knowing the start of a Subgroup" — replies broadening the topic: proposes reconsidering varints across the spec ("Subgroup ID could be a single byte"), recommends a **broader review of all variable-length integer fields** to determine whether they genuinely require varint encoding. **First explicit on-list call for a varint-vs-fixed-width audit.**
+  - **Repository Activity Summary Bot May 3** ([msg](https://mailarchive.ietf.org/arch/msg/moq/umr1H3WzgiNKptknCbeSZHCNCCg/)) — weekly GitHub digest. moq-transport: *"3 new issues, 12 issues received 15 comments, 14 issues closed, 10 PRs."* Notable: PR #1625 (Magnus Security), PR #1615 (Remove RRID, *"Merge Ready"*), PR #1608 (6 comments), PR #1607 (Largest Available Group filter). For warp-streaming-format: *"2 PRs incl. SCTE-35 + CEA-608/708 accessibility fields and initial zapping specifications"* — first wiki-visible mention of warp-streaming-format SCTE-35/CC PR work.
+  - **REWIND consensus**: Day +3 since May 1 deadline without chair-summary message. Cullen's *"Request Synchronization Use Case"* thread (May 1) still no replies.
+- IETF Datatracker: No new draft versions. WG state: transport-17, msf-00, loc-02, secure-objects-00 (-01 substantively ready but not yet published despite the May 1 merge wave), privacy-pass-02, cmsf-00. Notable individual: lite-04 (Apr 9), nmsf-01 (Apr 7).
+- Interop runner: **24 pass / 67 fail / 14 skip** (105 tests, 2026-05-04 00:38 UTC report). **Flat vs. May 3 00:38 UTC** (also 24/67/14). Walking arc since Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → **24**. The May 2 21:18 UTC PR #1372 revert (Luke pulling fetch_group + Subscription API) presumably reached this run, so any restoration-effect is already baked in.
+- MoQ Monthly: No new issue. Archive remains #0 (Mar 3) + #1 (Apr 30 / May 1). Day +3 since #1 publication.
+- tobbee/moq-llm-wiki: No new open issues.
+
+**Pages updated**: discussions-2026-05.md (top-level "May 3 06:00 UTC → May 4 06:00 UTC" section added), moq-dev.md (May 3 → May 4 section: PR #1373 opened superseding #1367, PR #1359 revised), moqtail.md (PR #145 commit log extended), interop-status.md (24/67/14, flat day note), interop-runner.md (history table extended), index.md (last_updated bump), log.md.
+
+**Key findings**:
+- **Joining FETCH redesign now has two competing live proposals** in the moq-transport repo: Martin Duke's PR #1604 (carry Joining FETCH on the SUBSCRIBE stream) vs. Ian Swett's brand-new Issue #1627 (collapse Joining FETCH into new SUBSCRIBE modes). Both target the same four issues (#1039 / #1313 / #1602 / #1612). Issue #1627 was opened ~1 hour after Ian's *"single message would be better"* comment on PR #1604, making it explicit that he wants the alternative shape considered. Resolution will likely surface in London hybrid-interim agenda.
+- **Subgroup-start design is on-list-confirmed**: Ian Swett's May 3 22:38 UTC message converts the May 1 PR #1608 closure into an on-list direction statement — FIRST_OBJECT bit (PR #1618) is the WG path forward. That removes ambiguity from the closed dispute.
+- **Mo Zanaty has opened a new design front**: a broader varint vs. fixed-width audit. This is the first time the spec's encoding-class choices have been challenged as a design topic on-list, separate from any specific message. Could be picked up at London if anyone champions it.
+- **moq-dev/moq external-contributor velocity**: skirsten alone has 4 PRs in 3 days (#1349 catalog merged, #1365 AudioContext merged, #1367 pull-mode + #1373 superseding-fix open). ksletmoe-aws is now in active revision turn-around. metapox has the open PriorityQueue bug-with-fix-offer (#1370). Luke's repo has clearly transitioned from solo-development to multi-contributor activity in the post-NAB window.
+- **Interop runner flat-day**: the May 2 PR #1372 revert (Luke removing the partial fetch_group / Subscription API merged Apr 30) didn't move the matrix needle — net zero from May 3 to May 4. The walking arc has stabilized at 24 pass for 2 consecutive days, with one excursion to 25 on May 2.
+- **Slack signal-to-noise**: 7 days of silence on `#moq` after the Apr 27 interim. The mailing list and GitHub are the only active surfaces — Slack as a coordination channel is absent post-interim.
+
+---
 
 # 2026-05-03 - **Luke REVERTS PR #1357 (fetch_group + TrackDynamic) and PR #1348 via PR #1372** May 2 21:18:50 UTC ("FETCH isn't hooked up yet, the breaking API change isn't worth it; the API also wasn't quite right") — three days after PR #1357 was described as "first track-level FETCH path API"; metapox OPENS PR #1370 May 2 15:28 UTC (`fix(lite): PriorityQueue does not update in-flight groups on SUBSCRIBE_UPDATE`) — detailed bug report citing draft-ietf-moq-transport-13 §6.1 with working fix in their fork (camera-focus switch latency) and offer to submit; Luke OPENS PR #1371 May 2 20:28 UTC (`hang: cross-broadcast track references in renditions`, +PathRelative type, "Generated with Claude Code") — sidecar catalogs can reference tracks in another broadcast without republishing; PR #1369 (sidsethupathi moq-gst EOS) MERGED May 2 14:53 UTC; moqtail PR #180 (separate stream for SUBSCRIBE_NAMESPACE) MERGED May 1 12:45 UTC into `draft-16` branch — moqtail merged the impl-side split design ~10 hours BEFORE moq-transport PR #1542 itself merged May 1 22:59 UTC; moq-transport quiet (no new commits/PRs); secure-objects quiet; mailing list quiet (no chair message yet on REWIND); MoQ Monthly archive shows #1 published Apr 30 not May 1 (minor adjustment); interop runner **24/67/14** — first regression after 4-day +1/day recovery streak (−1 pass / +1 fail vs May 2's 25/66/14); no new draft revisions on Datatracker; no new wiki issues
 

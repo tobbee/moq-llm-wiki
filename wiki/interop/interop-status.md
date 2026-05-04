@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-03
+last_updated: 2026-05-04
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-03 00:38 UTC): **24 passed / 67 failed / 14 skipped** out of 105 total — **first regression after the 4-day +1/day recovery streak** (−1 pass / +1 fail vs May 2's 25/66/14). Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → **25 → 24**.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-04 00:38 UTC): **24 passed / 67 failed / 14 skipped** out of 105 total — **flat day** (identical to May 3's 24/67/14). The May 2 21:18 UTC PR #1372 revert (Luke removing the partial fetch_group / Subscription API) reached this run, so any restoration-effect is already baked in. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → **24 → 24**.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

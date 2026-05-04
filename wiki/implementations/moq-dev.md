@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-03
+last_updated: 2026-05-04
 status: current
 ---
 
@@ -57,6 +57,14 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April–May 2026)
+
+## May 3 → May 4 skirsten OPENS PR #1373 superseding own PR #1367 (pull-mode renderer); ksletmoe-aws revises PR #1359
+
+A quieter-than-May-2 day: no new merges, no new Luke PRs, no new external-contributor issues. Two notable contributor turn-arounds.
+
+- **[PR #1373](https://github.com/moq-dev/moq/pull/1373) OPENED** May 3 16:53:49 UTC by **skirsten** (+146/−144 across 6 files, *@moq/watch: fix playback stalls and frame-rate beating*, **closes #1367**). Body terse: *"Detailed description of both fixes is in the commits."* Effectively supersedes skirsten's own May 1 [PR #1367](https://github.com/moq-dev/moq/pull/1367) (pull-mode renderer for 144Hz+ Chrome at vsync). The closes-#1367 directive treats #1373 as the proper landing of that work, addressing two distinct symptoms (playback stalls + frame-rate beating) rather than just the original 144Hz issue. coderabbitai bot review (May 3 17:02): *"No actionable comments were generated."* skirsten now has 4 PRs in the May 1–3 window (#1349 + #1365 merged; #1367 + #1373 open with #1373 superseding).
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) revised** May 3 04:30 UTC by **ksletmoe-aws** — now +1002/−1173 across 14 files (vs. earlier reading of +971/...). Author summary unchanged: *"Replace the two separate consumer implementations (Legacy and CMAF) with a single generic `Consumer` class that accepts a `ContainerFormat` strategy for frame parsing. This mirrors the Rust `moq-mux` `Consumer<F: Container>` pattern... Additionally, add a `sequential` delivery mode flag to fix audio stuttering caused by inter-group serialization."* The May 3 push presumably addresses Luke's May 2 review nits (*"Just call it `Frame`... `Legacy.LegacyFormat` should be avoided IMO... We should reuse `Frame` and `DecodedFrame`"*) — first revision turn-around since Luke's Apr 30 design suggestion to refactor as `OrderedConsumer<F: Container>`.
+- **No merges in the window.** Open-PR slate going into May 4: PR #1370 (metapox PriorityQueue bug-with-fix-offer), #1371 (Luke cross-broadcast track refs), #1367 (skirsten pull-mode, now superseded by #1373), #1373 (skirsten playback fix), #1359 (ksletmoe-aws Consumer unify), #1362 (Qizot audio reconfiguration), #1356/#1358/#1341 (Luke earlier work). No new Luke PRs since the Apr 29 wave's tail (#1356).
 
 ## May 2 → May 3 Luke REVERTS PR #1357 fetch_group + TrackDynamic via PR #1372; metapox opens detailed SUBSCRIBE_UPDATE PriorityQueue bug PR #1370; Luke opens cross-broadcast PR #1371; sidsethupathi PR #1369 MERGED
 
