@@ -76,7 +76,7 @@ status: current | outdated | archived
 
 ### Ingest GitHub Activity
 1. Check repos under `moq-wg/` org: moq-transport, msf, loc, secure-objects, privacy-pass, cmsf, catalog-format
-2. Check key implementation repos: cloudflare/moq-rs, video-dev/moq-js, moq-dev/moq, google/quiche (quiche/quic/moqt), moqtail/moqtail, birneee/quiche_moq
+2. Check key implementation repos: cloudflare/moq-rs, video-dev/moq-js, moq-dev/moq, google/quiche (quiche/quic/moqt), moqtail/moqtail, birneee/quiche_moq, Eyevinn/moqlivemock, Eyevinn/warp-player, Eyevinn/moqtransport
 3. Review open issues and recent PRs
 4. Update draft summary pages with active issues
 5. Append to `wiki/log.md`
@@ -102,6 +102,9 @@ status: current | outdated | archived
 - **google/quiche MoQT**: https://github.com/google/quiche/tree/main/quiche/quic/moqt — C++ impl (Martin Duke, Victor Vasiliev)
 - **moqtail/moqtail**: https://github.com/moqtail/moqtail — MoQT implementation by Zafer Gurel
 - **birneee/quiche_moq**: https://github.com/birneee/quiche_moq — Rust impl on Cloudflare quiche crate (Leon Birne)
+- **Eyevinn/moqlivemock**: https://github.com/Eyevinn/moqlivemock — Go test app simulating a live MoQ video+audio publisher with bundled subscriber (Tobbe / Eyevinn; mlmtest interop client)
+- **Eyevinn/warp-player**: https://github.com/Eyevinn/warp-player — TypeScript player for CMSF media over MoQ using MSE playback (Eyevinn)
+- **Eyevinn/moqtransport**: https://github.com/Eyevinn/moqtransport — Go MoQ Transport implementation (Eyevinn)
 
 ### Chat & Community
 - **Slack**: `#moq` channel in quicdev workspace (C046V0QF3CK)
