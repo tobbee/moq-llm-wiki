@@ -13,7 +13,7 @@ status: current
 
 # Repositories
 
-## moqtransport (v0.7.x)
+## moqtransport (v0.8.1 — Apr 17, 2026)
 - **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport)
 - **Language**: Go
 - **Description**: Media over QUIC Transport library supporting draft-14 and draft-16
@@ -39,7 +39,7 @@ The stack covers the full media pipeline:
 
 # Catalog Handling
 
-Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each namespace provides its own catalog describing available tracks.
+Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each `cmsf/*` and `msf/*` namespace serves its own catalog describing the available tracks under that namespace. The `moq-mi/clear` namespace has no catalog — moq-mi is identified by namespace prefix convention (see `IsMoqMINamespace` in `internal/sub/moqmi.go`).
 
 # Media Support
 
@@ -49,17 +49,19 @@ Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each n
 - **Sync**: Wall-clock synchronized — group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
 - **Format**: [[moq-cmsf|CMSF]] (CMAF chunks over MOQT)
 
-# Content Protection & Namespaces
+# Namespaces
 
-Three content protection modes, each served under its own namespace:
+`mlmpub` announces a fixed set of namespaces, each carrying a different packaging and (for CMSF) protection mode. Subscribers pick a namespace to select packaging/protection:
 
-| Namespace | Protection | Details |
-|-----------|-----------|---------|
-| `cmsf/clear` | None | Unencrypted CMSF |
-| `cmsf/drm-{scheme}` | Commercial DRM | Widevine, PlayReady, FairPlay via CPIX |
-| `cmsf/eccp-{scheme}` | ClearKey / ECCP | Explicit key delivery via HTTP |
+| Namespace | Packaging | Protection | Details |
+|-----------|-----------|------------|---------|
+| `cmsf/clear` | CMSF (CMAF chunks) | None | Unencrypted CMSF — default for `mlmsub` |
+| `cmsf/drm-{scheme}` | CMSF (CMAF chunks) | Commercial DRM | Widevine, PlayReady, FairPlay via CPIX; `{scheme}` = `cenc` or `cbcs` |
+| `cmsf/eccp-{scheme}` | CMSF (CMAF chunks) | ClearKey / ECCP | Explicit key delivery via HTTP `/clearkey` side endpoint |
+| `msf/clear` | LOC (raw codec frames) | None | MSF catalog describing LOC tracks (HEVC + AVC + AAC + Opus) |
+| `moq-mi/clear` | moq-mi | None | MoQ Media Interop format (no catalog; convention-based namespace prefix) |
 
-All three modes run simultaneously, allowing subscribers to choose their preferred protection level by subscribing to the appropriate namespace.
+All five namespaces are announced concurrently when `mlmpub` runs, so subscribers can choose the packaging and protection model independently. The CMSF DRM/ECCP namespaces are only announced when a DRM config or ClearKey IV/KID is provided.
 
 # CMSF ContentProtection
 
