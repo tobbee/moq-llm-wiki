@@ -2,14 +2,14 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-04
+last_updated: 2026-05-05
 status: current
 ---
 
 **GitHub**: [moqtail/moqtail](https://github.com/moqtail/moqtail)
 **Maintainers**: Zafer Gurel, Ali C. Begen
-**Draft support**: draft-14 (main), draft-16 (in progress)
-**Updated**: 2026-04-16
+**Draft support**: **draft-16 only on `main`** (draft-14 docs removed May 4 2026)
+**Updated**: 2026-05-05
 
 # Overview
 
@@ -76,6 +76,27 @@ Draft-16 tracking PR: [#145](https://github.com/moqtail/moqtail/pull/145) (zafer
   - `ee9f7e0` 19:02 UTC — *refactor: proper logging for moqtail-ts*
   - `ad78f25` 23:39 UTC — *fix: fixes a race condition*
   Two race-condition fixes ~5.5 hours apart bracket a logging refactor. PR now at 29 commits, +17187/−11733, 240 files vs. main. Still on the `draft-16` branch — has not landed on `main` despite PR #180 (separate stream for SUBSCRIBE_NAMESPACE) merging into the branch May 1.
+
+## May 4 — PR #145 (umbrella draft-16) FINALLY MERGED into main; draft-14 docs removed; setEarlyDiscardPolicy added; sharmafb opens upstream-FETCH 3-PR series
+
+After being open since **March 6** and absorbing 29 commits / 216 files / +17,114 / −11,744, the draft-16 umbrella PR landed on `main`.
+
+- **[PR #145](https://github.com/moqtail/moqtail/pull/145) MERGED** May 4 19:23:22 UTC by **zafergurel** — *feat: draft-16 compatibility*. Body: *"Here is a substantial PR thanks to the huge difference between draft-14 and draft-16."* Brings moqtail into full compliance with [draft-ietf-moq-transport-16](https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-16). Highlights:
+  - **Setup/Session**: New ALPN-based ClientSetup/ServerSetup negotiation (#132). Two new demo apps: `apps/client-js` (browser subscriber) and `apps/meet` (WebRTC-over-MoQ video conferencing demo). Renamed `request_id` → `max_request_id` (#146).
+  - **Control Message Overhaul**: Replaced VersionParameter with **MessageParameter** (#153) — typed parameters: `DeliveryTimeout`, `Expires`, `Forward`, `GroupOrder`, `LargestObject`, `NewGroupRequest`, `SubscriberPriority`, `SubscriptionFilter`. **Track Extensions** + **Object Extensions** (#155) added across `Publish`/`Subscribe`/`Fetch`/`PublishOk`/`SubscribeOk`/`FetchOk`. **Unified request ID registry** (#163).
+- **[PR #181](https://github.com/moqtail/moqtail/pull/181) MERGED** May 4 19:39:57 UTC by zafergurel — *refactor: clean up object status values* (closes Issue #117 *"Remove 0x1 from Object Status"*).
+- **[PR #182](https://github.com/moqtail/moqtail/pull/182) MERGED** May 4 20:12:09 UTC by zafergurel — *docs: remove draft 14 texts*. **moqtail formally drops draft-14 documentation** ~30 minutes after the umbrella draft-16 lands. moqtail is now a single-draft project (draft-16).
+- **[PR #184](https://github.com/moqtail/moqtail/pull/184) MERGED** May 4 21:21:20 UTC by zafergurel — *feat: add setEarlyDiscardPolicy to moqtail-ts API* (+85/−38). Body: *"add setEarlyDiscardPolicy to cancel slow subgroup streams after a configurable timeout."* New developer-facing API for slow-stream protection.
+- **README updated** May 4 20:27 UTC by **Ali C. Begen** (`1d39865`) — first commit on `main` from the co-maintainer in this update window.
+- **CI release commits** (#173, #183, #185) bumped versions on `main`. v0.9.x release line presumably published.
+
+### Aman Sharma upstream-FETCH 3-PR series (open)
+
+- **[PR #186](https://github.com/moqtail/moqtail/pull/186) OPENED** May 4 21:37:33 UTC by **sharmafb** (Aman Sharma) — *[upstream fetches] Add command-line args for FETCH upstream timeout and gap limit [1/n]* (+15/0). Body: *"This is going to be the first in a series of commits that aims to implement upstream fetches."* Underscore-prefixed unused vars to be filled in by [2/n] and [3/n].
+- **[PR #187](https://github.com/moqtail/moqtail/pull/187) OPENED** May 5 02:35:51 UTC by **sharmafb** — *[upstream fetches] Plumbing to forward FETCH data received from upstream [2/n]* (+71/−6, 4 files). Body: *"making some plumbing changes so that in handle_uni_stream, when we receive objects in a stream from the upstream, we can forward it to the downstream."*
+- **[PR #188](https://github.com/moqtail/moqtail/pull/188) OPENED** May 5 02:50:23 UTC by **sharmafb** — *[upstream fetches] Function to send upstream fetch [3/n]* (+154/−8, 5 files). Body: *"writing a function send_upstream_fetch_for_range to send FETCHes upstream."*
+
+**Net**: moqtail's biggest week of the year. Single-draft (draft-16) project on `main`; relay can now host upstream FETCH plumbing as a feature increment. The wholesale migration likely caused the **−4 pass / +4 fail** matrix regression on the May 5 interop runner once images rebuild.
 
 # Known Issues
 

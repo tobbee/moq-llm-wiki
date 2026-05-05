@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-04
+last_updated: 2026-05-05
 status: current
 ---
 
@@ -57,6 +57,28 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April–May 2026)
+
+## May 4 → May 5 Luke OPENS PR #1374 (DATAGRAMS control stream + QUIC datagram delivery, **Lite05 wire version**)
+
+The biggest moq-lite wire-level addition since the protocol's inception — opt-in unreliable datagram delivery as a brand-new wire version, opened in the late-night UTC hours.
+
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) OPENED** May 4 22:57:32 UTC by [[luke-curley]] — *moq-lite: add DATAGRAMS control stream + QUIC datagram delivery (Lite05)* (+1615/−7 across 21 files; both Rust and TypeScript libraries). Body: *"New wire version Lite05 / DRAFT_05 (ALPN moq-lite-05, code 0xff0dad05) gating an opt-in unreliable delivery path."* Key elements:
+  - **New `DATAGRAMS` bidi control stream (`0x6`)** parallel to `SUBSCRIBE`. Sharing the same `subscribe_id` namespace lets a single QUIC datagram body be routed by ID alone.
+  - **QUIC datagram body**: `subscribe_id (i) | sequence (i) | payload (b)`, **payload capped at 1200 B**. Sequence number is preserved on the wire (ignored by Lite05 semantics) so a future moq-transport adapter can reuse the encoding.
+  - **33 ms publisher-side cache**; per-subscriber `max_latency` filters stale entries on forward. *"max_latency = 0 is strict: only fresh arrivals (no congestion-delayed retries)."*
+  - **Public API**: groups-mirroring — `TrackProducer.write_datagram` / `append_datagram`, `TrackConsumer.subscribe_datagrams` → `DatagramsConsumer`. JS exposes `Track.writeDatagram` / `appendDatagram` / `recvDatagram` / `skipDatagramsToLatest`.
+  - **Rust files**: `lite/datagram.rs` + `model/datagram.rs` added; `model/track.rs`, `lite/publisher.rs`, `lite/subscriber.rs`, version + `ControlType` enums updated.
+  - **TS files**: `lite/datagram.ts` + `datagram.ts` added; `track.ts`, `lite/connection.ts`, `lite/publisher.ts`, `lite/subscriber.ts`, version + `StreamId` updated.
+  - **Spec draft**: section + Lite05 changelog entry live in the **separate `moq-wg/moq-drafts` repo**.
+  - 17 new Rust tests, 12 new TS tests; manual relay round-trip and Lite04↔Lite05 cross-version sanity still pending. Out of scope: subscriber-configurable cache age, chunked datagrams >1200B, moq-transport adapter using sequence for ordering, migrating hang/publish/watch layers to use datagrams.
+  - PR body explicitly notes: *"🤖 Generated with [Claude Code](https://claude.com/claude-code)"*.
+- **[PR #1356](https://github.com/moq-dev/moq/pull/1356) updated** May 4 23:10 UTC by [[luke-curley]] — *moq-lite: switch insert_track to take TrackConsumer* (+39/−93). Body: *"The `&TrackProducer` parameter was effectively a witness... `TrackConsumer` is the honest type for 'I have a handle to this track.'"* Removes `TrackConsumer::produce()` from #1300; adds `TrackConsumer::weak()` so the broadcast can derive its `TrackWeak` from a consumer.
+- **[PR #1373](https://github.com/moq-dev/moq/pull/1373) updated** May 4 22:25 UTC by **skirsten** — playback stalls / frame-rate beating fix (still open, follow-up to PR #1367).
+- **[PR #1341](https://github.com/moq-dev/moq/pull/1341) updated** May 4 22:24 UTC by [[luke-curley]] — *Refactor media producers and simplify fMP4 CMAF passthrough* (+3808/−2025 across 79 files). Module reorg `moq_mux::import` → `moq_mux::producer`, removed feature gates (`mp4`/`h264`/`h265`/`hls`/`av1`/`aac`/`opus`), init-segments now base64-encoded ftyp+moov in catalog, `Decoder` → `Framed` rename.
+- **[PR #1359](https://github.com/moq-dev/moq/pull/1359) CLOSED** May 4 21:25 UTC (status: closed-not-merged). ksletmoe-aws's *unify Consumer across container formats* did not land in the form opened.
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) updated** May 4 21:47 UTC — `chore: release` (moq-bot) — staging release commits.
+
+**Net**: PR #1374 introduces the **Lite05 wire version**, opening unreliable datagram delivery as a peer dimension to subgroup-stream delivery. The 33ms freshness cap is firm; per-subscriber `max_latency` is a novel knob. Lite05 spec text lives in moq-drafts (a separate repo not yet visible to the wiki crawler). Notable that this is a **wire-version increment** — earlier moq-lite changes typically remained inside Lite04.
 
 ## May 3 → May 4 skirsten OPENS PR #1373 superseding own PR #1367 (pull-mode renderer); ksletmoe-aws revises PR #1359
 

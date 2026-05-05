@@ -1,31 +1,34 @@
 ---
 title: "moqlivemock"
-tags: [implementation, go, javascript, eyevinn, cmsf, drm]
+tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm]
 date: 2026-04-12
-last_updated: 2026-04-15
+last_updated: 2026-05-05
 status: current
 ---
 
 **Organization**: Eyevinn Technology
 **Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
+**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0)
 **Demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
 
 # Repositories
 
-## moqtransport (v0.7.0)
+## moqtransport (v0.7.x)
 - **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport)
 - **Language**: Go
 - **Description**: Media over QUIC Transport library supporting draft-14 and draft-16
 
-## moqlivemock (v0.7.0)
+## moqlivemock (v0.8.0 — May 5, 2026)
 - **GitHub**: [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock)
 - **Language**: Go
-- **Description**: Live MoQ publisher/subscriber with CMSF media, DRM, and interop testing support
+- **Description**: Live MoQ publisher/subscriber with CMSF, LOC, MSF, and moq-mi media support, DRM, and interop testing
+- **v0.8.0 highlights**: HEVC support for LOC packaging, accurate per-packaging bitrate exposed in catalog, MSF/LOC/moq-mi support added
 
-## warp-player (v0.7.1)
+## warp-player (v0.8.0 — May 5, 2026)
 - **GitHub**: [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player)
-- **Language**: JavaScript
-- **Description**: Browser-based player for CMSF media over MoQ using MSE playback. Supports Widevine, PlayReady, FairPlay, and ClearKey.
+- **Language**: JavaScript / TypeScript
+- **Description**: Browser-based player for CMSF media (MSE) **and LOC media (WebCodecs)** over MoQ. Supports Widevine, PlayReady, FairPlay, and ClearKey on the MSE path.
+- **v0.8.0 highlights**: WebCodecs LOC pipeline (HEVC + AVC + AAC + Opus), MSF catalog support, mute toggle UI, namespace filtering UI, Safari `wt.closed` rejection fix
 
 # Architecture
 

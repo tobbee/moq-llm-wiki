@@ -2,13 +2,15 @@
 title: "Media over QUIC - Lite (moq-lite)"
 tags: [draft, transport, individual]
 date: 2026-04-13
-last_updated: 2026-04-18
+last_updated: 2026-05-05
 status: current
-draft_version: "04"
+draft_version: "04 (Datatracker) / Lite05 in moq-dev/moq PR #1374 + moq-wg/moq-drafts"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/"
 ---
 
 **draft-lcurley-moq-lite-04** | 23 pages | Expires 2026-10-11
+
+> **Lite05 in flight**: [[luke-curley]] opened [moq-dev/moq PR #1374](https://github.com/moq-dev/moq/pull/1374) on **May 4 2026 22:57 UTC** introducing wire version **Lite05 / DRAFT_05** (ALPN `moq-lite-05`, code `0xff0dad05`). Adds opt-in **DATAGRAMS control stream `0x6`** + QUIC datagram delivery (`subscribe_id | sequence | payload`, 1200B cap), 33ms publisher cache, per-subscriber `max_latency` filter. Spec text lives in the separate `moq-wg/moq-drafts` repo. Datatracker is still on `-04` as of May 5; an `-05` revision is presumably forthcoming.
 
 # Author
 - [[luke-curley]] (kixelated@gmail.com)

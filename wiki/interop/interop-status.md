@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-04
+last_updated: 2026-05-05
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-04 00:38 UTC): **24 passed / 67 failed / 14 skipped** out of 105 total — **flat day** (identical to May 3's 24/67/14). The May 2 21:18 UTC PR #1372 revert (Luke removing the partial fetch_group / Subscription API) reached this run, so any restoration-effect is already baked in. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → **24 → 24**.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-05 00:37 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **major regression: −4 pass / +4 fail vs May 4's 24/67/14**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC (wholesale draft-14→draft-16 migration, +17,114/−11,744 across 216 files) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05) was opened May 4 22:57 UTC but is **not yet merged**, so does not affect this run.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

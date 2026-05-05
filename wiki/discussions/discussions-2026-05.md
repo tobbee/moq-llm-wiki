@@ -2,11 +2,133 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-04
+last_updated: 2026-05-05
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 4 06:00 UTC → May 5 06:00 UTC)
+
+## moqtail — PR #145 (umbrella draft-16) FINALLY MERGED into main; draft-14 docs removed; setEarlyDiscardPolicy added; sharmafb opens upstream-FETCH 3-PR series
+
+After being open since **March 6** and absorbing 29 commits / 216 files / +17,114 / −11,744, [[zafer-gurel]]'s draft-16 umbrella PR landed on `main`.
+
+- **[PR #145](https://github.com/moqtail/moqtail/pull/145) MERGED** May 4 19:23:22 UTC by **zafergurel** — *feat: draft-16 compatibility*. Body: *"Here is a substantial PR thanks to the huge difference between draft-14 and draft-16."* Brings moqtail into full compliance with [draft-ietf-moq-transport-16](https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-16). Highlights from the merge body:
+  - **Setup/Session**: New ALPN-based ClientSetup/ServerSetup negotiation (#132). Two new demo apps: `apps/client-js` (browser subscriber) and `apps/meet` (WebRTC-over-MoQ video conferencing demo). Renamed `request_id` → `max_request_id` (#146).
+  - **Control Message Overhaul**: Replaced VersionParameter with **MessageParameter** (#153) — typed parameters: `DeliveryTimeout`, `Expires`, `Forward`, `GroupOrder`, `LargestObject`, `NewGroupRequest`, `SubscriberPriority`, `SubscriptionFilter`. **Track Extensions** + **Object Extensions** (#155) added across `Publish`/`Subscribe`/`Fetch`/`PublishOk`/`SubscribeOk`/`FetchOk`. **Unified request ID registry** (#163).
+  - This is the largest single moqtail merge since the project's draft-14 baseline; the `draft-16` integration branch (existed since Mar 6) is now collapsed into `main`.
+- **[PR #181](https://github.com/moqtail/moqtail/pull/181) MERGED** May 4 19:39:57 UTC by zafergurel — *refactor: clean up object status values* (closes Issue #117 *"Remove 0x1 from Object Status"*).
+- **[PR #182](https://github.com/moqtail/moqtail/pull/182) MERGED** May 4 20:12:09 UTC by zafergurel — *docs: remove draft 14 texts*. **moqtail formally drops draft-14 documentation** ~30 minutes after the umbrella draft-16 lands. moqtail is now a single-draft project (draft-16).
+- **[PR #184](https://github.com/moqtail/moqtail/pull/184) MERGED** May 4 21:21:20 UTC by zafergurel — *feat: add setEarlyDiscardPolicy to moqtail-ts API* (+85/−38). Body: *"add setEarlyDiscardPolicy to cancel slow subgroup streams after a configurable timeout."* New developer-facing API for slow-stream protection.
+- **README updated** May 4 20:27 UTC by **Ali C. Begen** (`1d39865`) — first commit on `main` from the co-maintainer in this update window.
+- **CI release commits** (#173, #183, #185) bumped versions on `main`. v0.9.x release line presumably published.
+- **PR #186 OPENED** May 4 21:37:33 UTC by **sharmafb** (Aman Sharma) — *[upstream fetches] Add command-line args for FETCH upstream timeout and gap limit [1/n]* (+15/0). Body: *"This is going to be the first in a series of commits that aims to implement upstream fetches."* Underscore-prefixed unused vars to be filled in by [2/n] and [3/n].
+- **PR #187 OPENED** May 5 02:35:51 UTC by **sharmafb** — *[upstream fetches] Plumbing to forward FETCH data received from upstream [2/n]* (+71/−6, 4 files). Body: *"making some plumbing changes so that in handle_uni_stream, when we receive objects in a stream from the upstream, we can forward it to the downstream."*
+- **PR #188 OPENED** May 5 02:50:23 UTC by **sharmafb** — *[upstream fetches] Function to send upstream fetch [3/n]* (+154/−8, 5 files). Body: *"writing a function send_upstream_fetch_for_range to send FETCHes upstream."*
+
+**Net**: moqtail's biggest week of the year. The draft-14→draft-16 wholesale migration on `main` is done; the relay can now host upstream FETCH plumbing as a feature increment (Aman Sharma's 3-PR series). Combined with the May 4 20:02 UTC `fix: fix relay url for the player`, moqtail is positioning for a clean draft-16 production release.
+
+## moq-dev/moq — Luke OPENS PR #1374 (DATAGRAMS control stream + QUIC datagram delivery, Lite05 wire version)
+
+[[luke-curley]] introduced moq-lite's biggest wire-level addition since the protocol's inception — opt-in unreliable datagram delivery as a brand-new wire version.
+
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) OPENED** May 4 22:57:32 UTC by [[luke-curley]] — *moq-lite: add DATAGRAMS control stream + QUIC datagram delivery (Lite05)* (+1615/−7 across 21 files; both Rust and TypeScript libraries). Body: *"New wire version Lite05 / DRAFT_05 (ALPN moq-lite-05, code 0xff0dad05) gating an opt-in unreliable delivery path."* Key elements:
+  - **New `DATAGRAMS` bidi control stream (`0x6`)** parallel to `SUBSCRIBE`. Sharing the same `subscribe_id` namespace lets a single QUIC datagram body be routed by ID alone.
+  - **QUIC datagram body**: `subscribe_id (i) | sequence (i) | payload (b)`, **payload capped at 1200 B**. Sequence number is preserved on the wire (ignored by Lite05 semantics) so a future moq-transport adapter can reuse the encoding.
+  - **33 ms publisher-side cache**; per-subscriber `max_latency` filters stale entries on forward. *"max_latency = 0 is strict: only fresh arrivals (no congestion-delayed retries)."*
+  - **Public API**: groups-mirroring — `TrackProducer.write_datagram` / `append_datagram`, `TrackConsumer.subscribe_datagrams` → `DatagramsConsumer`. JS exposes `Track.writeDatagram` / `appendDatagram` / `recvDatagram` / `skipDatagramsToLatest`.
+  - **Spec draft** section + Lite05 changelog entry live in the separate `moq-wg/moq-drafts` repo.
+  - 17 new Rust tests, 12 new TS tests; manual-relay round-trip and Lite04↔Lite05 cross-version sanity still pending.
+  - PR body explicitly notes: *"🤖 Generated with Claude Code"*.
+- **[PR #1356](https://github.com/moq-dev/moq/pull/1356) updated** May 4 23:10 UTC by [[luke-curley]] — *moq-lite: switch insert_track to take TrackConsumer* (+39/−93). Body: *"The `&TrackProducer` parameter was effectively a witness... `TrackConsumer` is the honest type for 'I have a handle to this track.'"* Removes `TrackConsumer::produce()` from #1300.
+- **[PR #1373](https://github.com/moq-dev/moq/pull/1373) updated** May 4 22:25 UTC by **skirsten** — playback stalls / frame-rate beating fix (still open, follow-up to PR #1367).
+- **[PR #1341](https://github.com/moq-dev/moq/pull/1341) updated** May 4 22:24 UTC by [[luke-curley]] — *Refactor media producers and simplify fMP4 CMAF passthrough* (+3808/−2025 across 79 files). Includes module reorg `moq_mux::import` → `moq_mux::producer`, removed feature gates, init-segments now base64-encoded ftyp+moov in catalog.
+
+**Net**: PR #1374 introduces the **Lite05** wire version with optional datagram delivery, opening a new dimension to moq-lite's design — the framework for low-latency unreliable transport as a peer to subgroup-stream delivery. The 33ms freshness cap is a firm latency target; per-subscriber `max_latency` is a novel knob. Lite05 spec text lives in moq-drafts (a separate repo not yet visible to the wiki crawler). Notable that this is a **wire-version increment** (Lite04 → Lite05) — earlier moq-lite changes typically remained inside Lite04.
+
+## moq-wg/moq-transport — Quiet (no new PRs / merges in the window)
+
+No new commits, merged PRs, or issues opened on `main` between May 4 06:00 UTC and May 5 06:00 UTC. Open PRs unchanged: #1627 (ianswett SUBSCRIBE-with-Joining-Fetch alternative), #1604 (martinduke Joining FETCH carry on SUBSCRIBE stream), #1617 (afrind GOAWAY individual requests), #1615 (ianswett Remove RRID, *Merge Ready*), #1625 (Magnus Security rebase), #1607 (Largest Available Group filter), #1544 (Improve Startup Latency / 0-RTT), #1623 (Remove Request ID from GOAWAY), #1618 (FIRST_OBJECT bit), #1621 (Forbid relays lying about LARGEST_OBJECT), #1591 (flow control for Subscriptions), #1605 (Split DELIVERY_TIMEOUT), #1378 (SWITCH for client-side ABR), #1613 (MAX_REQUEST_UPDATES setup option).
+
+## google/quiche `moqt` — First commit since Apr 22 (Day +13)
+
+- **`1ceadc7`** May 5 01:02:22 UTC — *Rewrite MOQT control message parser* (Vasiliev). **First moqt commit on `google/quiche` `main` since the Apr 22 `1004527` "Allow MoqtClient and MoqtServer to control session parameters."** Ends a 13-day quiet period. Suggests Vasiliev is back on the moqt subtree after the late-April pause.
+
+## Mailing List — Heavy May 4 day; 'Knowing the start of a Subgroup' (single-byte Subgroup ID debate continues), 'Request Synchronization Use Case' (Magnus replies), Magnus on minutes quality
+
+After Cullen's May 1 *"Request Synchronization Use Case"* sat unanswered for 3 days, [[magnus-westerlund]] returned to the list and replied substantively. The Subgroup ID thread also got a fresh round, this time digging into single-byte feasibility.
+
+### Knowing the start of a Subgroup (4 new May 4 messages)
+
+- **[[ian-swett]]** May 4 12:56 EDT (16:56 UTC) ([msg](https://mailarchive.ietf.org/arch/msg/moq/dpfivbI043m20hxziKNBYN38V2I/)) — replies to Mo Zanaty's varint critique. **Calls limiting Subgroup ID to a single byte *"a very appealing change"***, but flags the cost: *"if you wanted to do Object-per-Subgroup and couldn't or didn't want to use datagrams, you'd be limited to 256 Objects per Group."* References Issue #1405 (single-object subgroups). Repeats the broader concern: both Subgroup ID and Priority overlap as prioritization mechanisms within a Group; Priority was previously agreed to be a single byte, while Subgroup ID currently creates a much larger namespace. *"Maybe I'm overthinking it... worth exploring simplifications."*
+- **[[mo-zanaty]]** May 4 17:36 UTC ([msg](https://mailarchive.ietf.org/arch/msg/moq/xShnVHc5vXqEBrhUfU8czjTnkkU/)) — proposes a workaround for object-per-subgroup applications: *"transmit numerous objects as separate streams using identical identifiers (such as 0) and reset values."* Acknowledges this is inelegant, suggests a **specialized header format for single-object streams** as an alternative — references Issue #1405, notes conceptual similarity to datagrams, and proposes a dedicated header type combining desired characteristics of both. **If stream-per-object is achievable without consuming many Subgroup IDs, a single byte for Subgroup ID would suffice.**
+- **[[suhas-nandakumar]]** May 4 17:40 UTC (10:40 PDT) ([msg](https://mailarchive.ietf.org/arch/msg/moq/JHLULNLlNJ-o_RikD_XB8Ba-2-4/)) — *"Is there a use-case where we need more than 256 subgroups and needs to be considered for prioritization? I cannot think of one but appreciate inputs from others."*
+- **[[luke-curley]]** May 4 20:00 UTC (13:00 PDT) ([msg](https://mailarchive.ietf.org/arch/msg/moq/tPHPb_3nf893KMqICMIUJqE0NFI/)) — questions the use case: *"What are the use-cases for a sub-group per object/datagram? I think for media, it would be sending each b-frame as a separate sub-group."* Asks the WG how prioritization should work in that pattern.
+
+### Request Synchronization Use Case (3 May 4 replies; thread breaks 3-day silence)
+
+- **[[magnus-westerlund]]** May 4 10:04 UTC ([msg](https://mailarchive.ietf.org/arch/msg/moq/bSQf02Wcdvul4VNWro4_WikggSM/)) — replies to Cullen's May 1 framing. **Clarifies the WG poll was about whether request synchronization needed resolution in draft-18, with intent to defer discussion to London.** *"The discussion also indicated that there are some different views on why a request synchronization mechanism is needed. Thus, we asked for clarification on the use cases from the WG participants to enable discussion and proposals."* Proposes two paths: explicitly state request-synchronization capability remains, **or** retain `required_request_id` in draft -18 with notes documenting its issues. **Frames this as problem-solving, not removal of consensus.**
+- **[[magnus-westerlund]]** May 4 10:15 UTC ([msg](https://mailarchive.ietf.org/arch/msg/moq/UoDRMucPSFVAKzwJPeKVex1f0Io/)) — follow-up clarifier. **Asks Cullen to detail three specific scenarios**: (1) Swap Tracks (does pausing use REQUEST_UPDATE forward-flag, or new subscriptions w/ termination?), (2) Client Side ABR (REQUEST_UPDATE / new subscriptions / SWITCH?), (3) Pause/Unpause (*"requests will be delivered and processed in the order transmitted assuming the QUIC connection doesn't time out."* — questions whether reorder-via-REQUEST_UPDATE is achievable).
+- **[[luke-curley]]** May 4 17:10 UTC (10:10 PDT) ([msg](https://mailarchive.ietf.org/arch/msg/moq/6X8WPyp6GXcTVnMgN8D1aozmEbc/)) — identifies a **deadlock concern with draft-17's `required_request_id`**: *"if either side RESETs a request, it can cause a deadlock. The peer may never learn about a specific `request_id` referenced via a `required_request_id` so it will block (until some timeout)."* States the issue is *"addressable"* — alternative approaches may exist; encourages clarifying actual use cases.
+
+### Re: Minutes from Interim meeting 27 of April 2026
+
+- **[[magnus-westerlund]]** May 4 07:59 UTC ([msg](https://mailarchive.ietf.org/arch/msg/moq/ykbgFMG2I4KaMtzhlah8gc1u1rQ/)) — responds to Cullen's earlier criticism about minutes quality. *"Minutes at least indicating which issues was discussed, some of the argument and outcome"* serves as a useful pointer for deeper investigation; full details are in the Meetecho recording transcript. **Proposes more discussion via email**: *"For keeping the arguments more easily available we should in fact have more discussion over email as there the full argumentation would be available in the mail archive."* Implicit position: list-as-system-of-record over interim minutes.
+
+**Net**: This is the **first substantive activity from Magnus Westerlund on the list since the REWIND consensus call** — three messages in a single day, all on contested topics (Cullen's request-sync framing, minutes quality, deferral to London). Magnus appears to be re-engaging the list as the formal venue for unresolved post-interim issues. Cullen has not yet replied to either Magnus message.
+
+## Slack #moq — Day +7 silence broken; yuyou (London venue), Martin Duke ("yes"), Tobbe (moqlivemock 0.8 / MSF / LOC / WebCodecs / moq-mi)
+
+The 7-day silence on `#moq` since Giovanni Marzot's Apr 27 `:disappointed:` ended.
+
+- **yuyou** May 4 08:47 CEST — *"For the June interim in London, are the interop and the meeting at the same venue?"* Logistics question for London hybrid-interim.
+- **[[martin-duke]]** May 4 16:19 CEST — single-word reply: *"yes"*. Confirms interop and meeting share venue.
+- **[[torbjorn-einarsson]]** May 5 06:43 CEST — announces moqlivemock + warp-player update: *"I've updated moqlivemock and warp-player to support MSF/LOC and use WebCodecs for rendering. There is the same wall-clock synchronized loop with AVC, HEVC, AAC, Opus content as for CMSF/LOC. I also added moq-mi support to the server and to my Go client, so it may be interesting to interop test it."* Demo URL: [https://moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io). **First confirmation that moqlivemock now ships LOC + MSF + moq-mi support alongside CMSF.**
+
+## Eyevinn repos (moqlivemock, warp-player) — v0.8.0 release wave; LOC HEVC + WebCodecs LOC pipeline
+
+Tobbe's [[moqlivemock]] and [[warp-player]] both bumped to **v0.8.0** in coordinated May 4–5 commits.
+
+- **moqlivemock** `d174037` May 5 03:59 UTC — *chore: bump version to 0.8.0*.
+  - `77d67b0` May 3 22:13 UTC — *feat(catalog): expose accurate per-packaging bitrate*.
+  - `2d08ea1` May 3 21:20 UTC — *feat(loc): add HEVC support for LOC packaging*. Closes Issue #23 (*Add support for LoC*) via PR #76.
+  - PR #77 *feat(catalog): expose accurate per-packaging bitrate* MERGED May 5 03:47 UTC.
+  - PR #78 *Version 0.8.0* MERGED May 5 04:04 UTC.
+- **warp-player** `05ded99` May 5 04:15 UTC — *chore: bump version to 0.8.0*.
+  - `421e8da` May 5 03:54 UTC — *docs: cover MSF catalog and WebCodecs LOC pipeline in README and CLAUDE.md*.
+  - `48378e9` May 3 21:32 UTC — *feat(loc): add HEVC support to WebCodecs LOC pipeline*.
+  - `f154020` May 3 20:56 UTC — *fix(transport): handle wt.closed rejection so Safari doesn't flag it*.
+  - `95a653d` May 3 20:36 UTC — *feat(ui): add engine legend, mute toggle, and namespace filtering*.
+
+**Net**: Eyevinn's v0.8.0 wave covers HEVC for LOC, MSE+WebCodecs LOC pipelines, namespace filtering UI, and the Safari `wt.closed` rejection fix. Combined with the moq-mi support announced on Slack, moqlivemock now exercises four packaging formats (CMSF, LOC, MSF, moq-mi) and warp-player exercises both MSE and WebCodecs rendering paths. Major step forward for media-format interop.
+
+## moq-wg/secure-objects, msf, loc, cmsf, catalog-format, privacy-pass — Quiet
+
+No new activity since the May 1 editorial wave for secure-objects. Open secure-objects PRs remain #83 (SFRAME RFC ref), #84 (test vectors), #85 (en-dash fix). draft-ietf-moq-secure-objects-01 still **not** on Datatracker.
+
+## tobbee/moq-llm-wiki — No open issues
+
+No new issues since #3 (factual corrections) closed earlier this week.
+
+## Other implementations — mostly quiet
+
+- **cloudflare/moq-rs**: No new commits since Apr 13 (Day +22 of upstream-fork quiet).
+- **video-dev/moq-js**: No new commits since Apr 16.
+- **birneee/quiche_moq**: No new commits since Mar 13.
+
+# Interop Runner (May 5 00:37 UTC)
+
+**20 pass / 71 fail / 14 skip** (105 tests). **Major regression**: −4 pass / +4 fail vs May 4 00:38 UTC's 24/67/14. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. **Largest single-day regression since Apr 17 (back to that floor level).**
+
+Most plausible cause: image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` now picking up large changes from May 3–4:
+- **moqtail PR #145 merged May 4 19:23 UTC** — `main` now reflects the wholesale draft-14→draft-16 migration (216 files, +17,114/−11,744). Substantially new wire behavior on the moqtail-relay rows.
+- **moq-dev/moq PR #1359 closed May 4 21:25 UTC** (Consumer unify across container formats) — referenced as the Consumer refactor path; status shown as closed (not merged).
+- The May 5 build also predates moq-dev's PR #1374 (DATAGRAMS Lite05) which was opened May 4 22:57 UTC and is not yet merged.
+
+The regression is large enough that pair-level diff inspection is warranted; it likely reflects a moqtail × {moq-dev / moq-rs / others} pair flipping fail after the umbrella merge.
+
+---
 
 # Activity (May 3 06:00 UTC → May 4 06:00 UTC)
 
