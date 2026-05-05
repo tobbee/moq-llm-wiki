@@ -51,6 +51,32 @@ status: current | outdated | archived
 - Link to concepts: `[[publish-subscribe]]`
 - Link to implementations: `[[moq-rs]]`
 
+### Log Entry Format (`wiki/log.md`)
+Each day entry MUST start with a short heading and a TL;DR block. Long, comma-separated headings that pack PR numbers / contributor names / interop scores into the heading line are an anti-pattern — those details belong in the TL;DR, not the heading.
+
+```
+# YYYY-MM-DD — short label
+
+**TL;DR**:
+- 1–2 narrative bullets on the most material spec/WG/community events of the day
+- **Implementations**: short summary of which open-source repos saw activity and roughly how much (PR# + LOC delta when notable; "all quiet" if none).
+- **Interop**: runner score as `pass/fail/skip`, plus brief delta vs prior day or baseline (e.g. "+1 vs Apr 26", "flat third day", "no new run").
+
+**Operation**: Update | Ingest | User query
+**Sources**: ...
+**Pages updated**: ...
+**Key findings**: ...
+```
+
+Rules:
+- Heading: `# YYYY-MM-DD — <label>`. Use an em dash (`—`) between date and label. Keep the label under ~60 characters and free of PR numbers, contributor names, and interop scores — those go in the TL;DR.
+- For multiple entries on the same date, suffix the date with a short parenthetical descriptor: `(supplemental)`, `(deep-dive)`, `(evening)`. Avoid `b` / `c` letter suffixes.
+- TL;DR has **2–4 bullets total**. The last two MUST be the bold-prefixed `**Implementations**:` and `**Interop**:` bullets — these are the at-a-glance status snapshot. Skip neither: write "all quiet" / "no new run" rather than omitting.
+- Implementations bullet covers the tracked impl repos: `cloudflare/moq-rs`, `video-dev/moq-js`, `moq-dev/moq`, `google/quiche` (moqt), `moqtail/moqtail`, `birneee/quiche_moq`, plus Eyevinn repos and any `moq-wg/*` impls. Use repo short names; cite PR numbers and `+X/−Y` LOC for material merges.
+- Each bullet ≤120 characters where possible; PR numbers and concrete numbers (interop scores, LOC) are welcome.
+- Keep the existing **Operation** / **Sources** / **Pages updated** / **Key findings** sections below the TL;DR — those are the detail layer.
+- Newest entry goes at the top of `log.md` (chronological-reverse, as the file already is).
+
 ## Workflows
 
 ### Ingest New IETF Draft

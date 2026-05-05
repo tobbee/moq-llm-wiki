@@ -8,7 +8,12 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
-# 2026-05-05 - **moqtail PR #145 (umbrella draft-16) FINALLY MERGED into `main` May 4 19:23 UTC** by zafergurel after being open since Mar 6 — *"Here is a substantial PR thanks to the huge difference between draft-14 and draft-16"* (216 files, +17,114/−11,744; ALPN-based ClientSetup/ServerSetup, MessageParameter / TrackExtension / ObjectExtension / unified request ID registry, two new demo apps `client-js` + `meet`); **PR #182 MERGED May 4 20:12 UTC removes draft-14 docs entirely** — moqtail is now a single-draft (draft-16) project; PR #181 MERGED May 4 19:39 UTC closes Issue #117 ("Remove 0x1 from Object Status"); PR #184 MERGED May 4 21:21 UTC adds `setEarlyDiscardPolicy` to moqtail-ts API; **sharmafb (Aman Sharma) opens 3-PR upstream-FETCH series PR #186/#187/#188** May 4–5 ([1/n] command-line args, [2/n] plumbing, [3/n] send_upstream_fetch_for_range function) — first impl-side upstream FETCH work in moqtail; moq-dev/moq — **Luke OPENS PR #1374 May 4 22:57 UTC introducing `Lite05` wire version** (ALPN `moq-lite-05`, code `0xff0dad05`, +1615/−7 across 21 files) with new DATAGRAMS bidi control stream `0x6` parallel to SUBSCRIBE, QUIC datagram body `subscribe_id | sequence | payload` capped at 1200B, 33ms publisher-side cache, per-subscriber `max_latency` filter, mirroring `TrackProducer.write_datagram` / `subscribe_datagrams` API — biggest moq-lite wire-level addition since project inception (spec text in separate `moq-wg/moq-drafts` repo); PR #1359 (ksletmoe-aws Consumer unify) CLOSED unmerged May 4 21:25 UTC; PR #1356 / #1373 / #1341 all updated May 4 22:24–23:10 UTC; **google/quiche moqt: first commit since Apr 22 — `1ceadc7` May 5 01:02 UTC "Rewrite MOQT control message parser"** (Vasiliev) ending Day +13 quiet; mailing list — **HEAVY May 4** with 4 new "Knowing the start of a Subgroup" messages (Ian Swett 16:56 UTC: limiting Subgroup ID to single byte *"a very appealing change"* but trades 256-Object/Group cap; Mo Zanaty 17:36 UTC: proposes specialized header for single-object streams + reset workaround; Suhas Nandakumar 17:40 UTC: *"Is there a use-case where we need more than 256 subgroups?"*; Luke Curley 20:00 UTC: *"What are the use-cases for a sub-group per object/datagram? I think for media, it would be sending each b-frame as a separate sub-group"*) AND **Magnus Westerlund returns to list with 3 messages**: "Re: Request Synchronization Use Case" 10:04 UTC (clarifies WG poll, proposes two paths, frames as problem-solving not removal of consensus) + 10:15 UTC (asks Cullen to detail Swap Tracks / Client Side ABR / Pause-Unpause use cases) + Magnus 07:59 UTC on minutes quality (*"we should in fact have more discussion over email"*) — first Magnus list activity since REWIND consensus call; Luke May 4 17:10 UTC raises **deadlock concern with `required_request_id` if either side RESETs a request**; Slack `#moq` 7-day silence broken: **yuyou May 4 08:47 CEST asks if June London interim and meeting share venue (Martin Duke May 4 16:19 CEST: "yes")** + **Tobbe May 5 06:43 CEST announces moqlivemock + warp-player MSF/LOC/WebCodecs/moq-mi support shipped**; Eyevinn repos coordinate **v0.8.0 release** May 4–5 — moqlivemock + warp-player both bumped, HEVC for LOC packaging (server) + WebCodecs LOC pipeline (player), accurate per-packaging bitrate in catalog, mute toggle + namespace filtering UI in player, Safari `wt.closed` rejection fix; **interop runner MAJOR REGRESSION 24/67/14 → 20/71/14 (-4 pass / +4 fail)** at May 5 00:37 UTC — largest single-day drop since Apr 17, returning to that floor level (most plausible cause: moqtail relay image rebuild after PR #145 wholesale draft-14→draft-16 migration); moq-transport quiet (no main merges in window); secure-objects/msf/loc/cmsf/catalog-format/privacy-pass quiet; no new draft revisions on Datatracker; no MoQ Monthly issue since #1; no new wiki issues
+# 2026-05-05 — moqtail draft-16 umbrella merges; moq-lite Lite05 opens; interop major regression
+
+**TL;DR**:
+- **moqtail PR #145 (umbrella draft-16) finally MERGED** into `main` after being open since Mar 6 — 216 files, +17,114/−11,744. PR #182 (drop draft-14 docs) merges 49 min later — moqtail is now a single-draft (draft-16) project. Mailing list "Knowing the start of a Subgroup" thread surfaces 3 implementer voices asking "why >256 subgroups?"; Magnus Westerlund returns to list with 3 messages reframing request-sync as problem-solving and pointing at London.
+- **Implementations**: moqtail PR #145 MERGED (+17,114/−11,744 across 216 files); PR #181/#182/#184 MERGED; sharmafb opens 3-PR upstream-FETCH series #186/#187/#188 (+240/−14). moq-dev/moq Luke OPENS PR #1374 introducing **Lite05 wire version** (ALPN `moq-lite-05`, +1615/−7 across 21 files, new DATAGRAMS control stream + QUIC datagram delivery). google/quiche +1 moqt commit (Vasiliev: rewrite control message parser) — first since Apr 22. Eyevinn moqlivemock + warp-player coordinated **v0.8.0** (HEVC LOC, WebCodecs LOC, namespace filtering, Safari wt.closed fix). cloudflare/moq-rs Day +22 quiet, video-dev/moq-js, birneee/quiche_moq quiet.
+- **Interop**: 20/71/14 — **−4 pass / +4 fail vs May 4** (24/67/14). Largest single-day regression since Apr 17 floor. Most plausible cause: moqtail-relay image rebuild after PR #145 wholesale draft-14→draft-16 migration.
 
 **Operation**: Update
 **Sources**:
@@ -69,7 +74,12 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-05-04 - **ianswett OPENS Issue #1627 ("SUBSCRIBE with Joining Fetch") as a competing-design alternative to martinduke's PR #1604** May 3 07:40 UTC — fixes the same four issues (#1039 #1313 #1602 #1612), proposes adding two new modes to SUBSCRIBE instead of carrying Joining FETCH on the SUBSCRIBE stream; ianswett comments on PR #1604 May 3 06:39 + 06:42 UTC: *"This conversation makes me think using a single message would be better"* (proximate trigger for opening #1627 ~1 hour later); mailing list "Knowing the start of a Subgroup" thread reignites — **ianswett May 3 22:38 UTC announces decision to proceed with the FIRST_OBJECT bit (PR #1618)**, formally backing the May 1 PR #1608 closure with an on-list direction message; **Mo Zanaty May 4 04:24 UTC broadens the topic** by calling for a varint-vs-fixed-width audit across the spec ("Subgroup ID could be a single byte"); weekly GitHub digest sent May 3 (first wiki-visible mention of warp-streaming-format SCTE-35/CC accessibility PR work); moq-dev/moq — **PR #1373 OPENED** May 3 16:53 UTC by skirsten (*@moq/watch: fix playback stalls and frame-rate beating*, closes #1367) — supersedes skirsten's own PR #1367 pull-mode renderer two days after opening; PR #1359 (ksletmoe-aws Consumer unify) revised May 3 04:30 UTC addressing Luke's `Frame`/`DecodedFrame` reuse nits; moqtail PR #145 (umbrella draft-16) gets 3 commits May 3 (two race-condition fixes bracketing a logging refactor); moq-transport otherwise quiet (no new commits/PRs); secure-objects/msf/loc/cmsf/catalog-format/privacy-pass quiet; chair-summary message on REWIND consensus still absent (Day +3); MoQ Monthly archive unchanged; interop runner **24/67/14 — flat vs. May 3** (post-revert run shows net-zero matrix change); cloudflare/moq-rs Day +21 of fork quiet; google/quiche moqt Day +12; Slack `#moq` Day +7 of silence; no new draft revisions; no new wiki issues
+# 2026-05-04 — ianswett opens competing-design Issue #1627 to martinduke's PR #1604
+
+**TL;DR**:
+- **ianswett opens Issue #1627 ("SUBSCRIBE with Joining Fetch")** as a competing-design alternative to martinduke's PR #1604; fixes the same four issues (#1039/#1313/#1602/#1612) by adding two new modes to SUBSCRIBE instead of carrying Joining FETCH on the SUBSCRIBE stream. Mailing list reignites — ianswett announces decision to proceed with FIRST_OBJECT bit (PR #1618), backing the May 1 PR #1608 closure on-list; Mo Zanaty broadens scope by calling for varint-vs-fixed-width audit ("Subgroup ID could be a single byte"). Weekly GitHub digest sent May 3.
+- **Implementations**: moq-dev/moq PR #1373 OPENED by skirsten (`@moq/watch` playback stall + frame-rate beating fix, closes #1367) supersedes skirsten's own PR #1367 two days after opening; PR #1359 (ksletmoe-aws Consumer unify) revised. moqtail PR #145 (umbrella draft-16) gets 3 commits (two race-condition fixes bracketing a logging refactor). cloudflare/moq-rs Day +21 fork quiet; google/quiche moqt Day +12; video-dev/moq-js, birneee/quiche_moq quiet.
+- **Interop**: 24/67/14 — flat vs May 3 (post-revert run shows net-zero matrix change).
 
 **Operation**: Update
 **Sources**:
@@ -118,7 +128,12 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-05-03 - **Luke REVERTS PR #1357 (fetch_group + TrackDynamic) and PR #1348 via PR #1372** May 2 21:18:50 UTC ("FETCH isn't hooked up yet, the breaking API change isn't worth it; the API also wasn't quite right") — three days after PR #1357 was described as "first track-level FETCH path API"; metapox OPENS PR #1370 May 2 15:28 UTC (`fix(lite): PriorityQueue does not update in-flight groups on SUBSCRIBE_UPDATE`) — detailed bug report citing draft-ietf-moq-transport-13 §6.1 with working fix in their fork (camera-focus switch latency) and offer to submit; Luke OPENS PR #1371 May 2 20:28 UTC (`hang: cross-broadcast track references in renditions`, +PathRelative type, "Generated with Claude Code") — sidecar catalogs can reference tracks in another broadcast without republishing; PR #1369 (sidsethupathi moq-gst EOS) MERGED May 2 14:53 UTC; moqtail PR #180 (separate stream for SUBSCRIBE_NAMESPACE) MERGED May 1 12:45 UTC into `draft-16` branch — moqtail merged the impl-side split design ~10 hours BEFORE moq-transport PR #1542 itself merged May 1 22:59 UTC; moq-transport quiet (no new commits/PRs); secure-objects quiet; mailing list quiet (no chair message yet on REWIND); MoQ Monthly archive shows #1 published Apr 30 not May 1 (minor adjustment); interop runner **24/67/14** — first regression after 4-day +1/day recovery streak (−1 pass / +1 fail vs May 2's 25/66/14); no new draft revisions on Datatracker; no new wiki issues
+# 2026-05-03 — Luke reverts the FETCH-path API; metapox files first fix-with-PR
+
+**TL;DR**:
+- **Luke reverts PR #1357 (fetch_group + TrackDynamic) and PR #1348 via PR #1372** — *"FETCH isn't hooked up yet, the breaking API change isn't worth it; the API also wasn't quite right."* Three days after PR #1357 was framed as the first track-level FETCH path API. moq-transport quiet (no new PRs/commits); REWIND consensus chair-summary message still absent (Day +2 since deadline); MoQ Monthly archive shows #1 dated Apr 30 not May 1 (minor adjustment).
+- **Implementations**: moq-dev/moq PR #1372 MERGED (revert); PR #1371 OPENED by Luke (hang cross-broadcast track refs, +PathRelative type); **metapox OPENS PR #1370** (PriorityQueue not updating in-flight groups on SUBSCRIBE_UPDATE) — detailed bug report citing draft-13 §6.1 with working fix in their fork (camera-focus switch latency) and offer to submit. PR #1369 (sidsethupathi moq-gst EOS) MERGED. moqtail PR #180 (separate stream for SUBSCRIBE_NAMESPACE, +1150/−488) MERGED into `draft-16` branch ~10 hours BEFORE moq-transport PR #1542 itself merged. cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 24/67/14 — first regression after 4-day +1/day recovery streak (−1 pass / +1 fail vs May 2's 25/66/14).
 
 **Operation**: Update
 **Sources**:
@@ -156,7 +171,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-05-02 - PR #1542 (SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split) MERGED, closes Issue #1458 — the most structural moq-transport merge of the post-interim wave; new Issue #1626 (sharmafb: QMUX version negotiation) — afrind reply: *"plan is to say something like TLS ALPN moqt-18 implies qmux-01"*; PR #1608 formally CLOSED ("Closing in favor of 1618"); secure-objects editorial wave concludes May 1 21:05–21:33 UTC with PRs #82 (padding, fixes #54), #77 (threat model, fixes #49), #86 (fan-out attack, replaces #78, fixes #49) all MERGED — secure-objects substantively at -01 line but draft-01 not yet on Datatracker; mailing list — Cullen opens new "Request Synchronization Use Case" thread (3 use cases incl. video-conf track swap, ABR, rapid pause/unpause), challenges chair framing of REWIND post-call: *"reopening base issues about what the requirements are is not helpful"*, willing to *"punt to London"*; **REWIND consensus call deadline reached without chair-summary message** (no Magnus/Suhas/afrind interpretation message on-list yet); moq-dev/moq quiet day for Luke (PR #1366 flake bump, PR #1368 Cloudflare doc-note merged) but two new contributor PRs OPENED (skirsten #1367 add pull-mode renderer for 144Hz+ Chrome at vsync; sidsethupathi #1369 fix moq-gst moqsink EOS — second sidsethupathi PR after #1294); **MoQ Monthly #1 PUBLISHED May 1** by Mike English — first since #0 (Mar 4) — covers NAB 2026, names **draft-18 as next interop target**, calls Safari 26.4 → WebTransport Baseline, **explicitly cites this wiki** (`tobbee.github.io/moq-llm-wiki/`) and Tobbe's moqlivemock update; interop runner +1 → **25/66/14** (recovery now +1/day for 4 consecutive days); no new draft revisions on Datatracker
+# 2026-05-02 — PR #1542 NAMESPACE split MERGED; secure-objects wave concludes; MoQ Monthly #1
+
+**TL;DR**:
+- **PR #1542 (SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split) MERGED** — most structural moq-transport merge of the post-interim wave; closes Issue #1458. New Issue #1626 (sharmafb, QMUX version negotiation) — afrind: *"TLS ALPN moqt-18 implies qmux-01"* (first concrete framing for draft-18). PR #1608 formally CLOSED in favor of #1618. **REWIND consensus call deadline reached without chair-summary message**; Cullen opens "Request Synchronization Use Case" thread (3 use cases — track swap, ABR, pause/unpause), willing to *"punt to London"*.
+- **MoQ Monthly #1 PUBLISHED May 1** by Mike English — first since #0 (Mar 4); names draft-18 as next interop target, calls Safari 26.4 → WebTransport Baseline, **explicitly cites this wiki** (`tobbee.github.io/moq-llm-wiki/`) and Tobbe's moqlivemock update.
+- **Implementations**: secure-objects editorial wave concludes May 1 — PRs #82 (padding, fixes #54), #77 (threat model, fixes #49), #86 (fan-out, fixes #49) all MERGED. moq-dev/moq quiet day for Luke (PR #1366 flake bump, PR #1368 doc-note merged) but two new contributor PRs OPENED — skirsten PR #1367 (pull-mode renderer for 144Hz+ Chrome) + sidsethupathi PR #1369 (moqsink EOS fix, second sidsethupathi PR). moqtail, cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 25/66/14 (+1 vs May 1) — recovery now +1/day for **4 consecutive days**.
 
 **Operation**: Update
 **Sources**:
@@ -205,7 +226,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-05-01 - Editorial wave culminates + secure-objects 30-hour cleanup wave: moq-transport PR #1534 (REDIRECT, +50/−1) MERGED May 1 01:11:59 UTC by afrind, closes Issue #1481; PR #1624 (LOC properties registry, +11/0) MERGED Apr 30 18:10:18 UTC, closes Issue #1550 (cross-draft 0x02/0x04 collision saga); afrind Apr 30 18:31 UTC pushes back on Issue #1622 walk-back ("trivial to put in goaway, might be useful, can speed up retry when racing GOAWAY") — PR #1623 now contested; "Knowing the start of a Subgroup" mailing-list thread expands from 3→10 messages with Magnus, Mo Zanaty (AV1 example, calls #1608 "footgun for devs"), Suhas, Luke (proposes 0-indexed per-subgroup counter as third design); **moq-wg/secure-objects MASSIVE editorial wave**: 4 PRs MERGED (#79 fixed-width int AAD, #80 Publisher Priority in E2E, #75 track-extension guidance, #76 32-bit Object ID nonce), 5 issues CLOSED (#74 Authentication of Track Properties → consensus option #1 = no E2E for track properties, #58 Varints, #61 Private extensions, #70 Object ID nonce, #71 Publisher priority), 6 PRs OPENED (#77 threat model, #78 fan-out attack DO-NOT-MERGE, #82 byte-boundary padding, #83 SFRAME RFC ref, #84 test vectors, #85 dash fix), commit `87a95f77` removes Track Namespace + Track Name from AAD (closed PR #81 simplification landed via direct commit) — secure-objects converging on -01; moq-dev/moq PR #1365 (skirsten AudioContext) MERGED May 1 01:38 UTC; ksletmoe-aws PR #1359 self-summary + apology — Luke says "I'll take a look soon"; new issue #1364 (danrossi: Cloudflare relay connection bug); moqtail PR #178 (relay scheduling algorithm +455/−62) MERGED Apr 30 12:23 UTC — first draft-17-specific feature merged; moqtail PR #180 OPENED (zafergurel +1150/−488, separate stream for SUBSCRIBE_NAMESPACE) — first impl adopting post-Apr-29 SUBSCRIBE_NAMESPACE split; interop runner +1 to 24/67/14; draft-cenzano-moq-media-interop-03 EXPIRED Apr 23 with no -04 published
+# 2026-05-01 — Editorial wave culminates; secure-objects 30-hour cleanup wave
+
+**TL;DR**:
+- **PR #1534 (REDIRECT) MERGED** by afrind, closes Issue #1481. PR #1624 (LOC properties registry) MERGED, closes Issue #1550 (cross-draft 0x02/0x04 collision saga). afrind contests ianswett's Issue #1622 walk-back of PR #1559 (Request ID in GOAWAY). Mailing list "Knowing the start of a Subgroup" expands 3→10 messages — Mo Zanaty calls PR #1608 a *"footgun for devs"* with concrete AV1 example; Luke proposes 0-indexed per-subgroup counter as a third design.
+- **secure-objects MASSIVE editorial wave** — 4 PRs MERGED (#79 fixed-width int AAD, #80 Publisher Priority in E2E, #75 track-extension guidance, #76 32-bit Object ID nonce), 5 issues CLOSED (#74 Track Properties → option #1 = no E2E, #58, #61, #70, #71), 6 PRs OPENED (#77/#78/#82-#85), direct commit removes Track Namespace + Track Name from AAD. -01 substantively ready, not yet on Datatracker.
+- **Implementations**: moqtail PR #178 (relay scheduling algorithm, +455/−62) MERGED — **first draft-17-specific feature merged**; PR #180 OPENED (+1150/−488, separate stream for SUBSCRIBE_NAMESPACE) — first impl adopting post-Apr-29 split. moq-dev/moq PR #1365 (skirsten AudioContext) MERGED; ksletmoe-aws PR #1359 self-summary + apology; new Issue #1364 (danrossi Cloudflare relay bug). cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 24/67/14 (+1 vs Apr 30); draft-cenzano-moq-media-interop-03 EXPIRED Apr 23 with no -04 published.
 
 **Operation**: Update
 **Sources**:
@@ -260,7 +287,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-30 - Editorial wave continues: PR #1619 (NAMESPACE response name fix) MERGED; PR #1593 CLOSED unmerged; Issue #1365 ABR-grouping CLOSED as NotTransport; ianswett opens issue #1622 + PR #1623 ("Request ID in GOAWAY isn't useful"); suhasHere opens PR #1624 (LOC properties registry) + PR #1625 (Magnus security considerations); PR #1542 / PR #1534 / PR #1620 / PR #1618 all reach APPROVED; new mailing-list thread "Knowing the start of a Subgroup" (Ian/Alan/Cullen) splits the WG between #1608 and #1618 designs; Cullen Apr 29 chimes in on REWIND for option #1; Luke MERGES PR #1357 (fetch_group + TrackDynamic — first FETCH path API at the track level) + PR #1350 (mTLS HTTPS) + PR #1349 (skirsten static catalog) + PR #1360 (jemalloc into moq-native); Qizot replaces PR #1354 with PR #1362 (audio encoder reconfiguration); ksletmoe-aws expands #1359 from CMAF-specific fix to a generic OrderedConsumer refactor (+971/−...) per Luke's design suggestion; metapox opens issue #1363 (JS Subscriber lacks SUBSCRIBE_UPDATE); moqtail opens PR #178 (relay scheduling algorithm, +455/−62) + PR #179 (Firefox private-CA docs); interop unchanged at 23/68/14
+# 2026-04-30 — Editorial wave continues; ianswett walks back PR #1559
+
+**TL;DR**:
+- **PR #1619 (NAMESPACE response name fix) MERGED**; PR #1593 CLOSED unmerged (OBE'd by #1618); Issue #1365 ABR-grouping CLOSED as NotTransport. ianswett walks back his own PR #1559 — opens Issue #1622 + PR #1623 (Remove Request ID from GOAWAY). suhasHere opens PR #1624 (LOC properties registry) + PR #1625 (rebased Magnus security considerations). PR #1542 / #1534 / #1620 / #1618 all reach APPROVED.
+- **Mailing list**: new thread "Knowing the start of a Subgroup" (Ian/Alan/Cullen) splits WG between #1608 and #1618 designs; Cullen casts first explicit option-#1 REWIND ballot vote.
+- **Implementations**: moq-dev/moq Luke MERGES four PRs — #1357 (fetch_group + TrackDynamic — *first track-level FETCH path API*), #1350 (mTLS HTTPS), #1349 (skirsten static catalog), #1360 (jemalloc into moq-native). Qizot replaces #1354 with #1362 (audio encoder reconfiguration); ksletmoe-aws expands #1359 from CMAF-specific fix to generic OrderedConsumer refactor (+971/−...) per Luke's suggestion; metapox opens Issue #1363 (JS Subscriber lacks SUBSCRIBE_UPDATE). moqtail opens PR #178 (relay scheduling, +455/−62) + PR #179 (Firefox private-CA docs, new contributor davemevans). cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 23/68/14 — unchanged from Apr 29; the four moq-dev/moq merges all landed after the Apr 30 00:38 UTC run.
 
 **Operation**: Update
 **Sources**:
@@ -332,7 +365,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-29 - Post-interim editorial wave: PR #1611 (PUBLISH_OK removal) + PR #1609 (Joining FETCH fwd race → request error) MERGED; PR #1608 (Subgroup ID = first Object ID) CLOSED unmerged → replaced by PR #1618 (FIRST_OBJECT bit); five new afrind PRs (#1617/#1618/#1619/#1620/#1621); moq-dev/moq lands #1352 + #1353; five new Luke PRs (#1356-#1360); ksletmoe-aws + Qizot external PRs; chair Magnus asks for explicit ballot positions; interop +1 → 23/68/14
+# 2026-04-29 — Post-interim editorial wave; afrind 9-PR burst in 8 hours
+
+**TL;DR**:
+- **afrind 9-PR wave in ~8 hours**: PR #1611 (PUBLISH_OK removal) + PR #1609 (Joining FETCH fwd race → request error) MERGED; PR #1608 (Subgroup ID = first Object ID) CLOSED unmerged, replaced by PR #1618 (FIRST_OBJECT bit per yuyou's review-comment template); five new afrind PRs opened (#1617 individual GOAWAY, #1618, #1619, #1620, #1621 forbid LARGEST_OBJECT lying). PR #1615 (RRID removal) now unblocked.
+- Chair Magnus asks for **explicit ballot positions** with 3 days left; Gwendal Simon pushes back on Joining FETCH removal from a live-streaming-deployment perspective; Ian Swett endorses CurrentGroupFill (option-3 floor); minutes from interim-14 published.
+- **Implementations**: moq-dev/moq merges #1352 (announcement-less relay handling, resolves #1346) + #1353 (per-frame buffer, +346/−146) + #1355; five new Luke PRs (#1356–#1360, including #1358 Origin rewrite +994/−1289); first AWS-affiliated PR (ksletmoe-aws #1359, CMAF passthrough); Qizot #1354 (audio encoder); moq-boy now in production at 6+ instances. cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 23/68/14 (+1 vs Apr 28); back to Apr 24/27 reading.
 
 **Operation**: Update
 **Sources**:
@@ -392,7 +431,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-28 - interim-2026-moq-14 happens; WG decision: REMOVE Required Request ID (PR #1615); REWIND consensus thread re-erupts on the list (9 messages Apr 27-28); Luke's moq-relay big day (#1350 mTLS + #1352 announcementless-relay + #1353 per-frame buffer); interop drops back to 22/69/14
+# 2026-04-28 — Interim-14 day; WG decision REMOVE Required Request ID
+
+**TL;DR**:
+- **interim-2026-moq-14 takes place** Apr 27 16:30 UTC. Headline WG decision: **REMOVE Required Request ID** from draft-18 (ianswett opens PR #1615 +3/−52, vasilvv approves within hours). Make-before-break work deferred to London hybrid interim in June. PR #1608 closed at the interim with WG agreement that the requirement (knowing the start of a subgroup) needs a different mechanism. Martin Thomson joins PR #1544 (0-RTT) review with a substantive rewrite — first time on a moq-transport PR.
+- **Mailing list**: REWIND consensus thread re-erupts (9 messages Apr 27-28) — Luke + Ian Swett favor CurrentGroupFill; Martin Duke defends best-effort REWIND; Gwendal Simon pushes back on Joining FETCH removal. Chair Magnus asks for explicit ballot positions.
+- **Implementations**: Luke's moq-relay big day — three open PRs in <2 hours after interim: PR #1350 (mTLS HTTPS, +351/−18), PR #1352 (announcement-less relay, +6/0, resolves Apr 24 kubo6472 bug), PR #1353 (per-frame buffer, +346/−146, production-profiled memory optimization on a 66-connection 4 GB box). cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 22/69/14 (−1 vs Apr 27); back to the Apr 21–23 plateau.
 
 **Operation**: Update
 **Sources**:
@@ -456,7 +501,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-27b - User-requested deep-dive: data-model and wire-format diff across draft-ietf-moq-transport -14, -16, -17
+# 2026-04-27 (deep-dive) — Wire-format diff across moq-transport draft-14/16/17
+
+**TL;DR**:
+- User query: scrutinize Group/Subgroup/Object encoding and stream/channel framing across draft-14, -16, -17. Conceptual data model is **stable across 14/16/17**; **draft-15/16 was the wire-format upheaval** (bit-flag Type fields, FETCH redesigned with delta encoding); **draft-17** is mostly rename + the bidi-stream-per-request architecture change.
+- New page `concepts/streams-and-framing.md`; major rewrites of `subgroups-and-objects.md` and `track-properties.md`; downloaded the missing draft-16 source.
+- **Implementations**: n/a — research-only deep-dive, no impl activity inspected.
+- **Interop**: n/a — research-only deep-dive, no runner check.
 
 **Operation**: User query — "Scrutinize the concepts page and the description of the groups, subgroups, objects for their definitions and encoding. … description of any differences between draft 14, 16, 17. The same goes for channels and streams."
 
@@ -485,7 +536,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 4. **PR #1586 (merged Apr 27 2026, into post-17 main, +32/−23)** is a textual cleanup of the FETCH-response delta-encoding rule already introduced in draft-16. Final normative wording: *"If the Group ID Delta field is present, the Object ID is the value of Object ID Delta if present. When the Group ID Delta field is not present, the Object ID is the prior Object's ID plus the Object ID Delta if present."* Closes Martin Duke's long-running #877 "Pack the bits". Not a redesign of the draft-16 Serialization Flags scheme.
 
-# 2026-04-27 - Interim day; PR #1586 merges (closes Martin's #877 "Pack the bits"); Suhas reviews PR #1542, Vasilvv reviews #1534/#1544 in pre-interim warm-up; moq-dev/moq lands #1340 + #1343, opens FETCH-readiness #1348; external PR #1349 from skirsten; interop recovers one test to 23/68/14
+# 2026-04-27 (interim) — Pre-interim editor warm-up; moq-dev opens FETCH-readiness PR
+
+**TL;DR**:
+- PR #1586 (FETCH delta encoding) merges, closing Martin's long-running #877 "Pack the bits".
+- Pre-interim review pass: Suhas on #1542 (SUBSCRIBE_NAMESPACE/TRACKS split, 7 inline comments), Vasilvv on #1534 (REDIRECT) and #1544 (0-RTT).
+- **Implementations**: moq-dev/moq merges PR #1340 (+182/−5, `wait_for_broadcast`) and PR #1343 (+283/−26, subdomain slug routing); opens **FETCH-readiness PR #1348** (+1049/−471). External PR #1349 from skirsten (+196/−13) adds `static` catalog mode to `<moq-watch>`. cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche, birneee/quiche_moq all quiet.
+- **Interop**: 23/68/14 (+1 vs Apr 26, −1 below Apr 25 high of 24/67/14).
 
 **Operation**: Update
 **Sources**:
@@ -528,7 +585,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-26 - Pre-interim lull on the spec side; moqtail draft-16 branch absorbs two big merges (#168 + #169, ~2.1k LOC); moq-dev #1346 root-caused as browser/GPU; interop regresses to 22/69/14
+# 2026-04-26 — Pre-interim lull; moqtail absorbs two big draft-16 merges
+
+**TL;DR**:
+- moq-wg spec side completely quiet — interim agenda PRs all silent ahead of the Apr 27 meeting.
+- moq-dev issue #1346 root-caused as Firefox/GPU/driver, **not** a moq-lite or @moq/watch defect.
+- **Implementations**: moqtail draft-16 branch lands PR #168 (+1094/−443, FETCH wire format) + PR #169 (+994/−593, Message Parameters migration) — ~2.1k LOC combined, largest moqtail draft-16 day since Apr 14–16. moq-dev/moq merges PR #1345 (+108/0, Python examples) and dependabot PR #1347 (rustls bump). cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 22/69/14 (−2 vs Apr 25 high of 24/67/14; back to the Apr 21–23 plateau).
 
 **Operation**: Update
 **Sources**:
@@ -568,7 +631,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-25 - Luke Curley joins the pre-interim design debate, PR #1610 quietly merged Apr 23, interim slides posted, interop hits new April high at 24/67/14
+# 2026-04-25 — Luke joins the pre-interim spec debate; interop new April high
+
+**TL;DR**:
+- Luke Curley posts three substantive comments in 52 minutes (#1603 RRID DoS, #1607 LargestGroup filter, #1358 JOINING FETCH priority) — strongest pro-#1607 advocacy yet, with concrete Twitch TTV math (333 ms median startup gain).
+- Correction: PR #1610 (REQUEST_OK textual aliases) was actually **merged Apr 23**, not still open as Apr 24 log claimed; unblocks #1611 (PUBLISH_OK removal). Apr 27 interim slides posted; Vasilvv to present a **third RRID alternative** beyond #1604/#1613.
+- **Implementations**: moq-dev/moq PR #1343 (+248/−27, subdomain slug routing) still open with unresolved 🔴 Critical WS auth-handler bypass; dependabot PR #1347 opened (rustls bump); Issue #1346 (first external @moq/watch + MSF cross-impl bug) opened by @kubo6472. cloudflare/moq-rs, video-dev/moq-js, moqtail, google/quiche, birneee/quiche_moq all quiet.
+- **Interop**: 24/67/14 — new April high; second consecutive day of improvement (22 → 23 → 24).
 
 **Operation**: Update
 **Sources**:
@@ -616,7 +685,12 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-24 - Hop-based clustering MERGED on moq-dev, PR #1613 flow-control response to RRID DoS, interop finally ticks up to 23/68/14, moqtail FETCH wire format finalized
+# 2026-04-24 — Hop-based clustering lands on moq-dev; RRID design forks
+
+**TL;DR**:
+- Alan opens **PR #1613 (MAX_REQUEST_UPDATES flow control)** as second answer to Martin's RRID DoS escalation; debate now three-way (#1603 + #1604 + #1613). Alan hints fwd=1 precondition on JOINING FETCH may be relaxed (#1612, "I wonder if we should just allow fwd=0").
+- **Implementations**: moq-dev/moq merges **PR #1322 (hop-based clustering, +961/−979)** — biggest Claude-Code-authored moq-dev landing to date; breaking change for moq-lite/moq-relay. moqtail PR #168 finalizes draft-16 FETCH-object wire format in author comment (rebase pending). cloudflare/moq-rs, video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 23/68/14 (+1 after three days flat; matches Apr 15–16 baseline; coincides with hop-clustering merge).
 
 **Operation**: Update
 **Sources**:
@@ -659,7 +733,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-23 - moq-transport editor wave: PR #1606 merged, #1608–#1611 opened, RRID DoS concern, Semgrep CI on moq-rs, Python examples on moq-dev
+# 2026-04-23 (evening) — moq-transport editor wave ahead of Apr 27 interim
+
+**TL;DR**:
+- Largest single-day moq-transport activity since draft-17: **PR #1606 merged** (stream reset codes, fixes #1581, first post-draft-17 merge); **PRs #1608, #1609, #1610, #1611 all opened** by Alan/Ian.
+- Martin Duke escalates **#1603 with a DoS argument** — RRID multiplies via REQUEST_UPDATE; proposes eliminating RRID and moving Joining FETCH to the SUBSCRIBE stream (per PR #1604). Suhas marks **CHANGES_REQUESTED on PR #1607** — first hard blocker since the PR opened.
+- **Implementations**: cloudflare/moq-rs PR #165 (+30/0, Semgrep CI scanning) opened by Cloudflare App&ProdSec; moq-dev/moq PR #1345 (+108/0, Python clock + announced examples) opened by Luke. moqtail PR #168 has rebase commits but no substantive changes; video-dev/moq-js, google/quiche, birneee/quiche_moq quiet.
+- **Interop**: 22/69/14 — flat (no new run for Apr 24 yet at check time; last run Apr 23 00:35 UTC).
 
 **Operation**: Update
 **Sources**:
@@ -711,7 +791,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-23 - MSF InitTracks reverted, Luke opens group-alignment issue, Apr 27 agenda published, moq-dev PR burst, interop flat
+# 2026-04-23 (morning) — MSF InitTracks reverted; Apr 27 interim agenda published
+
+**TL;DR**:
+- **MSF PR #154 merges Will Law's revert of InitTracks** (−170 lines); MSF reverts to statically declared inits + AVC3 self-init segments for mid-stream changes. Luke opens **MSF #155 "Sequence aligned groups are too restrictive"** challenging §4.2 group alignment.
+- Ian Swett review wave (~50 min) on three moq-transport PRs ahead of interim: **#1606 APPROVED**, #1605 first real review, #1607 Subgroup-ID-as-first-Object-ID inline suggestion. Apr 27 interim agenda published (16:30 UTC, "all editor time").
+- **Implementations**: moq-dev/moq four-PR burst from Luke — PR #1339 merged (+5/−5, JS version bump), PR #1340 opened (+182/−5, `wait_for_broadcast`), PR #1341 opened (+748/−1145, media-producer refactor), PR #1343 opened (+226/−37, subdomain routing), PR #1344 merged (+31/0, catalog-format docs). cloudflare/moq-rs, video-dev/moq-js, google/quiche, moqtail (only Issue #177), birneee/quiche_moq quiet.
+- **Interop**: 22/69/14 — flat third consecutive day; 1 short of Apr 16 baseline.
 
 **Operation**: Update
 **Sources**:
@@ -759,7 +845,13 @@ Chronological record of all ingestions, queries, and maintenance operations.
 
 ---
 
-# 2026-04-22 - moq-rs datagram rate restored, quiche session-parameter API, moqtail timeout fix, interop +2 again
+# 2026-04-22 — moq-rs datagram rate restored; interop +2 again
+
+**TL;DR**:
+- Luke argues for static-init or annexb on MSF #153 (two comments) — reopens the simplification path alongside Will Law's `inits[]` proposal and Vasiliev's original remove-`initTrack` stance.
+- google/quiche moqt session-parameter API motivation cites partial-object delivery on the relay — ties directly to the partial-cache debate Luke opened on moq-transport PR #1607 on Apr 19.
+- **Implementations**: cloudflare/moq-rs +5 commits on PR #157 (forwarding-path repair; **datagram rate restored 1/sec → 50/sec**, fixing earlier regression). google/quiche moqt +2 commits (session-parameter API + `moqt_messages.h` cleanup). moqtail PR #175 merged (+47/−42, inactivity timeout 1 s → 5 s); new Issue #176 (draft-16 §7.2 scheduling not yet implemented). moq-dev/moq, video-dev/moq-js, birneee/quiche_moq quiet.
+- **Interop**: 22/69/14 — second consecutive +2 day (18 → 20 → 22); 1 short of Apr 16 baseline.
 
 **Operation**: Update
 **Sources**:
