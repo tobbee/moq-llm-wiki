@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-05
+last_updated: 2026-05-06
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-05 00:37 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **major regression: −4 pass / +4 fail vs May 4's 24/67/14**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC (wholesale draft-14→draft-16 migration, +17,114/−11,744 across 216 files) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05) was opened May 4 22:57 UTC but is **not yet merged**, so does not affect this run.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-06 00:36 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **flat day** vs May 5 00:37 UTC's identical 20/71/14. Two consecutive days at the Apr 17–21 floor reading; no recovery from the May 5 −4 pass / +4 fail regression. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → **20**. The post-[[moqtail]]-PR #145 (umbrella draft-16, merged May 4 19:23 UTC) image rebuild appears to be the new normal until pair-level fixes land. Today's seven moq-dev/moq merges (PRs #1341, #1356, #1377, #1378, #1379, #1380, #1381) are all API/config/platform fixes — no wire-format changes — so the matrix should not shift further on those rebuilds. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open**.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

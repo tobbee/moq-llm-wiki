@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-05
+last_updated: 2026-05-06
 status: current
 ---
 
@@ -97,6 +97,19 @@ After being open since **March 6** and absorbing 29 commits / 216 files / +17,11
 - **[PR #188](https://github.com/moqtail/moqtail/pull/188) OPENED** May 5 02:50:23 UTC by **sharmafb** — *[upstream fetches] Function to send upstream fetch [3/n]* (+154/−8, 5 files). Body: *"writing a function send_upstream_fetch_for_range to send FETCHes upstream."*
 
 **Net**: moqtail's biggest week of the year. Single-draft (draft-16) project on `main`; relay can now host upstream FETCH plumbing as a feature increment. The wholesale migration likely caused the **−4 pass / +4 fail** matrix regression on the May 5 interop runner once images rebuild.
+
+## May 5 — moqtail-ts polish: per-subscription early-discard (#189), isValidTrackAlias BigInt fix (#191, co-authored by thexeos)
+
+[[zafer-gurel]] continues the post-umbrella draft-16 release line — two `moqtail-ts` API fixes and a CI release bump in a ~25-minute window.
+
+- **[PR #189](https://github.com/moqtail/moqtail/pull/189) MERGED** May 5 13:40:06 UTC by zafergurel (+18/−4, 4 files) — *feat(moqtail-ts): set early discard policy per subscription*. Body: *"Early discard policy can be set for each subscription separately."* **Refines the `setEarlyDiscardPolicy` API from May 4's PR #184** (which exposed it as a moqtail-ts-wide setting) to a per-subscription scope. Subscribers can now apply different slow-stream thresholds to different tracks (e.g. video vs audio, hero vs PiP camera).
+- **[PR #191](https://github.com/moqtail/moqtail/pull/191) MERGED** May 5 14:00:08 UTC by zafergurel (+51/−4, 4 files; closes [#156](https://github.com/moqtail/moqtail/pulls/156); **co-authored by @thexeos**) — *fix(moqtail-ts): adds isValidTrackAlias validator*. Adds an `isValidTrackAlias` type guard in `src/client/util/validators.ts`, consolidating three inconsistent checks (`!trackAlias`, `=== undefined`, and a compound condition) into one canonical test that correctly accepts `0n` as a valid alias. **Fixes a BigInt-falsy bug** — several methods used `if (!trackAlias)` to check whether a `Map.get()` returned a value; since `trackAlias` is a `BigInt` and `0n` is falsy in JavaScript, the relay's first-assigned `trackAlias = 0` was incorrectly treated as missing. **First moqtail-ts merge with a non-maintainer co-author** — thexeos's PR #156 (filed earlier with the strict-undefined-check approach) was closed unmerged in favor of zafergurel's broader-validator landing, with attribution preserved via Co-Authored-By.
+- **[PR #156](https://github.com/moqtail/moqtail/pull/156) CLOSED unmerged** May 5 14:01:57 UTC by **thexeos** — *"fix(moqtail-ts): use strict undefined check for trackAlias"*. Cited the same draft-16 wire constraint (relay assigns `trackAlias = 0` to first announcer); the maintainer's broader fix landed via #191 with thexeos credited.
+- **[PR #190](https://github.com/moqtail/moqtail/pull/190) MERGED** May 5 14:04:21 UTC by github-actions[bot] — *[ci] release*. Cuts the next moqtail release line capturing #189 + #191.
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) updated** May 5 10:04 UTC by **davemevans** — *docs: add instructions for Firefox testing using private CA*. Still open. Documents the `network.http.http3.disable_when_third_party_roots_found` Firefox config required when running moqtail behind mkcert + private CA.
+- **PRs #186 / #187 / #188** (sharmafb's upstream-FETCH 3-PR series) — **all 3 still open**, no movement.
+
+**Net**: Two-merge polish day on `moqtail-ts`. The per-subscription early-discard refinement (#189) signals the slow-stream API is being driven by real-application feedback (likely from `apps/meet`). The thexeos co-authorship in #191 establishes a template for absorbing externally-proposed fixes — the maintainer takes the broader fix while preserving credit. The CI release line (#190) suggests moqtail-ts will publish frequent post-umbrella draft-16 patches as the API hardens.
 
 # Known Issues
 
