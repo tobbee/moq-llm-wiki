@@ -2,11 +2,114 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 6 06:00 UTC → May 7 06:00 UTC)
+
+## IETF Datatracker — NEW individual draft `draft-gregoire-moq-msfts-00` (Gregoire/Simon, MPEG-2 TS over MoQ)
+
+**[`draft-gregoire-moq-msfts-00`](https://datatracker.ietf.org/doc/draft-gregoire-moq-msfts/) submitted** May 6, 2026 — 21 pages — *MPEG-2 Transport Stream Packaging for Media Over QUIC Transport*.
+
+- **Authors**: **Paul Gregoire** (Red5) and **Gwendal Simon** (Synamedia).
+- **Scope**: extends [[moq-msf]] by registering the **`m2ts`** packaging value alongside CMSF (`cmaf`) and LOC. Defines catalog fields for transport-stream track description and specifies receiver/relay behavior for joining, switching, and validating packetized streams. Preserves existing MPEG-2 semantics while mapping consecutive source packets into MOQT Objects.
+- **m2ts-specific catalog fields** (10 total):
+  1. `m2tsPacketSize` (required, 188 or 192 octets)
+  2. `m2tsPacketsPerObject` (optional, typical packets per object)
+  3. `m2tsProgramNumber` (optional, program carried)
+  4. `m2tsPmtPid` (optional, locates PMT)
+  5. `m2tsPcrPid` (optional, identifies PCR location)
+  6. `m2tsPsiInterval` (optional, PSI repetition interval in ms)
+  7. `m2tsRandomAccess` (optional, signals whether groups begin at access points)
+  8. `m2tsTimestampMode` (optional, timestamp interpretation for 192-octet packets)
+  9. `m2tsScte35Pid` (optional, splice signaling)
+  10. `initData` (optional, Base64-encoded initialization packets)
+- **Significance**: **first non-CMAF, non-LOC packaging format proposed for the MSF umbrella** — extends MSF to broadcast/contribution workflows where MPEG-2 TS is still the dominant container. The 192-octet variant accommodates the M2TS source-packet form (4-byte timestamp prefix). SCTE-35 PID is explicitly modeled, signaling intent to support ad-insertion / splice points end-to-end.
+- **First MoQ contribution from Paul Gregoire** (Red5), who maintains [`moqxr`](https://github.com/mondain/moqxr) (recent v0.2.1 release, Apr 17 Slack post). Co-author **[[gwendal-simon]]** is also the author of moq-transport [PR #1378 (SWITCH for client-side ABR)](https://github.com/moq-wg/moq-transport/pull/1378), still active. **First IETF-side artifact from Gwendal after the late-April spec/impl cross-pollination wave.**
+- **No mailing-list announcement message yet** — both authors might announce on `moq@ietf.org` in the May 7+ window, or wait for the London June interim.
+
+## moq-dev/moq — Evening burst day-2: PR #1385 REVERTS yesterday's PR #1356 within 24h; PR #1382/#1383 polish; PR #1386 opened; Issue #1384
+
+[[luke-curley]] returns May 6 evening (~20:00–22:30 UTC) for a second burst building on the May 5 seven-PR run. Notable element: **PR #1385 reverts PR #1356 (`insert_track` takes `TrackConsumer`)** ~24 hours after it merged.
+
+- **[PR #1382](https://github.com/moq-dev/moq/pull/1382) MERGED** May 6 20:03 UTC by [[luke-curley]] (+3/−0) — *Unignore moq-mux test fixtures*. Test-fixture file inclusion fix following the moq-mux backport (PR #1341). Cosmetic.
+- **[PR #1383](https://github.com/moq-dev/moq/pull/1383) MERGED** May 6 21:09 UTC by [[luke-curley]] (+15/−5) — *@moq/watch: don't tear down a broadcast when an unrelated path flaps*. Targeted fix in the TypeScript `watch` package for spurious broadcast tear-downs when an unrelated subscription/announcement path changes state.
+- **[Issue #1384](https://github.com/moq-dev/moq/issues/1384) OPENED** May 6 20:41 UTC by [[luke-curley]] — *@moq/signals improvements*. Tracks reactive-signals layer cleanup in the TypeScript `signals` package.
+- **[PR #1386](https://github.com/moq-dev/moq/pull/1386) OPENED** May 6 21:51 UTC by [[luke-curley]] (+88/−130, **OPEN**) — *@moq/watch: source network stats from the connection, not navigator*. Replaces use of `navigator.connection` (which Firefox doesn't expose, and which other browsers report unreliably) with stats sourced directly from the QUIC connection object. **Second Firefox-compatibility-affecting PR** in two days (after PR #1307 legacy SETUP fallback, also still open).
+- **[PR #1385](https://github.com/moq-dev/moq/pull/1385) MERGED** May 6 22:08 UTC by [[luke-curley]] (+160/−117) — *Revert "moq-lite: switch insert_track to take TrackConsumer (#1356)"*. Body is the standard auto-generated revert text (*"This reverts commit `b611acd1`."*). **Backs out PR #1356 ~24 hours after it merged on May 5 22:15 UTC** — the type-level cleanup that was supposed to land the `TrackConsumer::produce()` removal from #1300 has been pulled back. No follow-up issue or new PR yet explaining the regression that prompted the revert; the next release-train PR (#1338) will roll without that change. **First merge-then-revert-within-24h cycle on `main` since the Apr 30 PR #1357 → PR #1372 fetch_group revert (which took 2 days).**
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) updated** May 6 22:24 UTC — `chore: release` (moq-bot[bot]). Auto-bumped after the day's merges; will drop PR #1356 from the staging release line.
+- **[PR #1358](https://github.com/moq-dev/moq/pull/1358) updated** May 6 21:32 UTC — Origin poll-driven rewrite, still open.
+- **[PR #1149](https://github.com/moq-dev/moq/pull/1149) updated** May 6 19:06 UTC — catalog registry, still open.
+- **[Issue #1364](https://github.com/moq-dev/moq/issues/1364) CLOSED** May 6 06:00 UTC — Dan Rossi's *"Cloudflare Relay"* question. No comment on close.
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) (Lite05 DATAGRAMS) — no movement** today (Day +2 since open).
+- **[PR #1307](https://github.com/moq-dev/moq/pull/1307) (Firefox legacy-SETUP fallback) — no movement** today.
+
+**Net**: Day-2 follow-up to the May 5 burst lands two small fixes (#1382, #1383) and **a notable revert (#1385)** that pulls PR #1356 back out of `main` within 24 hours of landing. PR #1386 (network-stats source change) is the day's only **new** open PR; it continues a Firefox-compatibility theme alongside the still-open PR #1307. Lite05 DATAGRAMS PR #1374 remains untouched for a 2nd day.
+
+## moqtail — sharmafb upstream-FETCH 3-PR series MERGED in 27 minutes; PR #179 (Firefox docs) merges; PR #193 [4/n] opens
+
+[[zafer-gurel]] merges **all 3 of sharmafb's upstream-FETCH PRs** (#186, #188, #187 in that order — note non-sequential merge order) on May 6 between 14:31 and 14:58 UTC, plus **davemevans's PR #179 Firefox docs** at 15:04 UTC. Late evening, **sharmafb opens PR #193** as the final piece of the upstream-FETCH series.
+
+- **[PR #186](https://github.com/moqtail/moqtail/pull/186) MERGED** May 6 14:31 UTC by zafergurel (+15/0) — *[upstream fetches] Add command-line args for FETCH upstream timeout and gap limit [1/n]* (sharmafb / Aman Sharma). Adds two new relay command-line flags configuring upstream-FETCH timeout and gap-tolerance behavior.
+- **[PR #188](https://github.com/moqtail/moqtail/pull/188) MERGED** May 6 14:56 UTC by zafergurel (+154/−8) — *[upstream fetches] Function to send upstream fetch [3/n]* (sharmafb). Adds the relay-side primitive for sending upstream FETCH requests to a publisher when a cache miss occurs. **Merged out of order vs #187** (the [2/n] plumbing PR).
+- **[PR #187](https://github.com/moqtail/moqtail/pull/187) MERGED** May 6 14:58 UTC by zafergurel (+71/−6) — *[upstream fetches] Plumbing to forward FETCH data received from upstream [2/n]* (sharmafb). Adds the data-forwarding plumbing connecting the upstream FETCH response back to the requesting downstream subscriber. **Merge order 1 → 3 → 2** (likely cherry-pick / linearization rather than fast-forward).
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) MERGED** May 6 15:04 UTC by zafergurel (+11/−2) — *docs: add instructions for Firefox testing using private CA* (davemevans / David Evans, opened Apr 29). Documents the `network.http.http3.disable_when_third_party_roots_found` Firefox config required when running moqtail behind mkcert + private CA. **Second non-maintainer-authored PR to land on `main` in 2 days** (after thexeos's co-authorship in PR #191 yesterday).
+- **[PR #192](https://github.com/moqtail/moqtail/pull/192) OPENED** May 6 15:05 UTC by github-actions[bot] — *[ci] release*. Standard release-line bump capturing #186/#187/#188/#179.
+- **[PR #193](https://github.com/moqtail/moqtail/pull/193) OPENED** May 6 23:11 UTC by sharmafb (+248/−132, **OPEN**) — *[upstream fetches] Finish implementation of sending FETCH requests upstream for cache misses [4/n]*. **Capstone of the 4-PR series.** Body summary:
+  - **Upstream fetch on cache miss**: relay now iterates group-by-group and sends a FETCH upstream to the publisher for any groups missing from the local cache, rather than serving only from the cache.
+  - **Split `fetch_requests` into incoming and outgoing**: separated the single `fetch_requests` map into `incoming_fetch_requests` (fetches the client sent to the relay) and `outgoing_fetch_requests` (fetches the relay sent to the publisher).
+  - **Use publisher's track alias**: upstream FETCH requests now use the publisher's own track alias instead of the relay's internal track ID, so the response stream can be resolved correctly.
+  - **Manual test plan**: 4-terminal local setup with relay, publish-namespace client (modified to respond to incoming FETCH by replaying objects), subscribe client, and fetch client; relay-side logs confirm cache hits and misses.
+- **[Commit `ccf9d2e`](https://github.com/moqtail/moqtail/commit/ccf9d2e)** May 6 08:59 UTC by **Ali C. Begen** — *docs: update reference*. Co-maintainer commit on `main`.
+
+**Net**: moqtail completes a key relay capability — **upstream FETCH on cache miss** — through a contributor-led 3-PR series merged in a 27-minute window, with the 4th and largest PR (the actual upstream fetch logic) opened the same evening. Combined with **PR #179 (davemevans Firefox docs)** also merging, this is the **second consecutive day with non-maintainer-authored merges on `main`** (after thexeos's co-authorship in PR #191 on May 5). The moqtail contributor base is widening visibly — sharmafb and davemevans both had multiple PRs land in the May 5–6 window.
+
+## moq-wg/secure-objects — First commits in many weeks: Suhas merges PR #87 (diagram fix)
+
+After a multi-week silent period on `main`, **[[suhas-nandakumar]]** lands a 2-commit diagram fix.
+
+- **Commit `8d789cf`** May 6 13:30 UTC by Suhas Nandakumar — *Fix encryption/decryption diagrams to match SECURE_OBJECT_AAD structure*.
+- **Commit `68f9f0b`** May 6 13:45 UTC by Suhas Nandakumar — *Merge pull request #87 from moq-wg/pic-fix*.
+
+**Diagram-only fix** aligning the figure-level depiction of encryption/decryption flow with the SECURE_OBJECT_AAD wire structure. **No normative change**. First commits on `main` in moq-wg/secure-objects since the May 1 editorial wave; the secure-objects-01 substantive draft (containing the SFRAME RFC reference, additional test vectors, and en-dash fix from the still-open #83/#84/#85 trio) is **still not on Datatracker** as of May 7.
+
+## moq-wg/moq-transport — Quiet day on `main`; only PR #1604 timestamp ping
+
+No new commits, merges, or new issues opened on `main` in the May 6 06:00 UTC → May 7 06:00 UTC window.
+
+- **[PR #1604](https://github.com/moq-wg/moq-transport/pull/1604) (Joining FETCH with subscription)** — touched at May 6 15:04 UTC; no new comment surfaced — likely a label/state update rather than a substantive comment after [[alan-frindell]]'s May 5 16:36 UTC reframing.
+
+Open PR slate unchanged.
+
+## Mailing list — Quiet for 2nd consecutive day
+
+**No new messages** on `moq@ietf.org` on May 6 or May 7 (through the wiki window). Cullen's *"Request Synchronization Use Case"* thread (May 1) and Magnus Westerlund's three May 4 framing messages now sit unanswered for **6 days** and **3 days** respectively. **Notably, no announcement message** was posted for the new `draft-gregoire-moq-msfts-00` draft. The "Knowing the start of a Subgroup" thread is also dormant since [[alan-frindell]]'s twin May 5 pushback messages.
+
+## Slack #moq — CAT4MOQ libraries open-sourced; Dan Rayburn MOQ Town Hall scheduled May 12
+
+Two new posts in the May 6 06:00 UTC → May 7 06:00 UTC window — first `#moq` activity since [[torbjorn-einarsson]]'s May 5 06:43 CEST moqlivemock+warp-player announcement.
+
+- **[[suhas-nandakumar]] May 6 17:49 CEST** — *"Just some updates on CAT4MOQ related implementation work"*:
+  1. **`catapult`** (C++ library, [github.com/Quicr/catapult](https://github.com/Quicr/catapult)) — open-sourced for a while, used in internal dev/testing.
+  2. **`cat-rs`** (Rust library, [github.com/Quicr/cat-rs](https://github.com/Quicr/cat-rs)) — **newly open-sourced**. Both libraries up to date with C4M spec, full CAT token implementation with **DPoP support**.
+  3. Cisco/Quicr commits to keeping both libs current and welcomes feedback.
+  - **Significance**: First open-sourcing of a Rust CAT4MOQ implementation. Pairs with the existing C++ `catapult` to give the [[moq-privacy-pass|privacy-pass]] / CAT4MOQ track its first cross-language client-side coverage. Suhas is a [[moq-wg/secure-objects|secure-objects]] co-editor, so the timing aligns with this morning's diagram-fix merge as a coherent Cisco/Quicr push.
+- **Will Law (Akamai) May 6 09:44 CEST** — Dan Rayburn is hosting a **live MOQ Town Hall Zoom session on May 12 at 1pm ET**, open to everyone. *"Please join to answer the questions, promote your project or service, or debate the nuances of MOQT."* [LinkedIn announcement](https://www.linkedin.com/posts/danrayburn_moq-openmoq-streamingmedia-share-7457463529865113602-KstM).
+  - **Significance**: First public-facing moderated MoQ town hall (vs IETF interim or Demuxed-style talks). Dan Rayburn is a streaming-industry analyst (StreamingMediaBlog); the framing is industry-promotion + practitioner debate. Falls 6 days before the next regular WG cadence; slot timing (1pm ET = 19:00 CEST = 17:00 UTC = 10am PT) hits both EU and US working hours.
+
+`#moq-rs` (C09CG9V7A2Y), `#moq-js` (C09BZ7KH0BZ), `#libquicr` (C08ER7J16BF) all unchanged.
+
+## Other implementations — quiet
+
+- **cloudflare/moq-rs**: No new commits since Apr 13 (Day +24 of upstream-fork quiet).
+- **video-dev/moq-js**: No new commits since Apr 16.
+- **google/quiche** (`quiche/quic/moqt`): No new commits since the May 5 01:02 UTC `1ceadc7` Vasiliev *"Rewrite MOQT control message parser"* — Day +2 of post-rewrite quiet.
+- **birneee/quiche_moq**: No new commits since Mar 13.
+- **Eyevinn/moqlivemock + warp-player**: No new commits since the May 5 v0.8.0 release.
+- **Eyevinn/moqtransport**: No new commits.
 
 # Activity (May 5 06:00 UTC → May 6 06:00 UTC)
 

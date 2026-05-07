@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-23
+last_updated: 2026-05-07
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -16,6 +16,13 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
 # Abstract
 
 MSF defines the streaming format for delivering media over [[moq-transport]]. It enables delivery of [[moq-loc]]-compliant media through bitstream fragmentation into independently transmittable objects. Replaces the earlier draft-ietf-moq-warp.
+
+# MSF Packaging Extensions (Individual Drafts)
+
+MSF defines an umbrella for codec/container packaging. As of May 2026, two extension drafts have been proposed:
+
+- **[[moq-cmsf|CMSF (`cmaf`)]]** (`draft-ietf-moq-cmsf-00`, WG) — CMAF-compliant packaging for MSF.
+- **MSFTS (`m2ts`)** ([`draft-gregoire-moq-msfts-00`](https://datatracker.ietf.org/doc/draft-gregoire-moq-msfts/), individual, **submitted May 6 2026**, 21 pages) — *MPEG-2 Transport Stream Packaging for Media Over QUIC Transport*. Authors: **Paul Gregoire** (Red5) and **[[gwendal-simon]]** (Synamedia). Registers the **`m2ts`** packaging value alongside CMSF; defines 10 m2ts-specific catalog fields including `m2tsPacketSize` (188 or 192 octets), `m2tsProgramNumber`, `m2tsPmtPid`, `m2tsPcrPid`, `m2tsPsiInterval`, `m2tsRandomAccess`, `m2tsTimestampMode`, `m2tsScte35Pid`, and `initData` (Base64-encoded init packets). **First non-CMAF, non-LOC packaging extension** — extends MSF to broadcast/contribution workflows where MPEG-2 TS remains the dominant container.
 
 # Key Features
 

@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 status: current
-updated: 2026-05-06
+updated: 2026-05-07
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -27,7 +27,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 
-For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-00 (relay DoS considerations).
+For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-00 (relay DoS considerations), and **draft-gregoire-moq-msfts-00** (MPEG-2 Transport Stream packaging for MSF, **submitted May 6 2026**, by Paul Gregoire / Gwendal Simon — see [[moq-msf]] for summary).
 
 # Protocol Concepts
 

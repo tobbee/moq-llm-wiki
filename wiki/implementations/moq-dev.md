@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 status: current
 ---
 
@@ -57,6 +57,24 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April–May 2026)
+
+## May 6 → May 7 Evening burst day-2: PR #1385 REVERTS yesterday's PR #1356 within 24h; PR #1382/#1383 polish merges; PR #1386 opened (Firefox stats source)
+
+[[luke-curley]] returns May 6 evening (~20:00–22:30 UTC) for a second burst building on the May 5 seven-PR run. Notable element: **PR #1385 reverts PR #1356** (`insert_track` takes `TrackConsumer`) ~24 hours after it merged — first merge-then-revert-within-24h on `main` since the Apr 30 → May 2 fetch_group cycle.
+
+- **[PR #1382](https://github.com/moq-dev/moq/pull/1382) MERGED** May 6 20:03 UTC by [[luke-curley]] (+3/−0) — *Unignore moq-mux test fixtures*. Test-fixture file inclusion fix following the moq-mux backport (PR #1341). Cosmetic.
+- **[PR #1383](https://github.com/moq-dev/moq/pull/1383) MERGED** May 6 21:09 UTC by [[luke-curley]] (+15/−5) — *@moq/watch: don't tear down a broadcast when an unrelated path flaps*. Targeted fix in the TypeScript `watch` package for spurious broadcast tear-downs when an unrelated subscription/announcement path changes state.
+- **[Issue #1384](https://github.com/moq-dev/moq/issues/1384) OPENED** May 6 20:41 UTC by [[luke-curley]] — *@moq/signals improvements*. Tracks reactive-signals layer cleanup in the TypeScript `signals` package.
+- **[PR #1386](https://github.com/moq-dev/moq/pull/1386) OPENED** May 6 21:51 UTC by [[luke-curley]] (+88/−130, **OPEN**) — *@moq/watch: source network stats from the connection, not navigator*. Replaces use of `navigator.connection` (which Firefox doesn't expose, and which other browsers report unreliably) with stats sourced directly from the QUIC connection object. **Second Firefox-compatibility-affecting PR** in two days alongside the still-open PR #1307 legacy SETUP fallback.
+- **[PR #1385](https://github.com/moq-dev/moq/pull/1385) MERGED** May 6 22:08 UTC by [[luke-curley]] (+160/−117) — *Revert "moq-lite: switch insert_track to take TrackConsumer (#1356)"*. Body is the standard auto-generated revert text (*"This reverts commit `b611acd1`."*). **Backs out PR #1356 ~24 hours after it merged on May 5 22:15 UTC** — the type-level cleanup that was supposed to land the `TrackConsumer::produce()` removal from #1300 has been pulled back. No follow-up issue or new PR yet explaining the regression that prompted the revert; the next release-train PR (#1338) will roll without that change.
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) updated** May 6 22:24 UTC — `chore: release` (moq-bot[bot]). Auto-bumped after the day's merges; will drop PR #1356 from the staging release line.
+- **[PR #1358](https://github.com/moq-dev/moq/pull/1358) updated** May 6 21:32 UTC — Origin poll-driven rewrite, still open.
+- **[PR #1149](https://github.com/moq-dev/moq/pull/1149) updated** May 6 19:06 UTC — catalog registry, still open.
+- **[Issue #1364](https://github.com/moq-dev/moq/issues/1364) CLOSED** May 6 06:00 UTC — Dan Rossi's *"Cloudflare Relay"* question. No comment on close.
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) (Lite05 DATAGRAMS) — no movement** today (Day +2 since open).
+- **[PR #1307](https://github.com/moq-dev/moq/pull/1307) (Firefox legacy-SETUP fallback) — no movement** today.
+
+**Net**: Day-2 follow-up to the May 5 burst lands two small fixes (#1382, #1383) and **a notable revert (#1385)** that pulls PR #1356 back out of `main` within 24 hours of landing. PR #1386 (network-stats source change) is the day's only new open PR; it continues a Firefox-compatibility theme alongside PR #1307. Lite05 DATAGRAMS PR #1374 remains untouched for a 2nd day.
 
 ## May 5 → May 6 Luke's biggest single-day merge run; 7 PRs land (incl. PR #1341 moq-mux backport, PR #1378 API tightening); PR #1307 OPENED for Firefox legacy-SETUP fallback
 

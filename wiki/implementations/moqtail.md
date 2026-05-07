@@ -2,14 +2,14 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 status: current
 ---
 
 **GitHub**: [moqtail/moqtail](https://github.com/moqtail/moqtail)
 **Maintainers**: Zafer Gurel, Ali C. Begen
 **Draft support**: **draft-16 only on `main`** (draft-14 docs removed May 4 2026)
-**Updated**: 2026-05-05
+**Updated**: 2026-05-07
 
 # Overview
 
@@ -110,6 +110,24 @@ After being open since **March 6** and absorbing 29 commits / 216 files / +17,11
 - **PRs #186 / #187 / #188** (sharmafb's upstream-FETCH 3-PR series) — **all 3 still open**, no movement.
 
 **Net**: Two-merge polish day on `moqtail-ts`. The per-subscription early-discard refinement (#189) signals the slow-stream API is being driven by real-application feedback (likely from `apps/meet`). The thexeos co-authorship in #191 establishes a template for absorbing externally-proposed fixes — the maintainer takes the broader fix while preserving credit. The CI release line (#190) suggests moqtail-ts will publish frequent post-umbrella draft-16 patches as the API hardens.
+
+## May 6 — sharmafb upstream-FETCH 3-PR series MERGED in 27 minutes; PR #179 (Firefox docs) merges; PR #193 [4/n] opens
+
+[[zafer-gurel]] merges all three of **sharmafb's upstream-FETCH PRs** (#186, #188, #187 — non-sequential order) plus **davemevans's PR #179** (Firefox docs) on May 6 between 14:31 and 15:04 UTC. **sharmafb opens PR #193** later the same evening as the capstone of the 4-PR series.
+
+- **[PR #186](https://github.com/moqtail/moqtail/pull/186) MERGED** May 6 14:31 UTC by zafergurel (+15/0) — *[upstream fetches] Add command-line args for FETCH upstream timeout and gap limit [1/n]* (sharmafb / Aman Sharma). Adds the two relay command-line flags configuring upstream-FETCH timeout and gap-tolerance behavior.
+- **[PR #188](https://github.com/moqtail/moqtail/pull/188) MERGED** May 6 14:56 UTC by zafergurel (+154/−8) — *[upstream fetches] Function to send upstream fetch [3/n]*. Adds the relay-side primitive for sending upstream FETCH requests to a publisher when a cache miss occurs. **Merged before #187** (the [2/n] plumbing PR).
+- **[PR #187](https://github.com/moqtail/moqtail/pull/187) MERGED** May 6 14:58 UTC by zafergurel (+71/−6) — *[upstream fetches] Plumbing to forward FETCH data received from upstream [2/n]*. Adds the data-forwarding plumbing connecting the upstream FETCH response back to the requesting downstream subscriber. **Merge order 1 → 3 → 2** (likely cherry-pick / linearization rather than fast-forward).
+- **[PR #179](https://github.com/moqtail/moqtail/pull/179) MERGED** May 6 15:04 UTC by zafergurel (+11/−2) — *docs: add instructions for Firefox testing using private CA* (davemevans / David Evans, opened Apr 29). Documents the `network.http.http3.disable_when_third_party_roots_found` Firefox config required when running moqtail behind mkcert + private CA.
+- **[PR #192](https://github.com/moqtail/moqtail/pull/192) OPENED** May 6 15:05 UTC by github-actions[bot] — *[ci] release*. Standard release-line bump capturing #186/#187/#188/#179.
+- **[PR #193](https://github.com/moqtail/moqtail/pull/193) OPENED** May 6 23:11 UTC by sharmafb (+248/−132, **OPEN**) — *[upstream fetches] Finish implementation of sending FETCH requests upstream for cache misses [4/n]*. **Capstone of the 4-PR series.** Body summary:
+  - **Upstream fetch on cache miss**: relay now iterates group-by-group and sends a FETCH upstream to the publisher for any groups missing from the local cache, rather than serving only from the cache.
+  - **Split `fetch_requests` into incoming and outgoing**: separated the single `fetch_requests` map into `incoming_fetch_requests` (fetches the client sent to the relay) and `outgoing_fetch_requests` (fetches the relay sent to the publisher).
+  - **Use publisher's track alias**: upstream FETCH requests now use the publisher's own track alias instead of the relay's internal track ID, so the response stream can be resolved correctly.
+  - **Manual test plan**: 4-terminal local setup with relay, publish-namespace client (modified to respond to incoming FETCH by replaying objects), subscribe client, and fetch client.
+- **Commit `ccf9d2e`** May 6 08:59 UTC by **Ali C. Begen** — *docs: update reference*.
+
+**Net**: moqtail completes a key relay capability — **upstream FETCH on cache miss** — through a contributor-led 3-PR series merged in a 27-minute window, with the 4th and largest PR (the actual upstream fetch logic) opened the same evening. Combined with PR #179 (davemevans Firefox docs), this is the **second consecutive day with non-maintainer-authored merges on `main`** (after thexeos's co-authorship in PR #191 on May 5). The moqtail contributor base is widening visibly — sharmafb and davemevans both had multiple PRs land in the May 5–6 window.
 
 # Known Issues
 

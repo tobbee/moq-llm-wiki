@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-06 00:36 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **flat day** vs May 5 00:37 UTC's identical 20/71/14. Two consecutive days at the Apr 17–21 floor reading; no recovery from the May 5 −4 pass / +4 fail regression. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → **20**. The post-[[moqtail]]-PR #145 (umbrella draft-16, merged May 4 19:23 UTC) image rebuild appears to be the new normal until pair-level fixes land. Today's seven moq-dev/moq merges (PRs #1341, #1356, #1377, #1378, #1379, #1380, #1381) are all API/config/platform fixes — no wire-format changes — so the matrix should not shift further on those rebuilds. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open**.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-07 00:38 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **flat day** vs May 6 00:36 UTC's identical 20/71/14. **Third consecutive day at the Apr 17–21 floor reading**; no recovery from the May 5 −4 pass / +4 fail regression. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → **20**. The post-[[moqtail]]-PR #145 (umbrella draft-16, merged May 4 19:23 UTC) image rebuild remains the new normal. PR #1341 (moq-mux backport, merged May 6 01:20 UTC) was the most plausible candidate for moving the matrix on the May 7 report — **no movement observed**, suggesting the catalog/init shape change is internal to moq-dev's hang format, not a moq-transport wire change. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open**. moqtail PR #193 (upstream FETCH on cache miss, +248/−132) opens late May 6 and could affect the May 8 matrix once `moqtail-relay` images rebuild.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)
