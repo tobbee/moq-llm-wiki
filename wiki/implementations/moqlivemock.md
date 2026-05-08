@@ -1,5 +1,5 @@
 ---
-title: "moqlivemock"
+title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm]
 date: 2026-04-12
 last_updated: 2026-05-05
