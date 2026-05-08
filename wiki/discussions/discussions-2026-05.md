@@ -2,11 +2,75 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-07
+last_updated: 2026-05-08
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 7 06:00 UTC → May 8 06:00 UTC)
+
+## moq-dev/moq — Day-3 burst: PR #1387 "Revert the revert" un-reverts PR #1356 within 24h; PR #1386 Firefox stats merged; PR #1388 LOC frame format opened; PR #1389 stats aggregation opened
+
+[[luke-curley]]'s third consecutive day with material `main`-branch activity, all between **17:42 and 18:24 UTC** May 7. Headline element: **PR #1387 reverts the May 6 revert (PR #1385) of PR #1356** — the type-level cleanup is back in `main` with the underlying clone-counting bug fixed in-place. Plus a major *new* feature-PR pair: LOC frame format support and stats aggregation, both Claude-Code-generated.
+
+- **[PR #1387](https://github.com/moq-dev/moq/pull/1387) MERGED** May 7 17:47:35 UTC by [[luke-curley]] (+167/−177) — *Revert the revert*. One-line body: *"Actually fix the issue by incrementing the dynamic count when cloning."* Un-reverts PR #1385's revert of PR #1356 (`insert_track` takes `TrackConsumer`). **Cycle**: PR #1356 merged May 5 22:15 UTC → reverted via #1385 May 6 22:08 UTC (−24h) → reverted-back via #1387 May 7 17:47 UTC (+19h 39m). **Total cycle 43h 32m. First merge → revert → revert-of-revert cycle on `main` in moq-dev/moq history.** Yesterday's wiki entry framed PR #1385 as a "first merge-then-revert-within-24h" event; today it is reframed as a *transient* revert. The `TrackConsumer::produce()` removal from #1300 is again gone.
+- **[PR #1386](https://github.com/moq-dev/moq/pull/1386) MERGED** May 7 18:17:23 UTC by [[luke-curley]] (+72/−177) — *@moq/watch: source network stats from the connection, not navigator*. Final shape +72/−177 (vs opened-shape +88/−130 on May 6 — the reviewed form deletes more code than originally drafted). Replaces `navigator.connection` (Firefox doesn't expose, others report unreliably) with QUIC-connection-sourced stats. **Second Firefox-compatibility PR to land in 3 days; sibling PR #1307 (Lite03+ via legacy SETUP) still open.**
+- **[PR #1388](https://github.com/moq-dev/moq/pull/1388) OPENED** May 7 17:42:06 UTC by [[luke-curley]] (+799/−17, **OPEN**) — *Add Low Overhead Container (LOC) frame format support*. **First adoption of an IETF-spec media container format in moq-dev/moq alongside its native Hang stack.** New `moq-loc` Rust crate + `@moq/loc` JS package implementing encode/decode for the [[moq-loc|draft-ietf-moq-loc]] wire format; QUIC-style varint property block (delta-encoded type IDs `0x06`=timestamp, `0x08`=timescale) followed by raw codec payload. **Catalog integration**: hang catalog gains `Container::Loc { timescale }` (default 1,000,000 µs); audio source selection prioritizes LOC after legacy, before CMAF. Watch player audio/video decoders + MSE backends instantiate the appropriate LOC decoder based on catalog config. Per-frame timescale (`0x08` property) overrides catalog default. *"Even-typed properties carry varint values; odd-typed properties carry length-prefixed bytes. Unknown properties are silently skipped on decode, never emitted on encode."* Body marked *"🤖 Generated with Claude Code"*.
+- **[PR #1389](https://github.com/moq-dev/moq/pull/1389) OPENED** May 7 18:23:35 UTC by [[luke-curley]] (+1168/−39, **OPEN**) — *Add stats aggregation and publishing for moq-lite sessions*. New `Stats` module (`rs/moq-lite/src/stats.rs`); per-broadcast and per-prefix stats published as **`.stats/<level>/<name>` JSON broadcasts** (1Hz snapshot, atomic counters with `Relaxed` ordering, RAII guards record open/close + frames + bytes + groups). **Hidden-path filtering**: new `Path::is_hidden()` (segments starting with `.`) so stats infrastructure doesn't recursively generate its own stats traffic; `OriginConsumer::announced()` filters hidden paths, complementary `announced_hidden()` exposes them. New `StatsConfig` in moq-relay (`name` + `levels` for per-prefix bucketing depth). API surface: `Client::with_stats()` / `Server::with_stats()` builders. Body marked *"🤖 Generated with Claude Code"*. **Same problem domain as the May 5-closed PR #853** (fcancela's "Minimal observability metrics", +1261/−38) — Luke's reformulation lands as a 1168-line opening within 2 days, occupying adjacent design space with three novel mechanisms (in-band stats broadcasts, hidden-path filtering, per-prefix bucketing).
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) updated** May 7 18:32 UTC — `chore: release` (moq-bot[bot]). Auto-bumped after #1387 + #1386 merges; the day-1 revert + day-3 revert-of-revert net no-op rolls forward, plus the Firefox stats fix.
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) (Lite05 DATAGRAMS) updated** May 7 19:25 UTC — still **open**, Day +3 since open. No movement towards merge.
+- **[PR #853](https://github.com/moq-dev/moq/pull/853) — note**: closed-not-merged on May 5; received an automated cross-reference timestamp ping May 7 17:50 UTC when PR #1389 opened (PR #1389 occupies adjacent design space). State remains CLOSED.
+
+**Net**: Day-3 lands **two merges** that net to zero net code change but unwind yesterday's revert with the underlying bug fixed in-place, and **opens two large new feature PRs** (+799 LOC frame format, +1168 stats aggregation). Both new PRs are Claude-Code-generated. Combined moq-dev/moq diff opened in the 4-day May 4 → May 7 window: PR #1374 (Lite05) +1615/−7 + PR #1378 +295/−240 + PR #1388 +799/−17 + PR #1389 +1168/−39 = **+3877/−303 added across 4 Claude-Code-generated PRs**, of which only PR #1378 has merged.
+
+## moq-wg/msf — avelad asks for PR #133 (SCTE-35 + CEA-608/708) to be split into 3 PRs
+
+After 70+ days open with periodic updates, [[suhas-nandakumar]]'s [PR #133](https://github.com/moq-wg/msf/pull/133) (+259/0, *Add SCTE-35 support and CEA-608/708 accessibility fields*) gets the **first new comment in 12 days** from a new reviewer.
+
+- **avelad** (Alvaro Velad / Google, Shaka Player engineer) May 7 11:50 UTC: *"Perhaps this should be separated into 3 PRs, one for CEA, one for SCTE-35, and one for IMSC1 and WebVTT?"*
+- The PR adds 4 separable concerns: accessibility metadata, SCTE-35 timeline events, IMSC1 caption events, WebVTT references. avelad's split suggestion would distribute these into 3 PRs (CEA-608/708 alone; SCTE-35 alone; IMSC1+WebVTT bundled).
+- **First moq-wg/msf review activity from a Google engineer in this PR thread.** Prior reviewer engagement was Will Law (Akamai) on Apr 27. Comes 1 day after avelad's May 6 14:27 UTC ping requesting Will Law's review.
+- **Process pushback, not technical pushback** — but the cadence change of moving from 1 PR (open Feb 27 → May 7+) to 3 PRs would extend the merge timeline considerably and may force the SCTE-35 + accessibility separation discussion into the May 12 MOQ Town Hall window.
+
+## moq-transport — afrind reframes Issue #1622 (GOAWAY Request ID removal) as repurposable Group-ID slot
+
+[Issue #1622](https://github.com/moq-wg/moq-transport/issues/1622) was opened Apr 30 by [[ian-swett]] with the title *"Request ID in GOAWAY isn't useful"*. Body argues request IDs are not the right primitive in MoQ, citing [[victor-vasiliev]]'s reluctance on PR #1559. After ianswett's open + afrind's brief Apr 30 18:31 UTC counter (*"trivial to put the request ID in goaway, and might be useful"*), the issue sat untouched for a week.
+
+- **[[alan-frindell]] May 7 18:53 UTC** ([comment](https://github.com/moq-wg/moq-transport/issues/1622#issuecomment-...)): *"Perhaps we want to use the Request ID slot to convey a Group ID when sent on an individual subscription or fetch stream."*
+- Reframes the GOAWAY Request-ID slot as **repurposable wire field for a different per-stream identifier**, rather than removing it. Suggests the slot itself is valuable but the *meaning* may need to change to be useful.
+- Combined with Required Request ID removal (PR #1615), Vasiliev's PR #1559 hesitation, and the Apr 30 Joining FETCH discussion, the editorial team appears to be **converging on per-stream identifier signalling as a subgroup of the Request-ID cleanup direction**.
+- **First substantive afrind comment on Issue #1622 since the original Apr 30 reply.**
+
+Other moq-transport open PRs (#1621, #1618, #1617, #1613, #1544, #1455-CLOSED) received label/timestamp pings on May 7 18:13–18:37 UTC but no code pushes. Likely afrind doing review-cleanup labelling on a single sit-down.
+
+## Slack #moq — quiet for 1 day
+
+No new posts since May 6 17:49 CEST (Suhas CAT4MOQ + Will Law MOQ Town Hall announcements). `#moq-rs` (C09CG9V7A2Y), `#moq-js` (C09BZ7KH0BZ), `#libquicr` (C08ER7J16BF) all unchanged.
+
+## Mailing list — quiet for 3rd consecutive day
+
+No new messages on May 6 or May 7. Cullen Jennings's *"Request Synchronization Use Case"* thread (May 1) and Magnus Westerlund's three May 4 framing messages remain unanswered for **7 days** and **4 days** respectively. **No on-list announcement** posted for the new MSFTS draft (Day +2 since Datatracker submission).
+
+## moqtail and other repos — completely quiet day
+
+[[zafer-gurel]] and contributors take May 7 off — no new commits, PRs, or issues on `moqtail/moqtail` after the **9 merges across May 5–6**. PR #193 [4/n] (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) remains untouched 24h+ later.
+
+`cloudflare/moq-rs` Day +25 quiet; `google/quiche` moqt Day +3 quiet (no commits since the May 5 Vasiliev parser rewrite); `video-dev/moq-js`, `birneee/quiche_moq`, all Eyevinn repos all quiet.
+
+**One implementation-side commit elsewhere**: [`Quicr/cat-rs`](https://github.com/Quicr/cat-rs) (newly open-sourced May 6) gets May 7 04:07 UTC commit `1e4423e` *"Security hardening: fix all audit findings"* by Suhas — Day +1 of post-open-source maintenance.
+
+## Datatracker / MoQ Monthly / wiki
+
+- **No new draft revisions**. WG state unchanged: transport-17, msf-00, loc-02, secure-objects-00 (-01 substantively ready in repo, **still not on Datatracker**), privacy-pass-02, cmsf-00. Notable individual: lite-04 (Apr 9), nmsf-01 (Apr 7), gregoire-moq-msfts-00 (May 6, **Day +2**).
+- **MoQ Monthly**: No new issue. Day +7 since #1.
+- **tobbee/moq-llm-wiki**: No new open issues.
+
+## Interop runner — 19/72/14 — breaks the 4-day floor downward
+
+**−1 pass / +1 fail vs 4 prior days at 20/71/14.** New post-NAB low; the matrix has now returned to the **Apr 17–21 floor reading of 19** (which was the early-floor reading before the late-April recovery wave to 25). moqtail PR #193 (upstream FETCH on cache miss) **did not merge** May 7 — yesterday's wiki noted it as the next candidate to move the matrix once `moqtail-relay` rebuilds, but the rebuild hasn't happened. Likely cause is **another image's rebuild** or natural per-run variance. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19**.
+
+---
 
 # Activity (May 6 06:00 UTC → May 7 06:00 UTC)
 

@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-07
+last_updated: 2026-05-08
 status: current
 ---
 
@@ -57,6 +57,20 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
 # Recent Activity (April–May 2026)
+
+## May 7 → May 8 Day-3 burst: PR #1387 "Revert the revert" un-reverts PR #1356 within 24h of the revert; PR #1386 Firefox stats merged; PR #1388 (LOC frame format) and PR #1389 (stats aggregation) opened
+
+[[luke-curley]]'s third consecutive day with material `main`-branch activity, all between 17:42 and 18:24 UTC May 7. **Headline element**: PR #1387 reverts the May 6 revert (PR #1385) of PR #1356 — the type-level cleanup is back in `main` with the underlying clone-counting bug fixed in-place. Plus a major *new* feature-PR pair: LOC frame format support and stats aggregation, both Claude-Code-generated.
+
+- **[PR #1387](https://github.com/moq-dev/moq/pull/1387) MERGED** May 7 17:47:35 UTC by [[luke-curley]] (+167/−177) — *Revert the revert*. Body one-liner: *"Actually fix the issue by incrementing the dynamic count when cloning."* **Un-reverts PR #1385's revert of PR #1356** (`insert_track` takes `TrackConsumer`). Net effect: the May 5 type-level cleanup is back in `main`, with the underlying clone-counting bug now fixed in-place rather than by reverting the API change. **Cycle**: PR #1356 merged May 5 22:15 UTC → reverted via #1385 May 6 22:08 UTC (−24h) → reverted-back via #1387 May 7 17:47 UTC (+19h 39m). **Total cycle 43h 32m. First merge → revert → revert-of-revert cycle on `main` in moq-dev/moq history.**
+- **[PR #1386](https://github.com/moq-dev/moq/pull/1386) MERGED** May 7 18:17:23 UTC by [[luke-curley]] (+72/−177) — *@moq/watch: source network stats from the connection, not navigator*. Final shape +72/−177 (vs opened-shape +88/−130 on May 6 — net deletes more code than originally drafted). Resolves the Firefox-`navigator.connection`-unavailable gap. **Second Firefox-compat PR to land in 3 days; sibling PR #1307 (Lite03+ via legacy SETUP) still open.**
+- **[PR #1388](https://github.com/moq-dev/moq/pull/1388) OPENED** May 7 17:42:06 UTC by [[luke-curley]] (+799/−17, **OPEN**) — *Add Low Overhead Container (LOC) frame format support*. **First adoption of an IETF-spec media container format in moq-dev/moq alongside its native Hang stack.** New `moq-loc` Rust crate + `@moq/loc` JS package implementing encode/decode for the [[moq-loc|draft-ietf-moq-loc]] wire format; QUIC-style varint property block (delta-encoded type IDs `0x06`=timestamp, `0x08`=timescale) followed by raw codec payload. **Catalog integration**: hang catalog gains `Container::Loc { timescale }` (default 1,000,000 µs); audio source selection prioritizes LOC after legacy, before CMAF. Watch player audio/video decoders + MSE backends instantiate the appropriate LOC decoder based on catalog config. Per-frame timescale (`0x08` property) overrides catalog default. *"Even-typed properties carry varint values; odd-typed properties carry length-prefixed bytes. Unknown properties are silently skipped on decode, never emitted on encode."* Body marked *"🤖 Generated with Claude Code"*.
+- **[PR #1389](https://github.com/moq-dev/moq/pull/1389) OPENED** May 7 18:23:35 UTC by [[luke-curley]] (+1168/−39, **OPEN**) — *Add stats aggregation and publishing for moq-lite sessions*. New `Stats` module (`rs/moq-lite/src/stats.rs`); per-broadcast and per-prefix stats published as **`.stats/<level>/<name>` JSON broadcasts** (1Hz snapshot, atomic counters with `Relaxed` ordering, RAII guards record open/close + frames + bytes + groups). **Hidden-path filtering**: new `Path::is_hidden()` (segments starting with `.`) so stats infrastructure doesn't recursively generate its own stats traffic; `OriginConsumer::announced()` filters hidden paths, complementary `announced_hidden()` exposes them. New `StatsConfig` in moq-relay (`name` + `levels` for per-prefix bucketing depth). API surface: `Client::with_stats()` / `Server::with_stats()` builders. Body marked *"🤖 Generated with Claude Code"*. **Same problem domain as the May 5-closed PR #853** (fcancela's "Minimal observability metrics", +1261/−38) — Luke's reformulation lands as a 1168-line opening within 2 days, occupying adjacent design space with three novel mechanisms (in-band stats broadcasts, hidden-path filtering, per-prefix bucketing).
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) updated** May 7 18:32 UTC — `chore: release` (moq-bot[bot]). Auto-bumped after #1387 + #1386 merges; the day-1 revert + day-3 revert-of-revert net no-op rolls forward, plus the Firefox stats fix.
+- **[PR #1374](https://github.com/moq-dev/moq/pull/1374) (Lite05 DATAGRAMS) updated** May 7 19:25 UTC — still **open**, Day +3 since open. No movement towards merge.
+- **[PR #853](https://github.com/moq-dev/moq/pull/853) — note**: closed-not-merged on May 5; received an automated cross-reference timestamp ping May 7 17:50 UTC when PR #1389 opened (PR #1389 occupies adjacent design space). State remains CLOSED.
+
+**Net**: Day-3 lands two merges that net to ~zero net code change (revert-of-revert + Firefox stats refactor) but unwind yesterday's revert with the underlying bug fixed in-place. Plus opens **two large new feature PRs** (+799 LOC frame format, +1168 stats aggregation), both Claude-Code-generated. Combined moq-dev/moq diff opened in the 4-day May 4 → May 7 window: PR #1374 (Lite05) +1615/−7 + PR #1378 +295/−240 + PR #1388 +799/−17 + PR #1389 +1168/−39 = **+3877/−303 added across 4 Claude-Code-generated PRs**, of which only PR #1378 has merged.
 
 ## May 6 → May 7 Evening burst day-2: PR #1385 REVERTS yesterday's PR #1356 within 24h; PR #1382/#1383 polish merges; PR #1386 opened (Firefox stats source)
 

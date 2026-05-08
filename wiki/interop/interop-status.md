@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-07
+last_updated: 2026-05-08
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-07 00:38 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **flat day** vs May 6 00:36 UTC's identical 20/71/14. **Third consecutive day at the Apr 17–21 floor reading**; no recovery from the May 5 −4 pass / +4 fail regression. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → **20**. The post-[[moqtail]]-PR #145 (umbrella draft-16, merged May 4 19:23 UTC) image rebuild remains the new normal. PR #1341 (moq-mux backport, merged May 6 01:20 UTC) was the most plausible candidate for moving the matrix on the May 7 report — **no movement observed**, suggesting the catalog/init shape change is internal to moq-dev's hang format, not a moq-transport wire change. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open**. moqtail PR #193 (upstream FETCH on cache miss, +248/−132) opens late May 6 and could affect the May 8 matrix once `moqtail-relay` images rebuild.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-08 00:38 UTC): **19 passed / 72 failed / 14 skipped** out of 105 total — **−1 pass / +1 fail** vs the prior 4-day plateau at 20/71/14. **Breaks the 4-day floor downward** — new post-NAB low, returning the matrix to the early Apr 17–21 floor reading of 19. moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) **did not merge** May 7, so this is **not** a moqtail-relay rebuild effect; the most likely cause is another image's rebuild or natural per-run variance. moq-dev/moq merges in the May 7 06:00 UTC → May 8 06:00 UTC window are PR #1387 (revert-of-revert, type-level only) + PR #1386 (Firefox network stats source) — neither is a wire-format change, so the regression is in implementation pairs rather than a spec change. moq-dev/moq PR #1388 (LOC frame format support, OPEN +799/−17) and PR #1389 (stats aggregation, OPEN +1168/−39) opened May 7 — neither merged yet, so neither could affect this matrix. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open** Day +3. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19**.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

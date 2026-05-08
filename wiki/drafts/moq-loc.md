@@ -2,7 +2,7 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-04-18
+last_updated: 2026-05-08
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
@@ -57,6 +57,12 @@ LOC uses numbered extensions in the object header:
 # Design Tension: LOC vs CMAF
 
 LOC represents the "low overhead" approach optimized for interactive/real-time use cases, while [[moq-cmsf]] provides CMAF compatibility for traditional OTT streaming. [[luke-curley]] has proposed [CMAF compression](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) as a potential bridge between the two approaches.
+
+# Implementation tracking
+
+- **[[moqtail]]** — full LOC encode/decode in `moqtail-rs` (sample app + draft-16 catalog plumbing).
+- **[[moqlivemock]] / warp-player (Eyevinn)** — LOC pipeline added in v0.8.0 (May 5, 2026), including HEVC LOC and a WebCodecs LOC pipeline.
+- **[[moq-dev]] (Luke Curley) — PR #1388 OPENED May 7 2026** (+799/−17, [link](https://github.com/moq-dev/moq/pull/1388)). New `moq-loc` Rust crate + `@moq/loc` JS package implementing encode/decode for the LOC wire format. Hang catalog gains `Container::Loc { timescale }` (default 1,000,000 µs); audio source selection prioritizes LOC after legacy, before CMAF. **First adoption of an IETF-spec media container format in moq-dev/moq alongside its native Hang stack.** Per-frame timescale (0x08 property) overrides catalog default.
 
 # External Links
 - [GitHub repo](https://github.com/moq-wg/loc)
