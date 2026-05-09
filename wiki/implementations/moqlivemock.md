@@ -1,14 +1,14 @@
 ---
 title: "moqlivemock (Eyevinn)"
-tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm]
+tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-05-05
+last_updated: 2026-05-09
 status: current
 ---
 
 **Organization**: Eyevinn Technology
 **Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
-**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0)
+**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0); **LOCMAF in PR** (May 7, experimental)
 **Demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
 
 # Repositories
@@ -66,6 +66,10 @@ All five namespaces are announced concurrently when `mlmpub` runs, so subscriber
 # CMSF ContentProtection
 
 The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.com/moq-wg/cmsf/pull/18), merged Apr 14) was proposed by Eyevinn based on the moqlivemock implementation. DRM support in moqlivemock and warp-player was implemented by Hugo Björs (Eyevinn). warp-player supports Widevine, PlayReady, FairPlay, and ClearKey/ECCP. It was the first running implementation, now joined by [[shaka-player]] ([PR #9972](https://github.com/shaka-project/shaka-player/pull/9972), also merged Apr 14).
+
+# LOCMAF (Low Overhead CMAF) — experimental, in PR
+
+**[Eyevinn/moqlivemock PR #79](https://github.com/Eyevinn/moqlivemock/pull/79)** (Hugo Björs, **OPEN** since May 7 2026, +2697/−83, 17 files) and **[Eyevinn/warp-player PR #120](https://github.com/Eyevinn/warp-player/pull/120)** (+2211/−188, 14 files) introduce **LOCMAF** — a compact LOC-inspired/compatible CMAF packaging format for MoQT. **Master's-thesis context**, with measurements pending. See [[media-packaging]] for the full design and comparison vs. compressed-mp4. A separate warp-player branch tests LOCMAF + DRM (not in PR #120).
 
 # Demo
 

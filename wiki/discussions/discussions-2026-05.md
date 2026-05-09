@@ -2,11 +2,120 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 8 06:00 UTC → May 9 06:00 UTC)
+
+## Eyevinn opens twin LOCMAF PRs — experimental Low Overhead CMAF packaging from a master's thesis
+
+**Hugo Björs** (Eyevinn) opens twin pull requests on May 7 13:12–13:15 UTC, both updated through May 8, proposing **LOCMAF (Low Overhead CMAF)** — a compact LOC-inspired/compatible CMAF packaging format for MoQT. Body of [moqlivemock PR #79](https://github.com/Eyevinn/moqlivemock/pull/79): *"This is an experimental packaging, and a more detailed description with measurements will be published in my master's thesis at a later point."*
+
+- **[moqlivemock PR #79](https://github.com/Eyevinn/moqlivemock/pull/79) OPENED** May 7 13:12 UTC (+2697/−83, **17 files**, **OPEN**, last update May 8 21:03 UTC) — *Add LOCMAF support*. Server-side implementation in the Eyevinn Go publisher.
+- **[warp-player PR #120](https://github.com/Eyevinn/warp-player/pull/120) OPENED** May 7 13:15 UTC (+2211/−188, **14 files**, **OPEN**, last update May 8 09:42 UTC) — *Add LOCMAF support*. Client-side counterpart in the TypeScript player. Cross-references the moqlivemock PR. **A separate branch tests LOCMAF + DRM**, but DRM is not in this PR.
+
+**Design**: LOCMAF avoids re-transmitting CMAF header fields that are fixed, derivable, or only present for structural reasons. Instead of sending full CMAF init segments and `moof` fragment headers, it stores only the fields needed to reconstruct them. Fields are encoded as MoQT/LOC-style key-value pairs, each assigned a LOCMAF ID; encoded values are aggregated into **one** LOCMAF property rather than defining a separate LOC property for every CMAF field — design choice is *"compatible with LOC while avoiding a large number of new globally coordinated property IDs."*
+
+**LOCMAF defines three properties**:
+1. **LOCMAF init segment** — non-derivable fields needed to reconstruct CMAF `ftyp` and `moov` boxes.
+2. **LOCMAF full header** — non-derivable fields needed to reconstruct a complete `moof` header. **Must be sent as a stream access point and as the first object in a MoQT group**, ensuring the group is independently decodable.
+3. **LOCMAF delta header** — differences relative to the previous `moof` header. Reduces overhead further when consecutive fragments are similar. **Fields listed as deleted are reset to default values rather than interpreted as deltas.**
+
+**Decompression**: receiver creates an empty CMAF init segment or fragment header using default values, parses the LOCMAF KV map, and fills in required fields. For delta headers, the receiver applies the stored differences relative to the previous header.
+
+**Two key optimizations** (PR body):
+- `tfdt.baseMediaDecodeTime` is calculated from the previous `baseMediaDecodeTime` and the previous sample durations — **does not need to be sent over the wire**.
+- When only 1 sample is sent per fragment, the sample size is **omitted** because it equals the LOCMAF payload length.
+
+**Significance**: LOCMAF is the **first impl-side proposal to bridge the LOC↔CMAF gap** since [[luke-curley]]'s `draft-lcurley-compressed-mp4-00` (Mar 18, individual). The two attempts come from opposite directions:
+
+| Approach | Path | Author | Status |
+|----------|------|--------|--------|
+| **compressed-mp4** | Compress full CMAF stream with a generic compressor | [[luke-curley]] | Individual draft Mar 18 |
+| **LOCMAF** | Encode only non-derivable CMAF fields as LOC KV pairs | Hugo Björs (Eyevinn) | Experimental impl May 7 |
+
+**Author context**: Hugo Björs previously implemented **CMSF ContentProtection** in moqlivemock + warp-player ([moq-wg/cmsf PR #18](https://github.com/moq-wg/cmsf/pull/18), merged Apr 14) — the spec contribution that is now Eyevinn's primary [[moq-cmsf]] DRM track. LOCMAF is therefore his **second media-pipeline contribution**, in a master's-thesis context. **Concrete measurements pending thesis submission**.
+
+## moq-wg/msf — PR #133 escalates to spec-restructuring debate
+
+After avelad's May 7 11:50 UTC suggestion to split [PR #133](https://github.com/moq-wg/msf/pull/133) (Suhas SCTE-35 + CEA-608/708) into 3 PRs, May 8 brings **3 new comments** in 7 hours that escalate the discussion from PR-splitting into spec-level restructuring of the MSF event-timeline coverage:
+
+- **wilaw May 8 11:29 UTC**: *"I notice another anomaly here. The current draft has a section for defining the event timeline carriage of SCTE-35 data, but then it punts the definition of the carriage of WebVTT and IMSCI to external drafts. Wouldn't be better to specify all event timeline formats outside of the MSF spec? That way the MSF spec stays clean. If there is agreement on this approach, then we can spin up 3 separate drafts: SCTE-35 transmission in MSF Event Timeline format, WebVTT transmission in MSF Event Timeline format, IMSCI transmission in MSF Event Timeline format."*
+- **gwendalsimon May 8 13:09 UTC**: agrees with wilaw's restructuring direction (quoting wilaw's anomaly observation).
+- **suhasHere May 8 18:30 UTC**: *"@wilaw @gwendalsimon I do have initial drafts on..."* (truncated in the API view) — **reveals pre-staged draft text already exists** for the SCTE-35 / WebVTT / IMSC1 separation.
+
+**Direction**: 3 separate Event-Timeline format drafts (SCTE-35, WebVTT, IMSC1) likely to spin out as **individual drafts**; CEA-608/708 accessibility metadata stays in MSF. Extends the [[moq-msf|MSF Packaging Extensions]] pattern (precedent: [[moq-msfts]] for `m2ts`) into **Event-Timeline Extensions** — making MSF an umbrella draft with two modular extension axes.
+
+**Significance**: First time a moq-wg PR's spec restructuring is shaped openly in a 3-author exchange (wilaw + gwendalsimon + suhasHere) rather than via interim meeting or chair direction. The Day -1 (May 7) avelad split-into-3-PRs comment was the trigger; today's exchange formalizes the spec-level direction. Editorial cadence is shifting toward *"spec text first, individual drafts when ready"* — Suhas reveals he had already drafted the separation text without on-list announcement.
+
+## Slack #moq — yu you announces 3GPP SA4 #136 conferencing PoC over MOQT
+
+**[[yu-you|yu you]] (Nokia) May 8 11:52 CEST** posts in `#moq` (first new post since [[suhas-nandakumar]]'s May 6 17:49 CEST CAT4MOQ + Will Law's May 6 09:44 CEST MOQ Town Hall announcements):
+
+> FYI
+>
+> We will present a conferencing PoC over MOQT at the upcoming 3GPP SA4 #136 meeting next week in Montreal, Canada.
+> The document is now available online at:
+> [3GPP S4-261065 input document](https://www.3gpp.org/ftp/tsg_sa/WG4_CODEC/TSGS4_136_Montreal/Docs/S4-261065.zip)
+> (the PoC is based on our in-house MOQT v17 implementation and provided as an informative input to the ongoing study in SA4: [FS_Q4RTC_MED](https://www.3gpp.org/ftp/TSG_SA/TSG_SA/TSGS_110_Baltimore_2025-12/Docs/SP-251661.zip))
+
+**Two new disclosures**:
+1. **Nokia maintains an in-house MOQT v17 implementation** — not previously disclosed publicly, sitting alongside the open-source moq-rs/moq-js/moq-dev/moqtail/moxygen/imquic/libquicr/quiche-moq stack.
+2. **First MOQT cross-pollination into 3GPP standardization** — informational input to the FS_Q4RTC_MED study at 3GPP SA4. MOQT has previously been informational at Demuxed, IETF Hackathon, Mile High Video, and NAB but not at 3GPP.
+
+**Timing**: SA4 Montreal #136 is May 11–15, so the PoC will be presented next week. Cross-posted to the IETF moq mailing list as *"Web conferencing demo over MOQT"* on the same day.
+
+`#moq-rs`, `#moq-js`, `#libquicr` all unchanged.
+
+## Mailing list — Cullen returns; yu you cross-posts SA4 PoC
+
+After 3 consecutive quiet days, the moq IETF mailing list reactivates with **two new messages May 8**:
+
+- **yu you (Nokia)** opens new thread *"Web conferencing demo over MOQT"* — same content as the Slack post above. **First IETF-archive cross-post of the 3GPP SA4 PoC.**
+- **Cullen Fluffy Jennings** replies on *"Knowing the start of a Subgroup"* — **first Cullen reply on this thread**. Disputes Ian Swett's May 5 claim that the WG had agreed to a single-byte priority encoding: *"since even the pre-WG draft proposal we have always had a pretty complicated prioritization including object ID (lower goes first when doing datagrams and streams), group ID (both directions), subscriber priority, publisher priority."* Pushback against Ian's framing that subgroup-design topics are closed for draft -18.
+
+**Stale threads continue**: Cullen's *"Request Synchronization Use Case"* thread (May 1) and Magnus Westerlund's three May 4 framing messages remain unanswered for **8 days** and **5 days** respectively. **No on-list announcement** posted for the [[moq-msfts|MSFTS draft]] — Day +3 since Datatracker submission.
+
+**Significance**: Cullen's reply is the first material on-list pushback against Ian's May 5 framing. Tightens the topic for the May 12 MOQ Town Hall (Will Law / Dan Rayburn) and likely re-enters the editorial backlog before draft-18 cutoff.
+
+## moq-dev/moq — quiet day after the day-3 burst
+
+**No new commits on `main`** since May 7 18:17 UTC. Day +1 of post-burst quiet. The 3 large Claude-Code-generated PRs from the May 4 → May 7 window remain **all open**:
+
+| PR | Opened | Lines | Status |
+|----|--------|-------|--------|
+| **#1374 Lite05 DATAGRAMS** | May 4 22:57 UTC | +1615/−7 | OPEN, **Day +4** |
+| **#1388 LOC frame format** | May 7 17:42 UTC | +799/−17 | OPEN, **Day +1** |
+| **#1389 stats aggregation** | May 7 18:23 UTC | +1168/−39 | OPEN, **Day +1** |
+
+**Combined open-PR diff: +3582/−63 across 3 PRs** — largest open-PR backlog in moq-dev/moq history. Pattern signal: Luke is accumulating review feedback before merging the wire-level Lite05 changes, since #1388 (LOC) and #1389 (stats) both depend on the moq-lite session model.
+
+## moqtail — 2nd consecutive completely quiet day
+
+No new commits, no PR updates, no new issues — extends the May 7 silence. PR #193 [4/n] (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since May 6 23:11 UTC) untouched **48h+ later** — earliest stale PR signal since the May 4 PR #145 merge.
+
+## Other repos — all quiet
+
+- **cloudflare/moq-rs**: Day +26 (no commits since Apr 13).
+- **video-dev/moq-js**: Last commit Feb 17.
+- **google/quiche** (`quiche/quic/moqt`): Day +4 quiet post-Vasiliev parser-rewrite (no commits since May 5 01:02 UTC).
+- **birneee/quiche_moq**: Last commit Mar 13.
+- **Eyevinn/moqtransport**: Last commit Apr 16.
+
+## Datatracker / MoQ Monthly / wiki
+
+- **No new draft revisions**. WG state unchanged: transport-17, msf-00, loc-02, secure-objects-00 (-01 still **not** on Datatracker), privacy-pass-02, cmsf-00. Notable individual: lite-04 (Apr 9), nmsf-01 (Apr 7), gregoire-moq-msfts-00 (May 6, **Day +3**).
+- **MoQ Monthly**: No new issue. Day +9 since #1.
+- **tobbee/moq-llm-wiki**: No new open issues.
+
+## Interop runner — 20/71/14 — partial recovery (+1 pass / −1 fail vs May 8)
+
+**Bounce-back to the May 4–7 floor.** Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**. moqtail PR #193 still **open** Day +3, so this is not a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet. **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression.
+
+---
 
 # Activity (May 7 06:00 UTC → May 8 06:00 UTC)
 

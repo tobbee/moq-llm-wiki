@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 status: current
 ---
 
@@ -30,7 +30,7 @@ Current state of cross-implementation interoperability testing.
 
 # Interop Runner Matrix
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-08 00:38 UTC): **19 passed / 72 failed / 14 skipped** out of 105 total — **−1 pass / +1 fail** vs the prior 4-day plateau at 20/71/14. **Breaks the 4-day floor downward** — new post-NAB low, returning the matrix to the early Apr 17–21 floor reading of 19. moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) **did not merge** May 7, so this is **not** a moqtail-relay rebuild effect; the most likely cause is another image's rebuild or natural per-run variance. moq-dev/moq merges in the May 7 06:00 UTC → May 8 06:00 UTC window are PR #1387 (revert-of-revert, type-level only) + PR #1386 (Firefox network stats source) — neither is a wire-format change, so the regression is in implementation pairs rather than a spec change. moq-dev/moq PR #1388 (LOC frame format support, OPEN +799/−17) and PR #1389 (stats aggregation, OPEN +1168/−39) opened May 7 — neither merged yet, so neither could affect this matrix. moq-dev/moq PR #1374 (DATAGRAMS Lite05) remains **open** Day +3. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19**.
+The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-09 00:39 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **+1 pass / −1 fail** vs May 8's 19/72/14. **Partial recovery back to the May 4–7 floor** (also the post-PR #145 floor since the May 4 wholesale draft-14→16 migration). moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) is still **open Day +3**, so the bounce isn't a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression. moq-dev/moq PR #1388 (LOC frame format, OPEN +799/−17), PR #1389 (stats aggregation, OPEN +1168/−39), and PR #1374 (DATAGRAMS Lite05, OPEN +1615/−7) all remain unmerged Day +1/+1/+4. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**.
 
 Implementations in the matrix (11):
 1. moq-dev-js (client)

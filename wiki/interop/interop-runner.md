@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **May 8, 2026** | **105** | **19** | **72** | **14** |
+| **May 9, 2026** | **105** | **20** | **71** | **14** |
+| May 8, 2026 | 105 | 19 | 72 | 14 |
 | May 7, 2026 | 105 | 20 | 71 | 14 |
 | May 6, 2026 | 105 | 20 | 71 | 14 |
 | May 5, 2026 | 105 | 20 | 71 | 14 |
@@ -102,6 +103,10 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **May 4**: **24 / 67 / 14** at 00:38 UTC — **flat day** (identical to May 3 reading). Walking arc: 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → **24**. The May 2 21:18 UTC PR #1372 revert (Luke removing the partial fetch_group / Subscription API merged Apr 30) presumably reached the moq-dev-rs / moq-dev-js builder before this run, so any restoration-effect from undoing the broken-API change is already baked in — net zero on the matrix. Other implementation activity in the May 3 02:00 UTC → May 4 00:38 UTC window: moqtail PR #145 (umbrella draft-16) picked up 3 commits May 3 (two race-condition fixes + a logging refactor) but stayed on the un-merged branch; no `main` merges in moq-dev/moq or moq-transport. The matrix has now stabilized at 24 pass for two consecutive days, with one excursion to 25 on May 2.
 
 **May 5**: **20 / 71 / 14** at 00:37 UTC — **major regression: −4 pass / +4 fail vs May 4**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC — the wholesale draft-14→draft-16 migration (216 files, +17,114/−11,744) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05, opened May 4 22:57 UTC) is **not yet merged**, so does not affect this run. No moq-transport `main` merges in the May 4 02:00 UTC → May 5 00:37 UTC window. This is the first time in the May arc the matrix has returned to a 20-pass reading — pair-level diff inspection warranted.
+
+**May 9**: **20 / 71 / 14** at 00:39 UTC — **partial recovery: +1 pass / −1 fail vs May 8's 19/72/14**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**. Bounce-back to the May 4–7 floor (also the post-PR #145 floor). moqtail PR #193 still **open** Day +3, so this is **not** a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC, so no `moq-dev-rs` / `moq-dev-js` rebuild). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression.
+
+**May 8**: **19 / 72 / 14** at 00:38 UTC — **−1 pass / +1 fail vs May 7**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19**. **Breaks the 4-day floor downward**; new post-NAB low matching the early Apr 17–21 floor reading of 19. moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) **did not merge** May 7, so this is not a moqtail-relay rebuild effect; the most likely cause is another image's rebuild or natural per-run variance. moq-dev/moq merges in the May 7 06:00 UTC → May 8 06:00 UTC window are PR #1387 (revert-of-revert, type-level only) + PR #1386 (Firefox network stats source) — neither is a wire-format change, so the regression is in implementation pairs rather than a spec change. **Reverted on May 9** (returns to 20).
 
 **May 7**: **20 / 71 / 14** at 00:38 UTC — **flat day**, third consecutive day at the Apr 17–21 floor reading. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → **20**. PR #1341 (moq-mux backport) merged May 6 01:20 UTC was expected to potentially affect the May 7 report — **no movement observed**, suggesting the moq-mux structural refactor preserved wire interop as designed (catalog-side `Container::Cmaf { init: Bytes }` is the only schema change but is internal to moq-dev's hang catalog format, not a moq-transport wire change). Other May 6 → May 7 implementation activity in the relevant window: moq-dev/moq merged 3 small PRs (#1382 test-fixture cleanup, #1383 watch broadcast-flap fix, **#1385 revert of #1356 insert_track-takes-TrackConsumer**) — all post-May 6 00:36 UTC interop run, but #1385 is a same-day pull-back of yesterday's API change, so the net builder-side delta is zero. moqtail merged #186/#187/#188 (sharmafb upstream-FETCH series, relay code) + #179 (davemevans Firefox docs) — relay code change in #186/#187/#188 (+240 lines) **could** trigger a `moqtail-relay` rebuild that would appear in the May 8 report. **The post-PR #145 floor at 20 pass continues for a third consecutive day** — the matrix is not recovering from the May 5 −4 regression on its own.
 

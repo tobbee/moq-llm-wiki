@@ -2,7 +2,7 @@
 title: "Media Packaging: LOC vs CMAF"
 tags: [concept, media, container]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-05-09
 status: current
 ---
 
@@ -28,9 +28,30 @@ Used via **[[moq-cmsf]]** (draft-ietf-moq-cmsf-00)
 - Well-understood by CDN operators
 - Supports DRM workflows
 
-# The Bridge: Compressed MP4
+# Bridges Between LOC and CMAF
 
-[[luke-curley]] proposed [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) (2026-03-18) as a way to compress CMAF containers, potentially bridging the gap between LOC's low overhead and CMAF's compatibility. His comment: "it's kinda gross, but maybe it's enough to bridge the gap between LOC and CMAF so we don't have a container split based on the use-case."
+Two proposals attempt to bridge LOC's low overhead with CMAF's compatibility — coming from opposite directions:
+
+## Compressed MP4 (spec-side, generic compression)
+
+[[luke-curley]] proposed [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) (2026-03-18) as a way to compress CMAF containers, potentially bridging the gap between LOC's low overhead and CMAF's compatibility. His comment: *"it's kinda gross, but maybe it's enough to bridge the gap between LOC and CMAF so we don't have a container split based on the use-case."* **Approach**: take a full CMAF stream and apply a generic compressor.
+
+## LOCMAF (impl-side, structural compression) — experimental
+
+**Hugo Björs** (Eyevinn) introduced **LOCMAF (Low Overhead CMAF)** in twin PRs ([moqlivemock #79](https://github.com/Eyevinn/moqlivemock/pull/79) +2697/−83 and [warp-player #120](https://github.com/Eyevinn/warp-player/pull/120) +2211/−188, both opened May 7 2026). **Approach**: encode only **non-derivable** CMAF fields as LOC-style key-value pairs, leveraging properties LOC already defines for varint+byte-string encoding.
+
+Key design points:
+- Fields encoded as MoQT/LOC-style KV pairs with LOCMAF IDs.
+- All values aggregated into **one LOCMAF property** rather than one LOC property per CMAF field — *"compatible with LOC while avoiding a large number of new globally coordinated property IDs."*
+- **3 LOCMAF properties**: init segment (reconstructs CMAF `ftyp` + `moov`), full header (reconstructs complete `moof` header, sent at SAP + first object in MoQT group), delta header (differences vs. previous header, with "deleted" semantics resetting to defaults).
+- **Optimizations**: `tfdt.baseMediaDecodeTime` calculated from prior `baseMediaDecodeTime` + sample durations (omitted from wire); single-sample fragments omit sample size (equals payload length).
+
+**Status**: Experimental, both PRs open. Concrete measurements pending Hugo Björs's master's thesis. A separate warp-player branch tests LOCMAF + DRM.
+
+| Approach | Path | Author | Status |
+|----------|------|--------|--------|
+| **compressed-mp4** | Compress full CMAF stream with a generic compressor | [[luke-curley]] | Individual draft Mar 18 |
+| **LOCMAF** | Encode only non-derivable CMAF fields as LOC KV pairs | Hugo Björs (Eyevinn) | Experimental impl May 7 |
 
 # Media Interop (Concrete Wire Format)
 

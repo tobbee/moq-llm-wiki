@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-05-07
+last_updated: 2026-05-09
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -67,7 +67,7 @@ MSF defines how media is organized into MOQT tracks:
 - **PR #152** (Merged Apr 9) - Clarify MSF URL construction and fragment parameters
 - **PR #143** (Merged) - Break the monolith table into separate tables and sections
 - **PR #141** (Merged Apr 9, **reverted Apr 22**) - Add support for InitTracks (reverted by PR #154)
-- **PR #133** (Open) - Add SCTE-35 support and CEA-608/708 accessibility fields
+- **PR #133** (Open since Feb 27) - Add SCTE-35 support and CEA-608/708 accessibility fields. **As of May 8 2026, under spec-restructuring discussion**: avelad (Google, May 7) suggested splitting into 3 PRs; wilaw + gwendalsimon (May 8) escalated to suggest spinning all event-timeline format definitions out of MSF into separate individual drafts (SCTE-35, WebVTT, IMSC1 each as a separate Event-Timeline-format draft); suhasHere (May 8 18:30 UTC) revealed *"I do have initial drafts on..."* the separation. Direction: CEA-608/708 accessibility metadata stays in MSF; SCTE-35 / WebVTT / IMSC1 spin out as individual drafts under an MSF Event-Timeline-Extensions umbrella (parallel to the [[moq-msfts|MSF Packaging Extensions]] pattern).
 - **PR #124** (Merged Apr 9) - Clarify first object in event and media timeline track
 - **PR #122** (Open) - Initial text on zapping
 - **PR #121** (Merged Apr 9) - Pub tracks, logs and metrics
