@@ -2,11 +2,73 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-09
+last_updated: 2026-05-10
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 9 06:00 UTC → May 10 12:00 UTC)
+
+## moq-dev/moq breaks 2-day quiet on `main` — release v0.16.0 ships, 2 fix PRs merge, 4 new PRs opened including first external contributor of May
+
+After a 2-day quiet period on `main` (last commit May 7 18:17 UTC), [[luke-curley]] resumes the merge cadence on May 9 19:27 UTC with the release-train PR plus two small fixes, then opens two **new feature PRs** the same evening. **May 10 morning UTC** brings the **first non-Luke commits to a moq-dev/moq PR queue in May**: `metapox` (taku) opens 2 PRs at 10:58 UTC addressing pre-existing issues #1363 and #1370.
+
+**Merged May 9 evening** (Luke):
+- **[PR #1338](https://github.com/moq-dev/moq/pull/1338) MERGED** May 9 19:27 UTC (+251/−128) — release-train PR shipping `moq-lite v0.16.0`. Auto-bump after the May 7 revert-of-revert (PR #1387 brought back the `insert_track` API rework). Replaced same instant by [PR #1391](https://github.com/moq-dev/moq/pull/1391) (release-train for v0.16.1, opened May 9 19:29 UTC by `moq-bot`).
+- **[PR #1392](https://github.com/moq-dev/moq/pull/1392) MERGED** May 9 21:41 UTC (Luke, +3/−3) — *moq-ffi: fix uniffi-bindgen invocation, bump 0.2.9*. Tooling fix for the FFI bindings generator.
+- **[PR #1393](https://github.com/moq-dev/moq/pull/1393) MERGED** May 9 22:30 UTC (Luke, +1/−1) — *Reduce track group cache eviction timeout from 30s to 5s*. **Single-constant tuning** (Claude Code co-author); reduces idle memory footprint at the cost of more cache rebuilds for slow re-subscribers. Lands within minutes of PR #1394's open — Luke is iterating on cache/catalog hot paths in this batch.
+
+**Opened May 9 evening** (Luke, both still open as of May 10 morning):
+- **[PR #1394](https://github.com/moq-dev/moq/pull/1394) OPENED** May 9 22:04 UTC (Luke, +197/−86) — *Auto-detect catalog format from broadcast name extension*. Catalog format (Hang JSON / Hang CBOR / native) is now inferred from the trailing extension on the broadcast path rather than being passed as a separate flag. **Rationale**: simplifies the publish/subscribe CLI and aligns with the May-7-merged PR #1341 moq-mux backport that gave catalogs first-class container types.
+- **[PR #1395](https://github.com/moq-dev/moq/pull/1395) OPENED** May 9 22:36 UTC (Luke, +162/−42) — *moq-cli: rename `--output` to `--format`, `--name` to `--broadcast`, add `accept` subcommand*. CLI ergonomics breaking change. The new `accept` subcommand presumably lets the CLI handle inbound subscriptions (mirror of `publish`/`subscribe`).
+
+**Opened May 10 morning** by `metapox` (taku) — **first non-Luke contributor to moq-dev/moq in May**:
+- **[PR #1396](https://github.com/moq-dev/moq/pull/1396) OPENED** May 10 10:58 UTC (metapox, +30/−4) — *feat(lite): implement SUBSCRIBE_UPDATE API for JS subscriber and publisher*. Addresses pre-existing **Issue #1363** (May 5, *"@moq/lite: implement SUBSCRIBE_UPDATE in TS subscriber"*).
+- **[PR #1397](https://github.com/moq-dev/moq/pull/1397) OPENED** May 10 10:58 UTC (metapox, +176/−63) — *fix(lite): update in-flight group priorities on SUBSCRIBE_UPDATE*. Addresses pre-existing **Issue #1370** (May 6, *"@moq/lite: in-flight group priorities not updated on SUBSCRIBE_UPDATE"*). **Together** these two PRs close out the May 5–6 SUBSCRIBE_UPDATE backlog that Luke had filed but not implemented. metapox is a new external contributor to moq-dev/moq (no commits in repo history before today).
+
+**Issue activity**:
+- **[Issue #1390](https://github.com/moq-dev/moq/issues/1390) OPENED** May 10 11:07 UTC by **Dan Rossi** — *"Production ES Watch library won't connect to the dev relay"*. **Production deployment friction** — first reported issue from a non-developer outside contributor in months, suggesting at least one real production deployment of `@moq/watch` against a relay other than `relay.cloudflare.com`.
+
+**Open-PR queue depth update**:
+- PR #1374 Lite05 DATAGRAMS (+1615/−7) — Day +6 still open.
+- PR #1388 LOC frame format (+799/−17) — Day +3 still open.
+- PR #1389 stats aggregation — **grew +215 LOC overnight** (was +1168/−39 May 8, now +1383/−50 after May 10 00:12 UTC update). Day +3 still open and actively being iterated on.
+- PR #1394 Auto-detect catalog format — Day +0 open.
+- PR #1395 moq-cli renames + accept — Day +0 open.
+- PR #1396 SUBSCRIBE_UPDATE JS — Day +0 open.
+- PR #1397 SUBSCRIBE_UPDATE in-flight priority — Day +0 open.
+
+**Total open PRs in moq-dev/moq**: **7 feature PRs** (was 3 on May 8). Combined diff size of the 7-PR queue is +4362/−307. Largest open-PR backlog in moq-dev/moq history.
+
+## cloudflare/moq-rs — Suhas's PR #167 (filter-support framework) gets continued attention
+
+[[suhas-nandakumar]]'s **[moq-rs PR #167](https://github.com/cloudflare/moq-rs/pull/167)** (filter-support framework, opened May 6, +12163/−2197) saw an update at May 10 05:03 UTC. **Diff size unchanged** (still the largest open PR in moq-rs at +12163/−2197); the May 10 ping is review iteration rather than a fresh resubmission. moq-rs `main` remains quiet — **27 days since the last commit** (Apr 13).
+
+This PR is the May continuation of Suhas's relay observability work that was abandoned/reformulated in moq-dev/moq PR #853 (closed May 5) and PR #1389 (Luke's reformulation, +1383/−50). The cross-repo pattern: Suhas pushes filter+observability infrastructure into moq-rs while Luke reformulates the same domain inside moq-dev/moq with smaller scope.
+
+## moq-wg/secure-objects — kixelated weighs in on issue #8
+
+**[moq-wg/secure-objects Issue #8](https://github.com/moq-wg/secure-objects/issues/8)** (*"Content protection and encryption"*) gets a new comment from **[[luke-curley]]** May 9 19:08 UTC — first non-author engagement on the thread in many days. The issue tracks the SFrame-based content-protection design for [[moq-secure-objects]]. **No `main` commits**.
+
+## moqtail PR #193 — still blocked Day +4
+
+**[moqtail PR #193](https://github.com/moqtail/moqtail/pull/193)** (sharmafb upstream-FETCH-on-cache-miss [4/n], +248/−132) **still open Day +4**, with a metadata-only update at May 9 20:29 UTC. **mergeable_state=blocked** — a code change is still required for review approval. moqtail `main` itself unchanged since May 6.
+
+## Mailing list — only the auto-generated weekly digest
+
+The IETF [moq] mailing list shows **one new message** in the May 9–10 window:
+- **May 10** — *"[Moq] Weekly github digest (Media Over QUIC Activity Summary)"* (Repository Activity Summary Bot, auto-generated weekly digest). Same cadence as the May 3 digest.
+
+**Zero human-authored messages** May 9–10. Cullen request-sync thread / Magnus Westerlund framing thread / [[suhas-nandakumar]] / [[will-law]] all silent. **Four-day silence stretch** in human discussion (last human message: yu you May 8 about 3GPP SA4 #136 PoC).
+
+## Slack `#moq` — quiet
+
+**No new posts** since yu you's May 8 announcement of the 3GPP SA4 #136 PoC. `#moq-rs`, `#moq-js`, `#libquicr` all unchanged.
+
+## Interop runner — flat 20/71/14 second consecutive day
+
+**2026-05-10 run at 00:40:03 UTC: Pass 20 / Fail 71 / Skip 14 / Total 105 — flat vs May 9 (20/71/14)**. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → 20 → **20**. The May 5 −4 regression that returned the matrix to the Apr 17 floor remains uncorrected; May 8's brief dip to 19 was statistical noise. **Two-day flat at the post-PR #145 floor**; moqtail PR #193 still open so no relay rebuild has touched the matrix; moq-dev/moq's May 9 `main` commits (PRs #1338, #1392, #1393) all merged **after** the May 10 00:40 UTC run, so any builder rebuild from `0.16.0` would only show in the May 11 report.
 
 # Activity (May 8 06:00 UTC → May 9 06:00 UTC)
 

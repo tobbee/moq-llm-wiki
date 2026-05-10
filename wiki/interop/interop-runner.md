@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-09
+last_updated: 2026-05-10
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **May 9, 2026** | **105** | **20** | **71** | **14** |
+| **May 10, 2026** | **105** | **20** | **71** | **14** |
+| May 9, 2026 | 105 | 20 | 71 | 14 |
 | May 8, 2026 | 105 | 19 | 72 | 14 |
 | May 7, 2026 | 105 | 20 | 71 | 14 |
 | May 6, 2026 | 105 | 20 | 71 | 14 |
@@ -105,6 +106,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **May 5**: **20 / 71 / 14** at 00:37 UTC — **major regression: −4 pass / +4 fail vs May 4**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC — the wholesale draft-14→draft-16 migration (216 files, +17,114/−11,744) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05, opened May 4 22:57 UTC) is **not yet merged**, so does not affect this run. No moq-transport `main` merges in the May 4 02:00 UTC → May 5 00:37 UTC window. This is the first time in the May arc the matrix has returned to a 20-pass reading — pair-level diff inspection warranted.
 
 **May 9**: **20 / 71 / 14** at 00:39 UTC — **partial recovery: +1 pass / −1 fail vs May 8's 19/72/14**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**. Bounce-back to the May 4–7 floor (also the post-PR #145 floor). moqtail PR #193 still **open** Day +3, so this is **not** a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC, so no `moq-dev-rs` / `moq-dev-js` rebuild). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression.
+
+**May 10**: **20 / 71 / 14** at 00:40:03 UTC (gh-pages commit `f70964a` 01:04:20 UTC) — **flat 2nd consecutive day** at the post-PR-#145 floor. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → 20 → **20**. moq-dev/moq's May 9 evening merges (PR #1338 release-train shipping `moq-lite v0.16.0` 19:27 UTC; PR #1392 moq-ffi 21:41 UTC; PR #1393 cache eviction 30s → 5s 22:30 UTC) all landed **after** the May 10 00:40 UTC interop run — any `moq-dev-rs` / `moq-dev-js` builder-rebuild effect from `0.16.0` would only show in the May 11 report. moqtail PR #193 still **open Day +4** with `mergeable_state=blocked`, so no `moqtail-relay` rebuild has touched the matrix. The only other in-window implementation activity is moq-rs PR #167 (Suhas filter-framework, +12163/−2197 unchanged) — open and unmerged, so no `moq-rs-draft-16` rebuild either. **The May 5 −4 regression remains structurally uncorrected**; the matrix has been at 20±1 for 6 of 7 May-weekday readings since May 5.
 
 **May 8**: **19 / 72 / 14** at 00:38 UTC — **−1 pass / +1 fail vs May 7**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19**. **Breaks the 4-day floor downward**; new post-NAB low matching the early Apr 17–21 floor reading of 19. moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) **did not merge** May 7, so this is not a moqtail-relay rebuild effect; the most likely cause is another image's rebuild or natural per-run variance. moq-dev/moq merges in the May 7 06:00 UTC → May 8 06:00 UTC window are PR #1387 (revert-of-revert, type-level only) + PR #1386 (Firefox network stats source) — neither is a wire-format change, so the regression is in implementation pairs rather than a spec change. **Reverted on May 9** (returns to 20).
 
