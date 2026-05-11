@@ -2,11 +2,86 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-10
+last_updated: 2026-05-11
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 10 12:00 UTC → May 11 12:00 UTC)
+
+## moq-wg/moq-transport — pre-Town-Hall PR burst surfaces draft-18 / QMux fallback
+
+The [moq-wg/moq-transport](https://github.com/moq-wg/moq-transport) tracker — quiet for several days under the May 6–10 mailing-list silence — receives **7 PRs and 3 issue threads of attention on May 11 00:27–05:53 UTC**, the day before the **May 12 MOQ Town Hall** (Dan Rayburn / [[will-law]] zoom session). The burst is dominated by **[[alan-frindell]] and Victor Vasilyev (vasilvv)** rebasing and reopening editorial PRs originally cut around the Apr 27 interim, plus two newly-opened PRs and one substantive cross-repo signal:
+
+**Newly-opened PRs (May 11 only)**:
+- **[PR #1628](https://github.com/moq-wg/moq-transport/pull/1628) OPENED** May 11 01:29 UTC by **[[alan-frindell]]** (+4/−3, single file, `mergeable_state=blocked`) — *"Add QMux framing for moqt-18 over TLS+TCP"*. **Body**: *"When the moqt-18 ALPN is negotiated over TLS+TCP, the underlying framing uses QMux version 1."* Fixes **[Issue #1626](https://github.com/moq-wg/moq-transport/issues/1626)** (sharmafb, May 1 — version negotiation for QMUX). **Two firsts in one PR**:
+  - **First public mention of `moqt-18` ALPN** — implies the WG editors are already cutting next-draft text for the post-interim consensus. Up to now the active draft is transport-17 (Apr 9).
+  - **First spec-side commitment to MoQ-over-TLS+TCP via QMux** — confirms the "QUIC fallback on networks that block UDP" path that has been informally discussed since the [[draft-mcquistin-moq-qmux]] work (and the IETF QMux WG draft `draft-ietf-quic-qmux`).
+  - **[[lucas-pardue]] (Cloudflare) comment May 11 01:57 UTC**: cites [QMux draft section 8.1-2](https://quicwg.org/qmux/draft-ietf-quic-qmux.html#section-8.1-2) — *"ALPN protocol identifiers identify the application protocol in use. Application protocols that use QMu[x] ..."* — implying afrind's `moqt-18` ALPN-over-TLS+TCP needs to be a **QMux-suffixed** identifier (not a plain `moqt-18`). First [[lucas-pardue]] comment on moq-transport in months — Cloudflare's QMux co-author tagging-in for ALPN naming review.
+- **[PR #1629](https://github.com/moq-wg/moq-transport/pull/1629) OPENED** May 11 05:47 UTC by **vasilvv** (+7/−0, single file, `mergeable_state=clean`) — *"Clarify definition of scope"*. Fixes **[Issue #1432](https://github.com/moq-wg/moq-transport/issues/1432)** (michalhosna, Mar 14 — define session reuse rules / improve scope definition). Closes a long-standing scope ambiguity for whether two URIs may share a session.
+
+**Older PRs rebased/refreshed for Town Hall** (all `afrind` + `vasilvv`, originally opened Apr 14–30):
+- **[PR #1605](https://github.com/moq-wg/moq-transport/pull/1605)** (vasilvv, Apr 14, +112/−77, `mergeable_state=dirty`) — *"Split DELIVERY_TIMEOUT into two types of timeout"*. Updated May 11 04:28 UTC with *"Addressed the comments."* (vasilvv). Splits the current `DELIVERY_TIMEOUT` into `OBJECT_DELIVERY_TIMEOUT` (the existing semantic, more precisely defined) and a **new `SUBGROUP_DELIVERY_TIMEOUT`** for subgroups that have been queued but not yet fully delivered. Fixes Issue #667.
+- **[PR #1617](https://github.com/moq-wg/moq-transport/pull/1617)** (afrind, Apr 28, +85/−73, `mergeable_state=dirty`) — *"Allow GOAWAY on request streams to migrate individual requests"*. Adds per-request GOAWAY with a zero-length URI (control-stream GOAWAY format minus Request ID); on receipt, the endpoint **re-issues the request on a session at the specified URI** and closes the old stream. Fixes Issue #1481. Updated May 11 05:20 UTC.
+- **[PR #1618](https://github.com/moq-wg/moq-transport/pull/1618)** (afrind, Apr 28, +22/−10, `mergeable_state=clean`) — *"Add FIRST_OBJECT bit to SUBGROUP_HEADER type"*. Adds bit 6 (0x40) to signal that the subgroup contains the first object published in the subgroup by the original publisher. **The SUBGROUP_HEADER type-format byte expands from `0b00X1XXXX` to `0b0XX1XXXX`** — all valid type values still fit in a 1-byte varint. Updated May 11 04:39 UTC.
+- **[PR #1621](https://github.com/moq-wg/moq-transport/pull/1621)** (afrind, Apr 28, +8/−1, `mergeable_state=clean`) — *"Forbid relays from lying about LARGEST_OBJECT"*. *"If we want to serve cached objects in response to SUBSCRIBE, lying is not the correct approach."* Fixes Issue #1386. Updated May 11 00:27 UTC.
+- **[PR #1625](https://github.com/moq-wg/moq-transport/pull/1625)** (suhasHere, Apr 30, +132/−1, `mergeable_state=blocked`) — *"Rebased and Update Security Considerations PR from Magnus Westerlund"*. Rebases and extends [[magnus-westerlund]]'s original **PR #1455** (Security Considerations text). First substantive Magnus-Westerlund-related activity on moq-transport since [[magnus-westerlund]]'s May 4 framing messages went unanswered on-list. Updated May 11 01:09 UTC.
+
+**Issue threads** (all received fresh comments May 11 00:27–03:09 UTC):
+- **[Issue #1603](https://github.com/moq-wg/moq-transport/issues/1603)** (martinduke, Apr 10 — *"What is the use case for required-request-id"*, 12 comments) — **[[alan-frindell]] May 11 01:33 UTC** quotes Cullen's mailing list post enumerating the use cases: *"1) Swap tracks. In a video conference, a subscriber is subscribed to track for Alice and Bob's video and is watching Alice with Bob paused, but wants to pause Alice and unpause the track with Bob. It's pretty common to want to ensure to pause the current one ..."* Brings the Apr 27 interim consensus (*"remove required-request-id from draft 18 and fix Joining Fetch (if necessary?)"* — [[ian-swett]]) into direct collision with Cullen's swap-track use case. Pre-Town-Hall positioning.
+- **[Issue #1614](https://github.com/moq-wg/moq-transport/issues/1614)** ([[luke-curley]], Apr 27 — *"(JOINING) FETCH + SUBSCRIBE prioritization"*) — gets a Day +14 ping at May 11 03:09 UTC. Luke's original framing: *"Effectively, I want to race to determine if it's faster to: download all of the current group (at network speed), or wait for the next group. SUBSCRIBE filter=CurrentGroup order=DESC does this perfectly. I don't think it's possible in the current draft."*
+- **[Issue #1582](https://github.com/moq-wg/moq-transport/issues/1582)** (vasilvv, Mar 30 — *"Caching and propagation of REQUEST_ERRORs"*) — Day +42 ping at May 11 03:09 UTC.
+
+**Read of the pattern**: This is the standard pre-meeting cleanup ahead of a public Town Hall — afrind and vasilvv are rebasing the stack of Apr 27 interim PRs so that the Town Hall presenters can point to concrete editorial PR diffs for **draft -18 candidate text** rather than just the Apr 27 minutes. The PR #1628 `moqt-18` ALPN reference is the first public spec-side artifact of -18 work.
+
+## moq-wg/msf — Issue #8 (Content protection) heads for CMSF migration
+
+**[moq-wg/msf Issue #8](https://github.com/moq-wg/msf/issues/8)** (*"Content protection and encryption"*) gets a Day +2 follow-up at **May 11 02:54 UTC** from **vasilvv**: *"This should probably be moved to CMSF repo, since that's where the text about content protection was moved."* This caps a 3-comment sequence:
+- **May 9 19:08 UTC [[luke-curley]] (kixelated)**: first non-author engagement on this thread in many days (the wiki noted this in the May 10 entry).
+- **May 9 19:08 UTC [[suhas-nandakumar]]**: *"@wilaw can we close this issue?"* — Suhas (the issue's effective steward) asks to close it.
+- **May 11 02:54 UTC vasilvv**: pushes back — **migrate to CMSF** rather than close. Aligns with the broader Apr–May 2026 spec-restructuring direction where event-timeline (May 8 wilaw/gwendalsimon/suhasHere on PR #133) and content-protection text are migrating **out of MSF** into format-specific WG documents.
+
+## Implementations — all-around quiet day on `main`
+
+The May 10 12:00 UTC → May 11 12:00 UTC window is the **first full day of `main`-side quiet across all tracked impl repos in May**:
+
+- **moq-dev/moq**: No new commits since [[luke-curley]]'s May 9 22:30 UTC PR #1393 merge (track group cache eviction 30s → 5s). **Day +1 of post-burst quiet.** Open-PR queue unchanged at 7 PRs / +4362/−307: PR #1374 Lite05 DATAGRAMS Day +7, PR #1388 LOC frame format Day +4, PR #1389 stats aggregation Day +4 (no further LOC growth), PR #1394 catalog-format-from-extension Day +1, PR #1395 moq-cli renames Day +1, PR #1396 metapox SUBSCRIBE_UPDATE JS Day +1, PR #1397 metapox in-flight priorities Day +1.
+- **cloudflare/moq-rs**: No new commits; **PR #167** ([[suhas-nandakumar]] filter-support framework, +12163/−2197) untouched since May 10 05:03 UTC. Day +28 quiet on `main`.
+- **moqtail/moqtail**: No new commits; **PR #193** [4/n] (sharmafb upstream FETCH, +248/−132, `mergeable_state=blocked`) untouched since May 9 20:29 UTC. Day +5 stuck.
+- **video-dev/moq-js**: No new commits since Feb 17.
+- **google/quiche** (`quiche/quic/moqt`): No new commits since May 5 01:02 UTC (Day +6 quiet post-Vasiliev parser-rewrite).
+- **birneee/quiche_moq**: No new commits since Mar 13.
+- **Eyevinn/moqlivemock / warp-player**: LOCMAF PRs #79/#120 unchanged Day +4.
+- **Eyevinn/moqtransport**: No new commits since Apr 16.
+- **Quicr/cat-rs**, **Quicr/catapult**: No new commits since May 7 04:07 UTC.
+
+## Slack — Mike English creates `#moq-interop-runner` channel; Luke flames WebRTC
+
+Two new `#moq` posts in the May 9 11:00 UTC → May 11 12:00 UTC window:
+
+- **Mike English (Cloudflare/englishm) May 9 18:23 CEST (16:23 UTC)**: *"Catching up on a bunch of things.. I created `#moq-interop-runner` as a place to discuss interop runner issues"* — **new channel `C0B2KQLJGN7`** dedicated to the interop runner. **Splits interop-runner discussion off `#moq`** for the first time; previously all interop-runner queries (test failures, PR review for new clients like `mlmtest`, draft-target debates) were inline in `#moq`. Worth probing in future updates.
+- **[[luke-curley]] May 9 20:13 CEST (18:13 UTC)**: *"btw I started a WebRTC flame war if anybody missed it: https://news.ycombinator.com/item?id=48051951"* — Hacker News thread (post-Luke's "MoQ vs WebRTC" or similar provocation). Reactions: `:smiling_imp:` x2. **First Luke off-spec Slack post in May**; signals public-discourse positioning ahead of the May 12 Town Hall.
+
+`#moq-rs`, `#moq-js`, `#libquicr` all unchanged.
+
+## Mailing list — Day +5 of human silence
+
+The IETF [moq] mailing list shows **no new human-authored messages** since [[yu-you]]'s May 8 11:52 CEST 3GPP SA4 #136 PoC announcement. Only the auto-generated May 10 weekly digest in the May 6–11 window — **5-day human-silence stretch**, the longest in May. [[cullen-jennings]] (request-sync, May 1), [[magnus-westerlund]] (framing, May 4), [[suhas-nandakumar]], [[will-law]], [[ian-swett]], [[alan-frindell]] all silent on-list. **All the May 11 activity is happening on the GitHub tracker**, not the mailing list — consistent with the Town Hall + GitHub-issue-driven editorial cadence the WG has shifted to since the Apr 27 interim. The May 12 MOQ Town Hall is the awaited unlock event.
+
+## Datatracker — no new revisions
+
+No new draft revisions in the May 7–11 window. WG state unchanged: transport-17, msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00. Notable individual drafts: lite-04 (Apr 9), nmsf-01 (Apr 7), qlog-moq-events-06 (Mar 16), **gregoire-moq-msfts-00** (May 6, **Day +5**, still no on-list announcement). The PR #1628 reference to **`moqt-18` ALPN** suggests the editors are working draft -18 candidate text on GitHub ahead of the datatracker submission.
+
+## MoQ Monthly — still on #1
+
+No new MoQ Monthly issue. Archive: #0 (Mar 3) + #1 *"NAB, interoperability, and a whole lot of catching up"* (Apr 30). **Day +11 since #1.**
+
+## tobbee/moq-llm-wiki — no new issues
+
+No new open issues. (3 closed issues remain.)
+
+---
 
 # Activity (May 9 06:00 UTC → May 10 12:00 UTC)
 
