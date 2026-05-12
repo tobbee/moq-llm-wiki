@@ -2,11 +2,168 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-11
+last_updated: 2026-05-12
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 11 12:00 UTC → May 12 01:00 UTC)
+
+## moq-wg/moq-transport — **6 PRs MERGED in 30 minutes**, draft-18 editorial sprint lands ahead of Town Hall
+
+The May 12 MOQ Town Hall (Dan Rayburn, 13:00 ET / 17:00 UTC) is **~17 hours away** as this update is written. In a single 30-minute window (**May 11 21:32–22:02 UTC**), [[alan-frindell]] merged **6 editorial PRs** into [moq-wg/moq-transport](https://github.com/moq-wg/moq-transport) `main` — the **largest single-sitting moq-transport editorial sprint in the wiki record**:
+
+| Time (UTC) | PR | Title | Fixes | LOC |
+|---|---|---|---|---|
+| 21:32:51 | **[#1544](https://github.com/moq-wg/moq-transport/pull/1544)** | *Improve Startup Latency and 0-RTT* | #420, #8 | new sections on reducing startup latency and 0-RTT |
+| 21:41:22 | **[#1615](https://github.com/moq-wg/moq-transport/pull/1615)** | ***Remove Required Request ID*** | **#1603** | Removes Required Request ID (keeps Request ID for individual-request operations). **Materializes Apr 27 interim consensus.** |
+| 21:53:59 | [#1617](https://github.com/moq-wg/moq-transport/pull/1617) | *Allow GOAWAY on request streams to migrate individual requests* | #1481 | +85/−73 |
+| 21:55:55 | [#1618](https://github.com/moq-wg/moq-transport/pull/1618) | *Add FIRST_OBJECT bit to SUBGROUP_HEADER type* | — | +22/−10 (bit 6 / 0x40) |
+| 21:56:50 | [#1621](https://github.com/moq-wg/moq-transport/pull/1621) | *Forbid relays from lying about LARGEST_OBJECT* | #1386 | +8/−1 |
+| 22:02:14 | [#1629](https://github.com/moq-wg/moq-transport/pull/1629) | *Clarify definition of scope* | #1432 | +7/−0 |
+
+**PR #1615 is the headline merge** — it lands [[ian-swett]]'s Apr 27 interim consensus (*"remove required-request-id from draft 18 and fix Joining Fetch"*) into `main`. It **closes [Issue #1603](https://github.com/moq-wg/moq-transport/issues/1603)** (martinduke, Apr 10 — *"What is the use case for required-request-id"*) and forwards the remaining "explore dependency structures between requests" piece to **[PR #1519](https://github.com/moq-wg/moq-transport/pull/1519)** (vasilvv, *"Improve design of requests blocking on other requests"*). afrind's closing comment on #1603: *"This is now tracked in #1519"*.
+
+This is the **first time** in 2026 that `main` advances 6 substantive PRs in one editorial sitting; afrind has been clearly waiting for this moment, with all 5 of the Apr 14–30 stack-of-PRs rebased + reviewed + green-lit overnight on May 10/11 so they could land in one sequence pre-Town-Hall.
+
+### moq-transport — Open PRs still working draft-18 candidate text
+
+After the merge sprint, the open PR queue narrows to 4 substantive editorial PRs + 2 surrounding "spinoff" PRs:
+
+- **[PR #1628](https://github.com/moq-wg/moq-transport/pull/1628)** ([[alan-frindell]], May 11, +11/−7, `mergeable_state=clean`) — *"Add QMux framing for moqt-18 over TLS+TCP"*. Updated again **May 11 22:43 UTC** (after the merge sprint), folding in [[lucas-pardue]]'s May 11 01:57 UTC QMux ALPN-naming feedback. **Slack confirmation: [[alan-frindell]] May 11 22:53 UTC (00:53 CEST May 12)** in `#moq`: *"For anyone interested in draft-18 interop over QMux, we intend to use qmux-01 framing."* — first explicit `qmux-01` framing target announced for draft-18 interop.
+- **[PR #1627](https://github.com/moq-wg/moq-transport/pull/1627)** ([[ian-swett]], May 3, +44/−139, `mergeable_state=unknown`) — *"SUBSCRIBE with Joining Fetch"*. Body: *"A different take on #1604 that adds two new modes to SUBSCRIBE instead of allowing Joining FETCH to be sent on the SUBSCRIBE stream."* **Competing approach to Joining FETCH**, sized as a large removal (+44 / **−139** = net-shrink). Fixes #1039, #1313, #1602, #1612. Updated May 11 20:42 UTC. This is the **alternative being surveyed below**.
+- **[PR #1623](https://github.com/moq-wg/moq-transport/pull/1623)** ([[ian-swett]], Apr 30, +0/−10, `mergeable_state=dirty`) — *"Remove Request ID from GOAWAY"* (reverts #1559). Updated May 11 22:19 UTC, now made redundant on most of its lines by the just-merged #1617 (GOAWAY on request streams); awaits cleanup.
+- **[PR #1625](https://github.com/moq-wg/moq-transport/pull/1625)** (suhasHere, Apr 30, +132/−1, `mergeable_state=blocked`) — *"Rebased Security Considerations PR from Magnus Westerlund"*. Updated May 11 23:03 UTC after the merge sprint; rebased on top of the new `main`.
+- **[PR #1605](https://github.com/moq-wg/moq-transport/pull/1605)** (vasilvv, Apr 14, +112/−77) — *"Split DELIVERY_TIMEOUT into two types of timeout"*. Updated May 11 23:56 UTC.
+- **[PR #1591](https://github.com/moq-wg/moq-transport/pull/1591)** ([[ian-swett]], Apr 2, +84/−0, `mergeable_state=dirty`) — *"RFC: Add flow control for Subscriptions"*. Adds `MAX_SUB_STREAMS` and `MAX_SUB_BYTES` flow control and introduces `SUBGROUP_RESET`. Fixes #869. Updated May 11 22:18 UTC.
+- **[PR #1518](https://github.com/moq-wg/moq-transport/pull/1518)** (mzanaty, Mar 2, +265/−16) — *"Filters with reduced scope, no location or group filter"*. Adds **range filters** for subgroup ID, object ID, priority, and property; track filter under subscribe namespace section; setup options + parameters for new filters. Updated May 11 16:27 UTC — first activity in weeks.
+- **[PR #1519](https://github.com/moq-wg/moq-transport/pull/1519)** (vasilvv) — *"Improve design of requests blocking on other requests"*. Updated May 11 21:40 UTC. Now the **designated tracker** for the "dependency structure between requests" use cases (swap tracks, ABR, pause/unpause) that the removed required-request-id was supposed to address.
+
+## Slack `#moq` + mailing list — **afrind opens Joining FETCH Survey, mailing list reactivates after 5-day silence**
+
+After **5 days of human silence** on the IETF [moq] mailing list (last human post: [[yu-you]] May 8 11:52 CEST), May 11 sees a coordinated WG-wide poll campaign:
+
+### Slack survey (May 11 18:02–18:15 UTC)
+
+**[[alan-frindell]] May 11 20:02 CEST (18:02 UTC)** in `#moq`:
+
+> Let me put the rest here [moved from a previous thread]
+> 
+> **If there's a unified data plane for past and future:**
+> 4.1 Past data must be flow controlled in all cases (Y/N)
+> 4.2 Past data must be flow controlled only if before the current group (Y/N)
+> 4.3 Relays ____ use "Fill" semantics to retrieve all requested objects not in cache, when no existing operation will deliver them (e.g. upstream subscription). (MAY, MUST, MUST NOT)
+
+**afrind May 11 20:03 CEST** (second survey question):
+
+> Answer in thread
+> ***I am willing to delay WGLC and RFC by ___ months to achieve a more preferable Joining FETCH outcome:***
+> 0
+> 1
+> 2
+> 3
+> 4+
+
+[[suhas-nandakumar]] May 11 20:24 CEST: *"wonder a survey monkey link or something be helpful ?"*. afrind 20:29 CEST: *"Eh, email will let people express their nuanced feelings and was less effort"*. **afrind 20:01 CEST**: *"Brutally killed by meetecho!"* — implies he had been trying to run a poll on Meetecho but it failed.
+
+### Mailing list reactivates
+
+The **5-day human-silence stretch** (May 6–10, only the auto-generated May 10 weekly digest) ends May 11 with **4 new thread starters / responses**:
+
+- **May 11 — afrind: *"[Moq] Joining FETCH Survey"*** — mailing-list-posted version of the Slack questions above. *"Now available as list email, thanks for your participation."*
+- **May 11 — martinduke: *"[Moq] London Agenda requests"*** — solicits agenda items for the **June 9–10 London interim/interop** ([[alan-frindell]] May 12 00:56 CEST `#moq`: *"interop is 6/9-10"*).
+- **May 11 — Mo Zanaty: *"[Moq] Re: Joining FETCH Survey"***
+- **May 11 — martinduke: *"[Moq] Re: Joining FETCH Survey"***
+- **May 12 — martinduke: *"[Moq] On other use cases"*** — Day-of-Town-Hall thread starter
+- **May 12 — Mo Zanaty: *"[Moq] Re: On other use cases"***
+
+The pattern is clear: the WG decompressed the 5-day silence into a **coordinated pre-Town-Hall Joining FETCH survey + agenda call** the evening before the public May 12 event.
+
+## moq-wg/msf — **Suhas opens 4 new PRs in 1 hour evening May 11** (PRs #156–159)
+
+**[[suhas-nandakumar]] May 11 22:21–23:08 UTC** opens 4 new MSF PRs targeting the open MSF backlog:
+
+- **[PR #156](https://github.com/moq-wg/msf/pull/156) May 11 22:21 UTC** (+7/−3, `mergeable_state=clean`) — *"Make MOQT Object to Stream mapping implementation-specific"*. Body: *"@wilaw @kixelated does this address #148"*. Relaxes spec language requiring specific object→stream mapping; pushes the decision into implementation choice.
+- **[PR #157](https://github.com/moq-wg/msf/pull/157) May 11 22:29 UTC** (+10/−13) — *"Clarify Group numbering requirements for restarts (#147)"*.
+- **[PR #158](https://github.com/moq-wg/msf/pull/158) May 11 22:41 UTC** (+63/−56) — *"Replace delta update fields with ordered operations array"* (addresses #145). Body: *"If we think we need a diff solution, we can add operation id and do it in the increasing order too?"*
+- **[PR #159](https://github.com/moq-wg/msf/pull/159) May 11 23:08 UTC** (+40/−1) — *"Add catalog compression support via track name suffix"*. Body: *"@wilaw @vasilvv thoughts on this ?"* — adds a track-name suffix mechanism for advertising catalog compression (parallels Luke's [moq-dev/moq PR #1394](https://github.com/moq-dev/moq/pull/1394) auto-detect-catalog-format-from-broadcast-name-extension landed May 9).
+
+Plus active discussion on already-open MSF issues:
+
+- **[Issue #139](https://github.com/moq-wg/msf/issues/139)** — *"Required/optional fields per role"* — [[luke-curley]] (kixelated) May 11 23:23 UTC: proposes nested-object catalog structure: *"It's clearer if you can group associated fields. Instead of a flat blob of K/V pairs whose meaning/availability changes based on the value of other fields"* — gives example `"container": {"kind": "cmaf", "initData": "..."}`.
+- **[Issue #129](https://github.com/moq-wg/msf/issues/129)** ([[yu-you]]) — *"Question to FORWARD parameter and catalog publishing racing"* — [[suhas-nandakumar]] May 11 21:50 UTC explains BiDi stream semantics around PUBLISH+FORWARD=1.
+- **Issue #102, #111** — minor activity (advertising from offsite, tiled rendering).
+
+[[suhas-nandakumar]] is now **clearly in MSF spec-curator mode** — splitting the omnibus document into focused PRs, with catalog/operations/object-to-stream/restart-numbering all factored into individual PRs the same evening.
+
+## moq-dev/moq — **Day +2 of `main`-quiet, but FIVE external-contributor PRs land in 24h**
+
+Luke Curley's `main` is still **Day +2 quiet** (no new commits since May 9 22:30 UTC PR #1393 merge). But the **open-PR queue grows by 5 new external-contributor PRs** in the May 11 window:
+
+- **[PR #1402](https://github.com/moq-dev/moq/pull/1402) May 12 00:04 UTC** by **SteveMcFarlin** (+33/−22) — *"moq-gst: Fix MoqSink CAPS handling and per-pad EOS aggregation"*. **FIRST contribution to moq-dev/moq from SteveMcFarlin** (0 prior commits). Two correctness fixes in `sink/imp.rs`: CAPS events now passed to `event_default()` after configuring background task; EOS tracking is per-pad instead of single counter. SteveMcFarlin is the GStreamer/MoQ integrator (`moq-gst`) — a **second consecutive external contributor first** after metapox May 10.
+- **[PR #1401](https://github.com/moq-dev/moq/pull/1401) May 11 20:41 UTC** by **skirsten** (4 prior commits) (+243/−139) — *"Refactor/video pacing rAF"*. Consolidates video frame pacing into the renderer's `requestAnimationFrame` loop. Removes the dual-pacing (decoder `Sync.wait()` setTimeout race + single-shot rAF in renderer).
+- **[PR #1400](https://github.com/moq-dev/moq/pull/1400) May 11 20:21 UTC** by **skirsten** (+17/−12) — *"fix: stop leaking PromiseReactions in consumer loops"*. `Promise.race` against never-settling Promises (`Effect#closed`, `Effect#cancel`) was leaking `.then` reactions; each leaked reaction's closure retains the awaiter state.
+- **[PR #1399](https://github.com/moq-dev/moq/pull/1399) May 11 20:18 UTC** by **skirsten** (+3/−0) — *"fix(watch): close MultiBackend's sync and sources"*. `MultiBackend.close()` only closed its own `#runElement` signal, leaving Sync and two Source instances alive — surfacing as *"Signals was garbage collected without being closed"* warnings.
+- **[PR #1398](https://github.com/moq-dev/moq/pull/1398) May 11 07:21 UTC** by **Qizot** (3 prior commits) (+197/−6) — *"Expose track name and used/unused activity signals"*. Adds `name()`, `used()`, `unused()` to `MoqTrackProducer` and `MoqMediaProducer` so FFI consumers can observe subscriber activity. Mirrors the new API in the Python moq-lite bindings.
+
+Plus **metapox PR #1396** updated May 11 08:33 UTC. **moq-dev/moq is suddenly the most externally-contributed-to MoQ impl repo** — May 10–11 sees 1 first-time contributor (SteveMcFarlin), 1 day-1 contributor (metapox May 10), and 2 active recurring external contributors (skirsten, Qizot) all moving on the same 24h window. The day's PR queue grows to **~12 open PRs**, the deepest in repo history.
+
+## moqtail/moqtail — **PR #193 [4/n] MERGED** after Day +5 stuck; upstream FETCH series complete
+
+**[PR #193](https://github.com/moqtail/moqtail/pull/193)** (sharmafb, *"[upstream fetches] Finish implementation of sending FETCH requests upstream for cache misses [4/n]"*, final stats: +303/−158) **MERGED May 11 22:37:32 UTC** after **Day +5 stuck with `mergeable_state=blocked`** — the longest non-Luke stall in moqtail draft-16 era now unblocked. PR #192 (release-bot triggered) is now open. This **completes the [N/n] upstream-FETCH series** (PRs #186 [1/n], #187 [2/n], #188 [3/n] all landed May 6, #193 [4/n] lands May 11). moqtail-relay now supports the full upstream-FETCH path for cache misses.
+
+## cloudflare/moq-rs — Day +29 quiet on `main`; PR #167 untouched
+
+[cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) `main` is **Day +29 quiet** (no commits since Apr 13). **PR #167** ([[suhas-nandakumar]] filter-support framework, +12163/−2197) is untouched since May 10 05:03 UTC — Suhas's attention on May 11 evening went to MSF PRs #156–159 instead of moq-rs review.
+
+## Eyevinn/warp-player — Dependabot burst
+
+[Eyevinn/warp-player](https://github.com/Eyevinn/warp-player) sees a **batch of 6 dependabot PRs** (PRs #121–127) opened May 11 23:33–23:35 UTC for routine dependency bumps (eslint 9→10, typescript 5.9→6.0, commitlint 20.5→21, deps groups). LOCMAF PR #120 ([[hugo-bjoers]]) unchanged Day +5. moqlivemock PR #79 unchanged Day +5.
+
+## Slack `#moq-interop-runner` — **OpenMOQ fork incident: Lucas Pardue calls out OpenMOQ governance, Giovanni Marzot takes blame, Will Law responds**
+
+The new **`#moq-interop-runner` channel** (created May 9 18:09 CEST by Mike English) saw — in its first 48 hours — a **major community-governance incident** that surfaced during the May 9–10 window but went uncaptured in the May 11 update because the wiki only learned of the channel's existence via Mike English's May 9 18:23 CEST `#moq` announcement.
+
+**Timeline**:
+- **May 9 18:09 CEST**: Mike English creates `#moq-interop-runner` channel (`C0B2KQLJGN7`).
+- **May 9 18:20 CEST**: Mike English notices `openmoq/moq-interop-runner` — a **fork in the OpenMOQ org with cloned issues** mirroring the upstream `englishm/moq-interop-runner` issues. Asks Giovanni Marzot (OpenMOQ): *"what's going on here?"*
+- **May 9 18:23 CEST**: [[giovanni-marzot]]: *"just running local fork to get current view of interop situation.. trying out some improvement ideas happy to feed back."*
+- **May 9 18:24 CEST**: Mike English: *"I'm just curious about the cloned issues. That seems like it could confuse people."*
+- **May 9 18:27 CEST**: Giovanni: *"over zealous claude perhaps.. i was looking to address some of them."*
+- **May 10 15:48 CEST**: Mike English follows up: *"over zealous"*.
+- **May 10 16:35 CEST**: Mike English: *"I'm hoping this isn't what it looks like because forking an interop runner would be extremely counterproductive."*
+- **May 10 16:48 CEST**: Giovanni: *"yes .. claude overstepped.. apologies. I only said remove the references to the links and ghcr .. i want a fully running local copy. I can make this private or move it to my personal github if it is cause grief."*
+- **May 10 17:37 CEST**: Giovanni: *"ok - I just flipped that fork private for now. I had run this by Alan ever so briefly but I am not sure I (or anyone) had thought through the impact of it being in openmoq vs my personal gh or whatever."*
+- **May 10 19:52 CEST**: [[lucas-pardue]] (Cloudflare) joins the channel.
+- **May 10 19:57 CEST**: **[[lucas-pardue]] escalates**: *"@willlaw et al this is not a good look for OpenMoQ. Taking IETF work, forming pay to participate consortia, and then coopting running code from others. Thats not how we develop standards and a healthy ecosystem. I expect to see a post mortem on this, better governance and better community engagement."*
+- **May 10 20:18 CEST**: Giovanni: *"@lucasp 2 things I have to add quickly as this seems to be spinning out. I did this independently to fix issues and feed them back. I am also unpaid by anyone and working on a volunteer capacity. This was not an official openmoq activity and that was my mistake alone."*
+- **May 10 20:22 CEST**: [[lucas-pardue]]: *"Mistakes happen, no individual should take any blame. But this is something happening under the OpenMoQ org and needs to be addressed. There are many other participants past, present, and future. OpenMoQ is not the universe."*
+- **May 10 20:26 CEST**: Giovanni: *"In this case it was entirely unilateral and I take the full blame."*
+- **May 10 21:02 CEST**: **[[will-law]] long response (5 paragraphs)**: *"@lucasp - I was just informed about this. I have asked Giovanni to retract all changes, which he has done. He has also apologized multiple times. This is not an official OpenMOQ action. OpenMOQ is not in the business of 'co-opting code from others'. ... Your point about code governance is fair - we need an improved system for validating code provenance before it is merged into any repo managed by openmoq. I'll ask the dev team to institute that next week. ... I'd appreciate a little more empathy and a little less vitriol for those with whom you share the trenches."*
+
+**Implications**:
+- **First public OpenMOQ governance incident** captured in any tracked source. The OpenMOQ consortium (a paid-membership industry consortium converting IETF MoQ into productizable open-source) is now publicly committed to **adding code-provenance review before merge into openmoq-org repos** ([[will-law]] *"I'll ask the dev team to institute that next week"*).
+- **Claude as a community-friction vector**: Giovanni cites *"over zealous claude perhaps"* and *"claude overstepped"* — the **fork-then-clone-issues was an LLM-assisted action that went further than the human contributor intended**. First MoQ-ecosystem record of an LLM-tooling-driven community incident.
+- **Lucas Pardue's "pay to participate consortia" framing** characterizes OpenMOQ specifically as **converting IETF work into commercial gating**, which the WG has not previously had to confront publicly. This is the **deepest critique of OpenMOQ's IETF-relation posture** on the public record.
+- **The new `#moq-interop-runner` channel** is therefore not a quiet operational channel but **a higher-visibility venue** than `#moq` for cross-org governance discussion — to be tracked closely.
+- **For the wiki**: `openmoq/moq-interop-runner` fork is now private; cloned issues are retracted. The episode is closed but the policy fallout (OpenMOQ code-provenance review) is the carry-forward.
+
+## Datatracker — no new revisions; draft-18 still GitHub-only
+
+No new draft revisions in the May 7–12 window. WG state unchanged: transport-17 (Apr 9), msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00. Notable individual: lite-04 (Apr 9), nmsf-01 (Apr 7), qlog-moq-events-06 (Mar 16), **gregoire-moq-msfts-00** (May 6, **Day +6**, still no on-list announcement).
+
+PR #1628's `moqt-18` ALPN reference + the 6-PR `main` sprint mean **draft -18 candidate text is now effectively assembled on GitHub `main`**, awaiting an editor cut. The next datatracker submission is the long-anticipated -18.
+
+## MoQ Monthly — still on #1, Day +12
+
+No new MoQ Monthly issue. Archive: #0 (Mar 3) + #1 *"NAB, interoperability, and a whole lot of catching up"* (Apr 30). **Day +12 since #1**, longest gap to date.
+
+## tobbee/moq-llm-wiki — no new open issues
+
+No new open issues (3 closed: #1, #2, #3).
+
+---
 
 # Activity (May 10 12:00 UTC → May 11 12:00 UTC)
 

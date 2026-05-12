@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-11
+last_updated: 2026-05-12
 status: current
 ---
 
@@ -42,7 +42,8 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **May 11, 2026** | **105** | **21** | **70** | **14** |
+| **May 12, 2026** | **105** | **20** | **71** | **14** |
+| May 11, 2026 | 105 | 21 | 70 | 14 |
 | May 10, 2026 | 105 | 20 | 71 | 14 |
 | May 9, 2026 | 105 | 20 | 71 | 14 |
 | May 8, 2026 | 105 | 19 | 72 | 14 |
@@ -107,6 +108,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **May 5**: **20 / 71 / 14** at 00:37 UTC — **major regression: −4 pass / +4 fail vs May 4**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC — the wholesale draft-14→draft-16 migration (216 files, +17,114/−11,744) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05, opened May 4 22:57 UTC) is **not yet merged**, so does not affect this run. No moq-transport `main` merges in the May 4 02:00 UTC → May 5 00:37 UTC window. This is the first time in the May arc the matrix has returned to a 20-pass reading — pair-level diff inspection warranted.
 
 **May 9**: **20 / 71 / 14** at 00:39 UTC — **partial recovery: +1 pass / −1 fail vs May 8's 19/72/14**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**. Bounce-back to the May 4–7 floor (also the post-PR #145 floor). moqtail PR #193 still **open** Day +3, so this is **not** a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC, so no `moq-dev-rs` / `moq-dev-js` rebuild). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression.
+
+**May 12**: **20 / 71 / 14** at 00:37:28 UTC — **−1 pass / +1 fail vs May 11** (21/70/14), **back to the post-PR-#145 floor**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → 20 → 20 → 21 → **20**. The May 11 +1 lift was **per-run variance, not a real recovery** — the matrix has now been at 20±1 for 8 of 9 May-weekday readings since May 5. No implementation activity in the May 11 02:00 UTC → May 12 00:37 UTC window would account for the flip-back: moqtail PR #193 merged at May 11 22:37:32 UTC (after the run cutoff, so any `moqtail-relay` builder-rebuild effect from completing the upstream-FETCH series only shows in the May 13 report); moq-transport landed 6 PRs at May 11 21:32–22:02 UTC but these are spec-only (no implementation rebuild path); moq-dev/moq `main` is Day +2 quiet (no commits since May 9 22:30 UTC). The most plausible flip-back driver is a single-pair regression in one of the May-9-rebuilt `moq-dev-rs` / `moq-dev-js` test pairs that was borderline-pass on May 11. **Pre-Town-Hall reading**: the May 12 MoQ Town Hall opens with the matrix at the floor, having shown no real movement in 8 days.
 
 **May 11**: **21 / 70 / 14** at 00:42:00 UTC — **+1 pass / −1 fail vs May 10** (20/71/14). Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → 20 → 20 → **21**. Marginal lift above the post-PR-#145 floor, still −4 below the May 2 high (25). **Most plausible cause**: the May 9 evening moq-dev/moq merges (PR #1338 release-train shipping `moq-lite v0.16.0`, PR #1392 moq-ffi, PR #1393 cache-eviction 30s→5s) all landed **after** the May 10 00:40 UTC interop run, so this is the first run in which `moq-dev-rs` / `moq-dev-js` docker images were rebuilt against `v0.16.0`. The May 9 release-train (#1338) and the cache-eviction tuning (#1393) are the most likely flip-drivers: PR #1393 reduces idle memory at the cost of more cache rebuilds, but it also tightens the eviction window in a way that could flip one previously-borderline pair. moqtail PR #193 still **open Day +5** (mergeable_state=blocked), so no `moqtail-relay` rebuild. moq-rs PR #167 still open Day +5, so no `moq-rs-draft-16` rebuild. Per-run variance can't be ruled out, but the timing is consistent with a `moq-dev` builder rebuild.
 
