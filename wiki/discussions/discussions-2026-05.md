@@ -2,11 +2,172 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 12 01:00 UTC → May 13 06:00 UTC) — **draft-18 published; Will Law proposes recharter to non-media**
+
+## IETF Datatracker — **draft-ietf-moq-transport-18 PUBLISHED May 12, 2026**
+
+After the May 11 6-PR editorial merge sprint assembled draft-18 candidate text on `main`, **[draft-ietf-moq-transport-18.txt](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/18/) was published to the IETF Datatracker May 12, 2026** — the long-anticipated cut. **[[alan-frindell]] May 13 01:15 CEST** in `#moq`: *"It's heeeeere [datatracker.ietf.org/doc/draft-ietf-moq-transport/18/]"*. The "[Moq] I-D Action: draft-ietf-moq-transport-18.txt" notification hit the mailing list May 12.
+
+Two further merges on May 12 (after the May 11 sprint) brought additional draft-18 substance to `main` immediately ahead of the cut:
+
+- **[PR #1605](https://github.com/moq-wg/moq-transport/pull/1605)** MERGED May 12 23:04:53 UTC (vasilvv, +114/−76) — *"Split DELIVERY_TIMEOUT into two types of timeout"*. Splits the existing `DELIVERY_TIMEOUT` into `OBJECT_DELIVERY_TIMEOUT` (semantically equivalent, more precisely defined) + new `SUBGROUP_DELIVERY_TIMEOUT` (covers subgroups fully queued but not fully delivered). **Closes Issue #667** ("DELIVERY_TIMEOUT is unimplementable", [[martin-duke]], long-running 2024 design issue). Issue #667 CLOSED May 12 23:04:54 UTC.
+- **[PR #1625](https://github.com/moq-wg/moq-transport/pull/1625)** MERGED May 12 20:02:18 UTC ([[suhas-nandakumar]], +118/−7) — *"Improve Security Considerations section"*. Adds fixes and additions to [[magnus-westerlund]]'s long-parked PR #1455. **Closes Issue #783** ("Missing aspects in the security consideration section", gloinul). Issue #783 CLOSED May 12 20:02:20 UTC, PR #1455 CLOSED in favor of this rebase.
+- **[PR #1630](https://github.com/moq-wg/moq-transport/pull/1630)** MERGED May 12 23:07:53 UTC ([[alan-frindell]], +59/0) — *"Draft 18 release notes"*. Body literally: *"Behold"*. The final release-notes commit on `main` immediately before the datatracker cut.
+
+The cut sequence is now visible end-to-end: **May 11 21:32–22:02 UTC** = 6-PR editorial sprint (PR #1544 + #1615 + #1617 + #1618 + #1621 + #1629); **May 12 20:02 → 23:07 UTC** = 3 final merges (PR #1625 Security Considerations, PR #1605 DELIVERY_TIMEOUT split, PR #1630 release notes); **May 12 ~23:30 UTC** = datatracker upload; **May 13 01:15 CEST** = afrind announcement on Slack.
+
+### moq-transport draft-18 — Abstract change
+
+The draft-18 abstract was rewritten to emphasize protocol generality over media-specificity: *"Despite its name referencing media, the specification emphasizes that MOQT remains content-agnostic and applicable across various use cases."* This is the spec-side framing that lands within a day of Will Law's recharter proposal (see below).
+
+### moq-transport — Open Issues / PRs post-draft-18
+
+- **[Issue #1631](https://github.com/moq-wg/moq-transport/issues/1631) OPENED May 13 02:23 UTC** by **yuanchao-chris** (**0 prior issues, new contributor**) — *"Track-level codec switching semantics"*. Notes that a MoQ Track is generally assumed to carry a stable codec configuration, but real-world RTC needs in-band codec migration (H265→H264, AV1→H264). In WebRTC this is handled via PT change inside the same SSRC. Asks whether codec reconfiguration can happen in-band within an existing Track. **[[alan-frindell]] May 13 05:11 UTC reply**: *"Seems like you could have the publisher make a new group in an ongoing track, and include codec information on properties communicated on Object 0 in the new group - or the Object 0 payload. Would something like that work?"* — first concrete answer to in-band codec switching, day +1 of draft-18.
+- **[Issue #1614](https://github.com/moq-wg/moq-transport/issues/1614)** ((JOINING) FETCH + SUBSCRIBE prioritization, [[luke-curley]]) — kixelated re-pinged May 13 00:09 UTC.
+- **[PR #1476](https://github.com/moq-wg/moq-transport/pull/1476)** (afrind, Feb 9 — *"Delivery timeouts are both Track and Object Properties"*) — updated May 13 00:07 UTC; the OBJECT_DELIVERY_TIMEOUT side of vasilvv's PR #1605 has now landed, so this older parallel PR will need rework.
+- **[PR #1628](https://github.com/moq-wg/moq-transport/pull/1628)** (afrind, QMux framing for moqt-18 over TLS+TCP) — updated May 12 20:40 UTC, still open after draft-18 cut. afrind's May 11 22:53 UTC `#moq` confirmation (*"For anyone interested in draft-18 interop over QMux, we intend to use qmux-01 framing"*) stands; this PR is the spec-side anchor for QMux interop at the **June 9–10 London interop** (afrind May 12 00:56 CEST `#moq`: *"interop is 6/9-10"*).
+- **[PR #1627](https://github.com/moq-wg/moq-transport/pull/1627)** ([[ian-swett]], *"SUBSCRIBE with Joining Fetch"*, +44/−139) — still open Day +10. The alternative being surveyed by afrind's Joining FETCH Survey.
+- **[PR #1607](https://github.com/moq-wg/moq-transport/pull/1607)** (vasilvv, *"Largest Available Group filter"*) — updated May 12 20:03 UTC. The Magnus Object-Filters consensus call (see below) explicitly cites this PR.
+- **[PR #1604](https://github.com/moq-wg/moq-transport/pull/1604)** (martinduke, *"Joining FETCH with subscription"*) — updated May 12 20:03 UTC.
+
+## Mailing list — Will Law proposes RECHARTER to include non-media use cases
+
+The most consequential mailing-list event since the WG was chartered in August 2022: **Will Law (Akamai) May 12 posted *"[Moq] Proposal to recharter to include non-media use cases."*** The post argues that the resulting MOQT protocol is *"payload-agnostic by design"* and has demonstrated applicability beyond media, so the charter should reflect actual usage patterns. The proposed expanded use-case list:
+
+- **AI inference and machine learning interfaces**
+- **Sensor and telemetry data distribution**
+- **UAV command-and-control systems**
+- **Financial market data feeds**
+- **AR/VR input and output transmission**
+
+Will emphasises this requires **no changes to MOQT itself and no compromise of its low-latency media capabilities**; the protocol mechanisms remain unchanged. Application-specific schemas (drone commands, market formats) would remain outside MoQ's scope, handled by the relevant communities. The expanded charter explicitly states the solution will be *"implementable in both browser and non-browser endpoints"* and support diverse payload types.
+
+**Same-day responses (May 12)** — the proposal triggered an unusually broad cross-section of IETF response:
+
+- **Ted Hardie** (long-time IAB veteran)
+- **Christian Huitema** (former QUIC WG co-chair / IAB)
+- **Richard Barnes** (Cisco, ex-IETF Security AD)
+- **Martin Duke** (ex-TSV AD, current WG editor)
+- **Mo Zanaty** (Cisco, MoQ WG participant)
+
+**This is the first time non-MoQ-regulars from the broader IETF (Hardie, Huitema, Barnes) engage on a MoQ recharter thread on-list** — implying the proposal has carried beyond the MoQ WG's usual perimeter. The thread is the headline post-draft-18 discussion item.
+
+The recharter direction is consistent with the **draft-18 abstract change** (see above) emphasising MOQT's content-agnostic nature, and with martinduke's parallel **"[Moq] On other use cases"** thread (May 11/12). The protocol-side framing and the WG-charter framing landed within 24 hours of each other.
+
+## Mailing list — Magnus Westerlund opens 2 consensus calls on filters
+
+**[[magnus-westerlund]] (Ericsson, WG chair) May 12** opened two filter-related consensus calls on-list, splitting the lukewarm meeting-poll signal into separate questions:
+
+### Consensus call on Object Filters (May 12 → May 26 deadline)
+
+Magnus references **PR #1518** (mzanaty, *"Filters with reduced scope, no location or group filter"*) and announces a **two-week consensus call** on whether to include **Object Filters** in the MOQT specification. Background per Magnus: *"The chairs noted that yesterday's meeting showed a good indication of there being a rough consensus for including the Object Filters part. However, the top-n track filters portion generated mixed responses requiring separate discussion."*
+
+Key parameters:
+- Object Filters support would be **optional**
+- Implementers can indicate maximum filter capacity
+- Consensus period runs **through May 26**
+
+Response template (Supporting / Not Supporting + Comments).
+
+### Support for Track Filters and Top-N (May 12, separate thread)
+
+Magnus's parallel post on track filters and top-N functionality. The meeting poll was **7-7 (numerous support and equal opposition)**, with confusion about whether concerns centered on top-N specifically or on track filters more broadly when used with SUBSCRIBE_NAMESPACE requests. Magnus posed two questions:
+
+1. Support for **track filters without top-N**?
+2. Support for **track filters with top-N**?
+
+Considerations to weigh: alignment with chartered use cases, MOQT completion timeline, security considerations, potential to **divide filters into core functionality vs optional extensions** — first explicit WG-chair framing of the filters-as-extension-point pattern.
+
+**Mo Zanaty replied same-day** on the Track Filters / Top-N thread.
+
+### Meeting cut short (May 12)
+
+Magnus also posted a brief explanatory message: *"For your information, yesterday's abrupt ending was the result of an erroneous configuration change on Meetecho's side. This have now been addressed and should not occur next meeting."* — confirms the **May 12 MOQ Town Hall ended abruptly on Meetecho mis-configuration** (afrind May 11 20:01 CEST hinted at this with *"Brutally killed by meetecho!"*).
+
+## Slack `#moq` — quiet day-of-Town-Hall through draft-18 announcement
+
+Only **2 Slack `#moq` posts** in the May 12 01:00 UTC → May 13 06:00 UTC window, both from [[alan-frindell]]:
+
+- May 12 00:53 UTC: *"For anyone interested in draft-18 interop over QMux, we intend to use qmux-01 framing."*
+- May 13 01:15 CEST (May 12 23:15 UTC): *"It's heeeeere [datatracker.ietf.org/doc/draft-ietf-moq-transport/18/]"*
+
+`#moq-rs`, `#moq-js`, `#libquicr`, `#moq-interop-runner` all unchanged. The Town Hall itself was external (Dan Rayburn LinkedIn event); WG-internal Slack chatter went silent during the meeting and resumed only with the draft-18 announcement late at night EU time.
+
+## moq-wg/msf — Suhas continues, Will adds Suhas to authors list
+
+After Suhas's May 11 22:21–23:08 UTC 4-PR burst (#156–159, see prior section), May 12–13 saw incremental review activity on all 4 PRs (Suhas reading review comments; no merges yet). Additionally:
+
+- **[PR #160](https://github.com/moq-wg/msf/pull/160)** OPENED + MERGED May 12 12:30 UTC ([[will-law]]) — *"Add Suhas Nandakumar to the authors list"*. **Formalises [[suhas-nandakumar]] as co-author of MSF** alongside [[will-law]]; Suhas had been operating as de-facto co-editor (most PRs in 2026) but was not in the front-matter until now. First MSF author-list change of 2026.
+- **[Issue #93](https://github.com/moq-wg/msf/issues/93)** ("Need of the Parent name", yekuiwang) — CLOSED May 12 12:32 UTC by wilaw.
+- **[Issue #100](https://github.com/moq-wg/msf/issues/100)** ("How to get the latest full catalog", gwendalsimon) — CLOSED May 12 11:02 UTC.
+- **[Issue #111](https://github.com/moq-wg/msf/issues/111)** ("Advertising from offsite", wilaw) — CLOSED May 12 10:59 UTC.
+
+Will Law in **MSF issue-grooming mode** May 12 morning EU: 3 issues closed in 4 minutes, plus authors-list update merged 90 minutes later. Consistent with pre-draft-18-cut housekeeping on dependent drafts.
+
+## Implementations — first cross-impl draft-18 motion
+
+### google/quiche moqt — **2 commits May 12 prepping for draft-17/18**
+
+After 7 days of quiet (last May 5), **[[martin-duke]] landed 2 commits to `quiche/quic/moqt` on May 12**:
+
+- **May 12 14:23 UTC**: *"Remove PUBLISH_OK message"* — commit message: *"This message type is going away (in favor of REQUEST_OK) and we currently don't support PUBLISH anyway. **Part of implementing draft-17/18 PUBLISH in draft-16**."* — first **explicit draft-17/18 PUBLISH implementation work in quiche moqt**, matching the spec-side change in moq-transport PR #1611 (merged Apr 29, removed PUBLISH_OK message type code point).
+- **May 12 17:52 UTC**: *"Allow fragmented MOQT object payloads. MoqtOutgoingQueue does not create objects in fragments, but MoqtLiveRelayQueue should be prepared to accept them."* — relay-side robustness fix.
+
+This is **the first implementation activity directly cited as draft-17/18 work** in any wiki-tracked repo, landing the same day as draft-18 publication.
+
+### moqtail/moqtail — track forwarding preference removed
+
+- **[PR #194](https://github.com/moqtail/moqtail/pull/194)** MERGED May 12 20:00 UTC ([[zafergurel]], +27/−52) — *"refactor: remove track forwarding preference. In Draft-16, track forwarding preference was removed. It is carried in the object header. This PR removes the dead code related to track forwarding preference and renames the client arguments."* Brings moqtail fully in line with draft-16 wire format.
+- **[PR #192](https://github.com/moqtail/moqtail/pull/192)** (github-actions [ci] release) updated May 12 20:01 UTC.
+- **[PR #195](https://github.com/moqtail/moqtail/pull/195)** OPENED May 12 21:17 UTC ([[zafergurel]], +64/0) — *"docs: Update contributing guidelines and rules"*.
+- **[Issue #148](https://github.com/moqtail/moqtail/issues/148)** ("Sketch for FETCH upstream handling", sharmafb) — CLOSED May 11 22:39 UTC, completing the [N/n] upstream-FETCH series.
+
+### moq-dev/moq — Day +3 main-quiet, open-PR queue holds at ~12
+
+No new Luke commits to `main` since May 9 22:30 UTC. The 5 external-contributor PRs from the May 10–11 wave (SteveMcFarlin #1402, skirsten #1399/#1400/#1401, Qizot #1398) all open, with skirsten PR #1400 updated May 12 06:43 UTC and PR #1402 updated May 12 03:48 UTC. **No Luke review activity visible May 12** — consistent with afrind's May 11 22:56 UTC *"gotta queue up the Claude prompt"* / Luke "in Claude orchestration mode" reading.
+
+### Eyevinn/moqlivemock — CENC fix lands; LOCMAF PR still open
+
+- **[PR #80](https://github.com/Eyevinn/moqlivemock/pull/80)** MERGED May 12 08:02 UTC — *"fix(cenc): chain IV across CMAF fragments to avoid reuse"*. CENC IV-reuse safety fix for the encrypted-CMAF demo paths.
+- **[PR #79](https://github.com/Eyevinn/moqlivemock/pull/79)** (LOCMAF) updated May 12 11:11 UTC, still open Day +6.
+
+### Eyevinn/warp-player — LOCMAF PR + dependabot burst pending
+
+PRs #121–127 (dependabot bumps from May 11 23:33–23:35 UTC) all still open. LOCMAF PR #120 unchanged Day +6.
+
+### cloudflare/moq-rs — Day +30 main-quiet
+
+**PR #167** ([[suhas-nandakumar]] filter-support framework, +12163/−2197) **untouched since May 10 05:03 UTC**. Suhas's May 12 effort went entirely into the MSF and moq-transport security-considerations side, not into iterating on the moq-rs filter framework. With Magnus's May 12 Object Filters consensus call running through May 26, PR #167 is the implementation-side anchor of the spec-side filter debate but is currently stalled.
+
+### Other implementations — quiet
+
+- video-dev/moq-js: No new commits since Feb 17.
+- birneee/quiche_moq: No new commits since Mar 13.
+- Eyevinn/moqtransport: No new commits since Apr 17.
+
+## Interop runner — back below the post-PR-#145 floor
+
+**19 / 71 / 14 at 2026-05-13 00:41:38 UTC** (105 total) — **−1 pass / +1 fail vs May 12** (20/71/14). The post-PR-#145 floor of 20 has now been **breached on the downside**: this is the first 19-reading since May 8.
+
+Walking arc since Apr 17:
+22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → **19** → 20 → 20 → 21 → 20 → **19**.
+
+**Plausible drivers**: the May 12 google/quiche moqt commits ("Remove PUBLISH_OK", "Allow fragmented MOQT object payloads") landed at 14:23 UTC and 17:52 UTC respectively — well before the May 13 00:41 UTC interop run cutoff — so any `quiche-moq` docker image rebuild against the new code would have been picked up. The PUBLISH_OK removal is a wire-format-affecting change, so any pair (quiche-moq vs anything-else) that had been passing on the PUBLISH_OK code point could be expected to flip. moqtail PR #194 (remove track forwarding preference) merged May 12 20:00 UTC — also pre-cutoff, potentially affecting moqtail-relay pair results.
+
+**Pattern check**: the interop matrix has been at 20±1 for **9 of 10 May-weekday readings** since May 5 — completely insensitive to the moq-transport editorial activity above. With draft-18 now published, the spec-vs-implementation gap is at its widest: draft-18 just landed but no implementation tracks it; meanwhile the matrix is testing draft-16 + draft-14 only.
+
+## MoQ Monthly + wiki — quiet
+
+- **MoQ Monthly**: No new issue. Archive remains **#0 (Mar 3) + #1 (Apr 30)**. Day +13 since #1.
+- **tobbee/moq-llm-wiki**: No new open issues.
+
+---
 
 # Activity (May 11 12:00 UTC → May 12 01:00 UTC)
 

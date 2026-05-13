@@ -2,13 +2,13 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-05-02
+last_updated: 2026-05-13
 status: current
-draft_version: 17
+draft_version: 18
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 ---
 
-**draft-ietf-moq-transport-17** | 121 pages | Expires 2026-09-03
+**draft-ietf-moq-transport-18** | published 2026-05-12 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/18/)
 
 # Authors
 - [[alan-frindell]] (Meta)
@@ -18,7 +18,26 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 
 # Abstract
 
-MOQT defines a media transport protocol operating over QUIC and WebTransport. It uses a [[publish-subscribe]] model where producers publish data that is consumed by multiple endpoints via subscription. The protocol treats [[relays]] as first-class citizens, enabling intermediate content distribution networks for high-scale, low-latency distribution.
+MOQT is a publish/subscribe protocol that runs over QUIC and WebTransport. It leverages transport capabilities including streams, datagrams, priorities, and partial reliability. MOQT enables content delivery both directly between endpoints and through intermediate [[relays]], achieving scalable low-latency distribution. **Despite its name referencing media, the specification emphasizes that MOQT remains content-agnostic and applicable across various use cases** (abstract reframing in draft-18 — see [[discussions-2026-05]] for Will Law's parallel May 12 recharter proposal).
+
+# Recent Changes (draft-18, published 2026-05-12)
+
+The draft-18 cut was assembled in two phases of merges to `main`:
+
+**Phase 1 — May 11 21:32–22:02 UTC editorial sprint (6 PRs in 30 min):**
+- **PR #1544** — *Improve Startup Latency and 0-RTT* (ianswett, fixes #420 #83). New sections on reducing startup latency / 0-RTT flow with WebTransport.
+- **PR #1615** — ***Remove Required Request ID*** (ianswett, fixes #1603). **Materialises the Apr 27 interim consensus**. Required Request IDs are removed; Request IDs remain for individual requests (used by Joining FETCH and GOAWAY).
+- **PR #1617** — *Allow GOAWAY on request streams to migrate individual requests* (afrind, fixes #1481). Per-request GOAWAY with zero-length URI causes endpoint to re-issue request on the specified URI session.
+- **PR #1618** — *Add FIRST_OBJECT bit to SUBGROUP_HEADER type* (afrind). Bit 6 (0x40) signals subgroup contains the first object published by the original publisher; type byte expands 0b00X1XXXX → 0b0XX1XXXX (still 1-byte varint).
+- **PR #1621** — *Forbid relays from lying about LARGEST_OBJECT* (afrind, fixes #1386).
+- **PR #1629** — *Clarify definition of scope* (vasilvv, fixes #1432).
+
+**Phase 2 — May 12 20:02–23:07 UTC final merges (3 PRs):**
+- **PR #1625** — *Improve Security Considerations section* (suhasHere, +118/−7). Rebases / extends [[magnus-westerlund]]'s long-parked PR #1455. **Closes Issue #783**.
+- **PR #1605** — *Split DELIVERY_TIMEOUT into two types of timeout* (vasilvv, +114/−76). `OBJECT_DELIVERY_TIMEOUT` (more precisely defined replacement for `DELIVERY_TIMEOUT`) + new `SUBGROUP_DELIVERY_TIMEOUT` (covers subgroups fully queued but not fully delivered). **Closes Issue #667** (DELIVERY_TIMEOUT is unimplementable).
+- **PR #1630** — *Draft 18 release notes* (afrind, +59/0). Body: *"Behold"*.
+
+Datatracker upload followed at approximately May 12 23:30 UTC; afrind announcement on Slack `#moq` at May 13 01:15 CEST: *"It's heeeeere"*.
 
 # Key Concepts
 
@@ -30,9 +49,9 @@ MOQT defines a media transport protocol operating over QUIC and WebTransport. It
 - **[[qmux]]**: TCP fallback via QUIC multiplexing over TLS+TCP
 - **URI Scheme**: `moqt://` URI scheme with fragment identifier support (PR #1571)
 
-# Recent Changes (draft-17)
+# Recent Changes (draft-17, published 2026-03-02)
 
-Draft-17 was published 2026-03-02 with significant changes from draft-16:
+Draft-17 brought significant changes from draft-16:
 - Unidirectional control streams for 0-RTT subscribe capability
 - SUBSCRIBE_NAMESPACE split into two messages: SUBSCRIBE_NAMESPACE (namespace info) and SUBSCRIBE_TRACKS (PUBLISH notifications)
 - Subscription filters moved to be a Param (PR #1590)

@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 status: current
-updated: 2026-05-12
+updated: 2026-05-13
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -16,7 +16,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
-| [[moq-transport]] | draft-17 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport |
+| [[moq-transport]] | draft-18 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (published 2026-05-12) |
 | [[moq-msf]] | draft-00 | Active | MOQT Streaming Format - media delivery over MOQT |
 | [[moq-loc]] | draft-02 | Active | Low Overhead Media Container for interactive streaming |
 | [[moq-secure-objects]] | draft-00 | Active | End-to-end authenticated encryption for MOQT objects |
