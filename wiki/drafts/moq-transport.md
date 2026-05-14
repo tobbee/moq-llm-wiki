@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-05-13
+last_updated: 2026-05-14
 status: current
 draft_version: 18
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -60,9 +60,11 @@ Draft-17 brought significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-05-02)
+# Active Issues (as of 2026-05-14)
 
 ## Design Issues
+- **#1632** — *MOQ-18: Properties Type collision with LOC-02*. OPENED May 14 03:24 UTC by **yuanchao-chris** (new contributor — 2nd issue in 2 days). Reports that **draft-18 §15.8-2 assigns Property Type IDs that diverge from draft-ietf-moq-loc-02's commit-history values**: MOQ-18 has TIMESTAMP=0x06 / TIMESCALE=0x08 / AUDIO_LEVEL=0x0C / VIDEO_FRAME_MARKING=0x0A / VIDEO_CONFIG=0x0D, while LOC-02 records TIMESTAMP=0x02 / AUDIO_LEVEL=0x06 / VIDEO_FRAME_MARKING=0x04. Twin issue filed simultaneously on the LOC side ([moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20)). **PR #1624** (April 30, *"provisional IANA registry for LOC properties"*) was supposed to resolve [[issue-1550]] but the assignment cuts in draft-18 §15.8-2 did not adopt the registry values. **First publicly-flagged post-draft-18 cross-spec coordination failure** — see [[discussions-2026-05]].
+- **#1631** — *Track-level codec switching semantics*. OPENED May 13 02:23 UTC by **yuanchao-chris**. Asks whether MoQ supports in-band codec migration (H265→H264, AV1→H264) within an existing Track, analogous to WebRTC PT change inside the same SSRC. **[[alan-frindell]] May 13 05:11 UTC** sketches *"publisher make a new group in an ongoing track, and include codec information on properties communicated on Object 0 in the new group - or the Object 0 payload"*. **yuanchao-chris May 13 09:23 UTC** confirms works in stream mode but in datagram mode needs property-stamped frames + `REQUEST_UPDATE`-based "ACK" semantics; also notes [[moq-msf]] §5.1.24 catalog track information needs alignment. First substantive post-draft-18 design conversation.
 - **#1626** - Version negotiation for QMUX. Opened May 1 23:50 UTC by **sharmafb** (Suhas Sathyanarayana): *"We have an idea of how version negotiation works for MoQ-over-HTTP/3 and how it works for MoQ-over-QUIC, but do we know how it's going to work for MoQ-over-QMUX?"* **[[alan-frindell]] reply** May 2 02:19 UTC: *"We discussed quite a bit last IETF. The plan is to say something like TLS ALPN moqt-18 implies qmux-01"* — first explicit statement of the QMUX/transport ALPN coupling for draft-18. See [[qmux]] for context.
 - **#1622** - Request ID in GOAWAY isn't useful. Opened Apr 30 by [[ian-swett]] (label `Handshake and Session`). Body: *"After more thought (yes I approved #1559), I don't think the Request ID in GOAWAY is actionable in MoQ. … Now that we're removing Required Request ID (#1615) and we've already removed Request ID flow control, GOAWAY is one of the two remaining uses of Request ID (the other is Joining Fetch)."* **PR #1623** (revert) opened Apr 30 01:38 UTC. **[[alan-frindell]] counter Apr 30 18:31:57 UTC**: *"My counter is - it's trivial to put the request ID in goaway, and might be useful. If nothing else it can speed up retry when a new request is racing a GOAWAY."* — afrind's first explicit pushback against the walk-back. PR #1623 now contested.
 - **#1616** - Both PUBLISH_NAMESPACE and NAMESPACE are responses to SUBSCRIBE_NAMESPACE. **CLOSED Apr 29 20:44 UTC** via PR #1619 merge.

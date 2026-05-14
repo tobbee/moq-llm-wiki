@@ -2,11 +2,114 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-13
+last_updated: 2026-05-14
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 13 06:00 UTC → May 14 09:00 UTC) — **first post-draft-18 cross-spec collision flagged**
+
+## moq-transport + LOC — yuanchao-chris files twin cross-spec collision issues
+
+**14 hours after draft-18 publication**, **yuanchao-chris** (no prior repo history before May 5, his **2nd new issue in 2 days** after [Issue #1631](https://github.com/moq-wg/moq-transport/issues/1631) on May 13) opens twin issues May 14 **03:18 UTC** (LOC) and **03:24 UTC** (moq-transport) reporting that **draft-ietf-moq-transport-18 §15.8-2 and draft-ietf-moq-loc-02 assign different Property Type IDs to the same property names**:
+
+- **[moq-transport Issue #1632](https://github.com/moq-wg/moq-transport/issues/1632)** — *"MOQ-18: Properties Type collision with LOC-02"*
+- **[moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20)** — *"LOC-02: Properties Type collision"*
+
+The concrete diff table from yuanchao-chris:
+
+| Property | LOC-02 (commit history) | MOQ-18 §15.8-2 |
+|---|---|---|
+| TIMESTAMP | 0x02 | 0x06 |
+| TIMESCALE | (not used) | 0x08 |
+| AUDIO_LEVEL | 0x06 | 0x0C |
+| VIDEO_FRAME_MARKING | 0x04 | 0x0A |
+| VIDEO_CONFIG | 0x0D | 0x0D |
+
+**This is the first ever cross-spec collision flagged on both repos simultaneously by the same author** — [[issue-1550]] (April 16, 2026, also yuanchao-chris on LOC) was a one-sided LOC filing.
+
+**Context for the failure**: [PR #1624](https://github.com/moq-wg/moq-transport/pull/1624) MERGED April 30, 2026 — *"provisional IANA registry for LOC properties"* by [[alan-frindell]] — was specifically intended to resolve [[issue-1550]] by establishing a registry of LOC property IDs. However, **draft-18 §15.8-2 went out using a *different* assignment** than what LOC-02's commit history records. So either (a) PR #1624's registry was not synced into the editor's draft-18 cut, or (b) the registry is correct and LOC-02's source needs updating but the LOC editors have not yet done so.
+
+**Carry-forward**: Either way, **two published WG documents (draft-ietf-moq-transport-18 and draft-ietf-moq-loc-02) now diverge on assigned IANA-style codepoints**. WG editorial coordination between moq-transport and LOC is now a visible item for the [[2026-06-09-london-interim]].
+
+## moq-transport — In-band codec switching design conversation (Issue #1631)
+
+[Issue #1631](https://github.com/moq-wg/moq-transport/issues/1631) (yuanchao-chris May 13 02:23 UTC) generates the first concrete post-draft-18 design exchange:
+
+- **[[alan-frindell]] May 13 05:11 UTC**: *"Seems like you could have the publisher make a new group in an ongoing track, and include codec information on properties communicated on Object 0 in the new group - or the Object 0 payload. Would something like that work?"*
+- **yuanchao-chris May 13 09:23 UTC**: *"yes, this can work in stream mode. now we use datagram mode, the new codec information is added in object properties, and at subscriber side, we also add a 'ACK' semantics (use REQUEST_UPDATE) to tell publisher stop add the property"* + notes that [[moq-msf]] §5.1.24 catalog track information also needs updating to align.
+
+This is the **first MoQ design issue actively progressed in the post-draft-18 window** — substantive enough to expose an unaddressed gap (in-band codec migration semantics for both stream and datagram modes, analogous to WebRTC PT change within an SSRC). The fact that a brand-new external contributor is driving design conversations day +1 of a new draft is a healthy WG-engagement signal — but also exposes that H265→H264 / AV1→H264 in-band migration was not addressed in the draft-18 cut.
+
+## moq-wg/msf — 3-PR / 3-issue cleanup sequence May 13
+
+Largest MSF main-advancement single-day in 2026:
+
+- **[PR #158](https://github.com/moq-wg/msf/pull/158)** MERGED May 13 **10:30 UTC** ([[suhas-nandakumar]], +72/−81) — *"Replace delta update fields with ordered operations array"*. **Closes Issue #145** (Luke Curley March 1, *"Ordering of delta updates"*) — long-standing catalog-update ordering question.
+- **[PR #161](https://github.com/moq-wg/msf/pull/161)** MERGED May 13 **18:43 UTC** ([[will-law]], +6/−1) — *"Update overlapping presentation time requirement"*. **Closes Issue #155** (Luke Curley April 22, *"Sequence aligned groups are too restrictive"*) — relaxes alignment constraint to overlapping-presentation-time.
+- **[PR #133](https://github.com/moq-wg/msf/pull/133)** MERGED May 13 **18:42 UTC** ([[suhas-nandakumar]], +184/0) — ***"Add SCTE-35 support and CEA-608/708 accessibility fields"*** — **the long-debated event-timeline PR**, open since January 30, with 4 prior debate cycles (April 22 ContentProtection-and-Captions split, May 8 avelad split-into-3-PRs, May 8 wilaw/gwendalsimon event-timeline restructuring, May 11 Suhas's *"I do have initial drafts on..."*). **Closes Issue #95** (avelad Jan 29 close captions support).
+
+The PR #133 outcome confirms the editorial direction: the **wilaw May 8 split-out-event-timeline-drafts proposal is future work, not blocking-merge work** — MSF is consolidating before the London interim, not expanding. The pre-staged draft text Suhas hinted at on May 8 (*"I do have initial drafts on..."*) will be spun out as separate Event-Timeline drafts in future cycles, not as MSF restructuring.
+
+Still open (Suhas review iteration): PR #156 (Object-Stream mapping implementation-specific, updated May 13 16:27 UTC); PR #157 (Group numbering restarts, updated May 13 21:45 UTC); PR #159 (catalog compression via Track Properties — renamed from "track name suffix", updated May 14 05:42 UTC). vasilvv Issue #153 (*"`initTrack` does not work"*) updated May 14 05:46 UTC.
+
+## Mailing list — Yu You (Nokia) opens Joining FETCH thread
+
+**Yu You (Nokia) May 13** opens *"[Moq] User case or question to Joining Fetch"* — followed by **4 same-day replies** from **Will Law**, **Zafer Gurel**, **Mo Zanaty**, **Will Law** (second reply). First Nokia-driven on-list contribution since Yu You's May 8 3GPP SA4 Montreal conferencing PoC announcement (FS_Q4RTC_MED study, S4-261065). The thread surfaces a use-case question on Joining FETCH semantics, complementing the broader Joining FETCH design debate carried forward from afrind's May 11 *"[Moq] Joining FETCH Survey"* and Mo Zanaty's May 12 *"[Moq] Re: On other use cases"* threads.
+
+**[[luke-curley]] May 13** replies on *"[Moq] Re: Consensus call on Object filters"* (Magnus's May 12 consensus call). Two-week consensus period (through May 26) running.
+
+**Will Law's recharter thread shows no May 13/14 follow-up** — Day +2 silence after the May 12 IAB cross-WG burst (Hardie / Huitema / Barnes / Duke / Zanaty). May indicate the cross-WG response was load-balanced into individual side-channel conversations rather than continuing the on-list thread.
+
+## google/quiche moqt — 4-commit May 13 burst continues draft-17/18 push
+
+After the May 12 2-commit start (martinduke *"Remove PUBLISH_OK message"* + *"Allow fragmented MOQT object payloads"*), May 13 adds 4 more:
+
+- **vasilvv** *"Use new MOQT control message parser API directly"* — **first vasilvv commit to the `quiche/quic/moqt` directory** on the wiki record (vasilvv is co-author of draft-ietf-moq-transport; previously committing to control message parser code outside the moqt subdir).
+- **asedeno** *"Fix OSS QUICHE build"* — open-source build fix following the API churn.
+- **martinduke** *"Fix ASAN/MSAN errors in MoqtSessionTest and MoqtTrackTest"* — test hardening.
+- **martinduke** *"Fix an issue from AI review of cl/914368728"* — **first explicit *"AI review"* commit message** in any wiki-tracked MoQ repo. Google's internal AI code review tooling flagged an issue in cl/914368728; martinduke's fix-up commit acknowledges the tooling-driven change.
+
+Pattern observation: AI-tooling is now visibly in the loop in MoQ implementation across the ecosystem — Google AI review (this commit), Luke Curley's Claude orchestration at moq-dev/moq (*"gotta queue up the Claude prompt"*, May 11), Giovanni Marzot's *"over zealous claude perhaps"* / *"claude overstepped"* at OpenMOQ (May 9–10).
+
+**6 commits in 48 hours** is the most concentrated quiche-moqt activity since March 2026, all post-draft-18-publication. quiche-moq remains the dominant draft-18 implementation push.
+
+## moqtail/moqtail — Post-PR-193 release pipeline May 13 08:41–08:44 UTC
+
+After [PR #193](https://github.com/moqtail/moqtail/pull/193) ([4/n] upstream FETCH on cache miss) MERGED May 11 22:37:32 UTC, the auto-release pipeline ran May 13 morning:
+
+- **PR #195** MERGED May 13 08:41 UTC (zafergurel, docs +64/0)
+- **PR #192** MERGED May 13 08:42 UTC (release-bot)
+- **PR #196** MERGED May 13 08:44 UTC ([ci] release)
+
+Release bundles the completed upstream-FETCH-on-cache-miss series ([N/n] PRs #186/#187/#188 May 6 + #193 May 11). No new sharmafb work since.
+
+## moq-dev/moq — Day +5 main-quiet
+
+No commits to `main` since [[luke-curley]]'s May 9 22:30 UTC PR #1393 merge. 5 external-contributor PRs from May 10–11 still open with no Luke review activity visible: skirsten #1399/#1400/#1401, SteveMcFarlin #1402, Qizot #1398. Luke remains in Claude-orchestration / Town-Hall-recovery mode.
+
+## cloudflare/moq-rs — Day +31 main-quiet
+
+PR #167 ([[suhas-nandakumar]] filter-framework, +12163/−2197) untouched since May 10 05:03 UTC — Day +4. Suhas's May 13 effort went entirely to MSF (3 PRs reviewed / merged / iterated), not moq-rs.
+
+## Slack `#moq` — 3 thread replies on draft-18 announcement
+
+- **Paul Gregoire (mondain) May 13 05:59 CEST**: *"Is moqx already supporting it? I suppose I should already know the answer..."*
+- **[[alan-frindell]] May 13 06:48 CEST**: *"lol no."*
+- **[[alan-frindell]] May 13 06:48 CEST**: *"Goal is interop in London"*
+
+**afrind's response is the explicit confirmation that no implementation is draft-18-ready and the June 9–10 London interop is the formal interop target.** Paul Gregoire's probe is the first non-OpenMOQ-author public reference to OpenMOQ moqx draft-18 status; afrind's "lol no" answer doubles as commentary on OpenMOQ's velocity expectations post-NAB.
+
+## Datatracker — quiet since draft-18
+
+No new draft revisions since draft-ietf-moq-transport-18 (May 12). gregoire-moq-msfts-00 (May 6) still has no on-list announcement (Day +8). Notable individual draft baseline: lite-04, subscribe-rewind-02, qlog-moq-events-06, nmsf-01, englishm-cdn-provisioning-00, englishm-relay-dos-00.
+
+## Interop runner — no May 14 run
+
+Latest reading remains **19 / 71 / 14** at 2026-05-13 00:41:38 UTC. The ~00:40 UTC daily run for May 14 has not yet published to the GitHub Pages site as of this update. The May 14 reading will be the first matrix snapshot that *could* reflect a `quiche-moq` image rebuild post-May 13 quiche-moqt commits (PUBLISH_OK removal is wire-format-affecting); if the auto-rebuild propagates, expect potentially larger movement than the +1/−1 daily variance the matrix has been showing.
+
+---
 
 # Activity (May 12 01:00 UTC → May 13 06:00 UTC) — **draft-18 published; Will Law proposes recharter to non-media**
 

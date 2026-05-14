@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-13
+last_updated: 2026-05-14
 status: current
 ---
 
@@ -42,6 +42,7 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| **May 14, 2026** | — | — | — | — |
 | **May 13, 2026** | **105** | **19** | **72** | **14** |
 | May 12, 2026 | 105 | 20 | 71 | 14 |
 | May 11, 2026 | 105 | 21 | 70 | 14 |
@@ -109,6 +110,8 @@ The jump from 93 to 105 tests (Apr 12) coincides with moqx joining the matrix, a
 **May 5**: **20 / 71 / 14** at 00:37 UTC — **major regression: −4 pass / +4 fail vs May 4**. Largest single-day regression since the Apr 17 drop, returning to that floor level. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → **20**. Most plausible cause: [[moqtail]] PR #145 merged into `main` May 4 19:23 UTC — the wholesale draft-14→draft-16 migration (216 files, +17,114/−11,744) — image rebuilds for `moqtail-relay` and `moq-dev-rs` / `moq-dev-js` likely flipping multiple pairs to fail. moq-dev/moq PR #1374 (DATAGRAMS Lite05, opened May 4 22:57 UTC) is **not yet merged**, so does not affect this run. No moq-transport `main` merges in the May 4 02:00 UTC → May 5 00:37 UTC window. This is the first time in the May arc the matrix has returned to a 20-pass reading — pair-level diff inspection warranted.
 
 **May 9**: **20 / 71 / 14** at 00:39 UTC — **partial recovery: +1 pass / −1 fail vs May 8's 19/72/14**. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**. Bounce-back to the May 4–7 floor (also the post-PR #145 floor). moqtail PR #193 still **open** Day +3, so this is **not** a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC, so no `moq-dev-rs` / `moq-dev-js` rebuild). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression.
+
+**May 14**: **No new run yet** as of this update. The most recent matrix snapshot is still the May 13 00:41:38 UTC reading of 19 / 72 / 14. The ~00:40 UTC daily run for May 14 has not yet published to the GitHub Pages site. **Carry-forward**: the May 14 reading will be the first matrix snapshot that *could* reflect a `quiche-moq` image rebuild post-May 13 google/quiche moqt commits (4 new commits May 13 including vasilvv first moqt-dir commit; combined with May 12's PUBLISH_OK removal = 6 commits in 48h). If the auto-rebuild propagates and `quiche-moq` is now ahead of moq-transport-spec (draft-16) used by other matrix entries, expect potentially larger movement than the +1/−1 daily variance.
 
 **May 13**: **19 / 72 / 14** at 00:41:38 UTC — **−1 pass / +1 fail vs May 12** (20/71/14), **breaches the post-PR-#145 floor of 20 on the downside**. First 19-reading since May 8. Walking arc: 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → 20 → 20 → 21 → 20 → **19**. Implementation activity in the May 12 02:00 UTC → May 13 00:41 UTC window that **could** drive this: (1) **google/quiche moqt landed 2 commits May 12** — *"Remove PUBLISH_OK message"* (14:23 UTC, commit message: *"Part of implementing draft-17/18 PUBLISH in draft-16"*) and *"Allow fragmented MOQT object payloads"* (17:52 UTC); the PUBLISH_OK removal is a wire-format-affecting change and any `quiche-moq` pair that had been passing on the PUBLISH_OK code point could be expected to flip. (2) **moqtail PR #194** merged May 12 20:00 UTC (refactor: remove track forwarding preference dead code, +27/−52) — also pre-cutoff. (3) **moq-transport PRs #1625 / #1605 / #1630** merged May 12 20:02–23:07 UTC are **spec-only** and don't trigger an implementation rebuild. **The matrix at draft-18 publication day**: with draft-18 just cut and **no implementation tracking draft-18 yet**, the matrix is testing draft-16 + draft-14 only; the spec-vs-implementation gap is at its widest. The matrix has been at 20±1 for **9 of 10 May-weekday readings** since May 5 — completely insensitive to the parallel spec activity.
 

@@ -2,7 +2,7 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-05-08
+last_updated: 2026-05-14
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
@@ -37,13 +37,15 @@ LOC uses numbered extensions in the object header:
 
 # Active Issues (moq-wg/loc)
 
+- **#20** (May 14 03:18 UTC, **yuanchao-chris**) - *LOC-02: Properties Type collision*. Reports that **draft-ietf-moq-transport-18 §15.8-2 and draft-ietf-moq-loc-02 commit history diverge on assigned Property Type IDs**: MOQ-18 has TIMESTAMP=0x06 / TIMESCALE=0x08 / AUDIO_LEVEL=0x0C / VIDEO_FRAME_MARKING=0x0A / VIDEO_CONFIG=0x0D, while LOC-02 records TIMESTAMP=0x02 / AUDIO_LEVEL=0x06 / VIDEO_FRAME_MARKING=0x04. Twin issue [moq-transport #1632](https://github.com/moq-wg/moq-transport/issues/1632) filed simultaneously 6 minutes later. **First post-draft-18 cross-spec coordination failure** — PR #1624 (Apr 30, *"provisional IANA registry for LOC properties"*) was supposed to prevent this but did not propagate into the draft-18 §15.8-2 assignment. See [[discussions-2026-05]].
+- **#19** (May 5, Luke Curley) - How do you encode LOC Private Properties?
 - **#18** - Moving redundant properties in the catalog?
 - **#17** - Delta compress timestamps
 - **#16** - Unix epoch + Timescale
 - **#15** - Ambiguity in Video Frame Marking vi64 encoding
 - **#14** - WebCodecs issue: fix new avc3/hev1 formats
 - **#13** - Duplicate extension ID for Timestamp and Audio Level
-- **#10** (Apr 16, yuanchao-chris) - Properties Type collision between moqt-draft17 and loc-01. Properties Type (Extensions Type) 0x02 and 0x04 are defined in both specs with different semantics. Cross-references transport issue #1550.
+- **#10** (Apr 16, yuanchao-chris) - Properties Type collision between moqt-draft17 and loc-01. Properties Type (Extensions Type) 0x02 and 0x04 are defined in both specs with different semantics. Cross-references transport issue #1550. Now superseded by **#20** as collisions persist between LOC-02 and MOQ-18.
 - **#9** - Track Property can't be authenticated
 - **#5** - Move LOC header metadata from object header extensions to object payload
 
