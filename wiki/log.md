@@ -8,6 +8,26 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-05-15 (supplemental) — ingest draft-lcurley-compressed-mp4-00
+
+**TL;DR**:
+- Added [[compressed-mp4|draft-lcurley-compressed-mp4-00]] — Luke Curley's individual submission (17 March 2026, 12 pages, Informational, expires 18 September 2026). Defines a varint-based compression scheme for ISO BMFF: a `cmpd` table in `moov` maps varint IDs ↔ 4-char box type names; four compressed box variants (`cmfh`, `cfhd`, `cfdt`, `crun`) replace fixed-width payload fields with QUIC-style varints. Reduces per-fragment overhead from ~96 bytes to ~21 bytes (≈78%) while preserving the ISOBMFF box hierarchy. Positions between [[moq-loc|LOC]] (new wire format) and [[moq-cmsf|CMSF]] (full standard fMP4). Security/IANA sections still stubs in -00.
+- **Implementations**: No code-side change in this supplemental — pure ingest. Source / issue tracker at github.com/kixelated/moq-drafts.
+- **Interop**: No new run; carry-forward from the May 15 main entry (19 / 72 / 14 from May 13).
+
+**Operation**: Ingest
+**Sources**:
+- `https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.txt` (downloaded to `sources/ietf-drafts/draft-lcurley-compressed-mp4-00.txt`)
+- `https://datatracker.ietf.org/doc/draft-lcurley-compressed-mp4/`
+
+**Pages updated**: wiki/drafts/compressed-mp4.md (NEW), wiki/index.md (IETF Drafts table row), wiki/log.md (this entry).
+
+**Key findings**:
+- Third Luke-Curley individual draft tracked alongside [[moq-lite]] and (informally) `draft-lcurley-moq-hang-01`. Unlike moq-lite (transport) and Hang (media layer), this one is a **container-format** draft — Luke's first contribution at the ISOBMFF layer.
+- The compression scheme is intentionally **lossless and reversible**: a receiver MUST be able to reconstruct the original uncompressed ISO BMFF structure by reversing the ID-to-name mapping and adjusting size fields. This is the structural difference vs LOC, which replaces fMP4 entirely.
+- Acknowledgments explicitly disclose AI-assisted drafting (Claude) — consistent with the pattern on other recent Luke-authored artifacts (PR #1407 `Co-authored-by: Claude` trailer May 14).
+- Open editorial gaps in -00: `Security Considerations` is `TODO Security`; IANA registration for 5 ISO BMFF box types (`cmpd`, `cmfh`, `cfhd`, `cfdt`, `crun`) is enumerated but not coordinated with MP4RA. Both would need resolution before adoption.
+
 # 2026-05-15 — interop registry expands by 4; AWS lands in moq-dev/moq; post-draft-18 issue triage pattern emerges
 
 **TL;DR**:

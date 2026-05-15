@@ -2,7 +2,7 @@
 title: "Media Packaging: LOC vs CMAF"
 tags: [concept, media, container]
 date: 2026-04-10
-last_updated: 2026-05-09
+last_updated: 2026-05-15
 status: current
 ---
 
@@ -32,9 +32,9 @@ Used via **[[moq-cmsf]]** (draft-ietf-moq-cmsf-00)
 
 Two proposals attempt to bridge LOC's low overhead with CMAF's compatibility — coming from opposite directions:
 
-## Compressed MP4 (spec-side, generic compression)
+## Compressed MP4 (spec-side, varint compression of ISO BMFF)
 
-[[luke-curley]] proposed [draft-lcurley-compressed-mp4-00](https://www.ietf.org/archive/id/draft-lcurley-compressed-mp4-00.html) (2026-03-18) as a way to compress CMAF containers, potentially bridging the gap between LOC's low overhead and CMAF's compatibility. His comment: *"it's kinda gross, but maybe it's enough to bridge the gap between LOC and CMAF so we don't have a container split based on the use-case."* **Approach**: take a full CMAF stream and apply a generic compressor.
+[[compressed-mp4|draft-lcurley-compressed-mp4-00]] ([[luke-curley]], submitted 17 March 2026). **Approach**: keep the ISO BMFF box hierarchy but rewrite the encoding — a `cmpd` table in `moov` maps varint IDs ↔ 4-char box type names, and four compressed box variants (`cmfh`, `cfhd`, `cfdt`, `crun`) replace fixed-width payload fields with QUIC-style varints. Reduces per-fragment overhead from ~96 to ~21 bytes (~78%) and is **losslessly reversible** to standard fMP4. Original framing: *"it's kinda gross, but maybe it's enough to bridge the gap between LOC and CMAF so we don't have a container split based on the use-case."*
 
 ## LOCMAF (impl-side, structural compression) — experimental
 
@@ -50,7 +50,7 @@ Key design points:
 
 | Approach | Path | Author | Status |
 |----------|------|--------|--------|
-| **compressed-mp4** | Compress full CMAF stream with a generic compressor | [[luke-curley]] | Individual draft Mar 18 |
+| **compressed-mp4** | Rewrite ISO BMFF box headers + four common boxes with QUIC-style varints | [[luke-curley]] | [[compressed-mp4\|Individual draft -00]] Mar 17 |
 | **LOCMAF** | Encode only non-derivable CMAF fields as LOC KV pairs | Hugo Björs (Eyevinn) | Experimental impl May 7 |
 
 # Media Interop (Concrete Wire Format)

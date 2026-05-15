@@ -27,6 +27,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
+| [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
 For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), and draft-englishm-moq-relay-dos-00 (relay DoS considerations).
 
