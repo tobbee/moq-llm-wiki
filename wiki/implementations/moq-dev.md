@@ -2,9 +2,11 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-08
+last_updated: 2026-05-15
 status: current
 ---
+
+> **2026-05-14**: First **AWS** contribution to moq-dev/moq — **ksletmoe-aws** (Kevin Sletmoe) opened [PR #1408](https://github.com/moq-dev/moq/pull/1408) *"feat(moq-mux, libmoq): add CMSF muxer, demuxer, and C API"* (+3891/−457, largest single PR to the repo in 2026), bringing **CMSF packaging** and a **C FFI surface** (`libmoq`) to the moq-dev stack alongside the existing Rust + TypeScript packages. Corporate-contributor footprint now spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS.
 
 **Language**: Rust + TypeScript (monorepo)
 **Maintainer**: [[luke-curley]]

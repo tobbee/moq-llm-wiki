@@ -2,11 +2,96 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-14
+last_updated: 2026-05-15
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 14 09:00 UTC → May 15 09:00 UTC) — **interop-runner registry expands by 4; AWS lands in moq-dev/moq; post-draft-18 issue triage pattern emerges**
+
+## Interop runner — 4-PR registry-expansion burst May 13 17:23–17:25 UTC
+
+[[mike-english|englishm-cloudflare]] merged **4 long-pending interop-runner PRs in 2 minutes** late on May 13 (after the May 13 ~00:40 UTC daily run), the **largest single-day participant expansion of 2026**:
+
+- **[PR #67](https://github.com/englishm/moq-interop-runner/pull/67)** MERGED May 13 **17:23:32 UTC** ([[giovanni-marzot]]) — *"Add aiomoqt (Python asyncio MoQT client) to implementation registry"*. **aiomoqt** is a Python asyncio MoQT client (separate from moqx; OpenMOQ stewardship via Giovanni).
+- **[PR #66](https://github.com/englishm/moq-interop-runner/pull/66)** MERGED May 13 **17:24:28 UTC** ([[giovanni-marzot]]) — *"Add moqx client role"*. Adds the missing **moqx client image** alongside the already-registered moqx relay (PR #59 Apr 11). Multi-arch (`linux/amd64` + `linux/arm64`), FRA region. **First OpenMOQ-author merge into the registry after the May 9–10 fork incident** — i.e., normal operating mode restored.
+- **[PR #63](https://github.com/englishm/moq-interop-runner/pull/63)** MERGED May 13 **17:25:14 UTC** ([[tobbe-einarsson|tobbee]] / Eyevinn) — *"Add moqlivemock (Eyevinn) as interop test client"*. Adds `mlmtest` from [[moqlivemock]] as both draft-14 and draft-16 client. **Day +31 from opening** (April 12) — longest-pending non-Luke interop-runner PR resolved.
+- **[PR #65](https://github.com/englishm/moq-interop-runner/pull/65)** MERGED May 13 **17:25:58 UTC** (yuyou / Nokia) — *"Docker relay url support"*. Adds configurable `RELAY_URL` to the Docker test harness so Nokia's v17 in-house implementation can target the same matrix.
+
+**Effect on matrix**: participant count expanded from 11 to **15 registered roles** (adding mlmtest client, moqx client, aiomoqt client, and the Docker relay-URL plumbing that lets Nokia's server slot in). This is the **first expansion of the matrix since moqx relay landed Apr 11** (PR #59). The carry-forward question is whether the May 14 / May 15 runs are stalled because the larger matrix is re-baselining, or because the addition introduced a regression — see "Interop runner status" below.
+
+## moq-dev/moq — AWS lands; Luke breaks 5-day quiet with 4-PR review burst
+
+After a **5-day commits-to-`main` silence** (May 9 22:30 UTC → May 14 16:45 UTC), [[luke-curley]] **merged 5 PRs in ~12 hours** May 14 16:45 UTC → May 15 04:37 UTC, clearing roughly half the external-contributor backlog from May 10–11:
+
+- **[PR #1402](https://github.com/moq-dev/moq/pull/1402)** MERGED May 14 **16:45:43 UTC** (**SteveMcFarlin** — second commit ever, first merge) — *"moq-gst: Fix MoqSink CAPS handling and per-pad EOS aggregation"*.
+- **[PR #1407](https://github.com/moq-dev/moq/pull/1407)** MERGED May 14 **16:59:46 UTC** ([[luke-curley|kixelated]]) — *"Bump package versions across JS packages"* with `Co-authored-by: Claude <noreply@anthropic.com>` trailer — **explicit visible Claude co-authorship line** on a moq-dev/moq commit (matches Luke's May 11 *"gotta queue up the Claude prompt"*).
+- **[PR #1399](https://github.com/moq-dev/moq/pull/1399)** MERGED May 14 **17:00:58 UTC** (skirsten) — *"fix(watch): close MultiBackend's sync and sources"*.
+- **[PR #1400](https://github.com/moq-dev/moq/pull/1400)** MERGED May 15 **04:37:10 UTC** (skirsten) — *"fix: stop leaking PromiseReactions in consumer loops"*. Release-bot **[PR #1391](https://github.com/moq-dev/moq/pull/1391)** *"chore(moq-lite): release v0.16.1"* opened by moq-bot May 15 04:39 UTC, still open as of this update.
+
+**Headline event — AWS enters moq-dev/moq**: **[PR #1408](https://github.com/moq-dev/moq/pull/1408)** OPENED May 14 **18:20:14 UTC** by **ksletmoe-aws** (Kevin Sletmoe at AWS) — *"feat(moq-mux, libmoq): add CMSF muxer, demuxer, and C API"*, **+3891/−457** the **largest single PR to moq-dev/moq in 2026**. Contents:
+- CMSF Broadcast Producer (`import/cmsf_broadcast.rs`) — multi-rendition publishing, group lifecycle, keyframe-aligned group boundaries
+- CMSF Broadcast Consumer (demuxer)
+- fMP4-to-CMSF bridge
+- **C FFI bindings** — first C API surface for the moq-dev/moq stack (alongside the existing Rust+TypeScript)
+
+This is the **first AWS contribution to moq-dev/moq on the wiki record** and brings moq-dev/moq's first-party packaging coverage to parity with the cloudflare/moq-rs stack on the CMAF/CMSF dimension. The corporate-contributor footprint for moq-dev/moq is now **Cloudflare** (Mike English review activity), **Nokia** (yuyou), **Eyevinn** (tobbee adjacent via [[moqlivemock]]), **OpenMOQ** (gmarzot via interop-runner), and now **AWS** (ksletmoe-aws via PR #1408).
+
+Other open PRs in the May 14–15 window: PR #1404 (Qizot, *"Fix reading catalogs"*, updated May 14 16:58 UTC); PR #1405 (Karolk99, *"Declare solid-js as a peerDependency"*, opened May 14 20:58 UTC); PR #1401 (skirsten, video pacing rAF refactor); PR #1397/#1398 (metapox/Qizot).
+
+## moq-transport — Post-draft-18 issue triage pattern emerges
+
+[[alan-frindell]] and [[victor-vasiliev]] established the **post-draft-18 issue-routing pattern** in three actions on May 14:
+
+- **Issue [#1632](https://github.com/moq-wg/moq-transport/issues/1632)** (cross-spec Properties Type collision) — [[alan-frindell]] May 14 **18:43:18 UTC**: *"The LOC authors will create a new loc draft, and update the appendix in moq to reflect it so we don't keep having this problem."* — concrete resolution path: **new LOC draft + moq-transport appendix sync** rather than reopening the draft-18 cut. Confirms the cross-spec coordination work item carries to the [[2026-06-09-london-interim]].
+- **Issue [#1631](https://github.com/moq-wg/moq-transport/issues/1631)** (Track-level codec switching, yuanchao-chris May 13) — **TRANSFERRED to MSF as [Issue #162](https://github.com/moq-wg/msf/issues/162)** after [[victor-vasiliev]] May 14 **11:56 UTC** comment: *"I don't think we should allow, under any circumstances, for the codec of the active stream to change. ... Either way, this is an MSF issue, and not MOQT."* — proposes the *new-track-not-codec-switch* alternative. [[will-law]] confirms within MSF May 14 16:41 UTC: *"Within MSF, we also prefer to keep codec (and other track properties) consistent once declared. ... If the publisher needs to change the codec on a track, it can stop publishing the old track, begin publishing a new track..."* **First cross-spec issue transfer post-draft-18** — sets the precedent that codec/encoding choice questions belong to MSF, not MOQT.
+- **Issue [#607](https://github.com/moq-wg/moq-transport/issues/607)** (*"Do we need Group Order for Subscriptions ?"*, Suhas Nov 2024, 18 months old) — [[alan-frindell]] May 14 **19:01:43 UTC**: *"Folks seems to have use cases for this. Closing."* — closed-as-keep without action. Long-dormant question resolved against removal, reflecting the broader "draft-18 baseline is the spec; design churn is future work" stance.
+
+**Pattern**: WG editors are actively triaging-and-deferring rather than reopening MOQT debate. Issues route to (a) dependent specs (LOC, MSF), (b) future draft cycles, or (c) closed-as-keep. **PR #1476** (afrind delivery timeouts) was updated May 14 11:50 UTC and needs rework after PR #1605 landed (DELIVERY_TIMEOUT was split into OBJECT_DELIVERY_TIMEOUT + SUBGROUP_DELIVERY_TIMEOUT in draft-18) — first concrete editorial follow-up from the draft-18 cut.
+
+## google/quiche moqt — 2 more commits May 14 22:49–23:03 UTC
+
+[[martin-duke]] adds 2 more commits to the post-draft-18 push:
+
+- **9c96a40** May 14 22:49 UTC — *"Refactor: Move OutgoingDataStream to a separate file and make the interfaces with PublishedSubscription explicit."*
+- **6b1d73b** May 14 23:03 UTC — *"Cleanup OutgoingSubgroupStream. Make SendObjects() private, use OnCanWrite() for public calls. Update priority of active..."*
+
+**8 commits in 3 days (May 12–14)** — now confirmed as the most concentrated quiche-moqt activity of 2026. Pattern: martinduke is taking the moqt subdir through a structural refactor (separate files, explicit interfaces, private/public boundary cleanup) immediately after the draft-18 cut, **with vasilvv joining the moqt subdir for the first time** (May 13 *"Use new MOQT control message parser API directly"*). Reads as a coordinated draft-18-implementation push, not just incremental work.
+
+## Eyevinn moqlivemock — PR #79 LOCMAF MERGED May 14 08:08 UTC
+
+**[PR #79](https://github.com/Eyevinn/moqlivemock/pull/79)** MERGED May 14 **08:08:57 UTC** ([[hugo-bjoers|hugobjoers]], **+2886/−83**) — *"Add LOCMAF support"*. **Largest moqlivemock PR of 2026**. Day +9 from opening (May 5). Brings LOCMAF (LOC profile for fMP4/MP4 packaging) to moqlivemock, matching the warp-player side of the same author's work ([Eyevinn/warp-player PR #120](https://github.com/Eyevinn/warp-player/pull/120) still open). [[moqlivemock]] now supports CMSF + MSF/LOC + LOCMAF + moq-mi packaging, a comprehensive coverage matrix for the upcoming London interop.
+
+## moqtail/moqtail — quiet post-PR-193 release cycle
+
+No new merges since the May 13 morning release pipeline run (PRs #195/#192/#196). **PR #170** (fatih-alperen, *"fixed a race condition that caused negative object deltas"*) had its `updated_at` touched May 13 08:43 UTC but the PR was closed unmerged back on April 8 — this was likely a comment-touch from the release tagging, not a new event. moqtail repository back in normal cadence following the [4/n] upstream FETCH series completion.
+
+## Mailing list — Filters consensus engages, recharter goes Day +3 quiet
+
+**7 messages May 14–15**, all on already-open threads:
+
+- **[Moq] Re: Consensus call on Object filters** (Magnus Westerlund May 12) — **5 replies May 14** from Lorenzo Miniero, Luke Curley, Victor Vasiliev (×2), Mo Zanaty. **First substantive engagement on the May 26 consensus deadline thread.** Lorenzo's reply is notable as imquic's voice on object-filter complexity.
+- **[Moq] Re: Joining FETCH Survey** (afrind May 11) — 2 replies May 14 from Luke Curley and Victor Vasiliev.
+- **[Moq] Re: User case or question to Joining Fetch** (Yu You May 13) — Yu You **May 15** follow-up continues the use-case probe.
+
+**No May 14–15 follow-up on** Will Law's *"[Moq] Proposal to recharter to include non-media use cases"* (Day +3 since May 12 open, post-IAB-burst) or martinduke's *"[Moq] On other use cases"* thread. **Pattern**: filters consensus is now the active on-list workstream; recharter has gone into off-list cooling. **No Weekly GitHub digest** May 14 or 15 (last digest May 10).
+
+## Slack — channel-join uptick
+
+Only message in the window: **Dragana Damjanovic (Mozilla) May 14 18:09 CEST** joined `#moq`. **First Mozilla-affiliated public join to `#moq`** since the wiki started tracking (Dragana is well-known in QUIC circles via Neqo); reads as Mozilla observation interest given the draft-18 + recharter activity. No other channel activity. `#moq-rs`, `#moq-js`, `#libquicr`, `#moq-interop-runner` all quiet.
+
+## IETF Datatracker — quiet since draft-18
+
+No new revisions May 13–15. WG state: transport-**18** (Day +3), msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00. Notable individual: lite-04, subscribe-rewind-02, qlog-moq-events-06, nmsf-01, gregoire-moq-msfts-00 (May 6, **Day +9, still no on-list announcement**), englishm-cdn-provisioning-00, englishm-relay-dos-00.
+
+## Interop runner status — May 14 / May 15 runs missing
+
+Latest reading remains **19 / 72 / 14** at 2026-05-13 00:41:38 UTC (note: the May 13 wiki entry recorded this as `19 / 71 / 14`; the actual results page shows `19 / 72 / 14`, total 105). **No May 14 or May 15 daily run has published to the GitHub Pages site as of this update — 2 consecutive missed runs.**
+
+The 2-day gap aligns precisely with [[mike-english]]'s **4-PR registry expansion at May 13 17:23–17:25 UTC**. Plausible causes: (a) the now-15-role matrix is re-baselining and the cadence is paused intentionally, (b) a new image build is failing CI and the run is gated on that, (c) Mike is offline and the runner hasn't auto-recovered. **Carry-forward**: a successful May 16 run with **higher total-tests count** would confirm the matrix has expanded; the 105-test baseline has held since pre-May 5 (matched the original 11-role registry). If the May 16 run is also missing, the cadence is structurally broken and needs intervention.
+
+---
 
 # Activity (May 13 06:00 UTC → May 14 09:00 UTC) — **first post-draft-18 cross-spec collision flagged**
 

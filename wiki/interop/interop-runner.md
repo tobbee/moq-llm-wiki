@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-14
+last_updated: 2026-05-15
 status: current
 ---
 
@@ -15,7 +15,7 @@ The interop runner automates testing between MOQ implementations, publishing res
 **GitHub**: [englishm/moq-interop-runner](https://github.com/englishm/moq-interop-runner)
 **Results**: [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/)
 
-# Registered Implementations (as of April 2026)
+# Registered Implementations (as of May 2026)
 
 1. **moq-dev-js** - [[moq-dev|moq-dev/moq]] JavaScript/Hang player ([[luke-curley]])
 2. **moq-dev-rs** - [[moq-dev|moq-dev/moq]] Rust ([[luke-curley]])
@@ -28,10 +28,13 @@ The interop runner automates testing between MOQ implementations, publishing res
 9. **moqtail** - [[moqtail|Zafer Gurel's Rust/TS implementation]]
 10. **quiche-moq** - Google's C++ MoQT ([[martin-duke]], [[victor-vasiliev|Victor Vasiliev]])
 11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (PR #59 merged Apr 11)
+12. **mlmtest** - [[moqlivemock|Eyevinn moqlivemock]] interop client ([[tobbe-einarsson]], PR #63 merged **May 13 17:25 UTC**) — supports both draft-14 and draft-16 via `DRAFT` env var
+13. **moqx (client)** - OpenMOQ moqx client role ([[giovanni-marzot]], PR #66 merged **May 13 17:24 UTC**) — adds the client-side image to complement the existing moqx relay
+14. **aiomoqt** - Python asyncio MoQT client ([[giovanni-marzot]], PR #67 merged **May 13 17:23 UTC**)
+15. **Nokia v17 (via Docker RELAY_URL)** - yuyou (Nokia) Docker relay-URL configuration support (PR #65 merged **May 13 17:25 UTC**) — enables Nokia's in-house v17 implementation to slot into the matrix
 
 # Pending PRs
 
-- **[PR #63](https://github.com/englishm/moq-interop-runner/pull/63)** (Apr 12–17, Torbjörn Einarsson) — Add `mlmtest` from [[moqlivemock]] as an interop-runner client. Supports **both draft-14 and draft-16** via a `DRAFT` env var (auto-tries both if unset). Published image builds from the moqlivemock repo.
 - **[PR #57](https://github.com/englishm/moq-interop-runner/pull/57)** (Lorenzo Miniero, open since Mar 19) — Add imquic relay and client docker images.
 
 # Current Target
@@ -42,6 +45,7 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| **May 15, 2026** | — | — | — | — |
 | **May 14, 2026** | — | — | — | — |
 | **May 13, 2026** | **105** | **19** | **72** | **14** |
 | May 12, 2026 | 105 | 20 | 71 | 14 |
