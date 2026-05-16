@@ -2,10 +2,14 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-05-15
+last_updated: 2026-05-16
 status: current
 ---
 
+> **2026-05-16**: **Second AWS contribution within 24 hours of #1408** — **ksletmoe-aws** opened [PR #1413](https://github.com/moq-dev/moq/pull/1413) at 00:50 UTC, *"fix(hang/consumer, watch/decoder): handle non-sequential groups and AVC description fallback"* (+68/−14). Fixes two real bugs surfaced while running CMSF/EML producers against `moq-watch`: (1) consumer assumed group sequences increment by 1, but CMSF/EML uses **epoch-based sequences with large gaps** (e.g., 85386781784064 → 85386781832192), causing every group transition to go through the latency-skip path → ~1s audio underflows and choppy playback; (2) WebCodecs rejects AVC frames without a description, so a fallback is needed when the MSF/CMSF catalog doesn't carry one. AWS is now the highest-touch external contributor of the May 14–16 cycle.
+>
+> **2026-05-15**: [[luke-curley]] **merges 8 PRs in 24 hours** (May 14 16:45 UTC → May 15 16:48 UTC) — including [PR #1395](https://github.com/moq-dev/moq/pull/1395) (moq-cli rename), [PR #1398](https://github.com/moq-dev/moq/pull/1398) (Qizot activity signals), [PR #1404](https://github.com/moq-dev/moq/pull/1404) (Qizot catalog fix), [PR #1409](https://github.com/moq-dev/moq/pull/1409) (**danrossi** new-contributor Vite worker plugin). Same window opens 3 new PRs: [PR #1410](https://github.com/moq-dev/moq/pull/1410) (**YogiSotho** new contributor, buffering overlay fix), [PR #1411](https://github.com/moq-dev/moq/pull/1411) (kixelated pixel budget for ABR), [PR #1412](https://github.com/moq-dev/moq/pull/1412) (kixelated **SolidJS → vanilla Web Components migration, net -868 LOC**, removes `@moq/ui-core` package). Largest 24-hour merge volume of 2026.
+>
 > **2026-05-14**: First **AWS** contribution to moq-dev/moq — **ksletmoe-aws** (Kevin Sletmoe) opened [PR #1408](https://github.com/moq-dev/moq/pull/1408) *"feat(moq-mux, libmoq): add CMSF muxer, demuxer, and C API"* (+3891/−457, largest single PR to the repo in 2026), bringing **CMSF packaging** and a **C FFI surface** (`libmoq`) to the moq-dev stack alongside the existing Rust + TypeScript packages. Corporate-contributor footprint now spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS.
 
 **Language**: Rust + TypeScript (monorepo)

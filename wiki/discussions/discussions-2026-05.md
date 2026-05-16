@@ -2,11 +2,154 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-15
+last_updated: 2026-05-16
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 15 09:00 UTC → May 16 06:00 UTC) — **SVC TPL-vs-SGPL Slack design thread; London interim formal invitation (June 9–12); AWS second PR within 24h**
+
+## Slack — afrind opens substantive SVC track-per-layer vs subgroup-per-layer thread
+
+[[alan-frindell]] May 15 **20:27 CEST** (18:27 UTC) opens **the first substantive SVC architecture design discussion on `#moq` in 2026**, addressing the long-running design question "Is SVC better as Track per layer or Subgroup per layer?". Headline framing: *"if we add subgroup filters to subscribe, the remaining differences between these two approaches is dwindling"* — the two designs now have nearly identical wire-format output (same QUIC streams, same Group/SG/Pri/Object IDs), differing only in the Track Alias.
+
+afrind's analysis:
+
+- **On-the-wire equivalence**: Track-per-layer and Subgroup-per-layer produce **identical bytes** except for the Track Alias.
+- **Unsubscribe flexibility**: previously a TPL advantage (only-tracks-can-be-unsubscribed), but **subgroup filters in draft-18 erase the difference** — subscribers can now opt out of a layer with either model.
+- **Object Model enforcement**: SGPL enforces no-duplicate-object-IDs-within-a-group; TPL is publisher-discipline only.
+- **Prioritization differences** narrow to two corner cases: (1) explicit per-subscriber layer prioritization (only TPL-possible), (2) equal-priority subgroups tie-break by SGID (SGPL only).
+- **Conclusion**: *"Otherwise I believe it's just a religious question of which design fits your mental model better."*
+
+**26-reply thread** with [[luke-curley]] (17 replies) and [[victor-vasiliev]] (5 replies) — entirely a 3-author exchange. Substantive points:
+
+- **Luke (20:30 CEST)**: filters are *optional* — TPL still has a real prioritization advantage in cross-feed scenarios (*"Bob's base layer should be higher priority than Alice's enhancement layer"*).
+- **Luke (20:33 CEST)**: cross-namespace publisher-priority interaction is **undefined** in current spec — *"I don't think publisher priority should leak across namespaces and formats"*. Counter-argues Victor's *"You just need to make them different publisher priority"*.
+- **Victor (20:35 CEST)**: *"I think we currently assume it's shared across the scope"* — exposes a draft-18 ambiguity about publisher-priority scope.
+- **Luke (20:39–20:40 CEST)**: prefers **explicit subscriber priorities** over relying on publishers agreeing on a numbering scheme, *"especially if you ever wanted to use SVC with multiple feeds (main game camera and side-line cameras)"*.
+- **Victor (20:40 CEST)**: *"If you don't like publisher priorities, set your own on the subscriber"* — Luke concedes the point.
+- **Luke (20:46 CEST) — operational pushback on filters**: *"downside of filters vs separate tracks is that it produces a fragmented cache, or increases relay ingress costs"* — a CDN-economics argument against the filter-collapses-the-debate framing.
+- **Victor (20:47–20:48 CEST)**: TPL *"doesn't work if you're trying to do subgroup per object on enhancement layer"* — surfaces the alignment headache when both layers want subgroup-per-object semantics.
+- **Luke + Victor (20:49–20:51 CEST)**: agree that you can still group-ID-align enhancement layer subgroups across tracks, *"just you're going to identify the base layer differently"*.
+- **Luke closes (20:53 CEST)**: SUBSCRIBE-can-start-at-different-groups-with-different-tracks is *"annoying, but not a big deal"*.
+
+**Headline takeaway**: The SVC TPL-vs-SGPL design debate, which has dragged across multiple interims, is now **substantively narrowed to two real differences** — (1) cache fragmentation / relay ingress costs (favors TPL), (2) subgroup-per-object-on-enhancement-layer alignment (favors SGPL). Both are **operational, not protocol-design**, concerns. The afrind framing is likely to feed into the [[2026-06-09-london-interim]] design discussion. **The publisher-priority-cross-namespace ambiguity flagged by Victor at 20:35 CEST is a fresh draft-18 gap** — not previously flagged on any issue tracker.
+
+`#moq-rs`, `#moq-js`, `#libquicr`, `#moq-interop-runner` all quiet. Only other Slack event: **gazzy joins `#moq-rs`** May 15 15:37 CEST (no messages, channel-join only).
+
+## Mailing list — Mike English formally announces London interim June 9–12
+
+**[Mike English May 15](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/)** sends *"[Moq] London interim June 9–12"* — the **formal in-person hybrid interim invitation** with full logistics:
+
+- **Dates**: **June 9–12** (4 days, expanding the previously-recorded *"June 9–10 interop + June 11–12 working sessions"* understanding into a single contiguous 4-day in-person window)
+- **Location**: **Cloudflare London office** — County Hall / The Riverside Building, Belvedere Road, London SE1 7PB
+- **Schedule**: 09:00–17:00 BST (08:00–16:00 UTC) daily, with midday break
+- **Registration deadline**: **Thursday June 4** — attendees must add name + affiliation to the GitHub wiki by that date for building security
+- **Follow-up to come**: arrival procedures, sign-in instructions, reception timing, remote-participant details
+
+This is the most concrete logistics communication on the London interim to date and **reframes the meeting structure** from the "2 days hackathon + 2 days sessions" mental model that has been used since IETF 125. **Implication for the wiki**: [[interim-meetings]] **needs to reflect June 9–12 as the in-person window**, not just the moq-08/09/10/11 formal session numbers (June 11–12 only). The June 9–10 days are the hackathon/interop sessions; the moq-08/09/10/11 formal session numbers cover June 11–12.
+
+**Other mailing-list activity (5 messages)** — Joining FETCH consultation continues:
+
+- **[afrind May 15 (1)](https://mailarchive.ietf.org/arch/msg/moq/iKE8j5l9ObVfOySxIZgBUh-ozZc/)** *"Re: Joining FETCH Survey"* — translates Luke Curley's prose-form May 14 reply into the structured survey: Q1 score **4** (*"meets your use case functionally but is not performant"*), Q2 score **3**, Q3 **MAY remove Joining FETCH**, Q4.3 **Fill semantics for relays**. Tone is *"Let me know if any of that is incorrect"* — afrind is acting as survey rapporteur, not advocate.
+- **[afrind May 15 (2)](https://mailarchive.ietf.org/arch/msg/moq/jGjf6SEVW3SZ43DB9mZ4xwkG06A/)** *"Re: Joining FETCH Survey"* — follow-up to Victor Vasiliev's responses: requests clarification on Q2 (unified control plane vs separate data planes), Q4 (subscribe-style FC interpretation), and Q4.3 (*"edge cases will cause this to collapse"*). Survey synthesis still in progress.
+- **[Yu You (Nokia) May 15](https://mailarchive.ietf.org/arch/msg/moq/Nc7WCviq2Xq2V5lC0j27fq4_jkQ/)** *"Re: User case or question to Joining Fetch"* — accepts the recommendations (will switch from shared-track + collision-prone Object IDs to **wall-clock-based Group ID + unique Object ID** per participant; will publish A/V info plus user-specific tracks with unique track names). **The closing of Nokia's chat use-case probe via redesign rather than spec change.**
+- **[Mo Zanaty May 15](https://mailarchive.ietf.org/arch/msg/moq/7txn6FbA2R_Sa_sE0yLp3ZJLKmc/)** *"Re: User case or question to Joining Fetch"* — anti-pattern warning on the shared-chat-track design: *"MOQT says such tracks SHOULD NOT use group range filters at all"*, *"A track is malformed if different objects end a subgroup or group"*. Suggests **Subscribe Tracks per sender in a shared namespace** as the canonical alternative — *"To rewind, fetch from each sender"*. Aligns with the Luke Curley *"track-per-publisher"* mental model.
+- **[Luke Curley May 15](https://mailarchive.ietf.org/arch/browse/moq/)** *"Re: User case or question to Joining Fetch"* — substantive reply on the use-case thread (track-per-publisher pattern).
+
+**No on-list activity** on Will Law's recharter thread (Day +3 silence) or martinduke's *"On other use cases"* thread. **No Weekly GitHub digest** May 15 (last digest May 10, Day +5).
+
+## moq-dev/moq — **Luke 4-PR merge burst + 4 new PRs in 24h; AWS PR #1413 is 2nd within 24h of #1408**
+
+After the May 14 review burst, **[[luke-curley]] merges 4 more PRs May 15 14:08–16:48 UTC** — total **8 PRs in 24 hours**, the **largest 24-hour merge volume on moq-dev/moq in 2026**:
+
+- **[PR #1395](https://github.com/moq-dev/moq/pull/1395)** MERGED May 15 **16:48 UTC** ([[luke-curley|kixelated]]) — *"moq-cli: rename --output to --format, --name to --broadcast, add accept subcommand"*. Co-authored-by Claude Opus 4.7 trailer.
+- **[PR #1398](https://github.com/moq-dev/moq/pull/1398)** MERGED May 15 **16:14 UTC** (Jakub Perżyło / **Qizot**) — *"Expose track name and used/unused activity signals"*. Co-authored-by Claude Opus 4.7 trailer.
+- **[PR #1404](https://github.com/moq-dev/moq/pull/1404)** MERGED May 15 **14:16 UTC** (Qizot) — *"Fix reading catalogs"*. Co-authored-by Luke + Claude.
+- **[PR #1409](https://github.com/moq-dev/moq/pull/1409)** MERGED May 15 **14:08 UTC** (**Dan Rossi / danrossi**) — *"Vite: Add alias resolver to Vite worker plugin esbuild"*. **First merge from new contributor danrossi.**
+
+**3 new PRs by Luke opened May 15 in the same window**:
+
+- **[PR #1411](https://github.com/moq-dev/moq/pull/1411)** OPENED May 15 14:15 UTC — *"Add pixel budget controls for video rendition selection"* (+139/−2). Adds `pixels` attribute / `PixelsMode` to `<moq-watch>` element: `"auto"` (default, dimension-based) or fixed pixel-area budget for bandwidth control.
+- **[PR #1412](https://github.com/moq-dev/moq/pull/1412)** OPENED May 15 16:31 UTC — *"Migrate UI from SolidJS to vanilla Web Components"* (**+1366/−2234 net -868**). Removes `@moq/ui-core` package entirely (shared Button/Icon/stats components); reimplements `@moq/watch/ui` and `@moq/publish/ui` as **framework-free Web Components** using `@moq/signals` for reactivity. **The largest negative-LOC PR on moq-dev/moq in 2026** — a dependency-trimming refactor that eliminates the SolidJS dependency from the production UI.
+- **[PR #1410](https://github.com/moq-dev/moq/pull/1410)** OPENED May 15 13:59 UTC (**YogiSotho**, **new contributor**) — *"fix(watch): hide buffering overlay while offline"* (+101/−2). Fixes [Issue #737](https://github.com/moq-dev/moq/issues/737) where the buffering UI covered the player + controls during the offline state.
+
+**Headline event — AWS files SECOND PR within 24 hours, this time a runtime fix**: **[PR #1413](https://github.com/moq-dev/moq/pull/1413)** OPENED May 16 **00:50 UTC** by **ksletmoe-aws** — *"fix(hang/consumer, watch/decoder): handle non-sequential groups and AVC description fallback"* (+68/−14). Two concrete bug fixes:
+
+1. **Non-sequential group sequences** — *"The consumer assumed group sequences increment by 1 (0, 1, 2, ...) but CMSF/EML uses epoch-based sequences with large gaps (e.g. 85386781784064, 85386781832192). After consuming a group, `#active += 1` would set `#active` to a value far below the next group's sequence, causing `next()` to block until `#checkLatency` fired a skip."* Effect: *"~1s audio underflows and choppy playback"*.
+2. **AVC description fallback** — *"WebCodecs rejects AVC frames without description. When the MSF/CMSF catalog doesn't carry [it]..."* fix path.
+
+**This is the most consequential AWS contribution to date** — not the +3891/−457 packaging-layer PR #1408 (which is integration code), but the *small (+68/−14) bug fix that exposes AWS has been actively running the moq-dev/moq stack against real CMSF/EML producers* and hit these wire-level bugs in production-like conditions. **ksletmoe-aws is now the highest-touch external contributor on moq-dev/moq this week** — 2 PRs in 24h, one packaging-layer and one runtime-fix.
+
+**Other PRs in window**: PR #1396 (metapox SUBSCRIBE_UPDATE) updated May 15 16:53 UTC; PR #1391 (release-bot v0.16.1) updated May 15 16:51 UTC, still open; PR #1405 (Karolk99 solid-js peerDependency) updated May 15 09:48 UTC.
+
+## moq-wg/moq-transport — quiet outside of PR #1378 metadata ping
+
+**No new issues or merged PRs in moq-transport** in the May 15 09:00 UTC → May 16 06:00 UTC window. **PR #1378** ([[gwendalsimon]], *"SWITCH for Client-side ABR"*) had its `updated_at` bumped to May 15 21:15 UTC, but timeline inspection shows **no new comments, reviews, commits, or labels since April 17** — likely an internal subscription/mention event not surfaced via the public API. Most-recent commit on the PR is still April 17 07:07 UTC (`docs(switch): strengthen SHOULD to MUST for local transition handling`). The SWITCH-for-Client-side-ABR design thread remains structurally unchanged; the open question is whether Will Law's earlier *"the SHOULD here is expected to capture such corner cases. Maybe it would be worth mentioning"* prompts another iteration before London.
+
+## moq-wg/msf — **Issue #163 OPENED (wilaw, catalog draft-version field)**
+
+**[Issue #163](https://github.com/moq-wg/msf/issues/163)** OPENED May 15 **10:44 UTC** by [[will-law]] — *"Version should carry draft info for interop until released"*. Full body:
+
+> Currently all the catalog examples specify Version: 1, which will be accurate once the RFC is released, however until then for interop we should really have it specify the draft version of the spec, so that we can interop around intermediate improvements to the spec. Version is currently specified as a Number. We can
+> 1. Change it to a string so we can specify `"version": "draft-01"` and also future dot improvements i.e `"1.5.342"`
+> 2. Or established a convention that for release numbers smaller than 1, the decimal portion specifies the draft i.e `"version": 0.03` implies draft-03.
+
+This is **directly motivated by the upcoming London interop**: with multiple implementations targeting different draft revisions of MSF/CMSF/LOC, the catalog `version` field's current `Number=1` (forward-looking to the RFC) gives no way for an interop endpoint to detect which draft the publisher is targeting. wilaw proposes either (a) `string` type with `"draft-NN"` semver-ish format, or (b) sub-1 decimal convention. **Carry-forward**: this is the **first MSF issue to explicitly reference the June interop as a forcing function** — pre-London editorial scope work is now visible.
+
+**[PR #157](https://github.com/moq-wg/msf/pull/157)** ([[suhas-nandakumar]] Group numbering restarts) — [[will-law]] May 15 **10:03 UTC** comment: *"What if we said 'each subsequent Group ID SHOULD increase by 1. Any intentional gaps MUST be signaled using the MOQT Prior Group ID Gap Extension header.'?"* — proposes tying MSF group-numbering rules to **the MOQT Prior Group ID Gap Extension**, formalizing the gap-signaling path. Suhas review iteration ongoing.
+
+**[MSF Issue #162](https://github.com/moq-wg/msf/issues/162)** (transferred from moq-transport #1631 May 14) and **[loc Issue #20](https://github.com/moq-wg/loc/issues/20)** (cross-spec Properties collision) both **no activity** in the window. The cross-spec coordination Issue #1632 → LOC-new-draft remains the open-ended item for London.
+
+## google/quiche moqt — martinduke continues structural refactor (9th commit in 4 days)
+
+**[3d089cb](https://github.com/google/quiche/commit/3d089cb)** May 15 **16:07 UTC** by [[martin-duke]] — *"Create OutgoingFetchStream and factor out OutgoingUniStream as a parent of both data stream types. PiperOrigin-RevId: 916033776"*. **9th moqt commit in 4 days** (May 12 → May 15) — the OutgoingDataStream / OutgoingSubgroupStream cleanup (May 14) → OutgoingFetchStream + OutgoingUniStream parent class hierarchy now in place. Pattern: martinduke is establishing **a clean class hierarchy for outgoing streams** ahead of FETCH wire-format implementation, mirroring the kind of refactor needed to support draft-18's split-out FETCH semantics.
+
+vasilvv quiet on the moqt subdir May 15 after the May 13 *"Use new MOQT control message parser API directly"* commit.
+
+## Eyevinn/moqlivemock — **3 PRs MERGED by tobbee (wiki owner) in one day; LOCMAF tooling lands**
+
+Pre-London preparation push by the wiki owner himself: **[[tobbe-einarsson|tobbee]] merges 3 PRs May 15 09:36 UTC → 19:37 UTC** consolidating LOCMAF tooling:
+
+- **[PR #81](https://github.com/Eyevinn/moqlivemock/pull/81)** MERGED May 15 **09:36 UTC** (+2115/−61) — *"LOCMAF: encoder/decoder fixes, roundtrip CLI, and design doc"*. Three commits bundled:
+  - **`fix: improve locmaf encoder/decoder`** — tfhd `Has*()` gating, signed `elst.media_time`, stpp/wvtt subtitle sample entries, `track_id` propagation, skip-and-log for unknown LOCMAF object header IDs, absolute `moofBaseMediaDecodeTime` override on BMDT discontinuity.
+  - **New `cmd/locmaf roundtrip` CLI** for round-trip testing.
+  - **LOCMAF design document** documenting the wire format.
+- **[PR #82](https://github.com/Eyevinn/moqlivemock/pull/82)** MERGED May 15 **16:45 UTC** (+70/−3) — *"LOCMAF: catalog locmafVersion field and correct bitrate reporting"*. Adds an explicit **`locmafVersion`** field to the CMSF catalog when `packaging == "locmaf"`, since the LOCMAF wire format is **still evolving** and recent changes are behavioural rather than additive (e.g., the absolute `moofBaseMediaDecodeTime` override on field ID 10 with new semantics).
+- **[PR #83](https://github.com/Eyevinn/moqlivemock/pull/83)** MERGED May 15 **19:37 UTC** (+144/−4) — *"fix: report LOCMAF wire bitrate correctly in CMSF catalog"*. Catalog generation was reporting CMAF wire bitrate for LOCMAF tracks — example: **128 kbps AAC at one-sample-per-object was reporting 171.5 kbps** in the catalog instead of the realistic ~131.9 kbps. New `internal.calcLocmafBitrate` measures one full + one delta LOCMAF object pair.
+
+**Operational reading**: with the May 14 PR #79 (hugobjoers LOCMAF support, +2886/−83) plus the May 15 trio (+2329 net), moqlivemock has had **5 LOCMAF-focused PRs in 2 days totalling ~5215 lines added** — the LOCMAF protocol-tooling iteration has accelerated significantly into the pre-London window. The version-field PR #82 explicitly hedges *"the LOCMAF wire format is still evolving"* — signaling there will be more LOCMAF wire-format change before the June interop.
+
+[[moqlivemock]] **now includes a LOCMAF roundtrip CLI** (`cmd/locmaf`), a documented design doc, accurate bitrate reporting, and explicit catalog-side version negotiation. This is **the most actively-developed publisher/subscriber pair** in the moq-llm-wiki tracking set this week.
+
+**[Eyevinn/warp-player](https://github.com/Eyevinn/warp-player/pull/120) PR #120** (hugobjoers LOCMAF support, opened May 5) **still open**, updated May 15 19:36 UTC — the player-side LOCMAF integration lags moqlivemock by ~10 days.
+
+## Implementations summary
+
+- **cloudflare/moq-rs** — Day +33 main-quiet. PR #167 (Suhas filter-framework) untouched Day +6.
+- **video-dev/moq-js** — no new commits since Feb 17.
+- **birneee/quiche_moq** — no new commits since Mar 13.
+- **Eyevinn/moqtransport** — no new commits since Apr 17.
+- **moqtail/moqtail** — quiet (post-PR-193 release cycle, last activity May 13 morning release pipeline).
+
+## IETF Datatracker — quiet since draft-18
+
+No new revisions May 14–16. WG state: transport-**18** (Day +4), msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00. Notable individual: lite-04, subscribe-rewind-02, qlog-moq-events-06, nmsf-01, gregoire-moq-msfts-00 (May 6, **Day +10, still no on-list announcement**), englishm-cdn-provisioning-00, englishm-relay-dos-00, lcurley-compressed-mp4-00 (Mar 17, ingested May 15 supplemental).
+
+## Interop runner status — **3 consecutive missed daily runs**
+
+Latest reading still **19 / 72 / 14** at 2026-05-13 00:41:38 UTC. **No May 14, May 15, or May 16 daily run has published** as of this update — **3 consecutive missed cadences** since the [[mike-english]] 4-PR registry expansion at May 13 17:23–17:25 UTC. The 105-test baseline (predating the 11→15 role expansion) is structurally broken without a new run. Plausible causes remain (a) re-baselining for the new role count, (b) new-image CI gating, or (c) operator absence around the May 15 London-interim announcement work. The next run is now the structural-stability check: **(1) does it publish? (2) does the test count grow above 105?**
+
+## MoQ Monthly — quiet
+
+No new issue. Archive remains #0 (Mar 3) + #1 (Apr 30). **Day +16 since #1**.
+
+## tobbee/moq-llm-wiki
+
+No new open issues.
+
+---
 
 # Activity (May 14 09:00 UTC → May 15 09:00 UTC) — **interop-runner registry expands by 4; AWS lands in moq-dev/moq; post-draft-18 issue triage pattern emerges**
 

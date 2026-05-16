@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-04-28
+last_updated: 2026-05-16
 status: current
 ---
 
@@ -12,10 +12,13 @@ status: current
 |---------|------|-------------|
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | |
-| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (hackathon day). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision.** |
-| **interim-2026-moq-09** | **2026-06-12** | London interim |
-| **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim |
-| **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim |
+| **London interim (in-person, hackathon/interop)** | **2026-06-09 to 2026-06-10** | Cloudflare London office (County Hall / The Riverside Building, Belvedere Road, SE1 7PB). Hackathon / interop days announced by [[mike-english]] on the IETF MoQ list **May 15, 2026** (*"[Moq] London interim June 9-12"*). 09:00–17:00 BST (08:00–16:00 UTC). |
+| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (formal session day 1). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision.** |
+| **interim-2026-moq-09** | **2026-06-12** | London interim (formal session day 2) |
+| **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim (formal session day 2) |
+| **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim (formal session day 2) |
+
+**London interim registration deadline: Thursday 2026-06-04** — attendees must add name + affiliation to the GitHub wiki by that date so [[mike-english]] can pass names to Cloudflare building security. See [Mike English's May 15 mailing-list message](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/) for the full announcement. Follow-up message with arrival procedures, sign-in instructions, reception timing, and remote-participant details still to come.
 
 ## interim-2026-moq-14 Outcomes (held Apr 27 16:30 UTC)
 
@@ -46,14 +49,25 @@ Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to pos
 
 **Apr 24 18:26 PDT (Apr 25 01:26 UTC) update**: [[alan-frindell]] replied to Martin's agenda thread on the mailing list with the slides folder link. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms [[victor-vasiliev|Victor Vasiliev]] will present a **competing proposal to RRID** at the interim, complementing Martin's PR #1604 and Alan's PR #1613. Headline agenda items now have published slides for **#1608** (Subgroup ID = first Object ID), **#1519/#1603** (Required Request ID), **#1613** (MAX_REQUEST_UPDATES), **#1605** (delivery timeout split). Time permitting: Joining FETCH Dissent.
 
-## London Interim (June 11-12)
+## London Interim (June 9-12)
 
-In-person interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB**. Four sessions across two days, similar in format to the [[discussions-2026-02|Boulder interim]] in February.
+**Formal invitation by [[mike-english]] on the IETF MoQ list May 15, 2026** ([archive link](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/)). In-person hybrid interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB** (Cloudflare London office). Mike English's announcement reframes the meeting into a **4-day contiguous in-person window** rather than the previously-tracked "moq-08/09/10/11 across June 11–12" split.
 
-- **June 11** (moq-08): 2 sessions — likely hackathon/interop day
-- **June 12** (moq-09, moq-10, moq-11): 3 working sessions (moq-10 at 08:30 UTC, moq-11 at 12:30 UTC)
-- **Remote participation**: Meetecho (details TBD)
-- Note: moq-08 through moq-11 are numbered lower but scheduled later because they were registered on the datatracker before the virtual interims.
+**Schedule (per Mike's May 15 announcement)**:
+
+- **June 9 (Tue)** — hackathon / interop day, 09:00–17:00 BST (08:00–16:00 UTC)
+- **June 10 (Wed)** — hackathon / interop day, 09:00–17:00 BST (08:00–16:00 UTC)
+- **June 11 (Thu)** — formal session day 1 (moq-08, 2 sessions)
+- **June 12 (Fri)** — formal session day 2 (moq-09, moq-10, moq-11; moq-10 at 08:30 UTC, moq-11 at 12:30 UTC)
+
+**Logistics**:
+
+- **Registration deadline**: Thursday **June 4** — names + affiliations on the GitHub wiki for building security.
+- **Daily timing**: 09:00–17:00 BST (08:00–16:00 UTC) with a midday break.
+- **Follow-up announcement still pending** with arrival procedures, sign-in instructions, reception timing, and remote-participant details (Meetecho).
+- **Format similar to** the [[discussions-2026-02|Boulder interim]] in February.
+
+Note: moq-08 through moq-11 are numbered lower but scheduled later because they were registered on the datatracker before the virtual interims.
 
 # Past 2026 Meetings
 

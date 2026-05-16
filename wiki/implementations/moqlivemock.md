@@ -2,13 +2,15 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-05-09
+last_updated: 2026-05-16
 status: current
 ---
 
+> **2026-05-14 to 2026-05-15**: **LOCMAF tooling lands and stabilises before London** — 4 LOCMAF PRs merged in 36 hours totalling ~+5215 LOC. [PR #79](https://github.com/Eyevinn/moqlivemock/pull/79) ([[hugo-bjoers|hugobjoers]], May 14 08:08 UTC, +2886/−83) brought initial LOCMAF support. Then [[tobbe-einarsson|tobbee]] landed a tooling-iteration trio: [PR #81](https://github.com/Eyevinn/moqlivemock/pull/81) (May 15 09:36 UTC, +2115/−61) — encoder/decoder fixes (tfhd `Has*()` gating, signed `elst.media_time`, stpp/wvtt subtitle entries, BMDT discontinuity handling), a new `cmd/locmaf roundtrip` CLI, and a LOCMAF design doc. [PR #82](https://github.com/Eyevinn/moqlivemock/pull/82) (May 15 16:45 UTC, +70/−3) added an explicit **`locmafVersion`** field to the CMSF catalog (LOCMAF wire format is still evolving, e.g. field ID 10 changed semantics for absolute `moofBaseMediaDecodeTime` override). [PR #83](https://github.com/Eyevinn/moqlivemock/pull/83) (May 15 19:37 UTC, +144/−4) fixed CMSF-catalog bitrate reporting for LOCMAF tracks — calls `calcLocmafBitrate` (one full + one delta object pair) instead of misreporting CMAF wire bitrate (128 kbps AAC at one-sample-per-object was reporting 171.5 kbps; correct is ~131.9 kbps).
+
 **Organization**: Eyevinn Technology
 **Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
-**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0); **LOCMAF in PR** (May 7, experimental)
+**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0); **LOCMAF** (merged May 14, tooling stabilised May 15 — encoder/decoder + roundtrip CLI + design doc + catalog `locmafVersion` + LOCMAF-accurate bitrate reporting)
 **Demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
 
 # Repositories

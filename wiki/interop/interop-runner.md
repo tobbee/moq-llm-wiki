@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-15
+last_updated: 2026-05-16
 status: current
 ---
 
@@ -45,6 +45,7 @@ The interop runner currently targets **draft-16** for automated testing.
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| **May 16, 2026** | — | — | — | — |
 | **May 15, 2026** | — | — | — | — |
 | **May 14, 2026** | — | — | — | — |
 | **May 13, 2026** | **105** | **19** | **72** | **14** |
