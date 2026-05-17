@@ -2,11 +2,102 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-16
+last_updated: 2026-05-17
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 16 06:00 UTC → May 17 06:00 UTC) — **Suhas joins SVC thread with decoder-side asymmetry argument; kixelated reverts audio frame batching; msf PR #157 converges; mailing list 2-day silent; interop-runner 4 consecutive missed cadences**
+
+## Slack — Suhas Nandakumar joins SVC TPL-vs-SGPL thread with first 3rd-party voice
+
+[[suhas-nandakumar]] May 17 **04:56 CEST (02:56 UTC)** posts a fresh top-level message into `#moq` (not threaded into the [[alan-frindell|afrind]] 26-reply chain from May 15) pushing back on the *"it's a religious question"* framing:
+
+> *"I think the internal details are more complicated than object model simplification. SVC has spatial, quality and temporal layers and the advanced ones have intricate layer dependencies across all the 3 degrees. Temporal layers and Spatial layers/Quality are handled pretty differently on the decoder side based on the information needed in-band vs can be found out of band. It is generally easier to separate Spatial layers/Quality then temporal layers into tracks. Can it be done, yes\*, but with adding more complexities for the applications."*
+
+Substantive moves:
+
+- **First 3rd-party participation** — the May 15 thread was afrind / [[luke-curley|Luke]] / [[victor-vasiliev|Victor]] only.
+- **First decoder-side argument** introduced. afrind's framing was wire-format-symmetry; Luke + Victor narrowed to operational/economic concerns (cache fragmentation, alignment headaches). Suhas opens a **new axis**: decoder-internal information topology.
+- **First explicit asymmetric-decomposition advocacy** — Spatial/Quality layers map cleanly to **tracks** (separable subscribe-control, out-of-band info); temporal layers map cleanly to **subgroups** (in-band dependency signalling). The implicit recommendation is **mix-and-match by layer type**, not TPL-only or SGPL-only.
+- **Posted as a top-level message rather than a thread reply** — likely intentional surfacing, since threading into the 26-reply chain would have buried the point.
+
+**Headline implication for [[2026-06-09-london-interim|London interim]]**: the SVC design discussion now has **three positions** to reconcile (TPL, SGPL, layer-type-mixed), not two. Suhas's argument also broadens the ground from *protocol design* (afrind's framing) to *decoder applicability* — a different review surface.
+
+`#moq-rs`, `#moq-js`, `#libquicr`, `#moq-interop-runner` all quiet. The May 10 #moq-interop-runner OpenMOQ-fork-process thread formally closed May 15 16:11 CEST with afrind's fork-governance summary and Lucas Pardue *"Thank you Alan, Will et al"*.
+
+## moq-wg/msf PR #157 — kixelated accepts wilaw's gap-signaling extension-header path
+
+After 5 days of design exchange on **[PR #157](https://github.com/moq-wg/msf/pull/157)** ([[suhas-nandakumar]] *"Clarify Group numbering requirements for restarts (#147)"*), the editorial direction converges May 16:
+
+- **[[suhas-nandakumar|suhasHere]] May 16 17:38 UTC**: *"It's the property of output track that we are talking about here. The same rules apply"* — addresses a question on **primary/backup-mux input handling** by clarifying that the spec-rule scope is the **output track**, not the input streams a muxer combines.
+- **[[luke-curley|kixelated]] May 16 19:08 UTC**: accepts wilaw's May 15 10:03 UTC formulation *"each subsequent Group ID SHOULD increase by 1. Any intentional gaps MUST be signaled using the MOQT Prior Group ID Gap Extension header"* with the slight weakening *"I would have SHOULD for both, but that works for me"*.
+
+**Headline takeaway**: the spec-side resolution path for **non-sequential group sequences** (the same bug class AWS hit at runtime in [[implementations/moq-dev|moq-dev]] PR #1413, where CMSF/EML's epoch-based sequences caused ~1s audio underflows) is now **the MOQT Prior Group ID Gap Extension header**. Producers using epoch-based sequences are spec-permitted-with-extension; consumers can switch into gap-aware mode on the wire-level signal.
+
+The kixelated *"SHOULD for both"* weakening (vs wilaw's *"SHOULD…MUST"*) reflects that some producers (e.g. moq-lite) may not always cleanly predict the gap before emit; making the extension-header signalling a strong recommendation rather than a hard requirement preserves an explicit non-compliant-but-still-legal path.
+
+## moq-dev/moq — kixelated reverts audio frame batching to one-frame-per-group
+
+[**PR #1414**](https://github.com/moq-dev/moq/pull/1414) OPENED May 16 **20:29 UTC** by [[luke-curley|kixelated]] (+17/−50), *"audio: send each frame as its own group"*. Body:
+
+> *"Audio frames were being packed into ~100ms groups for relay efficiency. For real-time use cases, that bounds end-to-end latency at the group boundary since the relay cannot forward a group until it is closed. Go back to one-frame-per-group: each frame is flushed to the relay immediately, and the codec's packet loss concealment (Opus PLC, AAC PLC) handles individual frame drops. Applies to the browser publish encoder and the Rust opus/aac mux importers, which all had the same 100ms grouping pattern."*
+
+**Net -33 LOC** removing the batching path. The trade-off:
+
+- **Removed cost**: ~100ms E2E-latency floor (the relay-cannot-forward-an-open-group constraint).
+- **Added cost**: higher QUIC stream count (one stream per frame ≈ 50 streams/s for 20ms Opus, vs ~10 streams/s at 100ms batching).
+- **Fallback**: Opus / AAC packet-loss concealment handles individual frame drops, so the loss-vs-latency choice is leaned toward latency.
+
+**Pattern observation**: this is the **second moq-lite design choice this month** reversed in the *"go back to the more obvious primitive"* direction (the other: PR #1385 May 6 reverted PR #1356 `insert_track` API change, then PR #1387 re-reverted). Reads as **kixelated tightening real-time semantics ahead of the [[2026-06-09-london-interim|London hackathon]]** — moq-lite's product narrative is *"low-latency live"*, and the audio batching was a latency leak.
+
+## moq-dev/moq — Karolk99 SolidJS peerDep PR #1405 closed unmerged
+
+[**PR #1405**](https://github.com/moq-dev/moq/pull/1405) (Karolk99, *"Declare solid-js as a peerDependency"*) CLOSED unmerged May 16 11:36 UTC. Background: Karolk99's argument was that `@moq/publish`, `@moq/watch`, and `@moq/ui-core` import from `solid-js` but listed it only in `devDependencies`, so the published package.json files declared no solid-js while their JS still contained bare `import "solid-js"` statements — causing either unresolved imports or two parallel Solid runtime instances on consumer apps. kixelated's response May 14 20:58 UTC was *"I don't really want to make solid an explicit dependency just for the UI web component. It hurts dev UX. TBH I kind of want to revert the switch to solidjs and go back to the minimal moq/signals DOM library, since it's already a dependency. Solid feels like overkill for a simple, stock video UI."* — which became [**PR #1412**](https://github.com/moq-dev/moq/pull/1412) (SolidJS → vanilla Web Components migration, opened May 15 16:31 UTC, +1366/−2234). Karolk99 closed PR #1405 *"happy to close"* on May 15 09:48 UTC, with one flagged regression on the `<moq-watch-ui>` Web Component path (overlay button reactive signals not updating visual state — *"play icon stays on play after pausing"*). The peerDep concern is now superseded by the Solid-removal direction.
+
+## Eyevinn/moqlivemock — tobbee LOCMAF DRM documentation
+
+[**PR #84**](https://github.com/Eyevinn/moqlivemock/pull/84) MERGED May 16 06:55 → 10:36 UTC by [[tobbe-einarsson|tobbee]] (+326/−0, docs-only), *"docs: add DRM section to LOCMAF.md"*. The new `## DRM with LOCMAF` section covers:
+
+- **End-to-end pipeline diagram** — encrypted CMAF source → LOCMAF wire → reconstructed CMAF → MSE/EME/CDM. **mdat bytes are byte-equal end-to-end**, so the CDM sees identical ciphertext on both sides (the LOCMAF box reconstruction is field-lossless on the encryption-relevant payload).
+- **Catalog DRM signalling** — the `contentProtections` root-level array, per-track `contentProtectionRefIDs`, and the `DRMSystem` object (systemID, robustness, laURL, authzURL, certURL, pssh). Worked JSON example included. Notes that `locmafVersion` applies to DRM-protected tracks the same way it applies to clear ones.
+- **`cenc` vs `cbcs` on the wire** — comparison table showing `cenc` carries a per-sample IV on every fragment (8–16 B per sample) while `cbcs` carries a constant IV once in the moov.
+- **Why byte-lossy moof reconstruction is safe for DRM** — every field the CDM consumes survives the round-trip.
+
+Continues the post-May-15 LOCMAF tooling sprint by tobbee (PRs #81, #82, #83 May 15 + #84 May 16 = 4 PRs by tobbee in 36 hours, ~+2655 LOC after PR #79 by hugobjoers on May 14). The DRM section completes the **publisher-side documentation surface** for the [[2026-06-09-london-interim|London interim]] LOCMAF demonstration with warp-player (PR #120 still open).
+
+## Eyevinn/warp-player — dependabot 7-PR merge burst
+
+May 16 21:07–21:22 UTC, **7 dependabot PRs merged in 15 minutes**:
+
+- PR #121 (21:07 UTC) — `actions/dependency-review-action` v4 → v5
+- PR #122 (21:07 UTC) — dev-deps group, 3 updates
+- PR #125 (21:07 UTC) — `@commitlint/cli` 20.5.3 → 21.0.0
+- PR #126 (21:12 UTC) — `@commitlint/config-conventional` 20.5.3 → 21.0.1
+- PR #128 (21:15 UTC) — production-deps group, 5 updates (1 dir)
+- PR #124 (21:22 UTC) — TypeScript 5.9.3 → **6.0.3** (major version bump)
+- PR #123 — alternate production-deps group with 3 updates — **CLOSED unmerged** (21:10 UTC, superseded by #128's 5-update group)
+
+PR #127 (eslint 9.39.4 → 10.4.0) still open after CI signal. This is the post-`v0.8.0` release-cycle dependency catch-up; **TypeScript 6.0.3** is the most consequential bump (major version, may surface type narrowing / strict-mode changes in subsequent merges).
+
+## Mailing list — 2-day silence after May 15 6-message bundle
+
+**No new messages May 16 or May 17** — first full 2-day on-list silence since the [[joining-fetch|Joining FETCH consultation]] opened May 11. Last on-list activity remains the May 15 bundle (Mike English London invitation + afrind Joining-FETCH-survey synthesis + Joining-FETCH use-case redesign acceptance by Yu You / Mo Zanaty / Luke Curley).
+
+**No Weekly GitHub digest** May 17 (last digest May 10, **Day +7**). The Will Law recharter thread (Day +5 silence) and martinduke *"On other use cases"* thread (Day +18 silence) both remain quiet.
+
+## google/quiche moqt — 2-day quiet after 9-commit burst
+
+**No new commits to `quiche/quic/moqt` May 16 or May 17** (last `3d089cbe` *"Create OutgoingFetchStream and factor out OutgoingUniStream as a parent of both data stream types"* May 15 16:07 UTC by martinduke). 9 commits in 4 days (May 12–15) now followed by 2 days quiet — likely just IETF-week / post-IETF-week pacing.
+
+## Interop runner — 4 consecutive missed daily cadences (May 14, 15, 16, 17)
+
+**Still 19 / 72 / 14 at 2026-05-13 00:41:38 UTC**. Four consecutive missed daily cadences confirms this is **operator-bandwidth-limited**, not an intentional baselining pause — [[mike-english]] has been focused on London logistics + cdn-provisioning + relay-dos drafts + the May 15 invitation announcement, and the new-15-role matrix expansion he merged May 13 17:23–17:25 UTC remains uncommitted to a CI run.
+
+**Wiki action (May 17)**: downgrade [[interop-runner]] header status from *"current"* to *"unreliable"* and flag it on the implementation pages that depend on it for status signals (specifically [[aiomoqt]], moqx-client, mlmtest, Nokia-via-Docker — all 4 newly merged on May 13 and have had **zero validation runs** since the registry expansion).
+
+---
 
 # Activity (May 15 09:00 UTC → May 16 06:00 UTC) — **SVC TPL-vs-SGPL Slack design thread; London interim formal invitation (June 9–12); AWS second PR within 24h**
 

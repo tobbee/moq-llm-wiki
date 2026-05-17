@@ -2,10 +2,12 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-05-16
+last_updated: 2026-05-17
 status: current
 ---
 
+> **2026-05-16**: **LOCMAF DRM documentation lands** — [PR #84](https://github.com/Eyevinn/moqlivemock/pull/84) MERGED May 16 06:55 → 10:36 UTC by [[tobbe-einarsson|tobbee]] (+326/−0, docs-only), *"docs: add DRM section to LOCMAF.md"*. New `## DRM with LOCMAF` section covers: end-to-end encrypted-CMAF → LOCMAF-wire → reconstructed-CMAF → MSE/EME/CDM pipeline (mdat bytes byte-equal end-to-end so the CDM sees identical ciphertext); catalog `contentProtections` array + per-track `contentProtectionRefIDs` + `DRMSystem` object (systemID, robustness, laURL/authzURL/certURL, pssh); **cenc vs cbcs IV-on-the-wire comparison table** (cenc carries per-sample IV on every fragment, cbcs carries constant IV once in moov); byte-lossy moof reconstruction is DRM-safe (every field the CDM consumes survives the round-trip). Completes the publisher-side documentation surface for the [[2026-06-09-london-interim|London interim]] LOCMAF demonstration with [[warp-player]] (PR #120 still open). **4 PRs by tobbee in 36 hours** (May 15 PRs #81, #82, #83 + May 16 PR #84).
+>
 > **2026-05-14 to 2026-05-15**: **LOCMAF tooling lands and stabilises before London** — 4 LOCMAF PRs merged in 36 hours totalling ~+5215 LOC. [PR #79](https://github.com/Eyevinn/moqlivemock/pull/79) ([[hugo-bjoers|hugobjoers]], May 14 08:08 UTC, +2886/−83) brought initial LOCMAF support. Then [[tobbe-einarsson|tobbee]] landed a tooling-iteration trio: [PR #81](https://github.com/Eyevinn/moqlivemock/pull/81) (May 15 09:36 UTC, +2115/−61) — encoder/decoder fixes (tfhd `Has*()` gating, signed `elst.media_time`, stpp/wvtt subtitle entries, BMDT discontinuity handling), a new `cmd/locmaf roundtrip` CLI, and a LOCMAF design doc. [PR #82](https://github.com/Eyevinn/moqlivemock/pull/82) (May 15 16:45 UTC, +70/−3) added an explicit **`locmafVersion`** field to the CMSF catalog (LOCMAF wire format is still evolving, e.g. field ID 10 changed semantics for absolute `moofBaseMediaDecodeTime` override). [PR #83](https://github.com/Eyevinn/moqlivemock/pull/83) (May 15 19:37 UTC, +144/−4) fixed CMSF-catalog bitrate reporting for LOCMAF tracks — calls `calcLocmafBitrate` (one full + one delta object pair) instead of misreporting CMAF wire bitrate (128 kbps AAC at one-sample-per-object was reporting 171.5 kbps; correct is ~131.9 kbps).
 
 **Organization**: Eyevinn Technology
