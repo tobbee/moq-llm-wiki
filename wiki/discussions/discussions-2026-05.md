@@ -2,11 +2,161 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-17
+last_updated: 2026-05-18
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 17 06:00 UTC → May 18 06:00 UTC) — **moq-dev/moq ships draft-18 (first implementation); SVC thread broadens to 4 voices with Lorenzo joining + draft-18 procedural gap surfaced; tobbee + warp-player v0.9.0 LOCMAF release**
+
+## moq-dev/moq — first implementation to ship draft-ietf-moq-transport-18
+
+[**PR #1418**](https://github.com/moq-dev/moq/pull/1418) MERGED May 18 **05:08 UTC** by [[luke-curley|kixelated]] (+1431/−477, `Co-authored-by: Claude`), *"Add draft-ietf-moq-transport-18 support"*. **First moq-transport-18 implementation to ship in any open-source repository** — 6 days after [[moq-transport|draft-18 publication]] May 12 23:07 UTC.
+
+Body verbatim summary:
+
+> *"Adds Draft18 as a negotiated version alongside Draft14-17 in both moq-lite Rust and JS implementations. Draft18 reuses the Draft17 unified SETUP path and applies the wire-format changes from the draft-17 to draft-18 changelog."*
+
+**Spec-driven changes** (from PR body):
+
+- **Wire version `0xff000012` / ALPN `"moqt-18"`** prepended to negotiation lists.
+- **Varint 7-byte form** (`1111110x` prefix) accepted on draft-18 (resolves moq-transport [#1595](https://github.com/moq-wg/moq-transport/issues/1595)).
+- **`SUBGROUP_HEADER` `FIRST_OBJECT` bit (0x40)** set on emit and ignored on decode in draft-18 per §11.4.2 (resolves [#1618](https://github.com/moq-wg/moq-transport/issues/1618)). moq-lite always starts subgroups at object 0, so the bit is constant-true on the publisher side.
+- **Request ID removed** from `PUBLISH_NAMESPACE` / `SUBSCRIBE` / etc. on draft-18 (resolves [#1615](https://github.com/moq-wg/moq-transport/issues/1615)) — field is draft-17-only.
+- **`SUBSCRIBE_TRACKS` (0x51, [#1542](https://github.com/moq-wg/moq-transport/pull/1542))**: explicitly rejected with a clear error rather than silently ignored, since moq-lite does not implement PUBLISH replication and the peer would otherwise wait forever for `REQUEST_OK`.
+- **Optional trailing Request ID in `GOAWAY`** ([#1559](https://github.com/moq-wg/moq-transport/issues/1559)): never emitted, read-and-discarded if present.
+
+**Intentionally NOT changed** (from PR body):
+
+- **`LARGEST_OBJECT` ([#1621](https://github.com/moq-wg/moq-transport/pull/1621))**: *"we lie on purpose — honoring the new MUST is strictly worse for live latency"*. **First explicit spec non-compliance moq-lite has documented in a PR body**.
+- **Track Properties on `REQUEST_OK` ([#1576](https://github.com/moq-wg/moq-transport/issues/1576)) and mandatory-to-understand track extensions ([#1509](https://github.com/moq-wg/moq-transport/issues/1509))**: read-and-dropped, never emitted — moq-lite does not use track properties.
+
+**Refactor**: switch version matches changed from *"explicit newest"* to *"newest defaults forward"* per CLAUDE.md convention. Each match lists Draft14–16 (legacy) explicitly and falls through to `_` for newer drafts, so **Draft19 will inherit Draft18 behavior unless explicitly opted out**. The `SetupVersion::Draft17` internal enum variant is renamed to `Modern` to reflect *"uses ALPN-only negotiation"*. 6 commits on the PR branch (`claude/add-moq-transport-18-support-fFxsp`), all auto-co-authored by Claude per kixelated's pre-London cadence.
+
+**Headline carry-forward**:
+
+- **Implementation-vs-spec gap closes 6 days after draft-18 publication** — this is the **fastest implementation turnaround for any major MoQT draft revision** the wiki has tracked (draft-17 took ~3 weeks; draft-16 took ~2 weeks). Reads as **moq-dev/moq positioning for [[2026-06-09-london-interim|London hackathon]] interop on draft-18**.
+- **The "we lie on purpose" comment on LARGEST_OBJECT is a procedural marker**: it concretely demonstrates the pattern the [[interop-runner]] / matrix-rebuild side will hit when implementations diverge from MUSTs for product reasons — the matrix has no signalling for *"intentionally non-compliant pass/fail"*. afrind / [[mike-english]] may need to thread this through their hackathon test design.
+- **No other implementation has shipped draft-18**: cloudflare/moq-rs (Day +35 main-quiet), google/quiche moqt (Day +3 quiet), moqtail/moqtail (Day +5 quiet) all still on draft-16. The matrix's spec-vs-implementation gap **widens** with moq-dev/moq now ahead of every other matrix entry.
+
+## moq-dev/moq — five-PR overnight merge spree by kixelated (May 18 01:51 → 05:08 UTC)
+
+Beyond the headline #1418, **kixelated landed 4 additional `main`-branch merges** in the same 3h17m window:
+
+| PR | Merged (UTC) | Title | Net |
+|----|--------------|-------|-----|
+| [#1414](https://github.com/moq-dev/moq/pull/1414) | 01:51 | audio: send each frame as its own group | +17/−50 |
+| [#1412](https://github.com/moq-dev/moq/pull/1412) | 02:37 | Migrate UI from SolidJS to vanilla Web Components | +1366/−2234 |
+| [#1411](https://github.com/moq-dev/moq/pull/1411) | 03:42 | Add pixel budget controls for video rendition selection | +139/−2 |
+| [#1419](https://github.com/moq-dev/moq/pull/1419) | 04:44 | Drop BEM prefixes from watch and publish UI CSS | (CSS-only) |
+| [#1418](https://github.com/moq-dev/moq/pull/1418) | 05:08 | Add draft-ietf-moq-transport-18 support | +1431/−477 |
+
+**Headline**:
+
+- **PR #1412 (SolidJS → vanilla Web Components, net −868 LOC)** lands — completes the May 15 SolidJS removal direction (closing PR #1405's peerDep blocker permanently). Removes `@moq/ui-core` SolidJS package entirely; UI now built on bare Custom Elements + the `@moq/signals` package moq-dev already depends on.
+- **PR #1411 (pixel budget ABR)**: new viewport-pixel-budget-driven rendition selection algorithm — adds device-side ABR aware of actual rendering surface (display-pixel-rate × upscaling tolerance). Pairs with the May 16 audio frame-per-group revert as the **second product-side latency/quality tuning before London**.
+- **PR #1414 (audio frame-per-group)** opened May 16 20:29 UTC (covered in May 17 entry) — now merged. The whole batching path is now removed from `main`.
+
+**Pattern observation**: **moq-dev/moq's largest single-window merge volume in 2026** measured by both PR count and LOC (5 merges + ~1500 net additions). All 5 PRs are `Co-authored-by: Claude` per kixelated's documented practice. **This is the third consecutive day with material moq-dev/moq main activity** — the May 14–18 cycle now totals 8 + 4 + 5 = 17 PR merges in 5 days, well above the repo's running ~2–3 merges/day baseline.
+
+## moq-dev/moq — two PRs opened May 18 06:00 UTC (just outside the merge window)
+
+[**PR #1420**](https://github.com/moq-dev/moq/pull/1420) OPENED May 18 **05:54 UTC** by [[luke-curley|kixelated]] (+67/−18), *"moq-lite: enforce cluster loop detection on announce"*. **Production-debug PR** addressing a ~120 MB/hr memory leak on a live nanode relay. Body:
+
+> *"Heap profile from a live nanode relay traced the leak to `Subscriber::start_announce → OriginNode::publish → Broadcast::produce`, ~120 MB/hr of `Broadcast` objects on a relay carrying ~zero customer traffic. Cause was a phantom anonymous publisher (`anon/la-cbs`, `anon/la-nbc`) that kept reconnecting and re-announcing. With a 13-edge mesh and no working loop detection, each announce bounced ~32 times (`MAX_HOPS`) allocating a fresh `Broadcast` per hop before finally being dropped."*
+
+Three changes: (1) subscriber drops reflected announces (`hops.contains(self_origin)` guard); (2) `AnnounceInterest.exclude_hop` is now populated and honored (was decoded but unused); (3) **`self_origin` is now stable per relay**, not random per session — previously every `session::start` generated `Origin::random()` so cross-session loop detection at `OriginProducer::publish_broadcast` could never fire. Includes a `moq-relay 0.10.25 → 0.10.26` patch bump. **Significant signal that moq-dev/moq is running on live infrastructure carrying real-world (or real-world-shaped) traffic** — the `anon/la-cbs` / `anon/la-nbc` phantom publishers suggest someone has been testing CBS/NBC livestream feeds through a moq-dev cluster.
+
+[**PR #1421**](https://github.com/moq-dev/moq/pull/1421) OPENED May 18 **05:58 UTC** by [[luke-curley|kixelated]] (+477/−227), *"fix: bump web-transport-iroh to 0.4 to unbreak cargo update"*. CI-unblock PR: release-plz auto-generated PR #1391 failed CI after `cargo update` picked up newly-released `pkcs8 0.11.0`, which changed `Error::KeyMalformed` from a unit variant to a tuple variant — transitively-pulled `ed25519-dalek 3.0.0-pre.1` (via iroh 0.97) still uses the old form. Bump to `web-transport-iroh 0.4` (iroh 0.98) constrains the lockfile to a self-consistent set.
+
+## Slack — Suhas SVC thread grows from 0 to 13 replies; Lorenzo Miniero joins as 4th voice; **NEW draft-18 procedural gap surfaced**
+
+The [[suhas-nandakumar|Suhas]] May 17 02:56 UTC top-level message (covered in May 17 entry as the *"first 3rd-party participation"* in the SVC TPL-vs-SGPL discussion) **grew 13 thread replies in the May 17 06:00 UTC → May 18 06:00 UTC window**.
+
+**4th-party voice joins** — [[lorenzo-miniero|Lorenzo Miniero]] May 17 13:05 CEST (11:05 UTC), bringing the **WebRTC-mirror argument**:
+
+> *"If we mirrored the way WebRTC currently does it, it would be SVC layers as subgroup, since layers per track would be more like simulcast (different spatial layers as independent streams, so different SSRCs), which makes more sense to me considering the layer dependencies in SVC. WebRTC simulcast supports SVC temporal scalability too out of the box, and that's done on the same SSRC (as expected)."*
+
+**afrind softens to "wire-image isomorphic, adaptation layer on subscriber side"** — May 17 17:12 CEST (15:12 UTC):
+
+> *"Oh you are on team 'both'. In any case, the wire image is essentially isomorphic so any system that can be built with one can be built with the other with an adaptation layer on the subscriber side."*
+
+Followed by 15:14 UTC self-deprecation: *"I realize I am essentially telling the world 'you can edit files in vim or emacs'"*. **Softer than the May 15 *"religious question"* framing** — afrind is now positioning the design space as *"interchangeable with adaptation"* rather than *"design preference"*.
+
+**Suhas refines the asymmetric-decomposition position** — May 17 20:50 CEST (18:50 UTC) introduces an **RTP analogy**:
+
+> *"When we came with subgroups, the idea was to represent temporal layers within a given spatial layer (which is a track). The inter spatial layer dependencies can be mapped via msf attribute. There is lot of inband signaling that happens, especially with VPx and AVx codecs that makes it natural with such arrangement for "common" svc dependencies chains. Having it split even at temporal layers at track level needs another layer of additional information that needs be exchanged for decoders to set up the dependencies appropriately across multiple tracks and wth differing priorities makes it much harder. I don't see a need to bring on this additional, probably unproven complexity for apps at this stage. RTP SvC, for example has 2 modes — SRST and MRMT. The latter aligns to some extent of multi track design. The former more aligns with what we have subgroup based design. Most of the real world implementations are SRST for its simplicity for the exact same reasons."*
+
+The RTP SRST (Single SSRC for Single Transport) / MRMT (Multi SSRC for Multi Transport) parallel maps **SGPL ≈ SRST** and **TPL ≈ MRMT** with the "most real-world implementations chose SRST" inference.
+
+**Luke Curley surfaces a NEW draft-18 procedural gap** — May 18 00:29 CEST (May 17 22:29 UTC):
+
+> *"isn't it illegal to SUBSCRIBE to the same track twice? how does that work with `SUBSCRIBE track=video FILTER=sub-group=0` and `SUBSCRIBE track=video FILTER=sub-group=1`"*
+
+Followed by 00:25 → 00:28 acknowledgement that *"yeah, I understand the appeal of sub-groups for temporal scalability; it means you don't need a separate group for each b-frame"* with a counter that decoder-side metadata about subgroup contents is *"going to happen anyway"*.
+
+**afrind concedes the gap** — May 18 01:27 CEST (May 17 23:27 UTC), after Luke clarifies the priority-per-subgroup-via-SUBSCRIBE concern:
+
+> *"Oh, yeah, if you want subscriber control over layer priority you have to use track per layer."*
+
+**Headline takeaway**: The May 15 *"religious question"* framing has **already been substantively walked back** by the originator. afrind's May 17 concession that **"subscriber control over per-layer priority is structurally only possible with TPL"** is the **first concrete differentiator** identified in the thread — the previous wire-image-isomorphism arguments had narrowed differences to economics (cache fragmentation, relay ingress costs). This means SGPL-with-filters has a **specific functional limitation** that depends on whether MOQT allows multiple subscriptions to the same track with different filters — which it currently doesn't ([[moq-transport]] Issue [#1451](https://github.com/moq-wg/moq-transport/issues/1451) *"Allow multiple Subscriptions to a Track"* has been open since April 13). **Carry-forward**:
+
+- Issue #1451 may need to be re-prioritised before [[2026-06-09-london-interim|London]] if the SGPL camp wants to preserve subscriber-side priority control.
+- The thread now has **4 design positions** (afrind/wire-isomorphism, Luke/economics, Suhas/decoder-asymmetry, Lorenzo/WebRTC-mirror) plus a procedural gap (priority-per-layer-only-with-TPL). **The London SVC design discussion just got significantly more complex**.
+
+## Eyevinn — synchronised moqlivemock v0.9.0 + warp-player v0.9.0 LOCMAF release by tobbee
+
+Three [[tobbe-einarsson|tobbee]] PRs merged into Eyevinn/moqlivemock May 17 06:47 → 09:36 UTC, plus the warp-player release at 09:40 UTC:
+
+- **[moqlivemock PR #85](https://github.com/Eyevinn/moqlivemock/pull/85) MERGED May 17 06:47 UTC** (+354/−8), *"fix(audio): regenerate 10s loops with uniform MP4 sample durations"* — regenerates the 10s loop audio sources (AAC, Opus, AC-3) so every MP4 sample has the same duration (no trailing short sample, no `elst`, `baseMediaDecodeTime` starts at 0). Adds `utils/contentgen/trimaudio` post-processor that strips whole-frame encoder priming, drops trailing short sample, trims to codec target frame count, removes the `elst`, and re-anchors tfdts at 0. `internal/asset.go::GenCMAFChunk` now emits `orig.Dur` instead of `t.SampleDur`. **Audio-loop drift fix** that was surfacing as gradual audio/video desync over multi-loop playback.
+- **[moqlivemock PR #86](https://github.com/Eyevinn/moqlivemock/pull/86) MERGED May 17 08:58 UTC** (+180/−1), *"docs(LOCMAF): add document version banner, logo, and revision history"* — adds the LOCMAF logo (light/dark variants via `<picture>`) at the top of `docs/LOCMAF.md`, plus an explicit *"Document version: 0.1 (2026-05-17) — Wire-format `locmafVersion`: \"0.1\""* banner and a Revision History table with git-tag snapshot policy (`locmaf-v0.1`, …). **First formal LOCMAF spec versioning artifact** — the wire-format version field tobbee added in [[moqlivemock|PR #82]] May 15 now has a corresponding spec-document version label.
+- **[moqlivemock PR #87](https://github.com/Eyevinn/moqlivemock/pull/87) MERGED May 17 09:36 UTC** (+66/−7), *"chore(release): prepare v0.9.0"* — v0.9.0 changelog: *"LOCMAF (Low Overhead CMAF) packaging support and audio loop drift fixes. LOCMAF: a LOC-inspired variant of CMAF that encodes only the non-derivable `moof`/`moov` fields as MoQT key-value pairs using QUIC varints. The first object of every group is a LOCMAF full moof (carries every required field); subsequent objects in the group are LOCMAF delta moofs that only carry the fields that changed since the previous moof."*
+- **[warp-player PR #129](https://github.com/Eyevinn/warp-player/pull/129) MERGED May 17 09:40 UTC** (+91/−13), *"chore: prepare v0.9.0 release"* — version bump 0.8.0 → 0.9.0 covering **LOCMAF (compressed CMAF) packaging support** — new `src/locmaf/` module that parses LOCMAF init / `moof` / delta-`moof` objects per v0.1 with QUIC varints and derived `baseMediaDecodeTime`, routed through the MSE pipeline; gated on the catalog's `locmafVersion` field. Also notes TypeScript 6 and other dep bumps.
+
+**Headline takeaway**:
+
+- **Eyevinn's LOCMAF stack is now formally version-labeled (v0.1) and synchronously released across publisher + player at v0.9.0** — Eyevinn's pre-London setup is **"freeze the wire format at LOCMAF v0.1, ship publisher + player together, then interop"**.
+- **Audio-loop drift fix in PR #85 is unrelated to LOCMAF** — surfaces while debugging long-running publisher sessions during pre-London soak-testing. The `trimaudio` post-processor is a reusable tool for future codec additions.
+
+## moq-dev/moq — 2 new issues, 1 still-open dependabot
+
+Two issues opened by [danrossi](https://github.com/danrossi) (new contributor, opened first moq-dev/moq PR May 14 → merged as #1409 May 15):
+
+- **Issue [#1416](https://github.com/moq-dev/moq/issues/1416)** OPENED May 17 13:28 UTC — *"Watch TS: Feature to signal when the api is ready"*. UX request for a ready signal on the TypeScript watch API surface.
+- **Issue [#1415](https://github.com/moq-dev/moq/issues/1415)** OPENED May 17 11:32 UTC — *"TS: Option to enable / disable to disconnect when pausing. Error emitted"*. Behavioural toggle request.
+
+Both filed within 5 hours of each other; reads as a real integration push by danrossi. With merged PR #1409 (Vite plugin) + 2 fresh issues + their PR #128 still open in warp-player (separate repo), danrossi is positioning as a fast-onboarding consumer-side contributor to the moq-dev/moq stack.
+
+[[warp-player|Eyevinn/warp-player]] PR #127 (eslint 9.39.4 → 10.4.0 dev-dep bump) **still open since May 14** — Day +3 after the May 16 dependabot 7-PR burst landed everything else.
+
+## Implementations still quiet
+
+- **cloudflare/moq-rs**: Day +35 main-quiet (last commit Apr 13). [PR #167](https://github.com/cloudflare/moq-rs/pull/167) (Suhas filter-framework) Day +8 untouched.
+- **google/quiche moqt**: Day +3 quiet (last commit `3d089cb` May 15 16:09 UTC).
+- **moqtail/moqtail**: Day +5 quiet (last commit `dbd7085` May 13 08:44 UTC, [ci] release #196).
+- **video-dev/moq-js**: No new commits since Feb 17 (Day +90+).
+- **birneee/quiche_moq**: No new commits since Mar 13 (Day +66+).
+- **Eyevinn/moqtransport**: No new commits since Apr 17 (Day +31+).
+- **Quicr/cat-token**: No new commits since May 10 22:30 UTC rename.
+
+## Mailing list
+
+**Weekly GitHub digest May 17 02:20 UTC** (Repository Activity Summary Bot, `do_not_reply@mnot.net`) — *"[Moq] Weekly github digest (Media Over QUIC Activity Summary)"*. Summary covers May 10–17 activity across moq-wg repos: moq-transport +1/−10 issues / 6 comments / 3 PRs filed; warp-streaming-format +2/−8 issues / 17 comments / 6 PRs; loc +1/−0 issues. **Note**: this digest fell just inside yesterday's wiki entry window (02:20 UTC May 17 < the 06:00 UTC cutoff) but was missed in the May 17 log entry. **Carry-forward**: cadence has resumed (last digest was May 10, so this is Day +7, restored to normal weekly cycle).
+
+No other on-list messages May 17 06:00 UTC → May 18 06:00 UTC. Will Law recharter thread quiet Day +7; martinduke *"On other use cases"* thread quiet; Joining FETCH consultation Day +3 since the May 15 6-message close-out.
+
+## IETF Datatracker
+
+No new revisions May 17 or May 18. WG state: transport-**18** (Day +6), msf-00, loc-02, secure-objects-00, privacy-pass-02, cmsf-00. Notable individual: lite-04, subscribe-rewind-02, qlog-moq-events-06, nmsf-01, gregoire-moq-msfts-00 (May 6, **Day +12**, still no on-list announcement), englishm-cdn-provisioning-00, englishm-relay-dos-00, lcurley-compressed-mp4-00.
+
+## Interop runner
+
+**No new run** — still 19 / 72 / 14 at 2026-05-13 00:41:38 UTC. **5 consecutive missed daily cadences** now (May 14, 15, 16, 17, **18**). Status remains *"unreliable"*. With moq-dev/moq now ahead of every other matrix entry on draft-18, the matrix is structurally one revision behind its highest-touch implementation as it approaches [[2026-06-09-london-interim|London hackathon]] — **22 days out, the matrix shows nothing of what implementations have actually shipped post-May 13**.
+
+## MoQ Monthly
+
+No new issue — archive still #0 (Mar 3) + #1 (Apr 30). **Day +18 since #1**.
 
 # Activity (May 16 06:00 UTC → May 17 06:00 UTC) — **Suhas joins SVC thread with decoder-side asymmetry argument; kixelated reverts audio frame batching; msf PR #157 converges; mailing list 2-day silent; interop-runner 4 consecutive missed cadences**
 
