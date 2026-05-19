@@ -2,10 +2,12 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-18
-status: unreliable
+last_updated: 2026-05-19
+status: current
 ---
 
+> **2026-05-19 cadence resumes** — first new report in 5 days. **[2026-05-19 01:36:37 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-19_013637/report.html): 168 / 35 / 132** (total / pass / fail). Matrix expanded from 105 → 168 tests (+60%) — the May 13 4-PR registry-expansion (mlmtest, aiomoqt, moqx-client, Nokia-via-Docker) is now exercised end-to-end for the first time. **The root cause of the May 14–18 silence** was diagnosed by [[mike-english]] (`#moq-interop-runner` May 18 21:19 UTC) as a **CI-timeout from the combinatorial explosion** (test suite hung 6+ hours); [PR #69](https://github.com/englishm/moq-interop-runner/pull/69) MERGED May 19 01:35 UTC adds per-test timeouts to prevent hanging tests blocking CI. **Status restored to *current***. **PR #68 (Update interop target to draft-18)** OPEN May 18 21:01 UTC — staged but not yet merged at report time, so the matrix is still targeting draft-16 vs [[moq-dev|moq-dev/moq]]'s shipped draft-18. **Note the matrix `moq-rs` / `moq-rs-draft-16` split** — cloudflare/moq-rs is now treated as two distinct implementations at different draft revisions. Pass rate 20.8% (vs 18.1% on May 13) is at **early-baseline territory**: the 4 newly-merged impls are running their first end-to-end validation. Mike English May 19 02:21 UTC: *"Probably a lot of low hanging fruit to get some of these to green."*
+>
 > **2026-05-18 status**: The interop runner has now **missed 5 consecutive daily cadences** (May 14, 15, 16, 17, 18). No run has published since **May 13 00:41:38 UTC** (19 / 72 / 14). Status remains *"unreliable"*. **New structural gap**: [[moq-dev|moq-dev/moq]] shipped draft-18 May 18 05:08 UTC (first open-source implementation, [PR #1418](https://github.com/moq-dev/moq/pull/1418)) — the matrix is now structurally **one revision behind its highest-touch implementation**. With [[2026-06-09-london-interim|London hackathon]] 22 days out, the matrix shows nothing of post-May-13 implementation evolution, and the moq-dev-rs / moq-dev-js images now compile against a target the matrix can't exercise.
 >
 > **2026-05-17 status downgrade**: The interop runner has **missed 4 consecutive daily cadences** (May 14, 15, 16, 17). No run has published since **May 13 00:41:38 UTC** (19 / 72 / 14). The 4-PR registry expansion merged by [[mike-english]] May 13 17:23–17:25 UTC (mlmtest, moqx-client, aiomoqt, Nokia-via-Docker) is uncommitted to a CI run, so the 4 newly registered roles have had **zero validation runs** under the matrix. Most likely cause is operator bandwidth (Mike has been focused on London interim logistics + cdn-provisioning + relay-dos drafts). Status downgraded from *"current"* to *"unreliable"* until a successful run resumes.
@@ -43,17 +45,18 @@ The interop runner automates testing between MOQ implementations, publishing res
 
 # Current Target
 
-The interop runner currently targets **draft-16** for automated testing.
+The interop runner currently targets **draft-16** for automated testing. **PR #68** (Update interop target to draft-18) opened May 18 21:01 UTC by [[mike-english]] is staged but not yet merged.
 
 # Test Results History
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
-| **May 18, 2026** | — | — | — | — |
-| **May 17, 2026** | — | — | — | — |
-| **May 16, 2026** | — | — | — | — |
-| **May 15, 2026** | — | — | — | — |
-| **May 14, 2026** | — | — | — | — |
+| **May 19, 2026 01:36 UTC** | **168** | **35** | **132** | **1** |
+| May 18, 2026 | — (no run) | — | — | — |
+| May 17, 2026 | — (no run) | — | — | — |
+| May 16, 2026 | — (no run) | — | — | — |
+| May 15, 2026 | — (no run) | — | — | — |
+| May 14, 2026 | — (no run) | — | — | — |
 | **May 13, 2026** | **105** | **19** | **72** | **14** |
 | May 12, 2026 | 105 | 20 | 71 | 14 |
 | May 11, 2026 | 105 | 21 | 70 | 14 |

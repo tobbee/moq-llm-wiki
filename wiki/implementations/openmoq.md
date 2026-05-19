@@ -2,9 +2,11 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-04-18
+last_updated: 2026-05-19
 status: current
 ---
+
+> **2026-05-19**: **mondain/moqxr ships draft-18 support** (10 commits May 16–18 by Paul Gregoire — *"Implement draft-18 subscribe tracks"* / *"fix draft 18 subgroup header encoding"* / *"Add cross-draft MoQ message serde tests"*). Paul Gregoire publicly announced on `#moq` May 18 18:44 UTC: *"@Lorenzo Miniero I've got moqxr updated to 18; github.com/mondain/moqxr."* **Third open-source implementation to ship draft-18** (after [[moq-dev|moq-dev/moq]] and [[imquic]]). First OpenMOQ-derived implementation to come up on the `#moq` channel in a positive technical context (vs the May 10 openmoq/moqx governance fallout).
 
 **Website**: [openmoq.org](http://openmoq.org/)
 **GitHub**: [openmoq](https://github.com/openmoq)
@@ -53,9 +55,10 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - **GitHub**: [mondain/moqxr](https://github.com/mondain/moqxr)
 - Origin Publisher, Contribution, and Ingest CLI for OpenMOQ
 - C++
-- Latest release: **v0.2.1** (Apr 17, 2026) — draft-16 interop fixes
+- **draft-18 support shipped May 16–18, 2026** — 10 commits including *"Implement draft-18 subscribe tracks"* (`fe6ba73f`), *"fix draft 18 subgroup header encoding"* (`cca10631`), *"Add cross-draft MoQ message serde tests"* (`d284c21c`). Slack `#moq` announcement May 18 18:44 UTC.
+- Latest release: **v0.2.1** (Apr 17, 2026) — draft-16 interop fixes (release tag predates the draft-18 work)
 - Prior: v0.2.0 (Apr 15) added draft-16 SUBSCRIBE KVP parser, dropped WebTransport subprotocol for draft-14, and made control-message handling non-blocking
-- Updated: 2026-04-17
+- Updated: 2026-05-18
 
 ## red5pro/moq-playa (planned)
 - Player component for OpenMOQ

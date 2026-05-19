@@ -2,11 +2,226 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-18
+last_updated: 2026-05-19
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 18 06:00 UTC → May 19 06:00 UTC) — **interop runner cadence resumes (105 → 168 tests, 12-impl matrix); 3 additional implementations announce draft-18 support (imquic / moqxr / moq.dev anon CDN); kixelated reframes moq-lite library as moq-net (separating library identity from wire-protocol identity); AWS PR #1413 CLOSED unmerged after kixelated rejects transport-layer encoder-failover stitching; London Agenda: Martin Duke chair prod + Will Law files first concrete request (MSF/CMSF 60min + DTS 30min)**
+
+## Interop runner — 5-day silence broken; matrix expanded to 168 tests / 12 implementations (35 / 132)
+
+[**Mike English May 18 23:19 CEST (21:19 UTC) `#moq-interop-runner`**](https://app.slack.com/client/T046V0QF374/C0B2KQLJGN7): *"I merged a number of new implementations last week also, and it looks like now the combinatorial explosion of test runs might be causing the test run and report generation task to time out. Investigating now to see if maybe something is just hanging or if we're really running tests for 6+ hours now."* — **diagnoses the May 14-18 cadence gap** as a CI-timeout issue triggered by the May 13 4-PR matrix-expansion merge (105 tests → 168).
+
+[**PR #69 MERGED**](https://github.com/englishm/moq-interop-runner/pull/69) May 19 **01:35 UTC** by englishm-cloudflare, *"Add per-test timeout to prevent hanging tests from blocking CI"* (+1/−1) — the structural fix.
+
+[**New report published May 19 01:36:37 UTC**](https://englishm.github.io/moq-interop-runner/results/2026-05-19_013637/report.html):
+
+| | **May 19 01:36 UTC** | **May 13 00:41 UTC** | Δ |
+|---|---|---|---|
+| Total | **168** | 105 | **+63** (+60%) |
+| Pass | **35** | 19 | **+16** |
+| Fail | **132** | 72 | **+60** |
+| Skip / other | 1 | 14 | -13 |
+| Pass rate | **20.8%** | 18.1% | +2.7pp |
+| Target draft | **draft-16** | draft-14 | +2 |
+| Implementations | **12** | 11 | +1 |
+
+[**Mike English May 19 04:21 CEST (02:21 UTC)**](https://app.slack.com/client/T046V0QF374/C0B2KQLJGN7): *"OK, added some timeouts for test runs that were just hanging and now we have a new report. Probably a lot of low hanging fruit to get some of these to green."* — frames the 20.8% pass rate as **early-baseline territory rather than regression**: new impls (mlmtest, aiomoqt, moqx-client, Nokia-via-Docker) were merged May 13 with no prior validation runs, so this is the first end-to-end pass for any of them.
+
+**Implementation list** (12 distinct identifiers in the matrix): aiomoqt, imquic, libquicr, moq-dev-js, moq-dev-rs, moq-rs, moq-rs-draft-16, moqlivemock, moqx, moxygen, quiche-moq, xquic. **Note the `moq-rs` / `moq-rs-draft-16` split** — the matrix now treats the cloudflare/moq-rs draft-14 and draft-16 baselines as separate implementations, formalising the *"multiple-version-of-same-impl"* pattern. **No mlmtest** as a distinct identifier — Eyevinn's moqlivemock is the catalogued name (matches the May 13 PR #65 merge). **moxygen** (Meta) reappears — last in the matrix in fall 2025.
+
+**Target draft jumped May 13 → May 19**: draft-14 → draft-16 (+2 revisions). [**PR #68 (Update interop target to draft-18)**](https://github.com/englishm/moq-interop-runner/pull/68) was OPENED May 18 21:01 UTC by englishm-cloudflare but **remains OPEN** at the report time — so draft-18 is staged but not yet the matrix target. The first matrix run hitting draft-18 (if PR #68 merges) is the next structural watermark.
+
+[**Mike English May 18 23:20 CEST**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK) `#moq`: *"Working through some CI issues, and then I'll be bumping the interop target in the automated interop test runner to draft-18, too."*
+
+**Headline carry-forward**:
+
+- **[[interop-runner]] is back from "unreliable" status** — daily cadence has resumed with the timeout fix in place, but the **new failure-mode is now CI-budget rather than test-flakiness**: at 168 tests with potential 6+ hour runtimes, any further matrix expansion (e.g. adding moqxr) compounds the wall-clock cost. Mike English flagged this; expect a follow-up batch of skip/timeout policy work pre-London.
+- **The matrix is still one draft revision behind moq-dev/moq** (target draft-16 vs moq-dev shipped draft-18 May 18) — same gap as flagged in the May 18 wiki entry, partially mitigated by PR #68 being staged.
+- **moqxr is conspicuously absent** despite Paul Gregoire's May 18 announcement and his draft-18 commits — likely the next implementation to be added to the matrix, but no PR yet to register it.
+
+## moq-dev/moq — `moq-lite` library renamed to `moq-net` ([PR #1428](https://github.com/moq-dev/moq/pull/1428))
+
+[**PR #1428**](https://github.com/moq-dev/moq/pull/1428) OPENED May 18 **21:31 UTC** by [[luke-curley|kixelated]] (+1230/−939, **OPEN** at window close), *"rename moq-lite package to moq-net"*. Body verbatim:
+
+> *"The old name caused confusion because `moq-lite` is also the name of one of the wire protocols this library speaks. The new name reflects that this is the networking layer; at session setup it negotiates either the moq-lite or moq-transport wire protocol."*
+
+**Package renames** (across all 3 language bindings):
+
+| Stack | Old | New | Shim policy |
+|---|---|---|---|
+| Rust | `rs/moq-lite` | **`rs/moq-net` v0.1.0** | `rs/moq-lite` kept as re-export shim, **no further updates** |
+| JS | `js/lite` (`@moq/lite`) | **`js/net` (`@moq/net`) v0.1.0** | `@moq/lite` kept as shim with runtime warning + JSDoc `@deprecated` |
+| Python | `py/moq-lite` | **`py/moq-net` v0.1.0** | `py/moq-lite` kept as shim emitting `DeprecationWarning` on import |
+
+**Protocol-level identifiers UNCHANGED**: ALPNs `moq-lite-04`, the internal `lite/` submodule that implements the moq-lite wire protocol, spec URLs. **All in-tree consumers** (`hang`, `moq-mux`, `moq-native`, `moq-relay`, `moq-ffi`, `libmoq`, `moq-cli`, `moq-clock`, `moq-boy`, `moq-gst`, `@moq/hang`, `@moq/watch`, `@moq/publish`, etc.) now depend on `moq-net` / `@moq/net`.
+
+**Headline carry-forward**:
+
+- **First explicit structural admission that the moq-lite library is a dual-protocol implementation**. Until PR #1428, the library name *"moq-lite"* was overloaded — referring both to (1) the wire protocol [[moq-lite|draft-lcurley-moq-lite]] and (2) the moq-dev/moq library implementing it. With moq-dev/moq now shipping [[moq-transport|draft-ietf-moq-transport-18]] via PR #1418 (May 18 05:08 UTC), this naming ambiguity became actively misleading. The rename **separates library identity from wire-protocol identity** and positions `moq-net` as a *"protocol-agnostic networking layer"*. **The implication for the [[interop-runner]]** is that the matrix entries `moq-dev-rs` and `moq-dev-js` should arguably be relabeled as `moq-net-rs` / `moq-net-js` (or the matrix should distinguish *which* wire protocol each instance speaks, not just the library).
+- **The shim policy is conservative but explicit-deprecation**: existing dependents won't break, but new code is steered to the new name. The `moq-lite` shim getting *"no further updates"* (Rust) / runtime-warning (JS) / `DeprecationWarning` (Python) is the same pattern Python ecosystems use for 6–12 month deprecations.
+- **The release strategy is `0.1.0` for `moq-net`** — not `v1.0.0`, signaling the new package is starting from API-stable-but-not-frozen. This is consistent with the moq-lite history (`v0.16.4` is the last legacy version, which the May 18 release PR #1425 cuts).
+
+## moq-dev/moq — 8-PR cluster May 18 06:00 UTC → 23:43 UTC (post-#1418 stabilisation)
+
+Beyond the May 18 05:08 UTC headline [PR #1418](https://github.com/moq-dev/moq/pull/1418), **kixelated landed 7 additional PRs and opened the moq-net rename** in the same UTC day:
+
+| PR | Status | UTC | Title | LOC | Note |
+|----|--------|-----|-------|-----|------|
+| [#1420](https://github.com/moq-dev/moq/pull/1420) | MERGED 06:19 | | moq-lite: enforce cluster loop detection on announce | +67/−18 | Closes ~120 MB/hr leak |
+| [#1421](https://github.com/moq-dev/moq/pull/1421) | MERGED 06:19 | | fix: bump web-transport-iroh to 0.4 to unbreak cargo update | +477/−227 | Dep bump |
+| [#1422](https://github.com/moq-dev/moq/pull/1422) | MERGED 08:08 | | chore: release | (release bot) | v0.16.3 |
+| [#1423](https://github.com/moq-dev/moq/pull/1423) | MERGED 07:46 | | moq-lite: tolerate Ended for unknown paths | small | Crash hardening |
+| [#1424](https://github.com/moq-dev/moq/pull/1424) | MERGED 08:07 | | chore: build and cache moq-boy on release tags | CI-only | |
+| [#1425](https://github.com/moq-dev/moq/pull/1425) | **OPEN** 08:10 | | chore: release | +49/−31 | v0.16.4 (release-plz auto) |
+| [#1426](https://github.com/moq-dev/moq/pull/1426) | MERGED 19:50 | | moq-lite: keep probe stream errors out of the session | +73/−53 | **Generated with Claude Code** |
+| [#1427](https://github.com/moq-dev/moq/pull/1427) | MERGED 10:58 | | moq-lite: fix AnnounceInterest.exclude_hop overflow on JS side | small | **Direct fix for u53 overflow caught by PR #1420** |
+| [#1428](https://github.com/moq-dev/moq/pull/1428) | **OPEN** 21:31 | | rename moq-lite package to moq-net | +1230/−939 | Major rename (see above) |
+
+**PR #1426 design notes** (also Claude-co-authored): probe-stream errors (peer reset / FIN / missing `getStats` / transport hiccup) were tearing down the entire session on both ends. The fix **scopes failures to the probe stream itself** — Subscriber/Publisher run-probe paths catch all errors, decline gracefully when the browser has no `getStats`, and the Rust side gates the probe stream on `BandwidthConsumer` existence (so viewer-only sessions skip it entirely). The PR body explicitly notes *"the actual session-tear-down bug was an unrelated `u53` overflow in `AnnounceInterest.exclude_hop`"* — fixed in the same window by PR #1427. **The Claude-Code workflow is now visible on cleanup/resilience PRs as well as feature PRs.**
+
+[**Luke Curley May 18 22:24 CEST (20:24 UTC) `#moq`**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"^ also I deployed hop-based routing (14 edge nodes), pls lemme know if something is not working."* — and **22:21 CEST (20:21 UTC)**: *"I think `cdn.moq.dev/anon` (and my clients) support draft-18 now, but it's untested."* **Two operational disclosures**: (1) cluster expanded from a "13-edge mesh" (May 18 morning PR #1420 body) to **14 edge nodes** later the same day; (2) **moq.dev's anonymous CDN now claims draft-18 wire support** ahead of any verified-interop result.
+
+## moq-dev/moq — [PR #1413](https://github.com/moq-dev/moq/pull/1413) CLOSED unmerged after kixelated rejects transport-layer encoder-failover stitching
+
+[**PR #1413**](https://github.com/moq-dev/moq/pull/1413) CLOSED May 18 **23:43 UTC** (unmerged, by ksletmoe-aws). Discussion ran May 16 00:50 UTC (open) → May 18 23:43 UTC (close), spanning 3 days and **5 substantive comments** between kixelated and ksletmoe-aws on the non-sequential-group-sequences design.
+
+**The technical thread**:
+
+1. **AWS use case** (ksletmoe-aws May 18 20:39 UTC): *"we need cross-region encoder redundancy where two independent encoders in different regions produce interchangeable output for the same stream. If one region goes down, a downstream relay switches to the other region's feed seamlessly. For this to work, group IDs from both encoders must align, and the natural way to achieve that with output-locked encoders is epoch-based PTS as the group sequence (both encoders derive the same value from wall clock, no coordination needed). Sequential IDs don't work because there's no shared counter between independent encoders, and deriving one from PTS breaks with variable-length GOPs (ad breaks, etc.)."*
+
+2. **AWS revised design** (same comment): use **MOQT `Prior Group ID Gap` extension header (Property Type 0x3C, added in draft-14)** for the publisher to declare *"the N groups before this one will never exist"* — gives the consumer the same certainty as `+= 1` without sequential numbering. *"I think you might have been thinking of Prior Object ID Gap when you mentioned gap notifications being object-only? The group-level one is there too as of draft-14."*
+
+3. **kixelated rejection of transport-layer stitching** (May 18 21:15 UTC): *"There has to be some coordination because the encoding settings need to be identical. And stuff like timelines and FETCH assumes that a broadcast is append-only. Otherwise the moment you do an unsynchronized failover, a bunch of stuff would break. My thought process here is that you explicitly make two separate broadcasts and have the player switch between them. `camera/1234/primary` and `camera/1234/backup`, or add the unix epoch to the broadcast name directly. It's a lot less gross to stitch at the application level than stitching at the transport level."*
+
+4. **kixelated on Prior Group ID Gap as inadequate**: *"And you're right, I didn't think Prior Group ID Gap was a thing. It's still not perfect because it can't handle two lost groups in a row (ex. audio)"*
+
+5. **kixelated recommended pattern**: *"I recommend relying on `SUBSCRIBE_NAMESPACE` (`announced` in moq-lite) to learn when primary/backup broadcasts come and go, and it opens the door to doing active/active stuff."*
+
+6. **AWS acceptance** (May 18 23:42 UTC): *"You're right that there's coordination already (identical encoder config, synchronized SCTE), and the separate broadcasts approach is cleaner for FETCH/DVR. I'll think more about the announced-based switching model you described. For the short term, I'll close this PR and split out the AVC description fallback (part 2) as a separate fix since that's orthogonal."*
+
+7. **Closure** (May 18 23:43 UTC): PR closed, AVC description fallback to be re-filed.
+
+**Headline carry-forward**:
+
+- **kixelated's stance on non-sequential group sequences is now public and explicit**: *"Sequences numbers should be += 1 just like HLS/DASH. I strongly disagree with the IETF drafts that allow, and even encourage, sequence number gaps."* (May 16 03:49 UTC). This is **at odds with the [[moq-msf]] PR #157 (Suhas group-numbering)** editorial direction — *"each subsequent Group ID SHOULD increase by 1; intentional gaps MUST be signaled via the MOQT Prior Group ID Gap Extension header"* — which kixelated himself agreed to *"with SHOULD for both"* on May 16 19:08 UTC. **kixelated's pattern is "library-level rejection of the spec-level concession"**: he accepts the spec wording but won't implement the gap path in moq-lite the library. This is the **second case in two weeks of kixelated documenting intentional moq-lite non-compliance** (first was `LARGEST_OBJECT` in PR #1418).
+- **AWS's failover use case is a real production gap in the IETF draft model**: cross-region encoder redundancy with output-locked encoders has no canonical transport pattern in MOQT today. kixelated proposes application-layer switching via `SUBSCRIBE_NAMESPACE` / `announced` — which works but requires the player to be aware of primary/backup namespace conventions. **This is the same kind of design question that the [[joining-fetch]] consultation surfaced**: where does transport responsibility end and application responsibility begin? Likely worth tracking for [[2026-06-09-london-interim|London]] as an emerging design topic.
+- **AWS engagement pattern is collaborative**: PR #1408 (CMSF/EML, +3891/−457) is **still open Day +4** after the design dialogue on PR #1413. The relationship between kixelated and ksletmoe-aws has settled into a substantive design-review pattern: AWS proposes implementation-pragmatic changes, kixelated pushes back on architectural grounds, AWS reframes within his constraints. This is **healthy engagement** but is **slow relative to AWS's apparent internal cadence** (2 PRs in 24h on May 14–15, then design discussion friction throughout May 16–18).
+
+## Three additional implementations announce draft-18 support: imquic / moqxr / moq.dev `anon` CDN
+
+The May 18 06:00 UTC → May 19 06:00 UTC window saw **three new draft-18 implementations come online** beyond the headline moq-dev/moq PR #1418:
+
+### meetecho/imquic — Lorenzo Miniero's QUIC-with-MoQT C library
+
+[**Lorenzo Miniero May 18 19:53 CEST (17:53 UTC) `#moq`**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"Not sure if anybody else started updating to v18 too, but if you want something to test against, I updated my stack to most of the changes there (hopefully the right way). I think I'm missing the ability to REQUEST_UPDATE a SUBSCRIBE_NAMESPACE/TRACKS, but I'll try to do that in the next few days. You can reach my POC relay at the usual place ([lminiero.it](http://lminiero.it), port 9000, both raw QUIC and WebTransport)."*
+
+The stack is [meetecho/imquic](https://github.com/meetecho/imquic) — *"QUIC library with RTP Over QUIC (RoQ) and Media Over QUIC (MoQT) support"*, C library, 73 stars, last pushed May 18 15:51 UTC. The relay endpoint at lminiero.it:9000 (raw QUIC + WebTransport) is now **a publicly available draft-18 endpoint for interop testing**.
+
+**Subsequent Slack engagement**:
+
+- [**Suhas Nandakumar May 18 20:38 CEST (18:38 UTC)**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"@Lorenzo Miniero I am in the midst of updating my client. I can run some tests and let you know?"*
+- [**Paul Gregoire May 18 20:44 CEST (18:44 UTC)**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"@Lorenzo Miniero I've got moqxr updated to 18; github.com/mondain/moqxr."*
+
+### mondain/moqxr — Paul Gregoire's C++ Origin Publisher for OpenMOQ
+
+[**mondain/moqxr**](https://github.com/mondain/moqxr) — *"Origin Publisher for OpenMOQ"*, C++, 3 stars. Draft-18 work started May 16 (3 days ahead of the May 18 Slack announcement):
+
+| Commit (UTC) | SHA | Message |
+|---|---|---|
+| May 16 13:16 | `05d1dec8` | Update MoQ draft WebTransport docs |
+| May 16 13:49 | `d284c21c` | Add cross-draft MoQ message serde tests |
+| May 16 15:01 | `cca10631` | fix draft 18 subgroup header encoding |
+| May 16 15:02 | `ea11a556` | Fix psychedelic ffmpeg pipe on Windows |
+| May 16 15:17 | `3360afca` | Refresh roadmap |
+| May 16 15:34 | `fe6ba73f` | Implement draft-18 subscribe tracks |
+| May 16 16:17 | `9454b2c0` | Clarify publisher stats API |
+| May 16 16:23 | `957d5cd8` | Poll live publisher stats |
+| May 17 17:22 | `07ecdcef` | Record published-object stats for non-live publish modes |
+| May 18 19:07 | `903bf868` | Fix missing functional include |
+
+This is **the first OpenMOQ-published implementation announcement on `#moq`** (compare to the May 10 OpenMOQ governance fallout where openmoq/moqx provoked the Lucas Pardue / Will Law dialogue). Paul Gregoire's moqxr is **a contribution from a single OpenMOQ member into the OpenMOQ org/identity** but is hosted on his personal `mondain/` namespace rather than `openmoq/` — separating individual work from the org-level brand.
+
+### moq.dev `anon` CDN — Luke Curley's deployed relay claims draft-18
+
+[**Luke Curley May 18 22:21 CEST (20:21 UTC)**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"I think `cdn.moq.dev/anon` (and my clients) support draft-18 now, but it's untested."*
+
+This makes **`cdn.moq.dev/anon` the first deployed production-shaped relay to claim draft-18 support** — the same nanode cluster from PR #1420's loop-detection-debugging context, now bumped to 14 edge nodes. Untested as of the announcement.
+
+### Updated implementation roster for draft-18
+
+As of May 19 06:00 UTC, **the implementations claiming draft-18 wire support** are:
+
+| Implementation | Stack | Maintainer | Status |
+|---|---|---|---|
+| **moq-dev/moq** (library + CDN) | Rust + JS | [[luke-curley|kixelated]] | Shipped via PR #1418 May 18 05:08 UTC |
+| **meetecho/imquic** | C | [[lorenzo-miniero]] | Shipped May 18 17:53 UTC (POC relay at lminiero.it:9000) |
+| **mondain/moqxr** | C++ | Paul Gregoire | Implementing since May 16 (Slack announcement May 18 18:44 UTC) |
+| **cdn.moq.dev/anon** | (moq-dev/moq deployment) | kixelated | Claims draft-18, untested as of May 18 20:21 UTC |
+
+**6 days after [[moq-transport|draft-18]] publication May 12, the count is 3 distinct codebases + 1 production deployment**. Compare to draft-17 (~3 weeks for first impl) and draft-16 (~2 weeks for first impl): **draft-18 has cleared 3 impls in less time than draft-17 cleared 1**. The accelerant is in two places: (1) the Claude-co-authored PR pattern on moq-dev/moq, and (2) **draft-18's small-delta scope** (7-byte varint, FIRST_OBJECT bit, RequestID removal, LARGEST_OBJECT) which lets implementations stage changes incrementally on top of draft-17 plumbing.
+
+## Mailing list — London Agenda: Martin Duke chair prod + Will Law files first request
+
+After **3 days of mailing list silence** (May 15-17), 2 messages May 18:
+
+### Martin Duke chair prod ([archive](https://mailarchive.ietf.org/arch/msg/moq/8pyExJ38lsn17GgMoPZ6w3eFPAQ/))
+
+*"We're two days out and have received zero requests for agenda time."* Reminds participants the **May 20 deadline** (Mike English May 15 invitation) is approaching. Re-states the format requirement: *"Please include an estimate of (1) how long you would like to present the slides and (2) how much discussion time you think you need. Requests will not be granted unless both estimates are present."*
+
+### Will Law (Akamai) first concrete request ([archive](https://mailarchive.ietf.org/arch/msg/moq/ph_GdTjbxut1QCwstrclzZkfL-k/))
+
+Files **the first two agenda items**:
+
+1. **MSF/CMSF — tech decisions**: **60 minutes**
+2. **DTS**: **30 minutes**, *"unless it gets resolved May 26th"*
+
+**Headline carry-forward**:
+
+- **MSF/CMSF 60-min slot signals it's the largest unresolved spec topic** going into London. Open MSF issues include #163 (will-law catalog draft-version field, opened May 15) and PR #157 (Suhas group-numbering / SHOULD-for-both editorial-converging). The May 14 [[moq-cmsf]] WG adoption status remains *"-00 / not yet adopted"*. **Will Law owning the agenda slot makes sense** — he's both the [[moq-msf]] editor and the catalog-format draft author.
+- **DTS as a separate 30-min slot** with conditional *"unless it gets resolved May 26th"*: DTS likely refers to a contention between Will Law / Mike English / kixelated on **DASH/HLS-like timestamp scheme** for MSF/CMSF — the same area as Suhas's group-numbering PR #157 and the AWS PR #1413 epoch-PTS use case. May 26th is presumably an editor's deadline / planned issue-resolution date.
+- **The "zero requests at T-2-days" pattern** is a normal IETF working group rhythm (chairs prod, requests arrive in the last 48h), not a red flag. Expect 3-5 more agenda requests in the May 19-20 window — afrind on Joining FETCH outcome (post-survey), Suhas on SVC TPL/SGPL synthesis, kixelated on draft-18 retrospective + moq-net architecture, possibly Tobbe on LOCMAF given the public Slack announcement (see below).
+
+## Slack `#moq` — Tobbe formally announces LOCMAF on `#moq` (first wide audience)
+
+[**Torbjorn Einarsson May 18 08:19 CEST (06:19 UTC)**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK): *"CMAF chunk headers are more than 100 bytes even when wrapping a single audio frame. This is an order of magnitude more than LOC, and increases with DRM/encryption. However, all fields are essentially fixed, or can be derived, so it is possible to delta-encode them within a group. LOCMAF, see [locmaf.dev](https://locmaf.dev), is a first shot at a new wire-format for CMAF that fits well with MOQ. The actual chunk overhead can often get down two 2 bytes in steady state for common cases with fixed framerate. All details and links to a spec and implementation in. moqlivemock is at the locmaf site. This pushes the MP4 compression of @Luke Curley quite a lot further, and has been done as a part of M Sc work by Hugo Björs (report to be published in June). Any feedback is welcome. If some of you think this is a good idea, we may want to make an Internet-Draft, probably after some adjustments/approvements."*
+
+**Two structural new elements** vs all prior LOCMAF context the wiki has tracked:
+
+1. **`locmaf.dev` is now publicly disclosed** as a project landing page. Until May 18, the spec + implementation were buried in `Eyevinn/moqlivemock/docs/LOCMAF.md` (catalogued in the May 14 wiki entry). The `locmaf.dev` domain elevates it to a **first-class draft project URL**.
+2. **First explicit mention of "may want to make an Internet-Draft"** for LOCMAF as a possibility. Until this Slack post, LOCMAF's status was *"Eyevinn-internal wire-format experiment + reference impl"*; now it's *"may be socialized as an I-D"*. The conditional framing (*"if some of you think this is a good idea, ... probably after some adjustments/approvements"*) is a **standard pre-IETF temperature-check**.
+
+**Reaction**:
+
+- [**Gwendal Simon May 18 15:29 CEST (13:29 UTC)**](https://app.slack.com/client/T046V0QF374/C046V0QF3CK) (gwendalsimon — author of [[moq-transport]] PR #1378 SWITCH): *"This is quite a piece of work. Thank you Tobje! You can probably expand CMSF github.com/moq-wg/cmsf. It is very interesting."*
+
+**Headline carry-forward**:
+
+- **Gwendal's reaction is constructive but suggests an integration path** via [[moq-cmsf]] rather than a standalone I-D — *"you can probably expand CMSF"*. This is a **specific architectural suggestion**: rather than start a parallel `LOCMAF` Internet-Draft, fold the delta-encoded CMAF overhead reduction into CMSF as an optional CMAF-mode extension. This is **politically lighter than launching a new draft** (CMSF is already WG-adopted at -00) but also means LOCMAF would inherit CMSF's bias toward DASH/HLS-compatible CMAF (vs LOCMAF's current freedom to optimise without that constraint).
+- **Slack reactions are likely incomplete** — the post was made at the start of the European workday, by Tobbe at Eyevinn. Additional reactions from Luke Curley (the LOC author), Will Law, Mike English (the CMSF author) are likely to arrive in the May 19-20 window. The May 18 entry captures only the Gwendal reaction; this thread is open for follow-up.
+- **For London agenda**: depending on how the May 19-20 reactions land, Tobbe may want to file an agenda slot before the May 20 deadline. The current MSF/CMSF 60-min slot Will Law requested could include a 10-15 min LOCMAF subitem if the conversation converges that way.
+
+## google/quiche moqt — `Factor PublishedSubscription out of MoqtSession` ([6460010e](https://github.com/google/quiche/commit/6460010e))
+
+[**6460010e**](https://github.com/google/quiche/commit/6460010e) May 18 **22:45 UTC** by martinduke: *"Factor PublishedSubscription out of MoqtSession, into SubscriptionPublisher."* **Breaks the 3-day quiet** on `quiche/quic/moqt` (last commit May 15 16:07 UTC). This is **structural / API-refactor work**, not a draft-18 implementation step — building a `SubscriptionPublisher` abstraction by extracting `PublishedSubscription` from the monolithic `MoqtSession`. Consistent with the 9-commit-in-4-days pattern preceding the May 16 quiet — Martin Duke is **re-architecting the publisher path** for the draft-18 transition rather than rushing a wire-level update.
+
+## Eyevinn/warp-player — dependabot 3-PR re-rebase post-#127 closure
+
+After [PR #127](https://github.com/Eyevinn/warp-player/pull/127) (eslint 9.39.4→10.4.0) was CLOSED unmerged May 19 01:27 UTC, dependabot opened 3 fresh PRs in the same minute:
+
+- [PR #130](https://github.com/Eyevinn/warp-player/pull/130) (@types/node 25.7.0 → 25.9.0, dev-deps group)
+- [PR #131](https://github.com/Eyevinn/warp-player/pull/131) (production-dependencies group, 3 updates)
+- [PR #132](https://github.com/Eyevinn/warp-player/pull/132) (eslint 9.39.4 → 10.4.0)
+
+These are mechanical dep-PR rebases triggered by recent merges (likely v0.9.0). Not material to MoQ work.
+
+## Other channels
+
+`#moq-rs`, `#moq-js`, `#libquicr` — all quiet in the window. `#moq-interop-runner` — see [[interop-runner]] discussion above.
+
+---
 
 # Activity (May 17 06:00 UTC → May 18 06:00 UTC) — **moq-dev/moq ships draft-18 (first implementation); SVC thread broadens to 4 voices with Lorenzo joining + draft-18 procedural gap surfaced; tobbee + warp-player v0.9.0 LOCMAF release**
 

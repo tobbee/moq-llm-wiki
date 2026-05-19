@@ -2,13 +2,27 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-05-14
+last_updated: 2026-05-19
 status: current
 draft_version: 18
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 ---
 
 **draft-ietf-moq-transport-18** | published 2026-05-12 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/18/)
+
+# Draft-18 Implementation Status (as of 2026-05-19)
+
+| Implementation | Stack | Maintainer | Status | Public endpoint |
+|---|---|---|---|---|
+| **[[moq-dev|moq-dev/moq]]** | Rust + JS | [[luke-curley|kixelated]] | Shipped May 18 05:08 UTC ([PR #1418](https://github.com/moq-dev/moq/pull/1418), +1431/−477) | `cdn.moq.dev/anon` (claims draft-18, untested as of May 18) |
+| **[[imquic|meetecho/imquic]]** | C | [[lorenzo-miniero]] | Shipped May 18 17:53 UTC (partial: missing REQUEST_UPDATE on SUBSCRIBE_NAMESPACE/TRACKS) | lminiero.it:9000 (raw QUIC + WebTransport) |
+| **[mondain/moqxr](https://github.com/mondain/moqxr)** | C++ | Paul Gregoire ([[openmoq]] member) | Shipped May 16–18 (10 commits, `#moq` announce May 18 18:44 UTC) | — |
+| [[moq-rs\|cloudflare/moq-rs]] | Rust | [[mike-english]] | Not yet | — |
+| [[moq-rs\|google/quiche moqt]] | C++ | [[martin-duke]] / [[victor-vasiliev]] | Not yet (Day +7 quiet on the moqt path post-draft-18) | — |
+| [[moqtail]] | Rust | Zafer Gurel | Not yet | — |
+| [[interop-runner]] matrix | (target only) | [[mike-english]] | Target is **still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) staged but not merged) | — |
+
+**6 days after publication, draft-18 has 3 distinct codebases shipped + 1 production deployment** — fastest spec → first-impl turnaround the wiki has tracked (draft-17: ~3 weeks; draft-16: ~2 weeks). The accelerants: (1) the Claude-co-authored PR pattern on moq-dev/moq; (2) draft-18's small-delta scope (7-byte varint, FIRST_OBJECT bit, RequestID removal, LARGEST_OBJECT) lets implementations stage changes incrementally on draft-17 plumbing.
 
 # Authors
 - [[alan-frindell]] (Meta)
