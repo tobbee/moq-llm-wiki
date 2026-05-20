@@ -2,10 +2,12 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 status: current
 ---
 
+> **2026-05-20**: **mondain/moqxr 8-commit draft-18 fix-up sprint May 19 14:17 → May 20 00:11 UTC** after Lorenzo Miniero's first interop attempt against the May 18 announcement found a **bidi-vs-uni SETUP-stream divergence** (moqxr defaulted to draft-14 unless `--draft 18` was set, and used a bidirectional stream for SETUP when draft-18 requires two unidirectional streams). Paul Gregoire's 8 commits include *"Align draft-18 WebTransport stream handling"* (`53ee899`), *"Fix MoQT control compliance gaps"* (`40ee48c`), *"Fix MoQT publish framing and metadata"* (`c426d2d`), *"Fix draft 17 and 18 MoQT wire semantics"* (`96baf5a`), *"Fix MoQT pass 3 compliance gaps"* (`7bebe08`), *"Fix WebTransport protocol offers"* (`f73427a`), *"Fix draft-18 setup option delta encoding"* (`1f222b0`), *"Fix draft 18 request stream polling"* (`d759426`). This is the **first cross-impl hands-on draft-18 interop attempt the wiki has tracked** (moqxr ↔ [[imquic]]); the 10-hour turnaround on 8 fixes validates moqxr as an actively-maintained second draft-18 endpoint heading into [[2026-06-09-london-interim|London]]. Mike English ↔ [[giovanni-marzot]] resolved May 18 23:17 UTC the *"suspicious AI PR"* incident from April: the moq-interop-runner PR was *"just Claude being overzealous about tackling a slightly under-specified prompt"* — Giovanni Marzot back in the contributor loop with Mike *"looking forward to working together more on improving the interop runner"*.
+>
 > **2026-05-19**: **mondain/moqxr ships draft-18 support** (10 commits May 16–18 by Paul Gregoire — *"Implement draft-18 subscribe tracks"* / *"fix draft 18 subgroup header encoding"* / *"Add cross-draft MoQ message serde tests"*). Paul Gregoire publicly announced on `#moq` May 18 18:44 UTC: *"@Lorenzo Miniero I've got moqxr updated to 18; github.com/mondain/moqxr."* **Third open-source implementation to ship draft-18** (after [[moq-dev|moq-dev/moq]] and [[imquic]]). First OpenMOQ-derived implementation to come up on the `#moq` channel in a positive technical context (vs the May 10 openmoq/moqx governance fallout).
 
 **Website**: [openmoq.org](http://openmoq.org/)

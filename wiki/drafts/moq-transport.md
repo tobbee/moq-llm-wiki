@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 status: current
 draft_version: 18
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -10,17 +10,17 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 
 **draft-ietf-moq-transport-18** | published 2026-05-12 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/18/)
 
-# Draft-18 Implementation Status (as of 2026-05-19)
+# Draft-18 Implementation Status (as of 2026-05-20)
 
 | Implementation | Stack | Maintainer | Status | Public endpoint |
 |---|---|---|---|---|
-| **[[moq-dev|moq-dev/moq]]** | Rust + JS | [[luke-curley|kixelated]] | Shipped May 18 05:08 UTC ([PR #1418](https://github.com/moq-dev/moq/pull/1418), +1431/−477) | `cdn.moq.dev/anon` (claims draft-18, untested as of May 18) |
-| **[[imquic|meetecho/imquic]]** | C | [[lorenzo-miniero]] | Shipped May 18 17:53 UTC (partial: missing REQUEST_UPDATE on SUBSCRIBE_NAMESPACE/TRACKS) | lminiero.it:9000 (raw QUIC + WebTransport) |
-| **[mondain/moqxr](https://github.com/mondain/moqxr)** | C++ | Paul Gregoire ([[openmoq]] member) | Shipped May 16–18 (10 commits, `#moq` announce May 18 18:44 UTC) | — |
-| [[moq-rs\|cloudflare/moq-rs]] | Rust | [[mike-english]] | Not yet | — |
-| [[moq-rs\|google/quiche moqt]] | C++ | [[martin-duke]] / [[victor-vasiliev]] | Not yet (Day +7 quiet on the moqt path post-draft-18) | — |
-| [[moqtail]] | Rust | Zafer Gurel | Not yet | — |
-| [[interop-runner]] matrix | (target only) | [[mike-english]] | Target is **still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) staged but not merged) | — |
+| **[[moq-dev|moq-dev/moq]]** | Rust + JS | [[luke-curley|kixelated]] | Shipped May 18 05:08 UTC ([PR #1418](https://github.com/moq-dev/moq/pull/1418), +1431/−477) | `cdn.moq.dev/anon` (claims draft-18, untested) |
+| **[[imquic|meetecho/imquic]]** | C | [[lorenzo-miniero]] | `moq-18` branch ready; merge gated on [interop-runner PR #68](https://github.com/englishm/moq-interop-runner/pull/68). Lorenzo May 19 15:40 UTC: *"finished the bulk of the work and the rest can wait"*. | lminiero.it:9000 (raw QUIC + WebTransport, served from branch) |
+| **[mondain/moqxr](https://github.com/mondain/moqxr)** | C++ | Paul Gregoire ([[openmoq]] member) | Shipped May 16–18; **8 fix-up commits May 19 14:17 → May 20 00:11 UTC** after Lorenzo found a bidi-vs-uni SETUP-stream divergence in first interop attempt | — |
+| [[moq-rs\|cloudflare/moq-rs]] | Rust | [[mike-english]] | Not yet (Day +37 main-quiet) | — |
+| [[moq-rs\|google/quiche moqt]] | C++ | [[martin-duke]] / [[victor-vasiliev]] | Not yet (Day +8 quiet on draft-18 wire path; martinduke May 18-19 commits are refactors not wire-bumps) | — |
+| [[moqtail]] | Rust | Zafer Gurel | Not yet (Day +7 quiet) | — |
+| [[interop-runner]] matrix | (target only) | [[mike-english]] | Target is **still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) Open, CI work in progress) | — |
 
 **6 days after publication, draft-18 has 3 distinct codebases shipped + 1 production deployment** — fastest spec → first-impl turnaround the wiki has tracked (draft-17: ~3 weeks; draft-16: ~2 weeks). The accelerants: (1) the Claude-co-authored PR pattern on moq-dev/moq; (2) draft-18's small-delta scope (7-byte varint, FIRST_OBJECT bit, RequestID removal, LARGEST_OBJECT) lets implementations stage changes incrementally on draft-17 plumbing.
 
@@ -74,9 +74,12 @@ Draft-17 brought significant changes from draft-16:
 - Editorial: consistent use of "MOQT" for protocol references (PR #1597)
 - Editorial: use "message" instead of "frame" (PR #1587)
 
-# Active Issues (as of 2026-05-14)
+# Active Issues (as of 2026-05-20)
 
 ## Design Issues
+- **#1635** — *[draft-18] Should a subscriber treat FIN/RST on a bidi stream as equivalent to PUBLISH_DONE?* OPENED May 19 18:37 UTC by [[alan-frindell|afrind]]. Body: *"PUBLISH_DONE conveys error information as well as stream count. Seems like FIN without PUBLISH_DONE is entirely avoidable and could be a PROTOCOL_VIOLATION?"* First subscriber-side post-publication control-stream-lifecycle question.
+- **#1634** — *[draft-18] What semantics do FIN or RST on a request stream carry?* OPENED May 19 18:34 UTC by [[alan-frindell|afrind]]. Quotes §4.5 + §3.6 (`STOP_SENDING` is the canonical cancellation) and asks what action a receiver should take on a bare FIN or RST_STREAM. Self-comment May 19 21:45 UTC: *"FIN almost always isn't a cancellation... For TRACK_STATUS an early FIN is perfectly normal. For requests like FETCH, PUB_NS, SUB_NS, SUB_T and SUBSCRIBE, an early FIN can mean 'I don't plan to REQUEST_UPDATE'..."* Sibling of #1635 on the publisher side.
+- **#1633** — *Should we allow more than one concurrent subscription per Track*. OPENED May 19 16:33 UTC by [[alan-frindell|afrind]]. **Operationalises [[luke-curley|Luke Curley]]'s May 18 SVC-thread procedural gap discovery** (SUBSCRIBE-same-track-twice illegal so SGPL-with-per-layer-priority needs multi-sub). Body lifts text from Editors' IETF-125 slides with 4-proposal slate: **1a (Editors' rec)** = unique Track Aliases per sub, no dedup; **1b** = same Track Alias, publisher coalesces (Ian Swett + Martin Duke prefer); **2** = single-sub + union filters; **3** = status quo (illegal). Same-day comments [[ian-swett]] May 19 17:08 UTC and afrind May 19 17:31 UTC re-argue 1b conflict-handling (afrind: *"different DELIVERY_TIMEOUT, PRIORITY, GROUP_ORDER, AUTH... if publisher is deduplicating by single track alias, it's unclear how to apply these"*). Cites long-parked PR #1451 (open since April 13). **Slated for [[2026-06-09-london-interim|London]]** — afrind's May 19 agenda request reserves 10 min present + 20 min discuss.
 - **#1632** — *MOQ-18: Properties Type collision with LOC-02*. OPENED May 14 03:24 UTC by **yuanchao-chris** (new contributor — 2nd issue in 2 days). Reports that **draft-18 §15.8-2 assigns Property Type IDs that diverge from draft-ietf-moq-loc-02's commit-history values**: MOQ-18 has TIMESTAMP=0x06 / TIMESCALE=0x08 / AUDIO_LEVEL=0x0C / VIDEO_FRAME_MARKING=0x0A / VIDEO_CONFIG=0x0D, while LOC-02 records TIMESTAMP=0x02 / AUDIO_LEVEL=0x06 / VIDEO_FRAME_MARKING=0x04. Twin issue filed simultaneously on the LOC side ([moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20)). **PR #1624** (April 30, *"provisional IANA registry for LOC properties"*) was supposed to resolve [[issue-1550]] but the assignment cuts in draft-18 §15.8-2 did not adopt the registry values. **First publicly-flagged post-draft-18 cross-spec coordination failure** — see [[discussions-2026-05]].
 - **#1631** — *Track-level codec switching semantics*. OPENED May 13 02:23 UTC by **yuanchao-chris**. Asks whether MoQ supports in-band codec migration (H265→H264, AV1→H264) within an existing Track, analogous to WebRTC PT change inside the same SSRC. **[[alan-frindell]] May 13 05:11 UTC** sketches *"publisher make a new group in an ongoing track, and include codec information on properties communicated on Object 0 in the new group - or the Object 0 payload"*. **yuanchao-chris May 13 09:23 UTC** confirms works in stream mode but in datagram mode needs property-stamped frames + `REQUEST_UPDATE`-based "ACK" semantics; also notes [[moq-msf]] §5.1.24 catalog track information needs alignment. First substantive post-draft-18 design conversation.
 - **#1626** - Version negotiation for QMUX. Opened May 1 23:50 UTC by **sharmafb** (Suhas Sathyanarayana): *"We have an idea of how version negotiation works for MoQ-over-HTTP/3 and how it works for MoQ-over-QUIC, but do we know how it's going to work for MoQ-over-QMUX?"* **[[alan-frindell]] reply** May 2 02:19 UTC: *"We discussed quite a bit last IETF. The plan is to say something like TLS ALPN moqt-18 implies qmux-01"* — first explicit statement of the QMUX/transport ALPN coupling for draft-18. See [[qmux]] for context.

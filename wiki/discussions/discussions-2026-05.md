@@ -2,11 +2,131 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 19 06:00 UTC → May 20 06:00 UTC) — **mondain/moqxr ships 8 draft-18 compliance fixes in 10 hours after Lorenzo Miniero finds a bidi-vs-uni SETUP-stream regression; afrind opens 3 formal draft-18 issues (#1633 concurrent subs / #1634 FIN-RST semantics / #1635 FIN-as-PUBLISH_DONE) closing the May 18 SVC-thread procedural-gap loop; London Agenda inbox fills with 6 requests by May 19 (Suhas Top-N + Privacy Pass, Will Law revised MSF/CMSF + DTS, Cullen Secure Object 20min, Mo Zanaty deadline-extension-to-May-26 ask, afrind enormous "37-non-editorial-issues" 4+ hour ask); interop runner 168/38/129 May 20 +3-pass vs May 19, still draft-16 target; Mike English social-resolution with Giovanni Marzot on the Apr 25 suspicious-AI-PR incident**
+
+## Slack `#moq` — moqxr ↔ imquic first-cross-impl draft-18 interop attempt
+
+[**Thread parent: Paul Gregoire May 18 18:44 UTC (carry-over from prior entry)**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779129867088989): *"@Lorenzo Miniero I've got moqxr updated to 18; github.com/mondain/moqxr."* + Lorenzo Miniero May 18 18:52 UTC: *"Thanks, I'll give it a try tomorrow!"*
+
+Lorenzo opened the thread the next morning with **5 sequential diagnostic messages May 19 09:12 → 09:55 UTC**:
+
+| UTC | Sender | Finding |
+|---|---|---|
+| 09:12 | Lorenzo | *"error: transport connect failed... my relay never sees the connection appearing. With debugging enabled I see `[picoquic-client] connect start ... alpn=moq-00` which I think is incorrect? I don't accept moq-00 anymore"* |
+| 09:14 | Lorenzo | *"Yeah, using Wireshark I only see `moq-00` being offered as a QUIC ALPN, and in fact I can see the `TLS Alert Description: No application Protocol (120)` my relay sends back"* |
+| 09:17 | Lorenzo | *"Even using https as an url I only see `moq-00` being offered, no `h3`: is WebTransport actually supported?"* |
+| 09:19 | Lorenzo | *"Nevermind that, I found `--draft XX` 🙈"* (defaulting to draft-14 surfaced as user-error) |
+| 09:55 | Lorenzo | *"Even with `--draft-18` your client is trying to use a bidirectional stream (0) for exchanging SETUP messages, while it should be two unidirectional streams instead"* |
+
+[**Paul Gregoire May 19 13:21 UTC**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779196872310729): *"Yes, lots of options on this, draft-14 is the default if --draft isn't specified. I placed more of my focus on raw moqt, so you may have probably found a bug. Thank you for testing it out and finding this!"*
+
+**Paul's response on the wire was 8 commits in 10 hours** to [mondain/moqxr](https://github.com/mondain/moqxr):
+
+| UTC | SHA | Subject |
+|---|---|---|
+| May 19 14:17 | `53ee899` | Align draft-18 WebTransport stream handling |
+| May 19 15:00 | `40ee48c` | Fix MoQT control compliance gaps |
+| May 19 16:11 | `c426d2d` | Fix MoQT publish framing and metadata |
+| May 19 17:08 | `96baf5a` | Fix draft 17 and 18 MoQT wire semantics |
+| May 19 17:34 | `7bebe08` | Fix MoQT pass 3 compliance gaps |
+| May 19 21:41 | `f73427a` | Fix WebTransport protocol offers |
+| May 19 22:06 | `1f222b0` | Fix draft-18 setup option delta encoding |
+| May 20 00:11 | `d759426` | Fix draft 18 request stream polling |
+
+This is the **first cross-implementation hands-on draft-18 interop attempt the wiki has tracked** (moqxr ↔ imquic). The bidi-vs-uni SETUP-stream divergence is structurally identical to draft-17's *"two-control-stream-direction"* requirement and indicates moqxr's draft-17 → draft-18 transition still has draft-14-shape residue in the WebTransport bring-up path.
+
+### Mike English ↔ Giovanni Marzot — May 18 23:17 UTC apology thread
+
+[**Mike English `#moq-interop-runner` May 18 23:17 UTC (21:17)**](https://quicdev.slack.com/archives/C0B2KQLJGN7/p1779139025174659): *"Closing the loop here: I had a really good call with @Giovanni Marzot last week and apologized for my overreaction to the suspicious-looking PR. It turns out it really was just Claude being overzealous about tackling a slightly under-specified prompt where the intent was just to fix some artifact links to make the repo able to run CI jobs on its own to support testing and fixing some CI issues. I'm glad we were able to sort things out and I'm grateful for Giovanni's taking initiative to improve things and I'm looking forward to working together more on improving the interop runner with some of his ideas and suggestions."*
+
+[**Lorenzo Miniero May 19 07:52 UTC**](https://quicdev.slack.com/archives/C0B2KQLJGN7/p1779177150479799): *"One more reason for me to stay away from AI as long as I can 😂"*
+
+This formally closes the **Apr 25 *"suspicious-AI-PR"* incident** thread where [[mike-english]] had earlier flagged a moq-interop-runner PR from [[giovanni-marzot]] as looking adversarially shaped (artifact-link manipulation pattern), but on inspection the surface was an LLM under-spec going overzealous on a CI-fix prompt. The carry-forward: the `#moq-interop-runner` channel now has an **explicit on-record norm** that LLM-shaped PRs need careful but not paranoid review, and Mike's *"working together more on improving the interop runner with some of his ideas"* signals Giovanni Marzot ([[openmoq]]) is back in the contributor loop.
+
+### LOCMAF thread carry-forward (May 18 STS slot offer)
+
+The May 18 LOCMAF thread (8 replies) included **Will Law's STS-Sweden talk offer** at 14:46 UTC: *"@Tobbe — I am giving a MSF talk at STS on Thursday. Can I mention locmaf there, or are you already presenting?"* and the prior reply *"You should publish an internet draft and then we can add `packaging = "locmaf"` support to CMSF."* [[tobbe-einarsson|Tobbe]] accepted both at 15:51 / 15:55 UTC: *"I'm not talking at Streaming Tech Sweden, so both Hugo and me think it would be great if you bring it up"* + Mike English's parallel suggestion about MPEG followed with *"I'm not sure this is general enough for MPEG... I'll post something on LinkedIn to reach a bigger audience."* **Net**: LOCMAF gains a second public-conference vehicle (Will Law's STS talk on Thursday May 21) and the *"publish an Internet-Draft"* prescription now has the **MSF/CMSF editor's explicit endorsement** beyond Gwendal Simon's earlier *"expand CMSF"* framing.
+
+## moq-wg/moq-transport — 3 formal draft-18 issues opened by afrind on May 19
+
+[[alan-frindell|afrind]] filed three issues May 19 16:33 → 18:37 UTC that **operationalise the May 18 SVC thread procedural gap** Luke Curley surfaced (*"isn't it illegal to SUBSCRIBE to the same track twice?"*) and add two FIN/RST-semantics questions on the new draft-18 control-stream model:
+
+### [Issue #1633](https://github.com/moq-wg/moq-transport/issues/1633) — *"Should we allow more than one concurrent subscription per Track"*
+
+OPEN, opened by [[alan-frindell|afrind]] May 19 16:33 UTC. The body lifts text from the Editors' slides shown at IETF 125, including a **4-proposal slate** with an explicit Editors' Recommendation:
+
+| Proposal | Shape |
+|---|---|
+| **1a** ⭐ **(Editors' rec)** | Allow multiple subscriptions, each with unique Track Alias; **no deduplication**. Subscriber/relay is responsible for minimizing overlaps/duplication. |
+| 1b | Allow multiple subscriptions, **all get the same Track Alias**; publisher coalesces these as a single subscription with union of filters. *"Conflicting parameters ¯\\_(ツ)_/¯"* |
+| 2 | Keep single subscription per track. Allow unions of all filter types in control messages. Can't specify conflicting parameters. |
+| 3 | Status Quo (illegal) |
+
+**Same-day comments**:
+- [[ian-swett|Ian Swett]] May 19 17:08 UTC: *"Thanks for filing an issue, I was about to. @martinduke was discussing this with me today and liked 1b better. Can you remind me what the issue is with conflicting parameters in 1b?"*
+- afrind May 19 17:31 UTC: *"I can subscribe to the same track with overlapping filters and different DELIVERY_TIMEOUT, PRIORITY, GROUP_ORDER, AUTH, etc. If the publisher is deduplicating by using a single track alias, it's unclear how to apply these."* — concrete refutation of 1b's per-stream-properties coalescing.
+
+The issue **explicitly cites the existing [PR #1451](https://github.com/moq-wg/moq-transport/pull/1451)** ("Allow multiple Subscriptions to a Track") as the long-parked precursor that *"the editors have had slides on the topic since IETF 125, but we've never had enough agenda time to discuss."* The London interim is now the **forcing-function venue** for resolving this.
+
+### [Issue #1634](https://github.com/moq-wg/moq-transport/issues/1634) — *"[draft-18] What semantics do FIN or RST on a request stream carry?"*
+
+OPEN, opened by afrind May 19 18:34 UTC. Body quotes draft-18 §4.5 (*"The subscriber terminates a subscription in the Pending (Subscriber) or Established states by sending STOP_SENDING"*) + §3.6 (*"Implementations SHOULD cancel requests by abruptly terminating any directions of a stream that are still open by resetting or sending STOP_SENDING"*) and asks: *"What action should a receiver take, if any, when receiving only a FIN, or only a RST_STREAM, but no STOP_SENDING?"*
+
+afrind May 19 21:45 UTC self-comment: *"I'm inclined to say FIN almost always isn't a cancellation from the sender of the request. For TRACK_STATUS an early FIN is perfectly normal — there's never anything else to say. For requests like FETCH, PUB_NS, SUB_NS, SUB_T and SUBSCRIBE, an early FIN can mean 'I don't plan to REQUEST_UPDATE'..."*
+
+### [Issue #1635](https://github.com/moq-wg/moq-transport/issues/1635) — *"[draft-18] Should a subscriber treat FIN/RST on a bidi stream as equivalent to PUBLISH_DONE?"*
+
+OPEN, opened by afrind May 19 18:37 UTC. Body: *"PUBLISH_DONE conveys error information as well as stream count. Seems like FIN without PUBLISH_DONE is entirely avoidable and could be a PROTOCOL_VIOLATION?"*
+
+**Combined carry-forward**: #1634 and #1635 are sibling issues exploring the **same control-stream-lifecycle question** from publisher- and subscriber-side respectively. They're the first post-publication semantic-gap issues filed against draft-18 (the prior 6 days were almost entirely implementation/wire-format issues like the #1632 LOC-02 Properties Type collision). #1633 is materially different: it lifts a long-parked WG-process item (PR #1451 has been open since April 13) into the London-interim-blocker queue with concrete decision-shaped proposals.
+
+## Mailing list — London Agenda inbox fills with 6 distinct requests May 18-19
+
+The May 18 Martin-Duke-chair-prod (*"two days out and have received zero requests for agenda time"*) → May 19 produced **6 distinct agenda requests** to the moq-chairs inbox. Listed in mailing-list-order on May 19:
+
+| Time UTC | Sender | Request | Status |
+|---|---|---|---|
+| May 19 ~13:40 | Cullen Fluffy Jennings | *"20 min to talk about updates to Secure Object and implementations updates"* | **Rejected by Martin Duke** — *"The original solicitation included specific instructions to separate out presentation and discussion time. Please follow those instructions for your requests to be considered."* ([archive](https://mailarchive.ietf.org/arch/msg/moq/HfvNHwQGeUU6icZ03QCCi6llZfI/)) |
+| May 19 13:40 | Will Law | (initial request, presumed similar shape) | **Rejected by Martin Duke** ([archive](https://mailarchive.ietf.org/arch/msg/moq/2Vw05JdiSVWPWyRchKofYqCmBw8/)) — *"Will, please re-read the original solicitation and follow it in order to be considered."* |
+| May 19 14:28 | Suhas Nandakumar | **Top-N Track Filter Implementation Experiences** (15 min present + 20 min discuss = **35 min**) + **Privacy Pass Implementation/Demo** (10+10 = **20 min**). Format-compliant. ([archive](https://mailarchive.ietf.org/arch/msg/moq/KPUj0vVm9NVCu91zngRmOadN9iI/)) | Accepted by format |
+| May 19 15:56 | [[alan-frindell|Alan Frindell]] | **MOQT draft-18 issues** — *"37 open non-editorial issues"*: Joining FETCH Dissent (4 issues, 20+40 = 60min, pending survey), Filter-related (3, ~consensus call time), ABR/SWITCH (4, ~1 hour placeholder Monday slot), **#1519 request blocking** (30+30 = 60min), **#1633 concurrent subscriptions** (10+20 = 30min, **filed same day**), remaining 22 (1-2 hours distributed). ([archive](https://mailarchive.ietf.org/arch/msg/moq/-3Fk9OWQR_ME33neQTzhUPMeKdI/)) | **Single largest ask** — collectively requesting ~4+ hours |
+| May 19 ~17:00 | Will Law (revised) | **MSF/CMSF tech decisions** (20+40 = 60min) + **DTS** (15+30 = 45min, *"unless it gets resolved May 26th"*). Format-compliant. ([archive](https://mailarchive.ietf.org/arch/msg/moq/pvq02mvPo0gpdPCdd0SVWXooFs0/)) | Accepted by format |
+| May 19 20:04 | Mo Zanaty | **Asks for deadline extension** May 20 → May 26 due to *"multiple outstanding consensus calls and virtual interim topics"* that will affect what should be included. ([archive](https://mailarchive.ietf.org/arch/msg/moq/1WRfzo5eJwmUWNU-bg-sH2eEHX0/)) | Procedural — Martin not yet responded at window close |
+
+**Net inbox at May 20 06:00 UTC** (deadline T-0): **~6+ hours of agenda time requested** against **~10 hours of formal-session time across June 11-12** (2-session × 4 slots ≈ 8 hours core + breaks). Already over-subscribed before late requests, and Mo Zanaty's deadline-extension question is procedurally live. The MOQT draft-18 issues block alone (afrind) is structurally equivalent to one full day of agenda; the WG will need to either compress per-issue time or defer issues to follow-up interims.
+
+**Carry-forward**: the rate of London agenda requests doubled in 24 hours (May 18: zero → May 19: six), validating Martin's chair-prod. The format-strict rejections of Cullen + Will Law's initial requests establish a **precedent for procedural rigor** that may bear on the May 26 IETF 126 agenda-submission window also.
+
+## Joining FETCH Survey thread (afrind, May 11 → May 19 active)
+
+Alan Frindell's May 11 survey thread on Joining FETCH had a **second-round response wave May 19** as the deadline approached. Notable messages:
+
+- [**Cullen Fluffy Jennings May 19 16:44 UTC**](https://mailarchive.ietf.org/arch/msg/moq/5a7khMTyQhrOt_uktnXjgIaUpec/) replying to Q4.1 (*"Past data must be flow controlled in all cases"*) + Q4.2 (*"Past data must be flow controlled only if before the current group"*): *"I don't understand these."* — first respondent to explicitly flag the survey wording as ambiguous on flow control.
+- [**Suhas Nandakumar May 19 16:29 UTC**](https://mailarchive.ietf.org/arch/msg/moq/F5ZBuxW2uJ180lFHN5qkplqof2E/) gives inline answers to Q1-4 with qualifications: *"end applications (players) will pick the right choice based on GOP duration"* + requests clarification on *"what 'performance' means"* and *"what constitutes 'small fixes needed'"* and *"depends on the change being proposed"*. Doesn't complete Q5 (acceptable delay for WGLC).
+- [**afrind May 19 17:04 UTC**](https://mailarchive.ietf.org/arch/msg/moq/MDqazhCDZ232G3KQkB0zo_NKlqs/) replies to Suhas clarifying *"small fixes needed = whatever is required to resolve outstanding issues without changing the overall shape of the solution"* and disambiguating *"MAY replace"* vs *"MUST"*.
+
+**Carry-forward**: the survey is structurally drifting toward a **dissent-shaped outcome** — respondents' confusion on Q4 flow-control wording and the proliferation of *"depends on..."* answers suggest the result will be hard to consensus-call cleanly. afrind's London agenda block reserves 60 minutes specifically for *"Joining FETCH Dissent (4 issues, pending survey results)"*.
+
+## Implementation activity carry-forward
+
+- **moq-dev/moq**: PR #1428 *"rename moq-lite package to moq-net"* still **OPEN** Day +2 (last touch May 18 22:04 UTC, no merge yet). Other PRs untouched. No new opens.
+- **google/quiche moqt**: **1 new commit May 19 17:41 UTC** `a3f18c9` by martinduke (*"Fix asan error in moqt_session_test"*) — follow-up to the May 18 `6460010e` PublishedSubscription refactor.
+- **mondain/moqxr**: 8 fix-up commits (see above table) — by far the highest commit volume on a single repo in the window.
+- **Eyevinn/warp-player**: 3 dependabot PRs still **OPEN** Day +1 (#130/#131/#132).
+- **Eyevinn/moqlivemock**: Quiet (last release v0.9.0 May 17).
+- **moqtail/moqtail**: Day +7 quiet since `dbd7085` May 13 08:44 UTC.
+- **cloudflare/moq-rs**: Day +37 main-quiet.
+- **meetecho/imquic**: `moq-18` branch exists but unmerged to main (Lorenzo May 19 15:40 UTC in Mike's PR #68 thread: *"Let me know when you're ready to go and I'll merge the v18 branch in imquic, I finished the bulk of the work and the rest can wait"*). `main` last touched Apr 16.
+
+## [[interop-runner]] — May 20 report 168/38/129 (+3 pass)
+
+[**New report 2026-05-20 00:46:03 UTC**](https://englishm.github.io/moq-interop-runner/results/2026-05-20_004603/report.html): **168 total / 38 pass / 129 fail / 1 skip**. **+3 pass-count vs May 19** (35 → 38), pass rate **22.6%** (vs 20.8% May 19). Matrix unchanged at 12 implementations; **target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN). Daily cadence is now restored (May 19 + May 20 reports = 2 consecutive days post-CI-timeout fix). Mike English window-internal Slack activity: working through PR #68 CI issues, no merge yet.
 
 # Activity (May 18 06:00 UTC → May 19 06:00 UTC) — **interop runner cadence resumes (105 → 168 tests, 12-impl matrix); 3 additional implementations announce draft-18 support (imquic / moqxr / moq.dev anon CDN); kixelated reframes moq-lite library as moq-net (separating library identity from wire-protocol identity); AWS PR #1413 CLOSED unmerged after kixelated rejects transport-layer encoder-failover stitching; London Agenda: Martin Duke chair prod + Will Law files first concrete request (MSF/CMSF 60min + DTS 30min)**
 

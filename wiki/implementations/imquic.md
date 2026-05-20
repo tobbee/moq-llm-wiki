@@ -2,10 +2,12 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 status: current
 ---
 
+> **2026-05-20**: **imquic `moq-18` branch exists but unmerged to `main`**. Lorenzo Miniero `#moq-interop-runner` May 19 15:40 UTC in [[mike-english|Mike English]]'s [PR #68](https://github.com/englishm/moq-interop-runner/pull/68) thread: *"Let me know when you're ready to go and I'll merge the v18 branch in imquic, I finished the bulk of the work and the rest can wait."* — gated on the interop-runner's draft-18 target merging. **`main` last-touched April 16**, but the `moq-18` branch carries the draft-18 wire-format work that backs the lminiero.it:9000 POC relay. Lorenzo also did the **first hands-on draft-18 interop attempt** against [mondain/moqxr](https://github.com/mondain/moqxr) May 19 09:12 UTC, finding a bidi-vs-uni SETUP-stream divergence that Paul Gregoire fixed in 8 commits over 10 hours. **The matrix-bump / library-merge / interop-cycle ordering** is now: PR #68 merges → imquic moq-18 branch merges → next interop run includes draft-18 axis → imquic vs moqxr first-cross-impl pair on draft-18 surfaces in matrix.
+>
 > **2026-05-19**: **imquic updated to draft-18** ([[lorenzo-miniero]] `#moq` Slack May 18 17:53 UTC): *"I updated my stack to most of the changes there (hopefully the right way). I think I'm missing the ability to REQUEST_UPDATE a SUBSCRIBE_NAMESPACE/TRACKS, but I'll try to do that in the next few days."* **Second open-source implementation to ship draft-18** (after [[moq-dev|moq-dev/moq]] PR #1418 May 18 05:08 UTC). POC relay endpoint at **lminiero.it port 9000** (raw QUIC + WebTransport) is publicly available for interop testing. Repo last-pushed May 18 15:51 UTC.
 
 **Language**: C

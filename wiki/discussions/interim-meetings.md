@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-16
+last_updated: 2026-05-20
 status: current
 ---
 
@@ -50,6 +50,23 @@ Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to pos
 **Apr 24 18:26 PDT (Apr 25 01:26 UTC) update**: [[alan-frindell]] replied to Martin's agenda thread on the mailing list with the slides folder link. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms [[victor-vasiliev|Victor Vasiliev]] will present a **competing proposal to RRID** at the interim, complementing Martin's PR #1604 and Alan's PR #1613. Headline agenda items now have published slides for **#1608** (Subgroup ID = first Object ID), **#1519/#1603** (Required Request ID), **#1613** (MAX_REQUEST_UPDATES), **#1605** (delivery timeout split). Time permitting: Joining FETCH Dissent.
 
 ## London Interim (June 9-12)
+
+### Agenda requests (deadline May 20 — Mo Zanaty asks for extension to May 26)
+
+As of 2026-05-20 06:00 UTC, **6 distinct requests** have been filed against the moq-chairs inbox:
+
+| Sender | Request | Present | Discuss | Total | Status |
+|---|---|---|---|---|---|
+| [[suhas-nandakumar\|Suhas]] | Top-N Track Filter Impl Experiences + Privacy Pass Demo | 15+10 | 20+10 | **55min** | format-compliant ([archive](https://mailarchive.ietf.org/arch/msg/moq/KPUj0vVm9NVCu91zngRmOadN9iI/)) |
+| [[alan-frindell\|afrind]] | **37 open non-editorial MOQT issues** (Joining FETCH Dissent 60min, Filter consensus, ABR/SWITCH 60min placeholder, **#1519 request blocking 60min**, **#1633 concurrent subs 30min**, remaining 22 issues 1-2h distributed) | varies | varies | **~4+ hours** | format-compliant; **single largest ask** ([archive](https://mailarchive.ietf.org/arch/msg/moq/-3Fk9OWQR_ME33neQTzhUPMeKdI/)) |
+| [[will-law\|Will Law]] (revised) | MSF/CMSF tech decisions + DTS (*"unless resolved May 26"*) | 20+15 | 40+30 | **105min** | format-compliant ([archive](https://mailarchive.ietf.org/arch/msg/moq/pvq02mvPo0gpdPCdd0SVWXooFs0/)) |
+| [[will-law\|Will Law]] (initial) | same topics, no present/discuss split | — | — | — | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/2Vw05JdiSVWPWyRchKofYqCmBw8/)) |
+| Cullen Fluffy Jennings | Secure Object updates + impl progress | — | — | 20min | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/HfvNHwQGeUU6icZ03QCCi6llZfI/)) |
+| Mo Zanaty | **Deadline extension request** May 20 → May 26 (cites pending consensus calls) | — | — | — | procedural — awaiting chair decision ([archive](https://mailarchive.ietf.org/arch/msg/moq/1WRfzo5eJwmUWNU-bg-sH2eEHX0/)) |
+
+**Net: ~6+ hours of formally-requested time** against ~8 hours of formal-session capacity across June 11-12 (interim-2026-moq-08/09/10/11). **Already over-subscribed**; afrind's MOQT issue block alone is the single largest sub-request and would consume a full day if granted. The chairs will need to compress per-issue time, defer issues to follow-up interims, or accept Mo Zanaty's deadline extension.
+
+**Format-strict precedent**: Martin Duke rejected 2 of the first 4 requests (Cullen, Will Law's initial) for not separating presentation vs discussion time. Both resubmitted compliantly within hours; Will Law's revised request landed at 17:00 UTC. This **establishes a precedent for procedural rigor** that may bear on the May 26 IETF 126 agenda-submission window also.
 
 **Formal invitation by [[mike-english]] on the IETF MoQ list May 15, 2026** ([archive link](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/)). In-person hybrid interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB** (Cloudflare London office). Mike English's announcement reframes the meeting into a **4-day contiguous in-person window** rather than the previously-tracked "moq-08/09/10/11 across June 11–12" split.
 
