@@ -2,11 +2,168 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-20
+last_updated: 2026-05-21
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 20 06:00 UTC → May 21 06:00 UTC) — **moq-lite → moq-net rename MERGED; AWS re-files CMSF support as PR #1429 with kixelated-feedback addressed; meetecho/imquic draft-18 lands on `main` (PR #25); cloudflare/moq-rs breaks Day +37 main-quiet streak with 2 merges; new iOS Swift implementation `Moqintosh` announced on `#moq`; Cullen re-files Secure Object + track-filter-DDOS in compliant format; Mo Zanaty files 135-min filter-focused agenda block despite Martin Duke implicitly declining the May 26 deadline-extension; interop runner +8 pass to 46/121 (3-day cadence)**
+
+## Slack `#moq` — SVC thread extends to 19 replies; new iOS impl announcement
+
+**SVC TPL-vs-SGPL thread** ([parent: Suhas Nandakumar May 17 02:56 UTC](https://quicdev.slack.com/archives/C046V0QF3CK/p1778986563369149)) added 2 more replies, the **first thread activity in 36 hours** after Luke Curley's May 18 20:25 UTC *"quota exceeded not a protocol violation"* close:
+
+- [**afrind May 20 14:56 UTC**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779288988400469?thread_ts=1778986563.369149): *"Another diff: you cannot NGR a subgroup - only a group."* — a previously-undocumented **TPL-vs-SGPL functional asymmetry**: New Group Request (NGR) signaling is scoped to group granularity, so subscribers using subgroup-per-layer cannot independently request the next group of one specific layer; track-per-layer keeps that capability. **This adds a 4th technical diff** to afrind's May 15 *"essentially isomorphic"* framing (the prior 3: Alias-vs-SGID, dedup contract, multi-level priority — now NGR scoping).
+- [**Ian Swett May 20 15:53 UTC**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779292398648829?thread_ts=1778986563.369149): *"There are a number of cases you might want multiple at once, particularly in transitions."* — first Ian Swett intervention in the SVC thread, reinforcing the same point he made on issue #1633 (*"we need to fix the SUBSCRIBE to the same Track twice problem... Filters are a forcing function"*).
+
+**Net: the SVC thread has surfaced the unresolved [Issue #1633](https://github.com/moq-wg/moq-transport/issues/1633) "concurrent subscriptions per Track" as a *prerequisite* design decision** for whether TPL and SGPL converge under filter-based subscription, with NGR-asymmetry now flagged as a SGPL-specific gap. afrind's May 15 *"religious question"* framing has now resolved into 4 concrete technical diffs — the London discussion will not be a flame-war but a structured trade-off analysis.
+
+### Moqintosh — new iOS Swift implementation announced
+
+[**gazzy (Toshiro Igarashi) May 20 15:22 UTC**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779290573826369): *"Hi. I have released iOS client for MoQ. I hope iOS developers use. • Pure Swift • Client Only • draft-14 based • github.com/t-gazzy/Moqintosh"* (2× 👍 reactions).
+
+[**Paul Gregoire May 20 15:31 UTC**](https://quicdev.slack.com/archives/C046V0QF3CK/p1779291103103049?thread_ts=1779290573.826369): *"I made 'toy' I was messing around with over the weekend, I named mine nearly the same 'moqntosh'; I guess we thought of the same play on words."* — naming-coincidence note; OpenMOQ's [[paul-gregoire|Paul Gregoire]] has a private `moqntosh` toy unannounced.
+
+[**Repo metadata (`gh api repos/t-gazzy/Moqintosh`)**](https://github.com/t-gazzy/Moqintosh): created **2026-04-10**, last push **2026-05-20 15:27 UTC**, primary language **Swift**, description *"Pure Swift Media over QUIC framework"*, 3 stars at announcement.
+
+**Net: 14th distinct open-source MoQ implementation tracked by the wiki** (after [[moq-dev]], [[moq-rs]], [[moq-js]], [[moxygen]], [[libquicr]], [[aiomoqt]], [[xquic-moq]], [[moqlivemock]], [[moqtail]], [[imquic]], [[quiche-moq]], [[shaka-player]], [[openmoq|mondain/moqxr]]). **First iOS-targeted client**, joining gazzy's earlier `#moq` Q&A activity (May 16 OS-level audio bug, March datagram-size questions). Draft-14 baseline is **2 revisions behind** the May 12 [[moq-transport|draft-18]] watermark; positions Moqintosh as an exploratory rather than interop-target implementation. **No mention of London hackathon participation** by gazzy.
+
+Other `#moq` channel activity: **quiet** beyond the SVC thread + Moqintosh announcement. `#moq-interop-runner`, `#moq-rs`, `#moq-js`, `#libquicr` also quiet.
+
+## moq-dev/moq — PR #1428 MERGED, AWS PR #1429 re-frames CMSF as targeted hang-pipeline extension
+
+### [PR #1428](https://github.com/moq-dev/moq/pull/1428) MERGED May 20 14:07:45 UTC by kixelated
+
+*"rename moq-lite package to moq-net"* (+1230/−939, **MERGED 2 days after open**). The rename announced May 18 22:31 UTC is now live in `main` and on crates.io / npm / PyPI as **`moq-net v0.1.0`**. The deprecation shims (`moq-lite` Rust no-update, `@moq/lite` JS runtime warning + `@deprecated`, `py/moq-lite` `DeprecationWarning`) all shipped intact. **First library-rename to land cleanly in 2 days** since the late-2024 `kixelated/moq-rs` → `moq-dev/moq` org-rename took ~3 weeks. The matrix-side question — whether the [[interop-runner]] should relabel `moq-dev-rs` / `moq-dev-js` → `moq-net-rs` / `moq-net-js` — is not yet acted upon.
+
+### [PR #1429](https://github.com/moq-dev/moq/pull/1429) OPENED May 20 08:37:20 UTC by ksletmoe-aws
+
+*"feat: Unified CMSF/Hang pipeline"* (+1969/−12, **OPEN**). Body verbatim (excerpts):
+
+> *"Unify CMSF support into the existing hang/CMAF pipeline. **Supersedes #1408, addressing all review feedback.**
+>
+> Instead of a parallel CMSF pipeline (~2400 lines duplicating CMAF logic), this extends the existing pipeline with targeted additions (+1658 lines, no duplication). **The key insight: CMSF is CMAF with a different catalog format.** The relay is format-agnostic, so the difference is purely at the edges.
+>
+> How it addresses #1408 feedback:
+> - 'Support both via intermediate representation' → `hang::Catalog` is the IR, one pipeline, two catalog serializations
+> - 'Don't copy-paste shared CMAF code' → **Zero duplicated code**
+> - 'Need `--catalog msf`' → Done
+> - 'C API should be a struct' → `moq_track_config` with `size` field for ABI compat
+> - 'Don't want C API to be a CMAF muxer' → It's not; just track/group lifecycle
+> - 'Don't want both description and init segment' → Only `init_data` in the config"*
+
+**Simultaneously** [PR #1408](https://github.com/moq-dev/moq/pull/1408) (the original May 14 CMSF muxer/demuxer, +3906/−458) was **CLOSED unmerged by AWS at 08:37:27 UTC** — same minute as #1429's open, deliberate supersession. **Net delta: −1937 LOC** (from 3906 → 1969 addition count), 50.4% size reduction by accepting the *"CMSF is CMAF with a different catalog format"* framing kixelated had pushed in the #1408 review thread.
+
+**Carry-forward**: This is the **second AWS-vs-kixelated design-cycle resolution in 7 days**, both ending with AWS re-architecting toward kixelated's preferred shape:
+
+| Cycle | AWS Initial Position | kixelated Counter | AWS Final | Result |
+|---|---|---|---|---|
+| **#1413 (May 16 → 18)** | Transport-layer encoder-failover stitching for non-sequential groups | *"It's a lot less gross to stitch at the application level."* | Re-files AVC fallback as separate PR | CLOSED unmerged May 18 |
+| **#1408 → #1429 (May 14 → 20)** | Parallel CMSF pipeline (+3906 LOC, ~2400 lines duplicated CMAF logic) | *"Support both via intermediate representation"*, *"Don't copy-paste shared CMAF code"* | `hang::Catalog` as IR, one pipeline, zero duplication (+1969 LOC) | Re-filed as #1429 May 20, **awaiting review** |
+
+The cycle time is **6 days end-to-end** for a structural rewrite of the largest external PR ever filed against moq-dev/moq. **AWS-as-corporate-contributor signal**: the engineering team commits to live design dialogue rather than parallel-fork, even when the rework cost is multi-day. **kixelated-as-maintainer signal**: holds the *"format-agnostic relay, format-specific edges"* line consistently across multiple AWS PRs.
+
+### Other moq-dev/moq activity May 20
+
+- **PR #1358** *"moq-lite: rewrite Origin as a poll-driven, conducer-based model"* (kixelated, **OPEN** since Apr 28, +unknown LOC, touched **May 20 16:40 UTC**) — 22-day-stale architectural PR, signs of life via comment/rebase activity.
+- **PR #1425** *"chore: release"* (release-plz auto, v0.16.4, **OPEN** since May 18 08:10 UTC, last touched **May 20 16:09 UTC**) — release-plz autopilot rebasing against May 19 changes. Awaiting human merge.
+- **PR #1410** YogiSotho buffering overlay fix Day +5 stale (last touch May 19 01:11 UTC).
+
+## meetecho/imquic — [PR #25](https://github.com/meetecho/imquic/pull/25) MERGED to `main` — draft-18 leaves branch
+
+[**PR #25 MERGED May 20 09:25:23 UTC**](https://github.com/meetecho/imquic/pull/25) by [[lorenzo-miniero|Lorenzo Miniero]] (+2184/−1693, *"Add support for MoQT v18"*). Body verbatim:
+
+> *"This is a series of changes (ongoing) implementing support for MoQT v18. As usual, the draft introduced many changes, including (but not limited to): a change in the SUBGROUP_HEADER flags (FIRST_OBJECT bit), delta encoding of a few IDs in FETCH, a new PADDING message that can be sent on dedicated streams, SUBSCRIBE_TRACKS as a split feature previously part of SUBSCRIBE_NAMESPACE, ability to REQUEST_UPDATE both SUBSCRIBE_NAMESPACE and SUBSCRIBE_TRACKS, a new redirect structure that can be returned via REQUEST_ERROR, new error codes, etc. The demos have been updated to try and test new functionality too, but of course it will be interop that'll tell us if the changes implemented here are correct or not."*
+
+Lorenzo also merged **PR #26** at 14:06:55 UTC (*"Refactored RoQ client/server demos to more generic sender/receiver demos"*, +unknown LOC) — not MoQ-relevant but shows meetecho/imquic `main` is no longer parked.
+
+**Net: imquic transitions from "moq-18 branch unmerged" (May 19) to "draft-18 on main" (May 20).** The interop-runner gating Lorenzo flagged on May 19 (*"Let me know when you're ready to go and I'll merge the v18 branch"*) appears to have moved unilaterally — imquic is no longer waiting on PR #68. **lminiero.it:9000 POC relay** is presumably now running `main` instead of branch builds. **6-day draft-18 turnaround for imquic** (May 12 → May 20 main-merge) — close to but not matching [[moq-dev]]'s 6-day-to-PR-merge cycle (PR #1418 May 18).
+
+## mondain/moqxr — 6 more commits May 20 (14-commit total May 19-20 sprint)
+
+Paul Gregoire continued the post-Lorenzo-interop fix-up sprint through May 20:
+
+| UTC | SHA | Subject |
+|---|---|---|
+| May 20 13:15 | `617a582` | Add localized publisher API docs |
+| May 20 13:31 | `cf0b22b` | Restructure README and add localized versions |
+| May 20 13:32 | `0d7c082` | Add MOQT draft transport specs |
+| May 20 14:25 | `7779575` | Fix WebTransport protocol offer formatting |
+| May 20 14:31 | `95b912d` | Document WebTransport protocol offer formatting |
+
+**14-commit running total** May 19 14:17 UTC → May 20 14:31 UTC (8 May 19 + 6 May 20). The May 20 commits shift from **wire-protocol fixes** to **documentation + localization** (4 of 6 are docs/i18n), suggesting Paul Gregoire considers the wire-protocol gap structurally closed and is now hardening developer onboarding. **No new Lorenzo Miniero responses** in the Slack thread after May 19 13:21 UTC ack, so the bilateral interop session has not been re-attempted post-fix.
+
+## cloudflare/moq-rs — breaks 38-day main-quiet streak ([PR #121](https://github.com/cloudflare/moq-rs/pull/121) MERGED, [PR #168](https://github.com/cloudflare/moq-rs/pull/168) release v0.7.18)
+
+**End of 37-day main-quiet** (prior last-merge Apr 13 carry-forward). May 20 16:34–16:45 UTC, [[mike-english]] merged 2 PRs in 11 minutes:
+
+- [**PR #121**](https://github.com/cloudflare/moq-rs/pull/121) *"refactor: simplified remote manager"* by **itzmanish (Manish)** (+762/−647) — **OPEN since Dec 18 2025** (155 days), finally merged. Long-stale community refactor of the remote-manager subsystem.
+- [**PR #168**](https://github.com/cloudflare/moq-rs/pull/168) release-plz auto-cut **moq-transport 0.14.1 → 0.14.2, moq-relay-ietf 0.7.17 → 0.7.18, moq-pub 0.8.13 → 0.8.14, moq-sub 0.4.7 → 0.4.8** (+57/−12).
+
+The release-plz changelog cites **actual bug fixes** in `moq-transport` 0.14.2 + `moq-sub` 0.4.8: *"subscribe cleaning on drop"* — non-trivial cleanup-path fix. Plus *"tokio utils use default features"* in `moq-relay-ietf` 0.7.18 + *"check for cancelled of cancellation token when waiting for subscribe open"*. **The PR #121 refactor + release pair is the first real engineering signal from cloudflare/moq-rs since the Suhas Nandakumar filter-framework [PR #167](https://github.com/cloudflare/moq-rs/pull/167) opened May 11** (still **OPEN Day +9**, untouched). PR #131 (Manish's draft-16 work) **still OPEN** as the underlying draft-16 baseline.
+
+**Carry-forward**: cloudflare/moq-rs's Day +37 silence had become a structural concern given the parallel [[moq-dev|moq-dev/moq]] velocity (8 PRs/day during the May 18 burst). The May 20 merge unblocks a 5-month-stale refactor that probably should have been merged earlier but was waiting on review bandwidth. **Mike English's [[interop-runner]] focus + London hackathon logistics + draft-18 register-bump work** appear to have been the bottleneck; the PR #121 merge happening within 4 hours of [[interop-runner]] PR #69 work suggests Mike batched maintenance tasks. The cloudflare/moq-rs draft-18 bump remains **not staged** — no PR to update beyond the draft-14 `main` / draft-16 PR #131 split.
+
+## google/quiche moqt — 1 more commit (publisher refactor cleanup continues)
+
+`083b83b39` May 20 22:36 UTC by [[martin-duke|martinduke]]: *"Remove unnecessary tests from MoqtSessionTest. Putting the logic in OutgoingSubgroupStreamTest and SubscriptionPublisherTest is more compact and cleaner conceptually."* — **third commit in the publisher-class-hierarchy refactor sequence** that began May 18 (`6460010e` Factor PublishedSubscription out → May 19 `a3f18c9` asan fix → May 20 `083b83b3` test-cleanup consolidation). Martin Duke is **rebuilding the moqt publisher path** in 3 days of small commits during the same window AWS is rebuilding its CMSF pipeline. Both are working out of internal review and not yet in interop-target shape.
+
+## moq-transport — quiet day (no new issues / PRs / comments)
+
+No new issues opened beyond the May 19 #1633/#1634/#1635 tranche. **[Issue #1633](https://github.com/moq-wg/moq-transport/issues/1633) comment-debate dormant** since the May 19 afrind/Swett same-day exchange. **PR #1378 SWITCH still updated_at May 15**. The AWS-side spec contributions (PR #157 in moq-wg/msf) also quiet Day +4.
+
+## Mailing list — London Agenda **oversubscription crosses ~10 hours**; Mo Zanaty files 135-min filter block; Joining FETCH Survey 4 more responses
+
+### London Agenda thread — Cullen re-files both rejected requests; Martin Duke implicitly declines May 26 extension; Mo Zanaty files 135 min anyway
+
+**4 messages on May 20 + 1 on May 21**:
+
+| UTC | Sender | Subject | Content | Action |
+|---|---|---|---|---|
+| May 20 ~16:00 | [**Cullen Fluffy Jennings**](https://mailarchive.ietf.org/arch/msg/moq/owPxzZ0M8GtnQMIlWrQWsMsnbn4/) | London Agenda requests - **Secure Object** | 10 min slides + 10 min discussion = **20 min**. *"updates to Secure Object and implementations updates"* | Re-files compliantly |
+| May 20 ~16:30 | [**Cullen Fluffy Jennings**](https://mailarchive.ietf.org/arch/msg/moq/mLsvjUdAJ-VYkoXDId4xLX6TaWE/) | London Agenda requests - **track filter DDOS** | 10 min slides + 20 min discussion = **30 min**. *"DDOS problems with track filter with top N"* — *"major area of concerns in making a decision"*, offers to consolidate other presenters' decks. | **NEW agenda item** (sub-issues #1518 Top-N) |
+| May 20 ~17:00 | [**Ali C. Begen**](https://mailarchive.ietf.org/arch/msg/moq/gpRerwUVVyNhmslXgG6-D_EfbNw/) | London Agenda requests | Reply (content unknown — not requesting time) | participatory |
+| May 20 ~18:30 | [**Martin Duke**](https://mailarchive.ietf.org/arch/msg/moq/yLFMnVngcN7vq5JvZerbHCVoQN8/) | London Agenda requests | *"Hi Mo, I haven't been able to connect with Magnus on this, but we are supposed to release in-person agendas a little earlier than others. I would suggest proactively submitting requests (remember to separate presentation and discussion time) and you can cancel later if needed."* | **Implicitly declines** Mo Zanaty's May 19 May-26 deadline-extension ask |
+| May 21 ~08:30 | [**Mo Zanaty**](https://mailarchive.ietf.org/arch/msg/moq/EbuKL1V2DUF8LggkielDbzniuks/) | London Agenda requests | **Files anyway with "likely change after May 26" caveat**: <br>• Object Range Filters (PR#1518) issues: 15+15=**30 min**<br>• Track Property Filters (PR#1518) clarifications: 5+10=**15 min**<br>• Top N Track Filters (PR#1518) issues: 15+30=**45 min**<br>• Subscription Location Filters (PR#1401) re-proposal: 15+15=**30 min**<br>• LOC update and issues: 5+10=**15 min**<br>**Total: 135 min** | NEW — single largest non-afrind block |
+
+**Updated London Agenda inbox at May 21 06:00 UTC**:
+
+| Sender | Block | Total |
+|---|---|---|
+| [[alan-frindell\|afrind]] | 37 non-editorial MOQT issues | **~240 min (4h)** |
+| **[[mo-zanaty\|Mo Zanaty]]** | 5 filter-related items (Range, Property, Top-N, Subscription Location, LOC) | **135 min** |
+| [[will-law\|Will Law]] | MSF/CMSF tech decisions + DTS | 105 min |
+| [[suhas-nandakumar\|Suhas]] | Top-N + Privacy Pass | 55 min |
+| Cullen Fluffy Jennings | track filter DDOS (new) | 30 min |
+| Cullen Fluffy Jennings | Secure Object (re-filed) | 20 min |
+| **Grand total** | | **~585 min ≈ 9h45m** |
+
+**vs ~8 hours of formal-session capacity** = **~22% oversubscribed** at the deadline.
+
+**Net carry-forward**:
+
+- **Mo Zanaty / Cullen / afrind combined own ~7 hours of the 9h45m ask** (Mo + Cullen 50min + afrind 240min = 410min vs 585min total). The filter-design thread (PR #1518 + PR #1401 + #1633) is now structurally **the top London priority by allocated time** — Mo Zanaty alone reserves 135 min for filter clarifications + corrections + re-proposals.
+- **Martin Duke's implicit-decline-with-pragmatic-workaround pattern**: instead of granting the May 26 extension, he tells Mo to *"proactively submit and cancel later"*. This is a **chair-pragmatic compromise** that preserves the May 20 deadline-as-policy while accommodating Mo's "I don't know yet what's important" concern.
+- **Cullen's track-filter-DDOS request is the first agenda item explicitly framed as an aggregation/consolidation slot** (*"happy to consolidate everyone's concerns into one deck"*) — a chair-friendly format that may set precedent for compressing the broader filter-design block.
+
+### Joining FETCH Survey — 4 more responses
+
+- [**Ali C. Begen May 20**](https://mailarchive.ietf.org/arch/msg/moq/xesQxWhxnTkbS2jyVNmJHcDA-U8/), [**Zafer Gurel May 20**](https://mailarchive.ietf.org/arch/msg/moq/MNGvn0rYE5dE5rI06kMA7mGv0Fc/), [**Victor Vasiliev May 21**](https://mailarchive.ietf.org/arch/msg/moq/99Dcw9gpnVONG9jN9L6OQqIO8Sk/), [**Mo Zanaty May 21**](https://mailarchive.ietf.org/arch/msg/moq/xKvUQ6-ydDdkDc9ey3hj66mSuz4/) — 4 more responses to the Joining FETCH Survey. **Victor Vasiliev's first reply on the survey** is structurally significant (he's been the quietest of the 5 main draft-18 editors on this thread). Detailed survey responses pending in next update.
+
+### NEW THREAD: "User case or question to Joining Fetch"
+
+[**Zafer Gurel May 20**](https://mailarchive.ietf.org/arch/msg/moq/pp0FIUuJapQ9uvHDq62oVvAC7ss/): Despite the thread title, **the actual content is about [[moqtail]] relay cache collisions when multiple publishers send to the same track with identical group IDs**. Verbatim summary from message body:
+
+> *"The collision problem I mentioned is more about the cache implementation of MOQtail relay. The cache key is (relay track id (maps to NS + N), group id). And each cache entity is a vector of objects."*
+
+Zafer's proposed workaround: **use randomized base group IDs per participant rather than wall-clock-milliseconds**, which deviates from the MOQT monotonically-increasing-group-ID norm. He explicitly recognizes that Will Law's suggestion (use different Object IDs) is the spec-correct path but would require revisiting MOQtail's cache logic.
+
+**Net**: structurally **same bug class as the May 16 AWS PR #1413 "non-sequential groups"** — a publisher-side workaround for upstream-coalescing-then-deduplication concerns, except this time the workaround is **randomize-to-avoid-collision** rather than **gap-tolerate-on-consume**. The cache key `(track id, group id)` design choice is a [[moqtail]]-specific implementation detail not present in [[moq-dev]]'s `(broadcast, track, group, subgroup)` 4-tuple cache key, and exposes a class of MOQtail-only bugs around multi-publisher tracks.
+
+## [[interop-runner]] — May 21 report 168/46/121 (+8 pass) — 3-day cadence holding
+
+[**New report 2026-05-21 00:45:51 UTC**](https://englishm.github.io/moq-interop-runner/results/2026-05-21_004551/report.html): **168 total / 46 pass / 121 fail / 1 skip**. **+8 pass-count vs May 20** (38 → 46), pass rate **27.4%** (vs 22.6% May 20, **+4.8pp**). **3 consecutive days of daily cadence** (May 19 / May 20 / May 21). Matrix at **13 implementation identifiers** (aiomoqt, moq-dev-js, moq-dev-rs, moq-rs, moq-rs-draft-16, moqlivemock, moqx, moxygen, xquic, imquic, libquicr, quiche-moq, **moqtail**) — moqtail visible in this report's matrix, was not enumerated in prior wiki summary at 12. **Target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN). The pass-rate climb 18.1% → 20.8% → 22.6% → 27.4% over 4 reports (May 13/19/20/21) shows the *"low-hanging fruit"* Mike English flagged is being addressed implementation-side, even without matrix expansion or target bump.
 
 # Activity (May 19 06:00 UTC → May 20 06:00 UTC) — **mondain/moqxr ships 8 draft-18 compliance fixes in 10 hours after Lorenzo Miniero finds a bidi-vs-uni SETUP-stream regression; afrind opens 3 formal draft-18 issues (#1633 concurrent subs / #1634 FIN-RST semantics / #1635 FIN-as-PUBLISH_DONE) closing the May 18 SVC-thread procedural-gap loop; London Agenda inbox fills with 6 requests by May 19 (Suhas Top-N + Privacy Pass, Will Law revised MSF/CMSF + DTS, Cullen Secure Object 20min, Mo Zanaty deadline-extension-to-May-26 ask, afrind enormous "37-non-editorial-issues" 4+ hour ask); interop runner 168/38/129 May 20 +3-pass vs May 19, still draft-16 target; Mike English social-resolution with Giovanni Marzot on the Apr 25 suspicious-AI-PR incident**
 

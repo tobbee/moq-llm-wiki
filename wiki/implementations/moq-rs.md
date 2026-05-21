@@ -2,9 +2,11 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-04-24
+last_updated: 2026-05-21
 status: current
 ---
+
+> **2026-05-21**: **38-day main-quiet streak BROKEN** (last prior merge Apr 13). May 20 16:34-16:45 UTC, [[mike-english]] merged 2 PRs in 11 minutes: **[PR #121](https://github.com/cloudflare/moq-rs/pull/121)** *"refactor: simplified remote manager"* by **itzmanish (Manish)** (+762/−647, **OPEN since Dec 18 2025**, 155 days), finally merged — long-stale community refactor. **[PR #168](https://github.com/cloudflare/moq-rs/pull/168)** release-plz auto-cut **moq-transport 0.14.1 → 0.14.2 / moq-relay-ietf 0.7.17 → 0.7.18 / moq-pub 0.8.13 → 0.8.14 / moq-sub 0.4.7 → 0.4.8** (+57/−12). Changelog cites actual bug fixes: *"subscribe cleaning on drop"* (moq-transport / moq-sub) + *"tokio utils use default features"* + *"check for cancelled of cancellation token when waiting for subscribe open"* (moq-relay-ietf). **First real engineering signal from cloudflare/moq-rs since [PR #167](https://github.com/cloudflare/moq-rs/pull/167) (Suhas filter-framework) opened May 11** (still OPEN Day +9, untouched). PR #131 (Manish's draft-16 work) **still OPEN** as the underlying draft-16 baseline. The cloudflare/moq-rs draft-18 bump remains **not staged** — no PR to update beyond the draft-14 `main` / draft-16 PR #131 split.
 
 **Language**: Rust
 **Organization**: Cloudflare

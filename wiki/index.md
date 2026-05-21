@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-05-20
+last_updated: 2026-05-21
 status: current
-updated: 2026-05-20
+updated: 2026-05-21
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -68,6 +68,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 - [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16)
 - [[shaka-player]] - Google's media player with experimental MSF/CMSF support incl. DRM (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
+- [[moqintosh]] - Pure-Swift iOS client by gazzy / Toshiro Igarashi (draft-14, client-only)
 
 ## Draft Version Support Summary
 
@@ -85,6 +86,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 | [[quiche-moq]] | C++ | 16 | [google/quiche](https://github.com/google/quiche/tree/main/quiche/quic/moqt) |
 | [[shaka-player]] | JavaScript | 14 (experimental) | [shaka-project/shaka-player](https://github.com/shaka-project/shaka-player) |
 | [[xquic-moq]] | C | 14 | Alibaba (see [[interop-runner]]) |
+| [[moqintosh]] | Swift (iOS) | 14 | [t-gazzy/Moqintosh](https://github.com/t-gazzy/Moqintosh) |
 
 # People & Organizations
 

@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-20
+last_updated: 2026-05-21
 status: current
 ---
 
@@ -51,22 +51,27 @@ Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to pos
 
 ## London Interim (June 9-12)
 
-### Agenda requests (deadline May 20 — Mo Zanaty asks for extension to May 26)
+### Agenda requests (deadline May 20 closed; extension implicitly declined)
 
-As of 2026-05-20 06:00 UTC, **6 distinct requests** have been filed against the moq-chairs inbox:
+As of 2026-05-21 06:00 UTC, **6 requesters have filed ~585 min total** against the moq-chairs inbox (Cullen's 2 rejected requests both re-filed compliantly):
 
 | Sender | Request | Present | Discuss | Total | Status |
 |---|---|---|---|---|---|
 | [[suhas-nandakumar\|Suhas]] | Top-N Track Filter Impl Experiences + Privacy Pass Demo | 15+10 | 20+10 | **55min** | format-compliant ([archive](https://mailarchive.ietf.org/arch/msg/moq/KPUj0vVm9NVCu91zngRmOadN9iI/)) |
-| [[alan-frindell\|afrind]] | **37 open non-editorial MOQT issues** (Joining FETCH Dissent 60min, Filter consensus, ABR/SWITCH 60min placeholder, **#1519 request blocking 60min**, **#1633 concurrent subs 30min**, remaining 22 issues 1-2h distributed) | varies | varies | **~4+ hours** | format-compliant; **single largest ask** ([archive](https://mailarchive.ietf.org/arch/msg/moq/-3Fk9OWQR_ME33neQTzhUPMeKdI/)) |
+| [[alan-frindell\|afrind]] | **37 open non-editorial MOQT issues** (Joining FETCH Dissent 60min, Filter consensus, ABR/SWITCH 60min placeholder, **#1519 request blocking 60min**, **#1633 concurrent subs 30min**, remaining 22 issues 1-2h distributed) | varies | varies | **~240min (4h)** | format-compliant; **single largest ask** ([archive](https://mailarchive.ietf.org/arch/msg/moq/-3Fk9OWQR_ME33neQTzhUPMeKdI/)) |
 | [[will-law\|Will Law]] (revised) | MSF/CMSF tech decisions + DTS (*"unless resolved May 26"*) | 20+15 | 40+30 | **105min** | format-compliant ([archive](https://mailarchive.ietf.org/arch/msg/moq/pvq02mvPo0gpdPCdd0SVWXooFs0/)) |
-| [[will-law\|Will Law]] (initial) | same topics, no present/discuss split | — | — | — | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/2Vw05JdiSVWPWyRchKofYqCmBw8/)) |
-| Cullen Fluffy Jennings | Secure Object updates + impl progress | — | — | 20min | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/HfvNHwQGeUU6icZ03QCCi6llZfI/)) |
-| Mo Zanaty | **Deadline extension request** May 20 → May 26 (cites pending consensus calls) | — | — | — | procedural — awaiting chair decision ([archive](https://mailarchive.ietf.org/arch/msg/moq/1WRfzo5eJwmUWNU-bg-sH2eEHX0/)) |
+| **[[mo-zanaty\|Mo Zanaty]]** (May 21) | **Filter cluster**: Object Range Filters #1518 (30) + Track Property Filters #1518 (15) + **Top-N #1518 (45)** + Subscription Location Filters #1401 re-proposal (30) + LOC update (15) | varies | varies | **135min** | format-compliant; *"likely change after May 26"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/EbuKL1V2DUF8LggkielDbzniuks/)) |
+| Cullen Fluffy Jennings (May 20 re-file) | London Agenda - **track filter DDOS** *"DDOS problems with track filter with top N"* — *"major area of concerns"*, offers to consolidate other presenters' concerns into one deck | 10 | 20 | **30min** | NEW ([archive](https://mailarchive.ietf.org/arch/msg/moq/mLsvjUdAJ-VYkoXDId4xLX6TaWE/)) |
+| Cullen Fluffy Jennings (May 20 re-file) | **Secure Object** updates + impl progress | 10 | 10 | **20min** | format-compliant re-file ([archive](https://mailarchive.ietf.org/arch/msg/moq/owPxzZ0M8GtnQMIlWrQWsMsnbn4/)) |
+| Will Law (May 19 initial — superseded) | same as revised, no present/discuss split | — | — | — | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/2Vw05JdiSVWPWyRchKofYqCmBw8/)) |
+| Cullen (May 19 initial — superseded) | Secure Object updates, no present/discuss split | — | — | — | **REJECTED** by Martin Duke ([archive](https://mailarchive.ietf.org/arch/msg/moq/HfvNHwQGeUU6icZ03QCCi6llZfI/)) |
+| Mo Zanaty (May 19) | Deadline extension request May 20 → May 26 | — | — | — | **Implicitly declined** May 20 by Martin Duke: *"I would suggest proactively submitting requests... you can cancel later if needed"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/yLFMnVngcN7vq5JvZerbHCVoQN8/)) |
 
-**Net: ~6+ hours of formally-requested time** against ~8 hours of formal-session capacity across June 11-12 (interim-2026-moq-08/09/10/11). **Already over-subscribed**; afrind's MOQT issue block alone is the single largest sub-request and would consume a full day if granted. The chairs will need to compress per-issue time, defer issues to follow-up interims, or accept Mo Zanaty's deadline extension.
+**Net: ~585 min ≈ 9h45m of formally-requested time** against ~8 hours of formal-session capacity across June 11-12 (interim-2026-moq-08/09/10/11). **~22% oversubscribed** at the deadline; afrind's MOQT issue block alone is ~4h, and the Mo Zanaty + Cullen filter-design cluster adds another 230min directly addressing PR #1518 / PR #1401 / #1633. The chairs will need to compress per-issue time, defer items to follow-up interims (May 26 virtual is the obvious candidate), or rule a chunk out-of-scope.
 
-**Format-strict precedent**: Martin Duke rejected 2 of the first 4 requests (Cullen, Will Law's initial) for not separating presentation vs discussion time. Both resubmitted compliantly within hours; Will Law's revised request landed at 17:00 UTC. This **establishes a precedent for procedural rigor** that may bear on the May 26 IETF 126 agenda-submission window also.
+**Format-strict precedent**: Martin Duke rejected 2 of the first 4 requests (Cullen, Will Law's initial) for not separating presentation vs discussion time. Both resubmitted compliantly within hours. **The May 20 deadline-extension question** (Mo Zanaty May 19) was resolved May 20 via Martin Duke's *"submit-and-cancel-later"* pragmatic compromise — **the May 20 deadline stays in force as policy**, with the chairs accommodating uncertainty by allowing post-deadline cancellation rather than post-deadline filing. **Net regulatory outcome**: format strictness is now the precedent (rejections), but deadline strictness is the *spirit* not the *letter* (cancel-later allowed).
+
+**Filter-design cluster is the structurally top item by allocated time** (Mo Zanaty 135min + Cullen 30min + afrind ~60min in #1633 + Suhas 35min Top-N = **~260 min of London agenda time** dedicated to **PR #1518 / PR #1401 / #1633** consensus). This eclipses the Joining FETCH Dissent block (~60 min) as the WG's biggest single design battle going into London.
 
 **Formal invitation by [[mike-english]] on the IETF MoQ list May 15, 2026** ([archive link](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/)). In-person hybrid interim at **County Hall / The Riverside Building, Belvedere Road, London SE1 7PB** (Cloudflare London office). Mike English's announcement reframes the meeting into a **4-day contiguous in-person window** rather than the previously-tracked "moq-08/09/10/11 across June 11–12" split.
 
