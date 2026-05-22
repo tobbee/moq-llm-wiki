@@ -2,11 +2,204 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-21
+last_updated: 2026-05-22
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 21 06:00 UTC → May 22 06:00 UTC) — **moq-dev/moq Swift+Kotlin FFI wrappers MERGED (PR #1432 +1997/−569, 48 files, 24h after gazzy's Moqintosh iOS announcement); Martin Duke publishes FINAL London Interim Preliminary Agenda — Mo Zanaty filter-cluster compressed 135→50 min, Tim Evens denied, only afrind/Will/Cullen/Suhas core fit; Consensus Call: DTS and SWITCH opened May 21 17:29 UTC (deadline June 4); 26 May interim re-purposed for DTS/SWITCH show-of-hands; #1633 substantive 4-comment martinduke↔ianswett make-before-break thread; #1636 RichLogan empty-namespace clarification new issue; mondain/moqxr 3 more commits (live publish API + MSF media timeline); interop runner REGRESSION 168/42/125 (-4 pass from 46→42, first regression in cadence since recovery)**
+
+## Mailing list — Martin Duke chair-triplet (Final Agenda, Consensus Call, May 26 prep) drives the London/May-26 decision sequence
+
+Three mailing-list messages from chair [[martin-duke|Martin Duke]] within **49 minutes** (May 21 17:19 → 18:08 UTC) **structurally lock the May 26 → June 4 → June 11-12 decision pipeline**:
+
+### [Moq] 26 May Agenda ([archive](https://mailarchive.ietf.org/arch/msg/moq/fTAIZlLWEU16uNOwDDZwxyPxY3w/)) — May 21 17:19 UTC
+
+*"After a few minutes of administrivia, almost the entire balance of Tuesday's meeting will be given to Gwendal and Will to discuss SWITCH and DTS: https://github.com/moq-wg/moq-transport/pull/1378 https://github.com/wilaw/dts4moq. The chairs expect them to work together to use the time constructively. ... The chairs will also take the last 15 minutes for a series of Show of Hands to supplement a consensus call that will go on the list shortly. The outcome of this meeting will be a decision to either (1) incorporate this work directly into MoQT, (2) adopt as an extension, or (3) send to /dev/null."*
+
+**Net: interim-2026-moq-16 (May 26) is now structurally a SWITCH/DTS show-of-hands meeting**, not a general working-meeting. Other agenda items (editor + design discussions) **only get time if the SWITCH/DTS block ends early** — *"by some miracle"*, in Martin's framing. Cullen Jennings's [May 9 #moq-interop-runner OpenMOQ-fallout-suppressed message about Ali Begen's SWITCH demo](https://quicdev.slack.com/) now lands at the structurally-correct meeting — Ali + Yu have published SWITCH/DTS experimental-result demos, the chairs explicitly defer to Gwendal/Will on whether to fold those into the meeting.
+
+### [Moq] Consensus Call: DTS and SWITCH ([archive](https://mailarchive.ietf.org/arch/msg/moq/O0Nw9uiGpDv08ZDksPDvcYUreD0/)) — May 21 17:29 UTC
+
+*"This begins a consensus call on the disposition of DTS and SWITCH. The call ends on 4 June.* [PR #1378](https://github.com/moq-wg/moq-transport/pull/1378) *and* [wilaw/dts4moq](https://github.com/wilaw/dts4moq). *... For each of these documents, the questions are: (1) Should the Working Group adopt the contents of this work in some form? (2) If yes, should the contents of this work be incorporated into the MOQT draft (as opposed to an extension draft)?"*
+
+**Net: the SWITCH consensus call now has a hard deadline 1 week before [[2026-06-09-london-interim|London]] starts (June 4)**. This is the **first formal SWITCH-disposition vote** since Gwendal Simon's April PR-#1378 refresh. The two-question structure — *adoption* + *integration-vs-extension* — gives DTS and SWITCH 3 possible outcomes each (decline / extension / MOQT-integration), so the call can produce nine combined outcomes. Chairs *"strongly encourage everyone to attend the 26 May interim... if you intend to do neither [attend interim or watch video], you are welcome to register your position now."* — the May 26 + June 4 deadlines are linked: the show-of-hands feeds the formal consensus disposition.
+
+### [Moq] London Interim Preliminary Agenda ([archive](https://mailarchive.ietf.org/arch/msg/moq/RTlJvR6VcT4LGGt2yLRwfgxRAQE/)) — May 21 18:08 UTC
+
+Martin Duke published the **final London agenda** (June 11-12), opening with *"Here is the preliminary agenda for the London Meeting on 11 and 12 June. We have decided to prioritize core MOQT draft issues and **did not have time to meet all the requests**. The gaps in the schedule are discussion time for each issue. The agenda for Friday is dependent on the outcome of the SWITCH consensus call ... which just started and concludes on 4 June. Cloudflare is also looking into catering lunch one or both days; if this happens, we may have some lunch demos that you are welcome to attend."*
+
+**Day 1 (June 11) — MOQT core issues only**:
+
+| Slot | Topic | Lead | Min | Reference |
+|---|---|---|---|---|
+| 0945–1000 | Object Range Filters | [[mo-zanaty\|Mo]] | 15 | [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) |
+| 1015–1020 | Track Property Filters | [[mo-zanaty\|Mo]] | 5 | [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) |
+| 1030–1045 | Subscription Location Filters | [[mo-zanaty\|Mo]] | 15 | [PR #1401](https://github.com/moq-wg/moq-transport/pull/1401) |
+| 1100–1130 | Request Blocking | [[alan-frindell\|Alan]] | 30 | [Issue #1519](https://github.com/moq-wg/moq-transport/issues/1519) |
+| 1300–1310 | Concurrent Subscribe | [[alan-frindell\|Alan]] | 10 | [Issue #1633](https://github.com/moq-wg/moq-transport/issues/1633) |
+| 1330–1350 | Joining FETCH | [[alan-frindell\|Alan]] | 20 | [Joining Fetch Dissent label](https://github.com/moq-wg/moq-transport/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Joining%20Fetch%20Dissent%22) |
+| 1445–1500 | Next Interim Planning | [[martin-duke\|Martin]] | 15 | — |
+| 1500–1700 | Other MOQT Issues | [[alan-frindell\|Alan]] | 120 | [All issues](https://github.com/moq-wg/moq-transport/issues) |
+
+**Day 2 (June 12, conditional on SWITCH/DTS being incorporated)**:
+
+| Slot | Topic | Lead | Min |
+|---|---|---|---|
+| 0930–0945 | Interop Report | [[mike-english\|Mike]] | 15 |
+| 0945–1000 | DOS Design team readout | [[mike-english\|Mike]] | 15 |
+| 1015–1045 | SWITCH Issues (if adopted) | Gwendal | 30 |
+| 1115–1130 | DTS Issues (if adopted) | [[will-law\|Will]] | 15 |
+| 1300–1310 | Top-N DDOS | Cullen | 10 |
+| 1320–1335 | Top-N issues | [[mo-zanaty\|Mo]] | 15 |
+| 1405–1410 | Top-N Implementation | [[suhas-nandakumar\|Suhas]] | 5 |
+| 1415–1435 | MSF/CMSF | [[will-law\|Will]] | 20 |
+| 1505–1515 | Privacy Pass | [[suhas-nandakumar\|Suhas]] | 10 |
+| 1525–1535 | Secure Objects | Cullen | 10 |
+
+**Net request-vs-agenda compression analysis** (formal time, ignoring gap-discussion):
+
+| Requester | Asked | Got | Compression |
+|---|---|---|---|
+| [[mo-zanaty\|Mo Zanaty]] | 135 min (5 filter items) | **50 min** (3 Day-1 filter items 35 min + Top-N Day 2 15 min) | **−63% (largest cut)** |
+| [[suhas-nandakumar\|Suhas]] | 55 min (Top-N + Privacy Pass) | 15 min (Top-N Impl 5 + Privacy Pass 10) | −73% |
+| Cullen Fluffy Jennings | 50 min (Secure Object 20 + track filter DDOS 30) | 20 min (Top-N DDOS 10 + Secure Objects 10) | −60% |
+| [[will-law\|Will Law]] | 105 min (MSF/CMSF 60 + DTS 30) | 35 min (MSF/CMSF 20 + DTS 15, both conditional) | −67% |
+| [[alan-frindell\|afrind]] | ~240 min (37 issues) | **180 min** (Request Blocking 30 + Concurrent Subscribe 10 + Joining FETCH 20 + Other MOQT Issues 120) | **−25% (smallest cut)** |
+| Tim Evens (May 21) | 15 min (draft-evens-moq-bench) | **0 min** | **−100% (DENIED)** |
+
+**Pattern**: the chairs **prioritised core-MOQT issues (afrind) and structurally compressed implementation-experience and external-format requests (Mo / Suhas / Cullen / Will)**. Tim Evens's late May 21 request for `draft-evens-moq-bench` (BMP-style benchmarking draft) was **dropped entirely** — first explicit late-request rejection-by-omission in the wiki's tracking. The Day-2 *"if SWITCH/DTS are incorporated"* conditional means the formal-session day-2 collapses to ~3h of Top-N+MSF/CMSF+Privacy Pass+Secure Objects if both DTS and SWITCH go to `/dev/null` on June 4.
+
+**Day-2 Joining FETCH dissent** is NOT explicitly slotted in Day 2 — only Day 1 (20 min). The combined Filter+Joining-FETCH+Concurrent-Subscribe block on Day 1 is **75 min total (afrind+Mo)**, vs. Mo's ~135min ask. **Carry-forward**: by the time London opens June 11, the WG will have **3 disposition events** behind it: May 26 show-of-hands, June 4 consensus call close, and now-frozen agenda. The London-time pressure to land MOQT consensus is structurally maximised.
+
+### [Moq] Re: London Agenda requests — Tim Evens (Cisco) May 21 12:13 UTC
+
+[Tim Evens](https://mailarchive.ietf.org/arch/msg/moq/X1er3XKMSkEDDwhmhqZHFb3l7Ik/) filed *"15-minute update to `draft-evens-moq-bench`"*. **Filed ~6 hours before Martin's final agenda publication; not selected.** Tim's BMP-style MoQ benchmarking draft has no PR in `moq-wg/moq-transport` and is an individual draft — the rejection-by-omission is consistent with chair pattern of *"WG-document items first"* (draft-evens-moq-bench is not WG-adopted).
+
+### Other mailing-list activity May 21
+
+- **[Mo Zanaty May 21 02:50 UTC Joining FETCH Survey answers](https://mailarchive.ietf.org/arch/msg/moq/xKvUQ6-ydDdkDc9ey3hj66mSuz4/)** — Q1.1 (does not need Joining FETCH for his use case) / Q2.1 (can live with shape) / Q3 MUST replace / Q4.1 Y (past data must be FC) / Q4.3 MAY (fill semantics) / Q5 1-2 (1-2 months delay OK). **First explicit "I do not need Joining FETCH" survey vote** from a chair (well, an Apple/Cisco-affiliated chair-adjacent reviewer); softens the survey's core constituency.
+- **[Victor Vasiliev May 21 01:14 UTC Joining FETCH Survey](https://mailarchive.ietf.org/arch/msg/moq/99Dcw9gpnVONG9jN9L6OQqIO8Sk/)** — *"Regarding question 2, I think we have an issue on both planes. On the control plane, we have an unsatisfying entanglement of two requests that does not really have a good way to spell it on the wire. On the data plane, we violate the general principle of 'never delivering the data that the user lacks the context to parse' whenever we start a subgroup with a random P-frame. Issue 1614 describes that fairly well. Regarding question 4, I can see this working for the previous groups too, but it's kind of pushing it? I mean, if you ask for 1000 groups, you'll surely just get almost 1000 resets. I think the non-joining fetch addresses this adequately."* — articulates the unified data-plane skepticism beyond current-group as practical-only.
+- **[Alan Mallett May 22 03:57 UTC Google Transparency Report](https://mailarchive.ietf.org/arch/msg/moq/bEguSuTk4CxxQobcpRzGeihgyLE/)** — list spam (a single link to transparencyreport.google.com with no context). First moderated-through spam on `moq@ietf.org` since the Apr 18 hijacking incident; the message slipped through dmarc-mitigation / member-moderation as a list-non-member. **No mailing-list policy follow-up yet from chairs**.
+
+## GitHub `moq-wg/moq-transport` — Issue #1636 OPENED + Issue #1633 substantive make-before-break thread
+
+### Issue [#1636](https://github.com/moq-wg/moq-transport/issues/1636) *"Empty namespace clarification"* OPENED May 21 10:50 UTC by RichLogan (Cisco)
+
+Body: *"I was just reading the draft-18 text regarding namespace prefixes and full track names and wanted to clarify the rules for our implementation. I understand the use-case for zero element namespace prefixes, but wanted to check that publishing a track with a zero element namespace is allowed, and in theory, given the text as it is today, a track with a zero element namespace AND an empty name is also allowed?"* — **first post-publication wire-level draft-18 clarification request from RichLogan**. No comments yet. Belongs in the *"draft-18 ambiguity backlog"* alongside #1633/#1634/#1635 (afrind May 19 tranche) and #1632 (yuanchao-chris May 14 Properties Type collision).
+
+### Issue [#1633](https://github.com/moq-wg/moq-transport/issues/1633) — Make-before-break / next-group-boundary thread (4 May 21 comments)
+
+The 6-day-old concurrent-subscriptions issue received 4 substantive comments May 21 18:43-21:21 UTC, building out the **make-before-break vs. REQUEST_UPDATE-on-next-group** design space surfaced by Luke Curley's May 18 SVC thread:
+
+- **[[martin-duke|Martin Duke]] May 21 18:43 UTC**: *"Yes, 1b. The non-silly use case for this is **make-before-break or just avoiding a session_error because of a lost RESET_STREAM**. If a client does this it's going to have to deal with an object that maps to two local subscriptions and/or figure out under which handle to pass it up the stack."* — first explicit chair-side endorsement of **1b (same Track Alias, publisher coalesces)** with **make-before-break as the load-bearing use case**.
+- **[[ian-swett|Ian Swett]] May 21 18:50 UTC**: *"With Subgroup filters, one clear usecase is **starting the enhancement layer Subgroup at the next group boundary**. I believe the easiest way to accomplish this is to **end the current Subscription at the end of the current Group and start a new one at the next Group with the updated Subgroup filter**."* — concrete SVC-flow design: the SGPL enhancement-layer-onboarding use case explicitly requires 2 concurrent subscriptions transitioning at group boundary.
+- **[[martin-duke|Martin Duke]] May 21 18:57 UTC reply**: *"yeah, that's a make-before-break. It also highlights that the **group-as-join-point thinking in the design is still pretty muddled. Why can't a REQUEST_UPDATE be triggered to start on the next group?**"* — **opens a new design alternative**: instead of allowing 2 concurrent subscriptions for the next-group transition, extend REQUEST_UPDATE with a *"start at next group"* parameter. **First explicit chair-side framing that #1633 is downstream of a deeper Group-As-Join-Point design assumption.**
+- **[[ian-swett|Ian Swett]] May 21 21:21 UTC**: *"I think a REQUEST_UPDATE could be triggered to start on the next group, but doing that for arbitrary parameters/filters might be quite complex? I think **a simpler option might be to start a new Subscription with the new filters you want**, but I could be wrong."* — pushback: REQUEST_UPDATE-with-next-group is general-purpose but combinatorially complex; new-subscription is operationally simpler. **The London #1633 10-min slot will now need to decide both proposal-1b-vs-1a AND whether REQUEST_UPDATE gets a next-group offset.**
+
+**Carry-forward**: Issue #1633 was already the load-bearing entry for Mo Zanaty's filter cluster + afrind's London ask; now also the entry point for an even broader **"What is the structural meaning of a Group boundary?"** design conversation. The 10 minutes Martin Duke allocated for London (1300-1310) appears **dramatically under-budgeted** for the design space that opened on May 21.
+
+## moq-dev/moq — record-tying May 21 PR cluster (7 merged, 4 opened, 1 closed-unmerged in 24h); Swift+Kotlin FFI wrappers SHIP
+
+**Highest single-day moq-dev/moq PR activity tracked by the wiki** outside the May 18 draft-18 burst. 12 distinct PR events touched the repo between May 21 15:40 UTC and May 22 00:38 UTC.
+
+### Headline: [PR #1432](https://github.com/moq-dev/moq/pull/1432) MERGED May 22 00:38:56 UTC — *"Add Swift and Kotlin FFI wrappers with packaging and publishing"*
+
+[[luke-curley|kixelated]], **+1997/−569 across 48 files**. Body excerpts:
+
+> *"This PR adds **ergonomic Swift and Kotlin wrappers** around the moq-ffi UniFFI bindings, along with complete packaging and publishing infrastructure for both platforms. Introduces two new language bindings for Media over QUIC: **Swift Package** for iOS and macOS applications, **Kotlin libraries** for Android and JVM applications. Both wrappers provide idiomatic async/await APIs that integrate with their respective platform's concurrency models (Swift's `AsyncSequence` and Kotlin's `Flow`), with automatic cleanup and cancellation propagation."*
+
+**Net: moq-dev/moq now has first-class iOS/macOS/Android/JVM language bindings**, shipped via UniFFI + idiomatic platform-language wrappers. **The timing is structurally significant**: gazzy's [[moqintosh|Moqintosh]] iOS Swift client was announced on `#moq` **May 20 15:22 UTC** as a *"Pure Swift Client Only draft-14 based"* implementation; PR #1432 was opened May 21 16:24 UTC by kixelated — **24 hours later**, with **draft-18 (current main)** and **both client + relay capabilities** via UniFFI. This positions moq-dev/moq as **the first-party native iOS+Android stack** in a way that gazzy's exploratory `t-gazzy/Moqintosh` was *not*. **It's an open question whether gazzy's Moqintosh effort will continue independently or pivot to moq-dev/moq's FFI wrappers.**
+
+### Second-headline: [PR #1438](https://github.com/moq-dev/moq/pull/1438) OPENED May 21 22:47 UTC — *"Add Matroska/WebM import and export support"*
+
+[[luke-curley|kixelated]], **+3092/−39** (largest in-flight single PR on the repo). Body excerpts:
+
+> *"Adds comprehensive Matroska (MKV) and WebM container support to moq-mux, enabling **ingestion and re-export of MKV/WebM files as MoQ broadcast streams**. Bidirectional Matroska/WebM support: Import (`rs/moq-mux/src/import/mkv.rs`): Parses MKV/WebM files and converts them to MoQ broadcast streams... Export (`rs/moq-mux/src/export/mkv.rs`): Subscribes to MoQ broadcasts and produces valid Matroska/WebM byte streams for consumption by standard media players."*
+
+**Net: moq-dev/moq is now adding a third container muxer/demuxer pipeline** alongside CMAF (existing, also got the CMSF unification via PR #1429) and Matroska/WebM. **The structural argument is the same one kixelated has been pushing AWS toward**: *"the relay is format-agnostic; the difference is purely at the edges"* (PR #1429 May 20 framing). PR #1438 demonstrates that approach across a 3rd format. **PR #1438 is the largest container PR landed in any IETF-aligned MoQ implementation tracked by the wiki** (vs. PR #1408 AWS CMSF parallel pipeline 3906 LOC, this is +3092 in zero-duplication shape).
+
+### Third-headline: [PR #1439](https://github.com/moq-dev/moq/pull/1439) OPENED May 21 23:10 UTC — *"Add per-track timescale and frame timestamps to moq-lite"*
+
+[[luke-curley|kixelated]], +936/−546. Body: *"Introduces per-track timescale negotiation and per-frame timestamps to the moq-lite protocol, enabling accurate media synchronization across different frame rates and sample rates. Refactors the timestamp system from a generic `Timescale<const SCALE: u64>` type alias to a concrete `Timestamp` struct that carries both a raw value and its scale. This allows timestamps to be expressed in any unit (seconds, milliseconds, microseconds, nanoseconds) and **enables the protocol to negotiate per-track timescales via SUBSCRIBE_OK messages**."*
+
+**Net: moq-lite gets per-track timescale negotiation at SUBSCRIBE_OK time** — a media-sync mechanism that **moq-transport draft-18 does not (yet) have at the same level**. This is the kind of moq-lite-leads-moq-transport-follows precedent that historically drove the moq-lite draft revisions; the **next moq-transport draft is the obvious carry-forward** for whether per-track timescale negotiation gets formally tracked into the WG path.
+
+### Other moq-dev/moq merges May 21
+
+| UTC | PR | Author | Title | LOC | State |
+|---|---|---|---|---|---|
+| 15:40 | #1358 | kixelated | moq-lite: rewrite Origin as a poll-driven, conducer-based model | — | **CLOSED** (after 23 days) |
+| 16:11 | #1425 | moq-bot[bot] | chore: release | — | **MERGED** |
+| 18:43 | #1433 | kixelated | Replace mpsc with conducer for coalesced origin consumer updates | — | **MERGED** |
+| 18:50 | #1410 | YogiSotho (external) | fix(watch): hide buffering overlay while offline | — | **MERGED** |
+| 18:51 | #1362 | Qizot (external) | Add audio encoder reconfiguration | — | **MERGED** (open since Apr 29) |
+| 20:19 | #1435 | kixelated | Claude/cargo update 3 fx or | — | **MERGED** |
+| 20:30 | #1431 | moq-bot[bot] | chore: release | — | **MERGED** |
+| 22:20 | #1437 | kixelated | mux: emit avcC/hvcC in catalog description for inline-SPS/PPS importers | +358/−92 | **CLOSED unmerged** (self-close after 1h, see below) |
+
+**[PR #1437 closing comment by kixelated May 21 22:20 UTC](https://github.com/moq-dev/moq/pull/1437)**: *"Closing — review feedback led us to the right architectural conclusion: the avc3/hev1 importers shouldn't transcode their own output. If a downstream consumer needs avc1/hvc1 (length-prefixed samples + out-of-band avcC/hvcC), that's the consumer's transcode and belongs in an exporter layer. Codec-aw..."* — **kixelated self-closing a 1-hour-old PR after review-cycle architectural redirect**. This is the **third "right architectural conclusion" self-redirect in 7 days** (after #1413 close → AVC fallback as separate PR; #1408 close → #1429 unified pipeline; #1437 close → exporter-layer transcode). **Pattern**: kixelated holds the *"format-specific edges, format-agnostic core"* line consistently, even against own-author PRs.
+
+### Open moq-dev/moq PRs end-of-day May 21
+
+- [PR #1389](https://github.com/moq-dev/moq/pull/1389) (stats aggregation, kixelated, OPEN since May 7 — touched May 22 05:52 UTC, 18-day-stale activity signal)
+- [PR #1429](https://github.com/moq-dev/moq/pull/1429) (Unified CMSF/Hang pipeline, ksletmoe-aws +1969/−12 — touched May 21 21:37 UTC, **awaiting review since May 20**)
+- [PR #1434](https://github.com/moq-dev/moq/pull/1434) (Split OriginConsumer into cheap read handle and announcement cursor, kixelated, opened May 21 17:01 UTC — follow-on to PR #1433)
+- [PR #1436](https://github.com/moq-dev/moq/pull/1436) (chore: release, moq-bot[bot], opened May 21 20:34 UTC — release-plz next-cycle)
+- [PR #1438](https://github.com/moq-dev/moq/pull/1438) Matroska/WebM
+- [PR #1439](https://github.com/moq-dev/moq/pull/1439) Per-track timescale
+
+**Net moq-dev/moq May 21**: 7 merges + 4 opens + 1 close-unmerged + 1 self-close = **13 distinct PR events in 24h**, **+1997/−569 +3092/−39 +936/−546 = ~+6000/−1100 net code activity**, plus 2 external merges (Qizot + YogiSotho). **The structural cadence has shifted from `merge-then-rest` to `merge-and-open-stack`** — kixelated is staging the next 4-5 PRs while #1429 (AWS CMSF) and #1389 (stats) ripen in review. **The external-contributor pipeline (Qizot 23-day-old PR merged) is healthy** — Qizot's PR #1362 was the 5th external-contributor merge of May 2026 alongside ksletmoe-aws, YogiSotho, danrossi, and Karolk99.
+
+## mondain/moqxr — 3 more commits May 21 (live publish API, MSF media timeline track)
+
+Paul Gregoire ([[openmoq]] member) extended the May 20 documentation/i18n sprint with **3 substantive commits May 21**:
+
+| UTC | SHA | Subject |
+|---|---|---|
+| 15:49 | `8255194` | Add **live object publish API** |
+| 17:12 | `8e90a0e` | Add optional **MSF media timeline track** |
+| 17:17 | `5c3cf91` | Merge PR #13 from mondain/jemalloc |
+
+**Net mondain/moqxr May 19-21 running total**: **17 commits** (8 May 19 wire-fix + 6 May 20 docs/i18n + 3 May 21 API additions). **The May 21 commits are a structural shift from compliance-fixing to feature-adding** — "Add live object publish API" and "Add optional MSF media timeline track" are forward-progress capability commits. **PR #13 jemalloc** is a memory-allocator swap (mondain-internal PR, not WG-relevant). **mondain/moqxr is now the highest-cadence open-source MoQ C++ implementation tracked by the wiki for May 2026** — 17 commits in 3 days exceeds [[imquic]]'s May draft-18 work by commit count.
+
+## Slack `#moq` — fully quiet May 21-22 beyond join events
+
+`#moq` channel: **only "Alina joined the channel" May 21 17:08 CEST** since the May 20 gazzy/Paul Moqintosh thread. **First fully-substantively-quiet 36h window in `#moq` since the May 11 draft-18 announcement**.
+
+`#moq-rs`, `#moq-js`, `#libquicr`, `#moq-interop-runner`: all quiet.
+
+## Implementations rolling status (24h window)
+
+| Repo | Activity | Notes |
+|---|---|---|
+| [[moq-dev|moq-dev/moq]] | **VERY HIGH** | 7 merges + 4 opens + 2 closes |
+| [[openmoq\|mondain/moqxr]] | **HIGH** | 3 commits + PR #13 merge |
+| [[imquic\|meetecho/imquic]] | quiet | `main` last touch May 20 14:06:55 UTC |
+| [[moq-rs\|cloudflare/moq-rs]] | quiet | quiet again after May 20 burst (PR #121 + #168) |
+| google/quiche `moqt` | quiet | last commit May 20 22:36 UTC by martinduke |
+| [[moqlivemock\|Eyevinn/moqlivemock]] | quiet | v0.9.0 holding |
+| [[moq-js\|video-dev/moq-js]] | quiet | longer-quiet |
+| [[moqtail]] | quiet | Day +9 quiet since `dbd7085` May 13 |
+| [[moqintosh\|t-gazzy/Moqintosh]] | quiet | Day +2 since announcement |
+| [[shaka-player]] | quiet | longer-quiet |
+| Eyevinn/warp-player | quiet | 3 dependabot PRs still OPEN since May 19 |
+
+## interop-runner — first regression in cadence
+
+[**2026-05-22 00:43:51 UTC report**](https://englishm.github.io/moq-interop-runner/results/2026-05-22_004351/report.html): **168 / 42 / 125 / 0** (total / pass / fail / skip). **−4 pass vs May 21** (46 → 42, pass rate **27.4% → 25.0%, −2.4pp**). **First regression since cadence-recovery May 19**. **4 consecutive days of daily cadence holding** (May 19 / 20 / 21 / 22). **Target still draft-16** (PR #68 still OPEN). **Skip count drops from 1 → 0** — the one previously-skipped test is now executing and presumably contributing to the +4 fail delta. The 4-day timeline:
+
+| Date | Total | Pass | Fail | Skip | Pass-rate | Δ pass |
+|---|---|---|---|---|---|---|
+| May 22 | 168 | **42** | 125 | 0 | **25.0%** | **−4** |
+| May 21 | 168 | 46 | 121 | 1 | 27.4% | +8 |
+| May 20 | 168 | 38 | 129 | 1 | 22.6% | +3 |
+| May 19 | 168 | 35 | 132 | 1 | 20.8% | — |
+
+**Carry-forward**: the May 21 +8 jump (the largest single-day pass-rate jump tracked) was the *real* outlier; May 22's regression to 42 brings the rolling-3-day average back to a more sustainable rate. **Hypothesis**: May 21's high-merge-volume day on moq-dev/moq (7 merges, including infrastructure-shaping ones like PR #1432 FFI wrappers and PR #1433 origin-consumer refactor) likely re-broke some moq-dev-rs/moq-dev-js test combinations that had stabilised May 19-20. **This is the cost of running the matrix against `main`-of-each-impl** — kixelated's high-velocity main-branch refactoring directly correlates with day-over-day pass-count instability.
+
+---
 
 # Activity (May 20 06:00 UTC → May 21 06:00 UTC) — **moq-lite → moq-net rename MERGED; AWS re-files CMSF support as PR #1429 with kixelated-feedback addressed; meetecho/imquic draft-18 lands on `main` (PR #25); cloudflare/moq-rs breaks Day +37 main-quiet streak with 2 merges; new iOS Swift implementation `Moqintosh` announced on `#moq`; Cullen re-files Secure Object + track-filter-DDOS in compliant format; Mo Zanaty files 135-min filter-focused agenda block despite Martin Duke implicitly declining the May 26 deadline-extension; interop runner +8 pass to 46/121 (3-day cadence)**
 

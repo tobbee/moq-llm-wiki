@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-21
+last_updated: 2026-05-22
 status: current
 ---
 
@@ -11,10 +11,11 @@ status: current
 | Meeting | Date | Agenda Notes |
 |---------|------|-------------|
 | **interim-2026-moq-15** | **2026-05-11** | |
-| **interim-2026-moq-16** | **2026-05-26** | |
+| **interim-2026-moq-16** | **2026-05-26** | **SWITCH/DTS show-of-hands meeting** — [[martin-duke\|Martin Duke]] May 21 17:19 UTC: *"almost the entire balance of Tuesday's meeting will be given to Gwendal and Will to discuss SWITCH and DTS"*; chairs will *"take the last 15 minutes for a series of Show of Hands to supplement [the SWITCH/DTS] consensus call"*. ([archive](https://mailarchive.ietf.org/arch/msg/moq/fTAIZlLWEU16uNOwDDZwxyPxY3w/)) |
+| **Consensus Call: DTS and SWITCH** | **opens 2026-05-21, closes 2026-06-04** | Martin Duke May 21 17:29 UTC ([archive](https://mailarchive.ietf.org/arch/msg/moq/O0Nw9uiGpDv08ZDksPDvcYUreD0/)). 2 questions × 2 docs ([PR #1378 SWITCH](https://github.com/moq-wg/moq-transport/pull/1378) + [wilaw/dts4moq](https://github.com/wilaw/dts4moq)): (1) WG adopt in some form? (2) If yes, integrate into MOQT or as extension? **Deadline 1 week before London opens.** |
 | **London interim (in-person, hackathon/interop)** | **2026-06-09 to 2026-06-10** | Cloudflare London office (County Hall / The Riverside Building, Belvedere Road, SE1 7PB). Hackathon / interop days announced by [[mike-english]] on the IETF MoQ list **May 15, 2026** (*"[Moq] London interim June 9-12"*). 09:00–17:00 BST (08:00–16:00 UTC). |
-| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (formal session day 1). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision.** |
-| **interim-2026-moq-09** | **2026-06-12** | London interim (formal session day 2) |
+| **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (formal session day 1). **MOQT core-issues track**: Filters (Mo, compressed 35 min), Request Blocking (Alan, 30 min), Concurrent Subscribe (Alan, 10 min), Joining FETCH (Alan, 20 min), Next Interim Planning (Martin, 15 min), Other MOQT Issues (Alan, 120 min). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision** — folded into Concurrent Subscribe (Issue #1633) slot. |
+| **interim-2026-moq-09** | **2026-06-12** | London interim (formal session day 2). **CONDITIONAL on June 4 SWITCH/DTS consensus call outcome** — full Day-2 agenda assumes SWITCH and/or DTS are adopted. Otherwise compressed to Top-N (Mo+Cullen+Suhas) + MSF/CMSF (Will, 20 min) + Privacy Pass (Suhas, 10 min) + Secure Objects (Cullen, 10 min). |
 | **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim (formal session day 2) |
 | **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim (formal session day 2) |
 
@@ -50,6 +51,55 @@ Remote: https://meetings.conf.meetecho.com/interim/?session=35394 · Alan to pos
 **Apr 24 18:26 PDT (Apr 25 01:26 UTC) update**: [[alan-frindell]] replied to Martin's agenda thread on the mailing list with the slides folder link. Notable line: *"Some content is still pending. Victor will provide updated slides on delivery timeout proposals and request ID alternatives."* — confirms [[victor-vasiliev|Victor Vasiliev]] will present a **competing proposal to RRID** at the interim, complementing Martin's PR #1604 and Alan's PR #1613. Headline agenda items now have published slides for **#1608** (Subgroup ID = first Object ID), **#1519/#1603** (Required Request ID), **#1613** (MAX_REQUEST_UPDATES), **#1605** (delivery timeout split). Time permitting: Joining FETCH Dissent.
 
 ## London Interim (June 9-12)
+
+### Final preliminary agenda (Martin Duke, May 21 18:08 UTC)
+
+[**Mailing list archive**](https://mailarchive.ietf.org/arch/msg/moq/RTlJvR6VcT4LGGt2yLRwfgxRAQE/). Chair Martin Duke published the final preliminary agenda May 21 18:08 UTC. Opener: *"We have decided to prioritize core MOQT draft issues and did not have time to meet all the requests. The gaps in the schedule are discussion time for each issue. The agenda for Friday is dependent on the outcome of the SWITCH consensus call ... which just started and concludes on 4 June."*
+
+**Day 1 (June 11 — MOQT core, NOT conditional)**:
+
+| Slot (UTC offset of BST) | Topic | Lead | Min | Reference |
+|---|---|---|---|---|
+| 0930 | Administrivia | — | 15 | — |
+| 0945–1000 | Object Range Filters | Mo | 15 | [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) |
+| 1015–1020 | Track Property Filters | Mo | 5 | [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) |
+| 1030–1045 | Subscription Location Filters | Mo | 15 | [PR #1401](https://github.com/moq-wg/moq-transport/pull/1401) |
+| 1100–1130 | Request Blocking | Alan | 30 | [#1519](https://github.com/moq-wg/moq-transport/issues/1519) |
+| 1200–1300 | Lunch | — | — | — |
+| 1300–1310 | Concurrent Subscribe | Alan | 10 | [#1633](https://github.com/moq-wg/moq-transport/issues/1633) |
+| 1330–1350 | Joining FETCH | Alan | 20 | [Joining Fetch Dissent label](https://github.com/moq-wg/moq-transport/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Joining%20Fetch%20Dissent%22) |
+| 1430–1445 | Break | — | — | — |
+| 1445–1500 | Next Interim Planning | Martin | 15 | — |
+| 1500–1700 | Other MOQT Issues | Alan | 120 | [All issues](https://github.com/moq-wg/moq-transport/issues) |
+
+**Day 2 (June 12 — CONDITIONAL on SWITCH/DTS being incorporated)**:
+
+| Slot | Topic | Lead | Min |
+|---|---|---|---|
+| 0930–0945 | Interop Report | Mike | 15 |
+| 0945–1000 | DOS Design team readout | Mike | 15 |
+| 1015–1045 | SWITCH Issues | Gwendal | 30 |
+| 1115–1130 | DTS Issues | Will | 15 |
+| 1200–1300 | Lunch | — | — |
+| 1300–1310 | Top-N DDOS | Cullen | 10 |
+| 1320–1335 | Top-N issues | Mo | 15 |
+| 1405–1410 | Top-N Implementation | Suhas | 5 |
+| 1415–1435 | MSF/CMSF | Will | 20 |
+| 1505–1515 | Privacy Pass | Suhas | 10 |
+| 1525–1535 | Secure Objects | Cullen | 10 |
+
+**Net request-vs-agenda compression**:
+
+| Requester | Asked | Got | Compression |
+|---|---|---|---|
+| Mo Zanaty | 135 min | **50 min** | **−63%** |
+| Suhas | 55 min | 15 min | −73% |
+| Cullen | 50 min | 20 min | −60% |
+| Will Law | 105 min | 35 min | −67% |
+| afrind | ~240 min | **180 min** | **−25%** |
+| Tim Evens (May 21 late) | 15 min | **0 min** | **−100% (DENIED)** |
+
+**Chair pattern**: prioritised **core-MOQT issues (afrind)** at smallest compression (−25%) and structurally compressed implementation/external-format requests (Mo / Suhas / Cullen / Will) at −60% to −73%. The Day-2 agenda is **conditional on June 4 SWITCH/DTS consensus call** — if both DTS+SWITCH go to `/dev/null`, Day 2 collapses to ~3h of Top-N + MSF/CMSF + Privacy Pass + Secure Objects.
 
 ### Agenda requests (deadline May 20 closed; extension implicitly declined)
 

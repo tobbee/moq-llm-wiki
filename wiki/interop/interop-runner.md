@@ -2,10 +2,12 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-21
+last_updated: 2026-05-22
 status: current
 ---
 
+> **2026-05-22 first regression in cadence** — **[2026-05-22 00:43:51 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-22_004351/report.html): 168 / 42 / 125 / 0** (total / pass / fail / skip). **−4 pass vs May 21** (46 → 42), pass rate **27.4% → 25.0% (−2.4pp)** — **first regression since cadence recovery May 19**. **4 consecutive days of daily cadence holding**. Skip count drops from 1 → 0 — the one previously-skipped test is now executing and contributes to the +4 fail delta. **Hypothesis**: May 21's record-tying moq-dev/moq PR cluster (7 merges including infrastructure-shaping PR #1432 FFI wrappers / PR #1433 origin-consumer refactor / PR #1435 cargo update + PR #1432 Swift+Kotlin wrappers landing May 22 00:38 UTC) likely re-broke some moq-dev-rs/moq-dev-js test combinations stabilised May 19-20. This is the **cost of running the matrix against `main`-of-each-impl** — kixelated's high-velocity main-branch refactoring directly correlates with day-over-day pass-count instability. Target still **draft-16** (PR #68 still OPEN).
+>
 > **2026-05-21 daily cadence at Day 3** — **[2026-05-21 00:45:51 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-21_004551/report.html): 168 / 46 / 121 / 1** (total / pass / fail / skip). **+8 pass-count vs May 20** (38 → 46), pass rate **27.4%** (vs 22.6% May 20, **+4.8pp** — largest single-day pass-rate jump since cadence resumed). **3 consecutive daily reports** (May 19 / May 20 / May 21) confirm the per-test-timeout fix structurally stable. Matrix at **13 implementations** (aiomoqt, moq-dev-js, moq-dev-rs, moq-rs, moq-rs-draft-16, moqlivemock, moqx, moxygen, xquic, imquic, libquicr, quiche-moq, **moqtail**); **target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN). The pass-rate climb 18.1% → 20.8% → 22.6% → **27.4%** over 4 reports (May 13/19/20/21) shows the *"low-hanging fruit"* Mike English flagged is being addressed implementation-side, even without matrix expansion or target bump. **Structural gap widens**: [[meetecho/imquic|imquic]] merged draft-18 to `main` May 20 09:25 UTC, joining [[moq-dev|moq-dev/moq]] (PR #1418 May 18) and [mondain/moqxr](https://github.com/mondain/moqxr) (8 commits May 19-20) — **3 implementations now on draft-18 while the matrix targets draft-16**.
 >
 > **2026-05-20 daily cadence holding** — second consecutive daily report. **[2026-05-20 00:46:03 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-20_004603/report.html): 168 / 38 / 129 / 1** (total / pass / fail / skip). **+3 pass-count vs May 19** (35 → 38), pass rate **22.6%** (vs 20.8% May 19, +1.8pp). Matrix unchanged at 12 implementations; **target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN — Mike English working through CI issues, no merge yet). The 2-consecutive-day cadence is the structural confirmation that the May 19 PR #69 per-test-timeout fix worked.
@@ -55,6 +57,8 @@ The interop runner currently targets **draft-16** for automated testing. **PR #6
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| **May 22, 2026 00:43 UTC** | **168** | **42** | **125** | **0** |
+| **May 21, 2026 00:45 UTC** | **168** | **46** | **121** | **1** |
 | **May 20, 2026 00:46 UTC** | **168** | **38** | **129** | **1** |
 | **May 19, 2026 01:36 UTC** | **168** | **35** | **132** | **1** |
 | May 18, 2026 | — (no run) | — | — | — |

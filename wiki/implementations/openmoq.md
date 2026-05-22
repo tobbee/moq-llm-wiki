@@ -2,10 +2,12 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-05-21
+last_updated: 2026-05-22
 status: current
 ---
 
+> **2026-05-22**: **mondain/moqxr +3 more commits May 21** (17-commit running total May 19-21) by [[paul-gregoire|Paul Gregoire]]. The May 21 commits shift from documentation/i18n (May 20) to **feature-adding capability commits**: `8255194` *"Add live object publish API"* (15:49 UTC) — first publisher-side runtime API beyond the May 17 ingest-CLI scope; `8e90a0e` *"Add optional MSF media timeline track"* (17:12 UTC) — first MSF/CMSF-aware track-publishing capability inside moqxr; `5c3cf91` *"Merge PR #13 from mondain/jemalloc"* (17:17 UTC) — memory-allocator swap (mondain-internal). **17 commits in 3 days makes mondain/moqxr the highest-cadence open-source MoQ C++ implementation tracked for May 2026** — exceeds [[imquic]]'s May draft-18 work by commit count. **Net structural arc May 19-21**: 8 wire-fix commits → 6 docs/i18n → 3 feature-adds. Paul has shifted out of stabilisation and into capability-expansion within 3 days of Lorenzo Miniero's first bilateral interop attempt.
+>
 > **2026-05-21**: **mondain/moqxr +6 more commits May 20 (14-commit running total May 19-20)** by Paul Gregoire. The May 20 commits shift from **wire-protocol fixes** to **documentation + localization**: `617a582` *"Add localized publisher API docs"* (13:15), `cf0b22b` *"Restructure README and add localized versions"* (13:31), `0d7c082` *"Add MOQT draft transport specs"* (13:32), `7779575` *"Fix WebTransport protocol offer formatting"* (14:25), `95b912d` *"Document WebTransport protocol offer formatting"* (14:31), plus carryover `d759426` *"Fix draft 18 request stream polling"* (00:11). **4 of 6 are docs/i18n** — Paul considers the wire-protocol gap structurally closed after May 19's 8-commit fix-up sprint. **No Lorenzo Miniero re-test** in the Slack thread after May 19 13:21 UTC ack; bilateral interop session has not been re-attempted post-fix. **Paul Gregoire `#moq` May 20 15:31 UTC**: in reply to gazzy's new `Moqintosh` iOS impl announcement, Paul mentions he had a similar private `moqntosh` "toy" he was *"messing around with over the weekend"* — same name play. **Day-22 since OpenMOQ governance fallout** (April 25 Mike English / Giovanni Marzot incident, fully resolved May 18 23:17 UTC); the consortium's most-visible technical contribution is now Paul Gregoire's mondain/moqxr fix-up cadence rather than the original moqx fork.
 >
 > **2026-05-20**: **mondain/moqxr 8-commit draft-18 fix-up sprint May 19 14:17 → May 20 00:11 UTC** after Lorenzo Miniero's first interop attempt against the May 18 announcement found a **bidi-vs-uni SETUP-stream divergence** (moqxr defaulted to draft-14 unless `--draft 18` was set, and used a bidirectional stream for SETUP when draft-18 requires two unidirectional streams). Paul Gregoire's 8 commits include *"Align draft-18 WebTransport stream handling"* (`53ee899`), *"Fix MoQT control compliance gaps"* (`40ee48c`), *"Fix MoQT publish framing and metadata"* (`c426d2d`), *"Fix draft 17 and 18 MoQT wire semantics"* (`96baf5a`), *"Fix MoQT pass 3 compliance gaps"* (`7bebe08`), *"Fix WebTransport protocol offers"* (`f73427a`), *"Fix draft-18 setup option delta encoding"* (`1f222b0`), *"Fix draft 18 request stream polling"* (`d759426`). This is the **first cross-impl hands-on draft-18 interop attempt the wiki has tracked** (moqxr ↔ [[imquic]]); the 10-hour turnaround on 8 fixes validates moqxr as an actively-maintained second draft-18 endpoint heading into [[2026-06-09-london-interim|London]]. Mike English ↔ [[giovanni-marzot]] resolved May 18 23:17 UTC the *"suspicious AI PR"* incident from April: the moq-interop-runner PR was *"just Claude being overzealous about tackling a slightly under-specified prompt"* — Giovanni Marzot back in the contributor loop with Mike *"looking forward to working together more on improving the interop runner"*.
@@ -60,9 +62,10 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - Origin Publisher, Contribution, and Ingest CLI for OpenMOQ
 - C++
 - **draft-18 support shipped May 16–18, 2026** — 10 commits including *"Implement draft-18 subscribe tracks"* (`fe6ba73f`), *"fix draft 18 subgroup header encoding"* (`cca10631`), *"Add cross-draft MoQ message serde tests"* (`d284c21c`). Slack `#moq` announcement May 18 18:44 UTC.
+- **Active sprint May 19-21, 2026** — 17 commits total: 8 draft-18 wire-fix commits May 19 + 6 docs/i18n May 20 + 3 feature-adds May 21 (`8255194` *"Add live object publish API"*, `8e90a0e` *"Add optional MSF media timeline track"*, `5c3cf91` *"Merge PR #13 from mondain/jemalloc"*). **Highest-cadence open-source MoQ C++ implementation for May 2026.**
 - Latest release: **v0.2.1** (Apr 17, 2026) — draft-16 interop fixes (release tag predates the draft-18 work)
 - Prior: v0.2.0 (Apr 15) added draft-16 SUBSCRIBE KVP parser, dropped WebTransport subprotocol for draft-14, and made control-message handling non-blocking
-- Updated: 2026-05-18
+- Updated: 2026-05-21
 
 ## red5pro/moq-playa (planned)
 - Player component for OpenMOQ
