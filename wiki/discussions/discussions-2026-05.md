@@ -2,11 +2,141 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 22 06:00 UTC → May 23 06:00 UTC) — **moq-dev/moq overnight 10-PR merge wave (Luke Curley, May 22 18:24 UTC → May 23 02:26 UTC, ~8h): LOC frame format + CMSF/Hang unified pipeline + Matroska/WebM all MERGED on the same night — moq-dev/moq becomes the first impl with all THREE major MoQ media container formats (CMAF/fMP4 + LOC + MKV/WebM) unified on `main`; AWS PR #1429 reborn as PR #1444 kixelated-led cleanup MERGED (+1278/−14, third AWS-vs-kixelated design-cycle resolution); Martin Duke opens "Consensus call on filters" May 22 12:22 UTC (deadline June 5) — fourth simultaneous consensus call (after DTS, SWITCH, Object Filters); Issue #1636 afrind explicit AI-hallucination apology after RichLogan catches AI-generated wrong spec quote ("between 1 and 32 Track Namespace Fields" — actually 0-32); 4-message afrind↔Mo Zanaty Object Filters thread on PR #1518 interpretation; MSF Issue #164 kixelated "Require sample rate and channels"; interop runner RECOVERS 168/46/121/1 (+4 pass restoring May 21 level, 5-day cadence intact); #moq Slack quiet 60h; google/quiche moqt quiet 70h+**
+
+## moq-dev/moq — overnight 10-PR merge wave; LOC + CMSF + MKV/WebM all land on same night
+
+**Highest container/codec-pipeline merge density tracked by the wiki for 2026.** Luke Curley merged **10 PRs to `main`** between May 22 18:24 UTC and May 23 02:26 UTC (~8 hour window). The cluster is **media-pipeline + stats + release infrastructure**, structurally larger than the May 18 draft-18 ship (5 PRs in 3h17m) by both PR count and aggregate LOC.
+
+### Headline cluster — three container muxers in one night
+
+| PR | Title | LOC | Merged (UTC) | Significance |
+|---|---|---|---|---|
+| [#1440](https://github.com/moq-dev/moq/pull/1440) | hang: re-emit deprecated CMAF timescale/trackId in catalog | +43/−16 | 18:24 | Backwards-compat for hang catalog readers expecting pre-MSF CMAF fields |
+| [#1441](https://github.com/moq-dev/moq/pull/1441) | direnv: auto-GC stale Nix store paths once a week | — | 19:10 | Dev infrastructure |
+| [#1443](https://github.com/moq-dev/moq/pull/1443) | Make reconnect timeout mandatory with 5-minute default | +32/−20 | 20:47 | Spec-adjacent: removes optional reconnect-timeout footgun |
+| [#1442](https://github.com/moq-dev/moq/pull/1442) | **Add stats via MoQ broadcasts** | **+1492/−70** | 20:56 | **Per-connection stats published as MoQ broadcast — observability dogfooded over the protocol itself** |
+| [#1444](https://github.com/moq-dev/moq/pull/1444) | **feat: Unified CMSF/Hang pipeline (cleanup of #1429)** | **+1278/−14** | 21:12 | **kixelated takes over the AWS CMSF PR**, strips out-of-scope C API + start_group, ships CMSF-as-CMAF-with-different-catalog merged. **Third AWS-vs-kixelated design-cycle resolution after #1413 close and #1408→#1429 rewrite.** |
+| [#1394](https://github.com/moq-dev/moq/pull/1394) | Auto-detect catalog format from broadcast name extension | +243/−114 | 21:50 | Broadcast routing — implicit MSF/Hang detection |
+| [#1438](https://github.com/moq-dev/moq/pull/1438) | **Add Matroska/WebM import and export support** | **+3087/−66** | 22:44 | **MKV/WebM as third container muxer/demuxer** (`webm-iterable` dep); CMAF + LOC + MKV/WebM all in same tree |
+| [#1388](https://github.com/moq-dev/moq/pull/1388) | **Add Low Overhead Container (LOC) frame format support** | **+844/−16** | 22:53 | **First LOC implementation in the moq-dev/moq stack** — new `moq-loc` Rust crate + `@moq/loc` JS package, integrated into `moq-mux` + hang catalog + watch player. Opened May 7, merged 15 days later. |
+| [#1446](https://github.com/moq-dev/moq/pull/1446) | Tag audio sources with a kind to drive Opus encoder settings | +69/−12 | 23:36 | Voice vs. music Opus encoder presets |
+| [#1447](https://github.com/moq-dev/moq/pull/1447) | Tighten moq-ffi release pipeline ahead of first publish | +72/−27 | May 23 02:26 | Pre-flight for FFI mirror publish to Maven Central + Swift Package Mirror |
+
+**Aggregate**: **~+7160/−355 across ~120 files** in 8 hours, all by [[luke-curley|kixelated]] (Luke Curley) as a single contributor — no review-gate. Plus PR #1448 *"swift: wire SPM mirror publish (Phase A)"* OPENED May 23 03:08 UTC (next-up in the FFI publishing chain).
+
+### Net structural effect: three container formats on one branch
+
+As of May 23 02:53 UTC, **moq-dev/moq is the first MoQ implementation with all three major container formats unified on `main`**:
+
+| Container | Pre-May-22 state | Post-May-22 state | Module |
+|---|---|---|---|
+| **CMAF/fMP4** | Original Hang format | Still primary | `rs/moq-mux/src/import/fmp4.rs` |
+| **CMSF** (PR #1429 AWS) | OPEN since May 20 | **MERGED as #1444** | `rs/moq-mux/src/import/cmsf.rs` (via hang::Catalog IR) |
+| **LOC** (PR #1388) | OPEN since May 7 | **MERGED** | `rs/moq-loc/` crate + `@moq/loc` pkg |
+| **MKV/WebM** (PR #1438) | OPENED May 21 22:47 UTC | **MERGED** | `rs/moq-mux/src/{import,export}/mkv.rs` |
+
+**Carry-forward**: by the [[2026-06-09-london-interim|London hackathon]], moq-dev/moq is positioned to be **the only implementation able to interop on all three packaging values** (`cmaf`, `loc`, and `mkv` if standardised). The CMSF/Hang unified pipeline gives `hang::Catalog` as a single in-memory IR that can serialize to MSF or Hang catalog formats; the LOC frame layer is now selectable via `Container::Loc` in the catalog. The MKV/WebM exporter (subscribe → write MKV bytes) means **standard players (VLC, MPV, browsers) can consume MoQ broadcasts via a moq-dev/moq exporter** without needing a MoQ-aware player — a structural new deployment shape.
+
+### PR #1444 — third AWS-vs-kixelated design-cycle resolution
+
+PR #1444 body (kixelated): *"Builds on @ksletmoe-aws's #1429 (which this branch is a fork of) and addresses the review feedback. The MSF catalog work — the actual goal of the PR — stays; the two pieces of new API that turned out unnecessary or out of scope get cut. **Importer — drop `start_group` / `with_explicit_groups`**: The default behavior already creates one group per video keyframe via `append_group()`. Caller-driven group boundaries on import don't add anything: shrinking the fragment size adds per-fragment overhead with no latency win, growing it adds latency. **libmoq — drop the slim C API**: `moq_track_create` + `moq_track_config`, `moq_broadcast_start_group`, `moq_broadcast_write`, `moq_track_close`, and `moq_group_open`/`write`/`close` are gone. This was effectively 'a C API to produce fMP4' and is its own scope — the existing `moq_publish_media_ordered` + `moq_publish_media_frame` path already provides CMAF passthrough."*
+
+**Pattern**: this is the **third AWS-vs-kixelated design-cycle resolution in 9 days**, this time with kixelated **personally cleaning up and merging** the AWS contributor work rather than asking AWS to re-file. The previous two:
+- **#1413 (May 16 → 18 CLOSED unmerged)**: AWS transport-layer encoder-failover stitching → kixelated *"stitch at application level"* → AWS re-files AVC fallback separately as `#1413`-children
+- **#1408 → #1429 (May 14 → 20)**: AWS parallel CMSF pipeline (+3906/−458) → kixelated *"use intermediate representation"* → AWS re-files as #1429 (+1969/−12, 50.4% smaller)
+- **#1429 → #1444 (May 20 → 22)**: AWS unified pipeline → kixelated *"two new API pieces out of scope"* → kixelated forks #1429, strips out-of-scope, and merges as #1444 (+1278/−14, another 33.5% smaller than #1429). **First time kixelated has taken over an AWS PR rather than redirecting it back.**
+
+The cumulative ksletmoe-aws contribution shape: **#1408 → #1429 → #1444 → MERGED** in 8 days from first file to merge, with **2 rounds of kixelated-led architectural pruning** stripping AWS's preferred shape (parallel CMSF pipeline, opt-in C API, caller-driven group boundaries) down to the **MSF-catalog-and-import-only** core. AWS's net code in the merged result: ~25–30% of original #1408's scope.
+
+### PR #1388 — LOC frame format support
+
+PR #1388 body (kixelated): *"Implements support for the Low Overhead Container (LOC) frame format defined in draft-ietf-moq-loc across the Rust and JavaScript stacks. New `moq-loc` crate providing `encode()` and `decode()` functions for LOC frame wire format. Handles QUIC-style varint encoding for properties, supports delta-encoded property type IDs (0x06 timestamp, 0x08 timescale)... Updated catalog container enum to support LOC with configurable timescale (defaults to 1,000,000 microseconds). Added LOC preference in audio source selection (prioritized after legacy, before CMAF)."*
+
+**Net**: moq-dev/moq now has its own LOC encoder/decoder library matching the [draft-ietf-moq-loc-02](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/) wire format. **Property Type IDs in this implementation match draft-ietf-moq-transport-18 §15.8-2 (TIMESTAMP=0x06, TIMESCALE=0x08)** — *not* the draft-ietf-moq-loc-02 historical values (TIMESTAMP=0x02) that triggered Issue [yuanchao-chris #20](https://github.com/moq-wg/loc/issues/20) on May 14. Kixelated has effectively voted-with-code for the moq-transport-18 assignments to win the cross-spec coordination dispute. **Carry-forward**: until the LOC spec PR #1624 (provisional IANA registry) propagates into a draft-ietf-moq-loc-03 with aligned values, moq-dev/moq's LOC implementation is the *de facto* reference for the post-draft-18 property type assignments.
+
+### PR #1438 — Matroska/WebM bidirectional
+
+PR #1438 body (kixelated): *"Adds comprehensive Matroska (MKV) and WebM container support to moq-mux, enabling ingestion and re-export of MKV/WebM files as MoQ broadcast streams. MKV Importer: Handles EBML parsing via `webm-iterable`, manages per-track state with deduplication across buffer replays, and supports multiple video codecs (H.264, H.265, VP8, VP9, AV1) and audio codecs (AAC, Opus). MKV Exporter: Subscribes to catalog and per-track consumers, emits EBML headers with proper track metadata, and streams frames as Matroska SimpleBlock elements with cross-track timestamp ordering."*
+
+**Net**: MoQ ↔ MKV/WebM bidirectional conversion lands on `main`. This unblocks **ingest from MKV/WebM source files into MoQ broadcasts** (most YouTube uploads, OBS recordings, Twitch VOD downloads) and **MKV-out exporter targets** (consume MoQ broadcasts in VLC/MPV/browsers without a MoQ-aware player). **First non-CMAF, non-LOC container packaging shipped in any tracked MoQ implementation**, predating any individual draft (no `draft-*-mkv-moq` exists). **Carry-forward**: if MKV-over-MoQ gains traction at the London hackathon as the *"consume MoQ in your existing player"* path, an `mkv` packaging value extension to [[moq-msf|MSF]] may follow Paul Gregoire's [[moq-msfts|m2ts extension]] pattern.
+
+## GitHub `moq-wg/moq-transport` — Issue #1636 AI-hallucination incident
+
+### Issue [#1636](https://github.com/moq-wg/moq-transport/issues/1636) escalates with afrind's explicit AI-hallucination apology
+
+The empty-namespace clarification issue opened May 21 by RichLogan (Cisco) received its **first three comments May 22**:
+
+- **[[alan-frindell|afrind]] May 22 18:24 UTC** (initial reply, **preceded by**: *"With apologies for answering your question with AI:"*): *"Track Namespace (for tracks): Line 511 says 'between 1 and 32 Track Namespace Fields' and line 544-546 explicitly states: 'If an endpoint receives a Track Namespace consisting of 0 or greater than 32 Track Namespace Fields, it MUST close the session with a PROTOCOL_VIOLATION.' So publishing a track with a zero-element namespace is NOT allowed — it's a protocol violation. Track Namespace Prefix (in SUBSCRIBE_NAMESPACE): Line 3107-3108 says 'between 0 and 32 Track Namespace Fields.' A zero-element prefix is explicitly permitted here — it acts as a wildcard matching all namespaces. So the rules diverge intentionally: SUBSCRIBE_NAMESPACE prefix: 0-32 fields (zero is valid, matches everything); Track Namespace (in PUBLISH, SUBSCRIBE, etc.): 1-32 fields (zero is a protocol violation). Regarding empty track name: Line 548 says 'Track Name is a sequence of bytes, possibly empty.' So yes, an empty track name is explicitly allowed."*
+- **RichLogan May 22 21:15 UTC reply**: *"@afrind forgive me if I'm missing (and it's late for me) but I'm not sure that's reflective of the text in the draft today. **I can't see any mention of 'between 1 and 32 Track Namespace Fields', only 'between 0 and 32'**. E.g See here the Track Naming section: [draft-18 §2.4.1](https://www.ietf.org/archive/id/draft-ietf-moq-transport-18.html#section-2.4.1) — *'Track Namespace is an ordered set of between 0 and 32 Track Namespace Fields'*. And any reference to Track Namespace I believe just links back to 2.4.1 - such as PUBLISH... Or Subscribe... I am totally fine with it being 0 elements and/or empty btw, I just wanted to double check on it."* — **catches the AI hallucination**: there is no *"between 1 and 32 Track Namespace Fields"* anywhere in draft-18; it is *"between 0 and 32"* in §2.4.1 and the lines 511 / 544-546 / 3107-3108 cited by afrind do not exist in the published text.
+- **[[alan-frindell|afrind]] May 22 21:45 UTC reply**: ***"Wow, that is pretty embarrassing. I apologize. It spit out that sentence about 1 and 32 and that seemed familiar I didn't double check it. Ouch.** Per the current draft you are 100% right it's allowed to have 0 fields and a 0 length name. I'm unclear if I think it's a good idea to forbid it or not, but maybe I'm inclined to allow it. It's sort of like path=/ in HTTP?"* — **first explicit on-record acknowledged-AI-hallucination on `moq-wg/moq-transport` by an editor in spec-discussion**.
+
+**Significance**: this is the third community-side AI-skeptic-narrative event in 4 days, after the May 18-19 Mike English ↔ Giovanni Marzot suspicious-AI-PR resolution (*"Claude being overzealous"*) and Lorenzo Miniero's May 19 07:52 UTC *"One more reason for me to stay away from AI as long as I can"*. Here the structurally novel piece is that **afrind preemptively disclosed AI assistance** (*"With apologies for answering your question with AI"*) before the answer was challenged — implying community awareness that AI-generated spec quotes carry hallucination risk has already settled at the editor level. **Carry-forward**: expect informal *"verify the citation"* norms to harden on `moq-wg/moq-transport` issue threads; explicit AI disclaimers ahead of AI-assisted answers may become a community norm. The substantive open question (*"should 0-element namespace + empty name be allowed, or restricted?"*) is now back to manual review — afrind tentatively in favour of allowing (*"it's sort of like path=/ in HTTP"*), no further comments at 06:00 UTC May 23.
+
+## GitHub `moq-wg/msf` — Issue #164 kixelated *"Require sample rate and channels"*
+
+[Issue #164](https://github.com/moq-wg/msf/pull/164) opened May 22 20:17 UTC by [[luke-curley|kixelated]]:
+
+> *"These fields should be required for audio tracks. If they're optional, I have to parse the init segment (gross) just to figure out if I should subscribe to the given track. And yeah I already filed a few issues, but we should have more required fields in MSF. **It's reaally annoying that everything is optional.**"*
+
+Net: kixelated's third successive MSF schema strengthening ask (after track-level `bitrate` / `displayResolution`, both filed May during the #1408/#1429 review cycle). The pattern is **"MSF as a subscribe-decision oracle, not a sub-spec of the init segment"** — kixelated wants the catalog to provide enough audio-track info that a subscriber can choose between mono/stereo/5.1 / 22.05 kHz / 48 kHz tracks without instantiating a decoder or fetching init segments. Currently MSF lets all of these be optional, defaulting to *"fetch init segment to find out"*. **Carry-forward**: the May 22 Will Law (MSF/CMSF) 20-min London Day-2 slot will need to land at least an editorial commitment on which MSF fields move from optional to required. kixelated has effectively pre-staged the design conversation.
+
+## Mailing list — Martin Duke "Consensus call on filters" + 4-message Object Filters thread + 4th simultaneous consensus call
+
+### [Moq] Consensus call on filters ([archive](https://mailarchive.ietf.org/arch/msg/moq/6g0WlQfghKJr4ufgjobT_1Dkrf0/)) — Martin Duke May 22 12:22 UTC
+
+[[martin-duke|Martin Duke]] (MOQ chair): *"Following the interim meeting on May 11th, the chairs determined there was rough agreement to 'merge all the filters into the MOQT draft except for top N, where there were substantial concerns.' Most filter mechanisms would be incorporated into the main MOQT specification, while the 'top N' filter approach would potentially become an optional extension instead."* **The consensus call closure deadline is June 5** (1 day after the SWITCH/DTS June 4 deadline, 6 days before London opens June 11).
+
+**Net: 4 simultaneous chair-opened consensus calls now in flight**:
+1. **Joining FETCH Survey** (afrind May 11, no formal deadline — survey-shape)
+2. **Consensus call on Object filters** (Magnus Westerlund, May 12, deadline May 26)
+3. **Consensus Call: DTS and SWITCH** (Martin Duke, May 21, deadline June 4)
+4. **Consensus call on filters** (Martin Duke, May 22, deadline June 5) — **new today**
+
+The four consensus calls cascade: **May 26 (Object Filters close + DTS/SWITCH show-of-hands) → June 4 (DTS/SWITCH formal close) → June 5 (Filters formal close) → June 11-12 (London formal session)**. Martin Duke is effectively running a **3-week chair-coordinated decision pipeline** to maximize the inputs available at London.
+
+**Important nuance**: Magnus's May 12 *"Object Filters"* consensus call (deadline May 26) and Martin's May 22 *"filters"* call (deadline June 5) **overlap in scope** but address different framings:
+- **Magnus's call (May 12)**: should the Object Filters work in [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) be included in MOQT as **optional-to-implement with max-count signalling**?
+- **Martin's call (May 22)**: which filters should be **mandatory MOQT vs. extension**? *"merge all except top-N"* implies Object Filters + Range Filters + Subscription Location Filters become MOQT-required, Top-N becomes extension.
+
+The two calls together produce a **layered disposition matrix**: (a) what filters land in MOQT *at all* (Magnus), (b) which of those are *required vs. optional* (Martin). **Carry-forward**: London Day-1 0945–1045 (Mo Zanaty's 35-min filter slate) is now structurally **constrained by both consensus call outcomes** by the time it opens.
+
+### [Moq] Consensus call on Object filters — 4-message thread May 22-23 (afrind ↔ Mo Zanaty)
+
+The Magnus Westerlund May 12 thread received four substantive replies May 22-23, debating PR #1518's interpretation:
+
+- **[[alan-frindell|afrind]] May 22 21:39 UTC** ([archive](https://mailarchive.ietf.org/arch/msg/moq/Z8FfhnHefTt_MyQIk8fX2iPJebk/)): notes ambiguity in PR text vs. consensus-call meeting discussion. *"The PR text suggests that Property filters in SUBSCRIBE_TRACKS do not impact control plane behavior — a subscriber would still receive PUBLISH messages for tracks with non-matching properties if individual objects override those properties. However... the meeting discussion [favored] a stricter interpretation where subscribers wouldn't receive PUBLISHes for non-matching tracks. Applying filters once at PUBLISH time is more efficient than filtering at the object level... The feature could reasonably exist as an optional extension rather than core specification."* — **afrind's first explicit Object-Filters-as-extension preference**, contradicting Martin Duke's same-day *"merge all except top-N"* framing.
+- **[[mo-zanaty|Mo Zanaty]] May 23 00:29 UTC** ([archive](https://mailarchive.ietf.org/arch/msg/moq/patpBIlwfAHVdd2eKxIkllhpnYc/)): quotes PR #1518 directly: *"If a track has a Track Property of the specified Property Type, its value is used for filtering both the PUBLISH message and any Objects from that track that lack their own value for that Property Type."* — argues PR text is **already clear** that property filters apply to both PUBLISH and Objects; **questions whether London slot is still needed**.
+- **[[alan-frindell|afrind]] May 23 00:48 UTC** ([archive](https://mailarchive.ietf.org/arch/msg/moq/1IVV3tazCaLFaEnQ6rYzEkiNcO8/)): *"Thanks for setting me straight Mo. That's clear enough and I missed it."* — concedes the misread; the *no objects from non-matching tracks are delivered* semantic is what PR #1518 already says.
+- **[[mo-zanaty|Mo Zanaty]] May 23 01:38 UTC** ([archive](https://mailarchive.ietf.org/arch/msg/moq/4H7rJc1i2nyZ5dNJQPtyU2E6658/)): *"The text is clear. Should we use the London slot, or release it?"* Plus a **terminology critique**: *"the current pull request (PR#1518) refers to all property filters as 'Range Filters,' while reserving 'Track Filter' specifically for top-N functionality"* — proposes London time be reserved primarily to align terminology rather than re-debate the technical interpretation.
+
+**Net effect on London agenda**: the **Mo Zanaty 15-min Track Property Filters slot (1015-1020) is now possibly vacated** — if Mo releases it, afrind's *"Other MOQT Issues"* 120-min block absorbs ~15 min of headroom. Watch for chair-side reshuffle in the next week. The **terminology cleanup ask** (Range Filters → Property Filters; Track Filter reserved for Top-N) is a low-controversy editorial that can land via mailing list before London.
+
+### [Moq] Google Transparency Report — May 22 spam carry-forward
+
+[Alan Mallett May 22 03:57 UTC](https://mailarchive.ietf.org/arch/msg/moq/bEguSuTk4CxxQobcpRzGeihgyLE/) — same spam message previously flagged on May 22 wiki entry. **No chair follow-up on moderation policy after 31 hours.** Pattern persists: dmarc-mitigation / member-moderation continues to allow non-list-member single-link spam through to the public archive.
+
+## Slack — `#moq` quiet for 60 hours; all channels silent
+
+`#moq` last message: gazzy May 20 15:22 CEST (Moqintosh iOS announcement). **No further messages May 21, 22, or first 6h May 23 UTC.** `#moq-interop-runner`, `#moq-rs`, `#moq-js`, `#libquicr` all quiet. The 60h silence is the **longest `#moq` quiet window since the May 11 interim** — community discussion has fully shifted to GitHub Issues / mailing list / PR review.
+
+## Interop runner — recovers to 168/46/121/1 (+4 pass); 5-day cadence intact
+
+**New report [2026-05-23 00:42:56 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-23_004256/report.html): 168 / 46 / 121 / 1** (total / pass / fail / skip). **+4 pass vs May 22** (42 → 46), pass rate **25.0% → 27.4% (+2.4pp)** — **fully recovers from May 22's regression**, restoring to the May 21 level. **5 consecutive days of daily cadence** (May 19, 20, 21, 22, 23). Skip count returns to 1.
+
+The May 22 regression hypothesis (*"moq-dev/moq's record-tying May 21 PR cluster broke matrix tests"*) appears confirmed by the May 23 recovery: with kixelated's May 22 merge wave being largely **non-wire-level** (CMSF cleanup, LOC frame format, MKV/WebM I/O, stats, Opus encoder kinds, reconnect timeout) the matrix re-stabilises. **Pattern observed**: the moq-dev/moq main-branch matrix is **noise-sensitive to wire-level refactors but quickly self-corrects** when downstream PRs are pipeline/codec/library changes. The +4 / −4 oscillation over two days suggests the matrix is healthy enough to register both regressions and recoveries within one daily-cycle. **Target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN).
+
+## google/quiche moqt — Day +2 quiet
+
+Last commit on `quiche/quic/moqt` path: `083b83b3` martinduke *"Remove unnecessary tests from MoqtSessionTest"* May 20 22:36 UTC. **No new commits May 21, 22, or first 6h May 23 UTC** — 60h+ quiet. Martin Duke's chair workload (the 4-consensus-calls-in-flight + agenda finalisation + 3 mailing-list messages May 21 + Issue #1633 substantive thread + *"Consensus call on filters"* email May 22 12:22 UTC) has structurally redirected his Google-side engineering bandwidth into chair-coordination work.
+
+---
 
 # Activity (May 21 06:00 UTC → May 22 06:00 UTC) — **moq-dev/moq Swift+Kotlin FFI wrappers MERGED (PR #1432 +1997/−569, 48 files, 24h after gazzy's Moqintosh iOS announcement); Martin Duke publishes FINAL London Interim Preliminary Agenda — Mo Zanaty filter-cluster compressed 135→50 min, Tim Evens denied, only afrind/Will/Cullen/Suhas core fit; Consensus Call: DTS and SWITCH opened May 21 17:29 UTC (deadline June 4); 26 May interim re-purposed for DTS/SWITCH show-of-hands; #1633 substantive 4-comment martinduke↔ianswett make-before-break thread; #1636 RichLogan empty-namespace clarification new issue; mondain/moqxr 3 more commits (live publish API + MSF media timeline); interop runner REGRESSION 168/42/125 (-4 pass from 46→42, first regression in cadence since recovery)**
 

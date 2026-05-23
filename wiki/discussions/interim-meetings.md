@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 status: current
 ---
 
@@ -12,7 +12,9 @@ status: current
 |---------|------|-------------|
 | **interim-2026-moq-15** | **2026-05-11** | |
 | **interim-2026-moq-16** | **2026-05-26** | **SWITCH/DTS show-of-hands meeting** — [[martin-duke\|Martin Duke]] May 21 17:19 UTC: *"almost the entire balance of Tuesday's meeting will be given to Gwendal and Will to discuss SWITCH and DTS"*; chairs will *"take the last 15 minutes for a series of Show of Hands to supplement [the SWITCH/DTS] consensus call"*. ([archive](https://mailarchive.ietf.org/arch/msg/moq/fTAIZlLWEU16uNOwDDZwxyPxY3w/)) |
+| **Consensus call on Object filters** | **opens 2026-05-12, closes 2026-05-26** | Magnus Westerlund (MOQ chair) May 12 11:42 UTC ([archive](https://mailarchive.ietf.org/arch/msg/moq/0t2uLOX8tngykpe-L4DjeQH7fm0/)) — re: [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518) Object Filters as optional-with-max-count-signalling in MOQT. **4-message afrind↔Mo Zanaty thread May 22-23** clarified PR text already says property filters apply to PUBLISH + Objects; Mo proposes releasing the London Day-1 1015-1020 Track Property Filters slot. |
 | **Consensus Call: DTS and SWITCH** | **opens 2026-05-21, closes 2026-06-04** | Martin Duke May 21 17:29 UTC ([archive](https://mailarchive.ietf.org/arch/msg/moq/O0Nw9uiGpDv08ZDksPDvcYUreD0/)). 2 questions × 2 docs ([PR #1378 SWITCH](https://github.com/moq-wg/moq-transport/pull/1378) + [wilaw/dts4moq](https://github.com/wilaw/dts4moq)): (1) WG adopt in some form? (2) If yes, integrate into MOQT or as extension? **Deadline 1 week before London opens.** |
+| **Consensus call on filters** | **opens 2026-05-22, closes 2026-06-05** | [[martin-duke\|Martin Duke]] May 22 12:22 UTC ([archive](https://mailarchive.ietf.org/arch/msg/moq/6g0WlQfghKJr4ufgjobT_1Dkrf0/)) — *"merge all the filters into the MOQT draft except for top N, where there were substantial concerns"*. **Layered with Magnus's May 12 call**: Magnus's deals with adoption-at-all (Object Filters optional in MOQT), Martin's deals with required-vs-extension. Cascading deadlines: May 26 (Object Filters close + DTS/SWITCH show-of-hands) → June 4 (DTS/SWITCH close) → June 5 (Filters close) → June 11-12 (London formal). |
 | **London interim (in-person, hackathon/interop)** | **2026-06-09 to 2026-06-10** | Cloudflare London office (County Hall / The Riverside Building, Belvedere Road, SE1 7PB). Hackathon / interop days announced by [[mike-english]] on the IETF MoQ list **May 15, 2026** (*"[Moq] London interim June 9-12"*). 09:00–17:00 BST (08:00–16:00 UTC). |
 | **interim-2026-moq-08** | **2026-06-11** | London interim, 2 sessions (formal session day 1). **MOQT core-issues track**: Filters (Mo, compressed 35 min), Request Blocking (Alan, 30 min), Concurrent Subscribe (Alan, 10 min), Joining FETCH (Alan, 20 min), Next Interim Planning (Martin, 15 min), Other MOQT Issues (Alan, 120 min). **Make-before-break / RRID design discussion deferred here per Apr 27 interim decision** — folded into Concurrent Subscribe (Issue #1633) slot. |
 | **interim-2026-moq-09** | **2026-06-12** | London interim (formal session day 2). **CONDITIONAL on June 4 SWITCH/DTS consensus call outcome** — full Day-2 agenda assumes SWITCH and/or DTS are adopted. Otherwise compressed to Top-N (Mo+Cullen+Suhas) + MSF/CMSF (Will, 20 min) + Privacy Pass (Suhas, 10 min) + Secure Objects (Cullen, 10 min). |

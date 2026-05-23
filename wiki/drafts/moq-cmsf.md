@@ -2,11 +2,13 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
-last_updated: 2026-04-18
+last_updated: 2026-05-23
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
 ---
+
+> **2026-05-23**: **CMSF unified pipeline lands in [[moq-dev|moq-dev/moq]] via [PR #1444](https://github.com/moq-dev/moq/pull/1444) MERGED May 22 21:12 UTC** (+1278/−14, [[luke-curley|kixelated]]) — kixelated forks AWS's #1429 (which had superseded #1408), strips out-of-scope C API + caller-driven group boundaries, ships the MSF-catalog core. **Third AWS-vs-kixelated design-cycle resolution in 9 days** (#1413 close → #1408→#1429 50% shrink → #1429→#1444 33% shrink); total AWS net code in merged result is ~25-30% of original #1408 scope. **Architectural principle**: *"CMSF is CMAF with a different catalog format"* — `hang::Catalog` serves as intermediate representation, single import pipeline serializes to MSF or Hang catalog formats. **First fully-working CMSF muxer/demuxer in any tracked open-source MoQ implementation**.
 
 **draft-ietf-moq-cmsf-00** | 9 pages | Expires 2025-12-01
 

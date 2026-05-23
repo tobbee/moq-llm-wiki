@@ -2,11 +2,13 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-05-14
+last_updated: 2026-05-23
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
+
+> **2026-05-23**: **First LOC encoder/decoder library merged in the [[moq-dev|moq-dev/moq]] stack** — [PR #1388](https://github.com/moq-dev/moq/pull/1388) MERGED May 22 22:53 UTC by [[luke-curley|kixelated]] (+844/−16, 30 files). New `moq-loc` Rust crate + `@moq/loc` JS package providing `encode()` / `decode()` for the LOC frame wire format, integrated into `moq-mux` + hang catalog + watch player. **Implementation chooses [[moq-transport]]-18 §15.8-2 property type IDs (TIMESTAMP=0x06, TIMESCALE=0x08) over the conflicting historical draft-ietf-moq-loc-02 values (TIMESTAMP=0x02)** — kixelated effectively votes-with-code for the moq-transport-18 assignments to win the cross-spec coordination dispute surfaced by Issue [#20](https://github.com/moq-wg/loc/issues/20). Catalog timescale defaults to 1,000,000 microseconds; per-frame timescale override supported via 0x08 property. LOC preference in audio source selection: prioritized after legacy, before CMAF. **Carry-forward**: until LOC spec PR #1624 (provisional IANA registry) propagates into a draft-ietf-moq-loc-03 with aligned values, the moq-dev/moq LOC implementation is the *de facto* reference for post-draft-18 property type assignments.
 
 **draft-ietf-moq-loc-02** | 19 pages | Expires 2026-03-15
 
