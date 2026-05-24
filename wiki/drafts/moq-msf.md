@@ -2,12 +2,14 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
 ---
 
+> **2026-05-24**: **[[tobbe-einarsson|Torbjorn Einarsson]] May 23 16:02 UTC substantive comment on [Issue #153](https://github.com/moq-wg/msf/issues/153)** — re-opens the catalog-bloat / mid-stream-init-change conversation just as suhasHere May 14 had asked to close. **4 numbered points**: (1) cross-packaging dedup is a different case from accidental duplicates — two MoQ tracks carrying same source media in different packagings could deliberately share one init segment; (2) readability is a benefit compression cannot deliver — root-level `initDatas[]` makes uncompressed catalogs skim-able, analogous to CMSF `contentProtection` referenceIDs (responsive to Vasiliev's #144 zlib proposal); (3) catalog override of some initData fields, with `lang` overriding `mdhd.language` as the clearest candidate (lets audio tracks with different languages encoded the same way share an init); (4) **AVC3 doesn't resolve the mid-stream-change question because Safari (notably for FairPlay DRM) requires `avc1`/`hvc1` sample entries with parameter sets in the decoder configuration record, not `avc3`/`hev1` with inline parameter sets** — self-initializing segments aren't an option for Safari/FairPlay pipelines. **Offers to write a focused PR** for `initDatas[]` + per-track `initDataRefID`. On the orthogonal mid-stream-change question: mentions kixelated's `trackID` proposal, Apple's `sampleDescriptor` (for switching between encrypted and unencrypted segments), and a DASH-style `emsg`-with-`publishTime` pattern (would map to catalog group + object ID in MoQ). **First material `moq-wg/msf` contribution by the wiki user**; would be the first MSF schema additive contribution from outside the Akamai/Cloudflare/Cisco/Google/AWS core.
+>
 > **2026-05-23**: **[Issue #164](https://github.com/moq-wg/msf/pull/164) OPENED May 22 20:17 UTC by [[luke-curley|kixelated]]** — *"Require sample rate and channels"*: *"These fields should be required for audio tracks. If they're optional, I have to parse the init segment (gross) just to figure out if I should subscribe to the given track. And yeah I already filed a few issues, but we should have more required fields in MSF. **It's reaally annoying that everything is optional.**"* Kixelated's third successive MSF schema strengthening ask (after track-level `bitrate` / `displayResolution`); the pattern is *"MSF as a subscribe-decision oracle, not a sub-spec of the init segment"*. **Carry-forward**: the Will Law (MSF/CMSF) 20-min London Day-2 slot now needs to land an editorial commitment on which MSF fields move from optional to required.
 
 **draft-ietf-moq-msf-00** | 34 pages | Expires 2026-07-23

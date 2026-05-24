@@ -2,14 +2,16 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-07
+last_updated: 2026-05-24
 status: current
 ---
+
+> **2026-05-24**: **First material dev activity since the May 7-13 registry-merge window** — May 23 sees commits from both maintainers: **Zafer Gürel** `1c209c5b` *"fix(relay): send FETCH_OK for all non-empty fetch ranges"* (PR #199, May 23 19:47 UTC) — conformance bug fix that could affect moqtail rows in the interop matrix; **Ali C. Begen** `28c04571` *"refactor(client-js): move query string log level setting to app.tsx"* (May 23 20:32 UTC) + `b69009be` *"fix(client-js): skip seeking if video is already playing"* (May 23 20:32 UTC) — continued client-js polish post-Demuxed. Plus 2 release-bot commits (PRs #198, #200). Breaks the long-quiet streak since May 13 interop-runner registry merge.
 
 **GitHub**: [moqtail/moqtail](https://github.com/moqtail/moqtail)
 **Maintainers**: Zafer Gurel, Ali C. Begen
 **Draft support**: **draft-16 only on `main`** (draft-14 docs removed May 4 2026)
-**Updated**: 2026-05-07
+**Updated**: 2026-05-24
 
 # Overview
 

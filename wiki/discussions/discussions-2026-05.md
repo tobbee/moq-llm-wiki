@@ -2,11 +2,158 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 23 06:00 UTC → May 24 06:00 UTC) — **moq-dev/moq second consecutive overnight merge wave: Go FFI bindings (4th language), MoQ server API, mandatory LLM-disclaimer norm, distribution-infra (Homebrew + .deb/.rpm), `moq-mux` codec/container restructure; Tobbe substantive comment on MSF Issue #153 (initTrack dedup proposal); moqtail breaks long-quiet with Zafer Gürel FETCH_OK relay fix + Ali Begen client-js commits; Mo Zanaty + afrind continue Object Filters consensus-call thread; interop 168/45/122/0 (−1 pass vs May 23 but skip 1→0); #moq Slack quiet 84h+; google/quiche moqt quiet Day +3; no new drafts; MoQ Monthly Day +24**
+
+## moq-dev/moq — second consecutive ~14-PR overnight merge wave (May 23 17:56 UTC → May 24 01:30 UTC)
+
+**Cadence continues**: 24h after the May 22-23 container-format triple-merge, [[luke-curley|kixelated]] runs **another ~14-PR merge cluster** May 23 afternoon → May 24 early-morning. **Net structural theme is distribution + binding + API hardening**, in contrast to the May 22 wave's pipeline/codec focus. **Two-day cumulative total (May 22-24)**: **~24 PR merges by a single maintainer**, the largest two-day window the wiki has tracked for moq-dev/moq.
+
+### Headline merges
+
+| PR | Title | Merged (UTC) | Significance |
+|---|---|---|---|
+| [#1417](https://github.com/moq-dev/moq/pull/1417) | **Add MoQ server API with session acceptance and handshake** | May 23 19:56 | **+1120/−5, 12 files**. New `MoqServer` + `MoqRequest` types in moq-ffi: bind socket, accept sessions, configure per-session or global publish/consume origins, TLS cert config, request-level ok/close. Includes Python `server_smoke.py` example. **First-class server role exposed through FFI** — previously the FFI only covered client-side. |
+| [#1452](https://github.com/moq-dev/moq/pull/1452) | moq-mux: restructure into per-codec and per-container modules | May 23 20:17 | Folder reshuffle: `rs/moq-mux/src/import/{fmp4,mkv,...}.rs` → per-codec + per-container module tree. Sets up future containers (m2ts, etc.) as additive rather than file-modifying. |
+| [#1456](https://github.com/moq-dev/moq/pull/1456) | Homebrew tap scaffolding for moq binaries and gst plugin | May 23 20:53 | New `homebrew-moq` tap; first end-user-installable distribution channel for moq binaries on macOS. |
+| [#1457](https://github.com/moq-dev/moq/pull/1457) | **.deb/.rpm packaging + apt.moq.dev / rpm.moq.dev workers** | May 23 20:13 | Linux package distribution: Cloudflare Workers serve apt + yum repos at apt.moq.dev / rpm.moq.dev. **First Linux-package distribution for moq binaries.** |
+| [#1469](https://github.com/moq-dev/moq/pull/1469) | **docs: require LLM disclaimer on AI-authored comments** | May 23 20:34 | **+2/−0 in `CLAUDE.md`**: *"when an LLM leaves a comment, it should include a short disclaimer like `// Written by Claude` so readers can tell it wasn't human-authored. Makes AI-authored comments visible at a glance during review and future maintenance, so humans don't mistake LLM commentary for verified human intent."* — **direct project-level institutional response to the May 22 [moq-wg/moq-transport Issue #1636](https://github.com/moq-wg/moq-transport/issues/1636) afrind AI-hallucination incident** (afrind's hallucinated "1 to 32 Track Namespace Fields" caught by RichLogan). **First project-level mandatory-LLM-disclaimer policy** in any tracked MoQ implementation. |
+| [#1470](https://github.com/moq-dev/moq/pull/1470) | **feat(go): add Go bindings for moq-ffi** | May 23 23:02 | **+827/−4 across 13 files**. Adds Go as **4th FFI language target** (after Python + Kotlin + Swift). Uses [`uniffi-bindgen-go` v0.7.1+v0.31.0](https://github.com/NordSecurity/uniffi-bindgen-go) targeting the exact pinned UniFFI version. New `go/` skeleton (`go.mod`, hand-written `moq/cgo.go` with per-platform LDFLAGS for linux amd64/arm64, darwin amd64/arm64, windows amd64), `scripts/{check,package,publish}.sh` mirroring Kotlin/Swift. Distribution model: `moq-dev/moq-go` mirror repo populated by CI on each release tag, consumer `go get github.com/moq-dev/moq-go@vX.Y.Z`. **CI release-go.yml fires on `moq-ffi-v*` tags with 5-target matrix.** **Net language coverage**: moq-dev/moq now spans **Rust + TypeScript + Python + Swift + Kotlin + Go** from a single tree. |
+| [#1471](https://github.com/moq-dev/moq/pull/1471) | ci: replace docker .rpm builds with cargo zigbuild | May 23 23:03 | Removes docker dependency from .rpm CI workflow; cross-compiles via cargo + zig. |
+| [#1472](https://github.com/moq-dev/moq/pull/1472) | **Tighten public APIs ahead of release: non_exhaustive + builders** | May 23 22:28 | Pre-1.0 API hardening: adds `#[non_exhaustive]` to enums + struct exposures, introduces builder pattern for forward-compatibility. **Pre-release signal** — moq-net's stable surface freezing for `v1.0`. |
+| [#1466](https://github.com/moq-dev/moq/pull/1466) | ci: skip unchanged languages with `just changed` | May 23 19:38 | CI optimisation — only re-build/test languages whose dirs changed. |
+| [#1468](https://github.com/moq-dev/moq/pull/1468) | ci: fix swift toolchain and restore check-swift workflow | May 23 23:03 | Brings Swift CI back online after May 22 SPM workflow add. |
+| [#1463](https://github.com/moq-dev/moq/pull/1463) / [#1464](https://github.com/moq-dev/moq/pull/1464) / [#1465](https://github.com/moq-dev/moq/pull/1465) / [#1476](https://github.com/moq-dev/moq/pull/1476) | CI maintenance (persist-credentials, dry-run PR, Determinate Nix opt-out, Cachix overlay deps + selective builds) | May 23 17:56 → May 24 00:51 | CI rollout fixes for the new Swift/Kotlin/Go publish workflows. |
+| [#1477](https://github.com/moq-dev/moq/pull/1477) | ci(cachix): build only the tagged package | May 24 01:29 | Cachix selective-build follow-on. |
+| [#1478](https://github.com/moq-dev/moq/pull/1478) | chore(js): bump JS package versions | May 24 01:20 | Release-plz auto-bump for JS packages post-#1452 restructure. |
+| [#1474](https://github.com/moq-dev/moq/pull/1474) | fix: update gitignore exception for moved fmp4 test fixtures | May 23 23:33 | Follow-on to #1452 codec/container restructure. |
+| [#1467](https://github.com/moq-dev/moq/pull/1467) | chore: release | May 23 23:28 | release-plz auto-PR. |
+| [#1458](https://github.com/moq-dev/moq/pull/1458) – [#1462](https://github.com/moq-dev/moq/pull/1462) | 5 dependabot bumps (docker/build-push, actions/download-artifact, setup-java, android-actions/setup-android, actions/upload-artifact) | May 23 16:58 | GitHub Actions version bumps batched. |
+
+**Aggregate**: ~14 merges + ~3 still-open follow-ons (#1473 *"moq-net: runtime Timescale/Timestamp; container::Frame keeps source scale"* OPENED May 23 22:18 UTC follow-on to #1439, #1475 chore release auto-PR, plus the older #1448 SPM publish from May 23 03:08 UTC remains open). **All merges by kixelated** (the 5 dependabots are auto-merged into kixelated's queue).
+
+### PR #1469 — first project-level mandatory-LLM-disclaimer policy
+
+The PR diff is **2 added lines** in `CLAUDE.md`:
+
+```markdown
+## Comment Conventions
+
+When an LLM leaves a comment in the source, include a short disclaimer like
+`// Written by Claude` so readers can tell it wasn't human-authored.
+```
+
+**Structural significance**: this is the first project-level mandatory disclosure policy tracked by the wiki for any MoQ codebase. **Direct causal chain**:
+1. May 22 18:24 UTC: afrind opens [moq-wg/moq-transport Issue #1636](https://github.com/moq-wg/moq-transport/issues/1636) AI-generated reply with hallucinated `"between 1 and 32 Track Namespace Fields"` + non-existent line numbers
+2. May 22 21:15 UTC: RichLogan catches with actual draft-18 §2.4.1 quote (`"between 0 and 32"`)
+3. May 22 21:45 UTC: afrind apologises (`"Wow, that is pretty embarrassing"`)
+4. **May 23 20:34 UTC: kixelated merges #1469** — making the AI-authorship norm explicit at the moq-dev/moq project level
+
+**Carry-forward**: this is the **fourth community-side AI-skeptic-narrative event in 6 days**, and the **first one that produces a written normative artifact** rather than discussion-only. Expect this pattern (visible AI-disclosure marker on AI-authored output) to propagate to other MoQ repos that have been receiving AI-assisted contributions — most directly the `moq-wg/moq-transport` issue threads, where afrind's pre-emptive *"With apologies for answering your question with AI"* disclaimer has already started normalising it.
+
+### PR #1470 — Go bindings make moq-dev/moq the first 6-language MoQ stack
+
+PR #1470 body (kixelated): *"Adds Go as a fourth language target for `rs/moq-ffi`, alongside the existing Python, Kotlin, and Swift bindings. The implementation uses `uniffi-bindgen-go` v0.7.1+v0.31.0, which targets the exact UniFFI version that moq-ffi pins, so the generated surface matches what the other languages already expose."*
+
+**Distribution model**: Mirror repo `moq-dev/moq-go`, populated by CI on each `moq-ffi-v*` tag. Consumer side: `go get github.com/moq-dev/moq-go@v0.2.11` returns generated bindings + per-platform static archives bundled. cgo links statically via build-tag stubs — no `LD_LIBRARY_PATH` or runtime `.so` discovery on consumer side. **5-target build matrix**: linux x86_64/arm64, darwin x86_64/arm64, windows x86_64.
+
+**Net language coverage** for moq-dev/moq is now:
+
+| Language | Path | Distribution | Status |
+|---|---|---|---|
+| **Rust** | `rs/moq-net`, `rs/moq-loc`, `rs/moq-token`, `rs/moq-ffi`, `rs/moq-mux`, ... | crates.io | Native (the source of truth) |
+| **TypeScript** | `js/net`, `js/hang`, `js/watch`, `js/publish`, `js/loc` | npm | Native (browser+node) |
+| **Python** | `py/moq-net`, `py/moq-ffi` | PyPI | UniFFI |
+| **Swift** | `swift/` (SPM mirror in `moq-dev/moq-swift`, Phase A via PR #1448) | SPM (in-flight) | UniFFI |
+| **Kotlin** | `kotlin/` (JVM + Android) | Maven Central (in-flight) | UniFFI |
+| **Go** (**NEW May 23**) | `go/` (`moq/cgo.go` + scripts; mirror repo `moq-dev/moq-go`) | `go get github.com/moq-dev/moq-go@vX.Y.Z` | UniFFI via `uniffi-bindgen-go` |
+
+**Carry-forward to user-relevant context**: Tobbe (the user maintaining this wiki) develops in Go (Eyevinn/moqtransport, Eyevinn/moqlivemock). **moq-dev/moq's Go bindings now provide a direct alternative to Eyevinn's pure-Go MoQ stack**, structurally analogous to how PR #1432 (May 22 Swift+Kotlin) positioned moq-dev/moq vs. gazzy's Moqintosh. The choice for Go developers becomes pure-Go (Eyevinn/moqtransport, depend only on Go ecosystem) vs UniFFI-via-Rust (moq-dev/moq-go, depend on cgo + Rust runtime). The trade-off mirrors the Swift+Kotlin case: native-language clarity vs. immediate access to all moq-dev/moq features at upstream-velocity.
+
+### PR #1417 — server-side FFI lifts moq-dev/moq from client-library to full-stack-binding
+
+PR #1417 body summary: *"Introduces `MoqServer` and `MoqRequest` types that allow FFI consumers to build MoQ servers. The server can bind to a socket, accept incoming sessions, and configure per-session or global publish/consume origins."*
+
+**Server API surface**:
+- `MoqServer::listen()` — binds the listening socket and returns the bound address
+- `MoqServer::accept()` — accepts the next incoming session, returning a `MoqRequest`
+- `MoqRequest::ok()` — completes the MoQ handshake, returns an established `MoqSession`
+- `MoqRequest::close(code)` — rejects the session with an HTTP status code
+- Per-request origin overrides via `set_publish()` / `set_consume()`
+- Read-only properties: `url()` and `transport()`
+
+**Net structural change**: Until #1417, moq-ffi (and therefore all its Python/Kotlin/Swift/Go bindings) was **client-only**. Server functionality required directly using the Rust `moq-relay` crate. **Now non-Rust applications can also bind a port, accept sessions, and act as MoQ relays** — significantly lowering the barrier to building relay-shaped applications in Python/Swift/Kotlin/Go.
+
+### PR #1452 — moq-mux per-codec/per-container restructure
+
+`rs/moq-mux/src/{import,export}/` is reorganised so each container has its own module (`fmp4.rs`, `mkv.rs`, etc.) and each codec has its own module. Test fixtures move to new paths (PR #1474 follow-on fixes gitignore). This is **pre-extensibility work** — sets up adding a future `m2ts.rs` (Paul Gregoire's [[moq-msfts|MSFTS]] individual draft) as additive rather than file-modifying.
+
+### PRs #1456 + #1457 — first cross-platform binary distribution channels
+
+- **Homebrew tap**: `brew tap moq-dev/moq && brew install moq` (macOS)
+- **apt.moq.dev** (Debian/Ubuntu): `echo 'deb [trusted=yes] https://apt.moq.dev stable main' | sudo tee /etc/apt/sources.list.d/moq.list && sudo apt update && sudo apt install moq-relay`
+- **rpm.moq.dev** (RHEL/Fedora): `sudo dnf config-manager --add-repo https://rpm.moq.dev/moq.repo && sudo dnf install moq-relay`
+
+Both apt and rpm endpoints are served by Cloudflare Workers (kixelated is at Cloudflare). **Net distribution model post-May 23**: moq-dev/moq binaries are installable via cargo / npm / pip / PyPI / brew / apt / dnf / SPM + Maven (in-flight). Six binary distribution channels in production, three more in-flight — a unique footprint for an MoQ implementation.
+
+## GitHub `moq-wg/msf` — Tobbe substantive comment on Issue #153 (initTrack mid-stream changes)
+
+[Issue #153](https://github.com/moq-wg/msf/issues/153) *"`initTrack` does not work"* opened April 10 by [[victor-vasiliev|Victor Vasiliev]] received a **substantive 4-point comment from [[tobbe-einarsson|Torbjorn Einarsson]] on May 23 16:02 UTC** (10 days after the previous comment by suhasHere May 14, which asked to close the issue). Tobbe's comment outlines four open angles before closing:
+
+1. **Cross-packaging dedup is a different case from accidental duplicates** — challenges kixelated's earlier *"properly demuxed tracks shouldn't have identical init data"* by noting that **two MoQ tracks carrying the same source media in different packagings** (CMAF and a possible CMAF-derivative wire format) **could be deliberately designed to share one init segment**, so cmaf-only and packaging-aware clients can consume the same catalog. Also raises two video tracks with same width/height/SPS/PPS-inband as a counter-example.
+2. **Readability is a benefit compression cannot deliver** — inline base64 init data dominates the *uncompressed* form developers and code-review tools actually inspect; a root-level `initDatas[]` (placed by convention at end of document) makes the tracks list skim-able. Frames this as responsive to Vasiliev's #144 zlib-compression proposal but addressing readability rather than transport size — analogous to CMSF's `contentProtection` referenceIDs.
+3. **Catalog override of some initData field?** — proposes that certain catalog fields could *override* corresponding values in the referenced init segment. Clearest candidate: `lang` overriding `mdhd.language`, which lets audio tracks with different languages encoded the same way share a single init. Acknowledges this is a precedence-rule change, probably a separate thread, but materially extends the dedup case.
+4. **AVC3 doesn't resolve the mid-stream-change question** — for the record: **Safari (notably for FairPlay DRM) requires `avc1` / `hvc1` sample entries with parameter sets in the decoder configuration record, not `avc3` / `hev1` with inline parameter sets**. Self-initializing segments aren't an option for anyone targeting that pipeline. So Will Law's *"use AVC3"* resolution doesn't fully cover the broader *"what about init changes mid-stream"* question.
+
+**Offers a focused PR**: *"I'd be happy to write a focused PR for `initDatas[]` + per-track `initDataRefID` (singular) — strictly inline `data` for now — if there's appetite? The syntax could also open up for referencing initData from special init tracks at a later stage."*
+
+**On the mid-stream init-change question itself**: agrees a mechanism in the media track is needed; mentions kixelated's `trackID` proposal, a different `sampleDescriptor` suggestion from Apple (to switch between encrypted and unencrypted segments), and DASH's `emsg`-with-`publishTime` pattern as a third option (would be catalog group + object ID in MoQ's case) — still cross-layer between cmaf and catalog but at least outside the `moov` box that is normally a binary blob owned by the encoder.
+
+**Significance**: this is the **first material `moq-wg/msf` contribution by the wiki user** while the wiki is being maintained. The comment cleanly separates the dedup question (where Tobbe sees an open design opportunity) from the mid-stream change question (where he sees AVC3 as insufficient because of Safari/FairPlay). **Carry-forward**: if Tobbe ships the offered `initDatas[]` + `initDataRefID` PR, it would be the **first MSF schema additive contribution from outside the Akamai/Cloudflare/Cisco/Google/AWS core**. The Safari/FairPlay constraint (point 4) **is a structural data-point for the Cullen Jennings Secure Object discussion at London Day-2** — DRM-related init-handling cuts across MSF, CMSF, and Secure Objects.
+
+## moqtail — Zafer Gürel relay FETCH_OK fix + Ali Begen client-js commits break long-quiet streak
+
+[[moqtail|moqtail/moqtail]] saw **multiple commits May 23** breaking a long quiet streak:
+
+- **Zafer Gürel** `1c209c5b` *"fix(relay): send FETCH_OK for all non-empty fetch ranges"* (PR #199) — May 23 19:47 UTC. Conformance bug fix.
+- **Ali C. Begen** `28c04571` *"refactor(client-js): move query string log level setting to app.tsx"* — May 23 20:32 UTC.
+- **Ali C. Begen** `b69009be` *"fix(client-js): skip seeking if video is already playing"* — May 23 20:32 UTC.
+- Two release-bot commits (PRs #198, #200).
+
+**Significance**: moqtail's last activity in the wiki's tracking window was around May 7-13 (registry-merge to interop-runner). May 23 is **the first material moqtail dev activity post-draft-18-publication**. Zafer's FETCH_OK fix is conformance-relevant — could affect interop matrix moqtail rows. Ali's client-js work continues the post-Demuxed video.dev player polish.
+
+## Mailing list — Object Filters consensus-call thread continues (4 messages May 23-24)
+
+The **Magnus Westerlund "Consensus call on Object filters"** thread (opened May 12, deadline May 26) saw **4 more messages** May 23-24, with [[mo-zanaty|Mo Zanaty]] dominating and Alan Frindell responding once:
+
+1. **Mo Zanaty May 23** *"Re: Consensus call on Object filters"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/patpBIlwfAHVdd2eKxIkllhpnYc/))
+2. **Alan Frindell May 23** *"Re: Consensus call on Object filters"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/1IVV3tazCaLFaEnQ6rYzEkiNcO8/))
+3. **Mo Zanaty May 23** *"Re: Consensus call on Object filters"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/4H7rJc1i2nyZ5dNJQPtyU2E6658/))
+4. **Mo Zanaty May 24** *"Re: Consensus call on Object filters"* ([archive](https://mailarchive.ietf.org/arch/msg/moq/fkYN_piZRztviDtWRpzeLHRSMQY/))
+
+Thread continues the May 22-23 afrind ↔ Mo Zanaty PR #1518-interpretation back-and-forth. Mo Zanaty's 3-of-4-message dominance over the May 23-24 window is **structurally significant** for the **May 26 deadline** (2 days away at this writing) — Mo is the most active consensus-call participant and has prepared positions on both Magnus's Object Filters call (deadline May 26) and Martin's filter-merge call (deadline June 5).
+
+## Slack / interop / drafts / newsletter — quiet day
+
+- **`#moq` Slack**: no new messages since gazzy May 20 15:22 CEST [[moqintosh|Moqintosh]] announce. **84h+ quiet** (now the longest quiet stretch since the May 11 interim).
+- **`#moq-interop-runner`, `#moq-rs`, `#moq-js`, `#libquicr`**: all quiet.
+- **google/quiche moqt**: no new commits since `083b83b3` martinduke May 20 22:36 UTC (Day +3 quiet). The 3-day quiet aligns with [[martin-duke|Martin Duke]]'s May 21-22 chair-coordination intensity (5 mailing-list messages in 26h opening 4 simultaneous consensus calls).
+- **No new IETF drafts**: WG state unchanged from May 23 (transport-18 / msf-00 / loc-02 / secure-objects-00 / privacy-pass-02 / cmsf-00). Day +12 since draft-18 publication.
+- **MoQ Monthly**: archive still #0 (Mar 3) + #1 (Apr 30). **Day +24 since #1.**
+- **tobbee/moq-llm-wiki**: no open issues.
+
+## Interop runner — −1 pass vs May 23 but skip drops 1→0; cadence at 6 consecutive days
+
+**[2026-05-24 00:43:56 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-24_004356/report.html): 168 / 45 / 122 / 0** (total / pass / fail / skip). **−1 pass vs May 23** (46 → 45, pass rate 27.4% → 26.8%, −0.6pp), **skip count drops 1 → 0** (the previously-skipped test now runs, contributing to the +1 fail delta). **6 consecutive days of daily cadence** (May 19/20/21/22/23/24). **Target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN, no new commits since May 19).
+
+**Net rolling-window picture** (last 5 days): 35 → 38 → 46 → 42 → 46 → 45 — the +11/−4/+4/−1 sequence shows the matrix has stabilised in a **42-46 pass band**. The −1 today is plausibly attributable to moq-dev/moq's **#1452 moq-mux restructure** (file paths changed, test fixture moves in #1474). **6-day cadence is the longest consecutive-cadence stretch since the May 14-18 5-day outage**.
+
+---
 
 # Activity (May 22 06:00 UTC → May 23 06:00 UTC) — **moq-dev/moq overnight 10-PR merge wave (Luke Curley, May 22 18:24 UTC → May 23 02:26 UTC, ~8h): LOC frame format + CMSF/Hang unified pipeline + Matroska/WebM all MERGED on the same night — moq-dev/moq becomes the first impl with all THREE major MoQ media container formats (CMAF/fMP4 + LOC + MKV/WebM) unified on `main`; AWS PR #1429 reborn as PR #1444 kixelated-led cleanup MERGED (+1278/−14, third AWS-vs-kixelated design-cycle resolution); Martin Duke opens "Consensus call on filters" May 22 12:22 UTC (deadline June 5) — fourth simultaneous consensus call (after DTS, SWITCH, Object Filters); Issue #1636 afrind explicit AI-hallucination apology after RichLogan catches AI-generated wrong spec quote ("between 1 and 32 Track Namespace Fields" — actually 0-32); 4-message afrind↔Mo Zanaty Object Filters thread on PR #1518 interpretation; MSF Issue #164 kixelated "Require sample rate and channels"; interop runner RECOVERS 168/46/121/1 (+4 pass restoring May 21 level, 5-day cadence intact); #moq Slack quiet 60h; google/quiche moqt quiet 70h+**
 

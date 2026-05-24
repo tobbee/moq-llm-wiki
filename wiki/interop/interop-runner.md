@@ -2,10 +2,12 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 status: current
 ---
 
+> **2026-05-24 168/45/122/0; 6-day cadence; skip drops 1→0** — **[2026-05-24 00:43:56 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-24_004356/report.html): 168 / 45 / 122 / 0** (total / pass / fail / skip). **−1 pass vs May 23** (46 → 45, pass rate 27.4% → 26.8%, **−0.6pp**), **skip count drops 1 → 0** (previously-skipped test now runs, contributing to the +1 fail delta). **6 consecutive days of daily cadence holding** (May 19/20/21/22/23/24). Target still **draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN). **Rolling 5-day picture**: 35 → 38 → 46 → 42 → 46 → 45 — matrix has stabilised in a **42–46 pass band**. The −1 today is plausibly attributable to moq-dev/moq's **[PR #1452 moq-mux restructure](https://github.com/moq-dev/moq/pull/1452)** (file paths changed for codec/container modules; #1474 follow-on fixes gitignore for moved fmp4 test fixtures). **6-day cadence is the longest consecutive-cadence stretch since the May 14-18 5-day outage**.
+>
 > **2026-05-23 recovers to 168/46/121/1; 5-day cadence intact** — **[2026-05-23 00:42:56 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-23_004256/report.html): 168 / 46 / 121 / 1** (total / pass / fail / skip). **+4 pass vs May 22** (42 → 46), pass rate **25.0% → 27.4% (+2.4pp)** — fully recovers from May 22's regression, restoring to May 21 level. **5 consecutive days of daily cadence holding** (May 19–23). Skip count returns to 1. The May 22 regression hypothesis (*"moq-dev/moq's May 21 PR cluster broke matrix tests"*) appears confirmed: with kixelated's May 22 merge wave being largely **non-wire-level** (CMSF/Hang unified pipeline cleanup, LOC frame format, MKV/WebM I/O, stats-via-broadcast, Opus encoder kinds, reconnect timeout) the matrix re-stabilises. **Pattern observed**: moq-dev/moq main-branch matrix is **noise-sensitive to wire-level refactors but quickly self-corrects** when downstream PRs are pipeline/codec/library changes. The +4/−4 oscillation over two days shows the matrix registers both regressions and recoveries within one daily cycle. **Target still draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN; no commits since May 19 merge).
 >
 > **2026-05-22 first regression in cadence** — **[2026-05-22 00:43:51 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-22_004351/report.html): 168 / 42 / 125 / 0** (total / pass / fail / skip). **−4 pass vs May 21** (46 → 42), pass rate **27.4% → 25.0% (−2.4pp)** — **first regression since cadence recovery May 19**. **4 consecutive days of daily cadence holding**. Skip count drops from 1 → 0 — the one previously-skipped test is now executing and contributes to the +4 fail delta. **Hypothesis**: May 21's record-tying moq-dev/moq PR cluster (7 merges including infrastructure-shaping PR #1432 FFI wrappers / PR #1433 origin-consumer refactor / PR #1435 cargo update + PR #1432 Swift+Kotlin wrappers landing May 22 00:38 UTC) likely re-broke some moq-dev-rs/moq-dev-js test combinations stabilised May 19-20. This is the **cost of running the matrix against `main`-of-each-impl** — kixelated's high-velocity main-branch refactoring directly correlates with day-over-day pass-count instability. Target still **draft-16** (PR #68 still OPEN).
@@ -59,6 +61,8 @@ The interop runner currently targets **draft-16** for automated testing. **PR #6
 
 | Period | Total Tests | Pass | Fail | Skip |
 |--------|------------|------|------|------|
+| **May 24, 2026 00:43 UTC** | **168** | **45** | **122** | **0** |
+| **May 23, 2026 00:42 UTC** | **168** | **46** | **121** | **1** |
 | **May 22, 2026 00:43 UTC** | **168** | **42** | **125** | **0** |
 | **May 21, 2026 00:45 UTC** | **168** | **46** | **121** | **1** |
 | **May 20, 2026 00:46 UTC** | **168** | **38** | **129** | **1** |
