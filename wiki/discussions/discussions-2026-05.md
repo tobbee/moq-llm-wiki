@@ -2,11 +2,188 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 24 06:00 UTC → May 25 06:00 UTC) — **moq-dev/moq third consecutive overnight merge wave: audio FFI gap closure (`moq-audio` crate + Opus encode/decode), Rust/JS namespace cleanup (moq-lite stub removal, JS `@moq/net` as `Net`, `moq-clock` moved to example), first PRs dogfooding PR #1469 `(Written by Claude)` disclaimer norm, external metapox SUBSCRIBE_UPDATE double-merge (24-day Issue #1363 close cycle); Cullen Jennings publishes first agenda-skeptic letter on May 21 final London agenda (*"pick a limited set of important topics... filters / top N"*); moqx docker adapter PR #71 ready for May 26 matrix (expected 13/18 → ~75+/162 moqx-as-relay coverage); moqtail Day-2 relay-conformance fix (Zafer PR #201 mid-subgroup join); interop 168/42/125/0 (−3 pass vs May 24, second consecutive regression); #moq Slack quiet 5 days; google/quiche moqt quiet Day +4; no new drafts; MoQ Monthly Day +25**
+
+## moq-dev/moq — third consecutive overnight merge wave (May 24 06:00 UTC → May 25 ~05:00 UTC)
+
+**Cadence holds for a third day**: 24h after the May 23-24 Go-FFI + server-API + LLM-disclaimer wave, [[luke-curley|kixelated]] runs **another ~17-PR cluster** May 24 18:06 UTC → May 25 ~05:00 UTC. **Three-day cumulative total (May 22-25): ~40 merges by a single maintainer**, the largest three-day window the wiki has tracked for any MoQ implementation. Today's structural theme is **audio FFI gap closure + Rust/JS namespace cleanup + first dogfooding of the PR #1469 LLM-disclaimer norm**, complementing the May 22-23 container-format triple-merge and the May 23-24 binding + distribution wave.
+
+### Headline merges
+
+| PR | Title | Merged (UTC) | Significance |
+|---|---|---|---|
+| [#1484](https://github.com/moq-dev/moq/pull/1484) | **feat: add moq-audio crate, raw-audio FFI, and rename moq-codec to moq-video** | May 24 22:41 | **+2576/−71, 39 files**. New `rs/moq-audio` crate with Opus encode/decode over `moq-mux` + `hang`; rubato resampler so callers can pass any WebCodecs `AudioData.format`/rate; generic `Encoder`/`Decoder` traits with Opus impl at fixed 20 ms frames. `moq-ffi` + `libmoq` gain raw-audio publish/subscribe APIs so **Python/Swift/Kotlin/C callers can drive a microphone or speaker without bringing their own codec library**. ~340 KB stripped size impact for bundled libopus in `libmoq_ffi.dylib`. Renames empty `moq-codec` placeholder → `moq-video` (squat the right name). **PR description ends with `(Written by Claude)` line — first PR to apply the PR #1469 LLM-disclaimer norm in practice, less than 22h after that norm merged.** |
+| [#1492](https://github.com/moq-dev/moq/pull/1492) | **Remove moq-lite stub crate** | May 24 23:00 | **+3/−479**. Drops the deprecated `rs/moq-lite` re-export of `moq-net` left over from the [PR #1428](https://github.com/moq-dev/moq/pull/1428) rename. Confirms via `grep` that no other workspace crate depends on `moq-lite`. Completes the **moq-lite → moq-net Rust-side rename** that opened May 18. Protocol-level moq-lite references (wire protocol, ALPN strings, `concept/layer/moq-lite` docs) intentionally untouched. The 0.17.0 shim on crates.io remains as the final version. |
+| [#1498](https://github.com/moq-dev/moq/pull/1498) | **js: re-export @moq/net as Net (deprecate Lite/Moq aliases)** | May 25 01:36 | **+6/−0**. `@moq/publish` + `@moq/watch` + `@moq/hang` standardise on `Net` namespace, `Lite` (publish/watch) + `Moq` (hang) stay as `@deprecated` aliases for back-compat. Rationale: *"Lite is the old package name (the package is @moq/net now), and @moq/hang had drifted to a third alias (Moq). Standardizing on Net keeps the public API consistent with the actual package name across all three downstream packages."* |
+| [#1494](https://github.com/moq-dev/moq/pull/1494) | **moq-clock: convert to a moq-native example** | May 25 00:02 | **+224/−764, 19 files**. Deletes standalone `rs/moq-clock` crate, moves source into `rs/moq-native/examples/clock.rs` alongside the existing `chat.rs` example. Drops `moq-clock` from Cargo workspace, Nix overlay/flake, `.release-plz.toml`, demo justfile. Fixes the `release-plz release` failure on `main` caused by `publish = false` (Cargo.toml) vs `publish = true` (release-plz default) mismatch. **Also ends with `(Written by Claude)` disclaimer — second PR to apply the norm.** |
+| [#1396](https://github.com/moq-dev/moq/pull/1396) | **feat(lite): implement SUBSCRIBE_UPDATE API for JS subscriber and publisher** | May 24 22:57 | **+80/−4, 4 files** by **metapox** (taku). **Closes [Issue #1363](https://github.com/moq-dev/moq/issues/1363) from Apr 30, 24-day cycle.** Adds `track.updatePriority(priority)` method via internal Signal; subscriber watches Signal post-SubscribeOk and sends `SubscribeUpdate` when it changes; publisher applies received update. **Motivated by metapox's own [moq-multicam](https://github.com/metapox/moq-multicam) multi-camera streaming project**: *"Camera switching needs instant priority changes without re-subscribe to avoid replaying stale groups from the relay cache."* |
+| [#1397](https://github.com/moq-dev/moq/pull/1397) | fix(lite): update in-flight group priorities on SUBSCRIBE_UPDATE | May 24 22:56 | metapox follow-on to #1396 fixing PriorityQueue not updating in-flight groups on SUBSCRIBE_UPDATE. |
+| [#1485](https://github.com/moq-dev/moq/pull/1485) | hang: non_exhaustive VideoConfig/AudioConfig with constructors | May 24 18:06 | Continues the pre-1.0 API freeze begun by [PR #1472](https://github.com/moq-dev/moq/pull/1472) May 23 — `#[non_exhaustive]` on hang catalog config structs with constructor methods to preserve forward-compatibility. |
+| [#1486](https://github.com/moq-dev/moq/pull/1486) | ci(rs): add cargo-deny and resolve outstanding advisories | May 24 18:27 | New CI step running [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny) for license + advisory + duplicate-version + ban audits across the workspace; clears the outstanding RUSTSEC advisories surfaced by the first run. |
+| [#1488](https://github.com/moq-dev/moq/pull/1488) | Fix Kotlin release; stop publishing moq-clock + @moq/clock | May 24 20:33 | Cleanup of the moq-clock removal (#1494); Kotlin release workflow had `publish = true` on the now-removed crate. |
+| [#1489](https://github.com/moq-dev/moq/pull/1489) | relay(stats): allow multi-segment --stats-node values; move cargo-deny to ci | May 24 20:10 | Stats config + cargo-deny CI move. |
+| [#1491](https://github.com/moq-dev/moq/pull/1491) | relay(stats): fix TOML stats config silently clobbered by clap update_from | May 24 22:57 | Silent-clobber bug fix in stats TOML config loading. |
+| [#1490](https://github.com/moq-dev/moq/pull/1490) | moq-token-cli: treat `-` as stdin/stdout, not a literal file path | May 24 22:15 | UX fix for token CLI piping. |
+| [#1482](https://github.com/moq-dev/moq/pull/1482) / [#1483](https://github.com/moq-dev/moq/pull/1483) | docs: group language libraries under `lib/` and CLIs under `bin/` + infra: reuse SIGNING_KEY | May 24 17:07-17:08 | Doc layout reorg + apt/rpm signing-key consolidation. |
+| [#1497](https://github.com/moq-dev/moq/pull/1497) | ci(rpm): skip rclone bucket probe when publishing to R2 | May 25 01:10 | Follow-on fix to PR #1457 apt/rpm packaging. |
+| [#1480](https://github.com/moq-dev/moq/pull/1480) / [#1481](https://github.com/moq-dev/moq/pull/1481) | 2 dependabot bumps (docker/setup-buildx, gradle/actions) | May 24 | GitHub Actions version bumps. |
+| [#1493](https://github.com/moq-dev/moq/pull/1493) / [#1475](https://github.com/moq-dev/moq/pull/1475) | release-plz auto-PRs | May 24-25 | Auto-bumps from release-plz. |
+
+**Aggregate**: ~17 merges + 4 still-open follow-ons. Still-open: **[PR #1473](https://github.com/moq-dev/moq/pull/1473)** *"moq-net: runtime Timescale/Timestamp; container::Frame keeps source scale"* (follow-on to #1439); **[PR #1487](https://github.com/moq-dev/moq/pull/1487)** *"moq-mux: catalog filter/target and Annex-B exporters"*; **[PR #1495](https://github.com/moq-dev/moq/pull/1495)** *"moq-mux: replace anyhow with thiserror"*; **[PR #1371](https://github.com/moq-dev/moq/pull/1371)** *"hang: cross-broadcast track references in renditions"*; **[PR #1401](https://github.com/moq-dev/moq/pull/1401)** *"Refactor/video pacing rAF"* by skirsten (external); plus older #1448 still open since May 23 03:08 UTC.
+
+**Three-day cumulative pace** (May 22 18:24 UTC → May 25 ~05:00 UTC): **~40 merges**, ~+12,000/−2500 net LOC, single-maintainer-led. The pattern is **theme-coherent waves** (May 22-23 container-format, May 23-24 binding + distribution, May 24-25 audio FFI + cleanup + LLM-disclaimer dogfooding) rather than scattershot velocity.
+
+### PR #1484 — moq-audio crate: the second of two FFI-completeness moves in 48 hours
+
+Two days after PR #1417 (server API, May 23) lifted FFI from client-only to client+server, **PR #1484 closes the audio side of the codec-helper gap**:
+
+**Before PR #1484**: Audio flowed as already-encoded Opus/AAC bitstreams. `moq-mux` parsed codec configuration headers (OpusHead, AudioSpecificConfig) and passed raw Opus/AAC packets through to `moq-net` unchanged. **The browser path used WebCodecs; native callers (`moq-ffi`, `libmoq`) had to bolt on a codec library themselves**.
+
+**After PR #1484**:
+- `AudioFormat` enum mirroring WebCodecs `AudioData.format` (U8/S16/S32/F32 ± planar)
+- `AudioSamples` carrier (format + rate + channels + timestamp + bytes)
+- Generic `Encoder` / `Decoder` traits + Opus impl at fixed 20 ms frames
+- `AudioProducer` / `AudioConsumer` wiring PCM through `moq_mux::container::Producer<legacy::Wire>` + registering/reading `hang::catalog::AudioConfig`
+- moq-ffi: `MoqBroadcastProducer::publish_raw_audio_opus(name, format, rate, channels, bitrate?)` + `MoqBroadcastConsumer::subscribe_raw_audio_opus(...)`
+- libmoq: `moq_publish_raw_audio_opus` / `moq_consume_raw_audio_opus` C functions
+
+**Size cost**: `libmoq_ffi.dylib` (stripped, what ships in `py/moq-rs` Python wheels) grows from 10.50 MB → 10.83 MB = **+340 KB stripped**, almost all libopus. AAC explicitly out-of-scope (the codec module shape is generic so AAC can drop in later behind its own feature flag).
+
+**Renamed `moq-codec` → `moq-video`**: kixelated explicitly notes *"audio and video have different enough I/O shapes to live in separate crates"*, and *"Once the input/output story for video samples is settled it can mirror `moq-audio`'s structure."* — the rename **pre-positions the video-side raw-frame FFI** that will close the symmetric gap (currently the browser uses WebCodecs; native is missing video-frame helpers).
+
+**Structural implication**: by London, moq-dev/moq's pitch becomes *"single-tree multi-language full-stack with native codec helpers"*. Python apps can drive a microphone end-to-end via `moq_publish_raw_audio_opus(...)` without ever touching a codec library or WebCodecs. **This is a structurally different value-proposition tier than competing Go-only or Swift-only impls** — moq-dev/moq is the first MoQ project that can claim *"want to publish audio from any of 6 languages? `pip install moq-rs` / `swift package add moq` / etc., and call the publish function"*.
+
+### PRs #1484 + #1494 — first dogfooding of the PR #1469 LLM-disclaimer norm
+
+[PR #1469](https://github.com/moq-dev/moq/pull/1469) added the **mandatory LLM-disclaimer** norm to `CLAUDE.md` on May 23 20:34 UTC. **Within 22 hours**, kixelated applies the disclaimer in two of his own PR descriptions:
+
+- **PR #1484** (audio FFI): description ends with **`🤖 Generated with [Claude Code](https://claude.com/claude-code)`** plus the moq-dev README footer.
+- **PR #1494** (moq-clock removal): description ends with **`🤖 Generated with [Claude Code](https://claude.com/claude-code)` + `(Written by Claude)`** — the explicit *"Written by Claude"* form from the CLAUDE.md text.
+
+**Structural significance**: the PR #1469 text added the rule **specifically to source-code comments**, but kixelated's same-day extension to PR bodies shows the norm propagating to **adjacent editorial surfaces** (the PR description is the cover-letter / review-aid layer adjacent to the diff). **This is the fastest community-norm adoption** the wiki has tracked — 22-hour norm-merge-to-dogfood cycle, vs the 4–6 day inter-event cadence of the broader AI-skeptic narrative (Mike English May 18 → Lorenzo May 19 → afrind May 22 → PR #1469 May 24 → first applied use May 24-25).
+
+**Carry-forward**: the next AI-skeptic-narrative test is whether non-moq-dev MoQ repos move toward a similar codified marker. Most directly the `moq-wg/moq-transport` issue threads where afrind has been using a *"With apologies for answering your question with AI"* prose disclaimer — does the WG-side adopt a structural marker (e.g., an issue/PR label or a CONTRIBUTING.md note)?
+
+### PRs #1396 + #1397 — external contributor metapox lands SUBSCRIBE_UPDATE for JS
+
+**metapox** (taku) closes [Issue #1363](https://github.com/moq-dev/moq/issues/1363) opened **Apr 30 — 24-day cycle**. The two-PR pair:
+
+- **PR #1396** (+80/−4, 4 files) — adds `track.updatePriority(priority)` API in `track.ts`, subscriber watching the priority Signal post-SubscribeOk and sending `SubscribeUpdate`, publisher applying the received `SubscribeUpdate` to the track (implements an existing TODO).
+- **PR #1397** — fix to in-flight group priorities on SUBSCRIBE_UPDATE (PriorityQueue was not updating in-flight groups).
+
+**Motivation as stated in the PR**: *"I'm building [moq-multicam](https://github.com/metapox/moq-multicam), a multi-camera streaming system. Camera switching needs instant priority changes without re-subscribe to avoid replaying stale groups from the relay cache."* — **first-principles product-driven contribution** from outside the corporate-contributor set (Cloudflare/Nokia/Eyevinn/OpenMOQ/AWS).
+
+**Why this matters structurally**: metapox's product needs SUBSCRIBE_UPDATE *for dynamic priority changes*, which is exactly the use case the wire protocol's SUBSCRIBE_UPDATE message was designed to enable. The JS Subscriber had been **missing a programmatic API to change priority after subscribing**, forcing close-and-re-subscribe (which causes the relay to replay cached groups). **The 24-day cycle from Apr 30 issue → May 24 close is the moq-dev/moq median for external-contributor PRs of this complexity**, and shows the metapox-style *"build a real product, file an issue when you hit the gap, ship the PR yourself"* pattern is working through review.
+
+### New Issue #1499 — natmurella *"old leaf discovery strategy gone?"*
+
+External user **natmurella** opens [Issue #1499](https://github.com/moq-dev/moq/issues/1499) May 25 05:02 UTC asking about an observed relay-topology behavior change: *"old leaf discovery strategy gone?"* Plausibly a downstream consequence of the May 22-24 moq-mux / origin / consumer refactor cluster. **First downstream notice of an unannounced behavioral regression in the three-day wave.**
+
+## Cullen Jennings — first agenda-skeptic letter on the May 21 final London agenda
+
+**[[cullen-jennings|Cullen Fluffy Jennings]] (Cisco)** publishes [a substantive critique](https://mailarchive.ietf.org/arch/msg/moq/-k2a8R7dGz0AhlwO2MsQfaZOz3c/) of [[martin-duke|Martin Duke]]'s May 21 final agenda May 24 14:27 UTC / 08:27 PDT:
+
+> *"I do not think we will make any progress with this agenda. Every topic on it does not have enough time for any meaningful discussion to resolve the issues."*
+
+He recommends:
+
+> *"Pick a limited set of important topics that needs face to face time and finish them."*
+
+His **preferred priority**: **filters / top N**.
+
+### Why this is structurally significant
+
+Cullen's letter is **the first push-back on the May 21 final agenda since publication**, from a senior contributor whose own slots were among the heaviest compressed:
+
+| Original ask | Final allocation | Compression |
+|---|---:|---:|
+| Secure Object (Cullen) | 50 min → 20 min | **−60%** |
+| Top-N (Cullen + Mo + Suhas) | 5 min on conditional Day-2 | — |
+
+His **filters/top-N priority aligns with [[mo-zanaty|Mo Zanaty]]'s** dominant Object Filters mailing-list voice (3-of-4 messages May 23-24). The combination is **two senior contributors converging on "more filters, less of everything else"** within 48 hours of the final agenda publication.
+
+### Layered with the May 26 interim
+
+The May 26 interim is now bracketed by:
+- **[[interim-meetings|Magnus Westerlund's Object Filters consensus call]] closes same day**
+- **[[martin-duke|Martin Duke]]'s [[interim-meetings|SWITCH/DTS show-of-hands]] meeting** (the formal Tuesday)
+- **Two senior contributors** (Cullen + Mo) advocating for filter-heavy London
+
+**Carry-forward**: if Martin concedes any agenda repacking, the targets are the prior beneficiaries — afrind's 180-min MOQT-issues block (the *"smallest cut"* at −25%) and Will Law's 35-min MSF/CMSF slot. The May 26 interim outcome (consensus close + show-of-hands) will be the **proxy disposition signal** for whether the London formal agenda holds or gets repacked.
+
+## englishm/moq-interop-runner — moqx docker adapter PR #71 (first matrix-shape change since cadence recovery)
+
+**[[giovanni-marzot|Giovanni Marzot]]** merges [PR #71](https://github.com/englishm/moq-interop-runner/pull/71) May 25 03:18 UTC: *"moqx: add relay docker adapter, update remote URLs, register publisher"* (+52/−2). Three changes to `implementations.json` + new adapter Dockerfile:
+
+1. **Registers moqx as a docker-buildable relay** — new `adapters/moqx/Dockerfile.relay` wraps `ghcr.io/openmoq/moqx:latest` with the runner's `/certs` convention and UDP port 4443. Adds `roles.relay.docker` to the moqx entry. Mirrors the moxygen adapter pattern.
+2. **Updates relay remote URLs** `moqx-000.ci.openmoq.org` → `moqx-main.ci.openmoq.org` (moqx-main is the stable CI-deployed hostname).
+3. **Registers publisher role** under `roles.publisher.remote` pointing at moqx-main.
+
+**Required upstream prereq** landed first: [openmoq/moqx#319](https://github.com/openmoq/moqx/pull/319) added a `MOQX_ENDPOINT` env var to the moqx docker entrypoint so the adapter can override the endpoint path to `/` (default is `/moq-relay`).
+
+### Expected next-matrix impact
+
+gmarzot's local validation table shows **moqx-as-relay reaching 18/18 against multiple well-behaved clients** in docker mode:
+
+| Client → moqx relay (docker) | Result |
+|---|---|
+| moqx → moqx | 6/6 ✓ |
+| moxygen → moqx | 6/6 ✓ |
+| moq-rs → moqx (draft-14) | 6/6 ✓ |
+| moq-rs-draft-16 → moqx | 6/6 ✓ |
+| aiomoqt → moqx | 6/6 ✓ |
+| moqlivemock → moqx | 6/6 ✓ |
+
+**Expected matrix impact**: moqx-as-relay column moves from **13/18 (no docker, only remote)** to **~75+/162** with full docker bringup. **First matrix-shape change of the post-May-18 cadence-recovery period.**
+
+The May 25 00:45:06 UTC report (168/42/125/0) was captured **before** PR #71 merged at 03:18 UTC, so the matrix-shape expansion will hit the **May 26 report**. If May 26's numbers show ~75 moqx passes added without breaking other rows, the matrix will have validated the **adapter-pattern-per-impl posture** as the path forward. The draft-revision lag (matrix on draft-16 vs three+ impls on draft-18) remains the structural gap PR #71 does not address — [PR #68](https://github.com/englishm/moq-interop-runner/pull/68) (draft-18 target bump) still OPEN since May 18, no new commits since May 19.
+
+## moqtail/moqtail — Day-2 relay-conformance fix by Zafer Gürel
+
+**Zafer Gürel** merges [PR #201](https://github.com/moqtail/moqtail/pull/201) May 24 21:15 UTC: *"fix(relay): deliver mid-subgroup objects to late subscribers"* (+165/−67, 5 files):
+
+> *"New subscribers joining a track mid-subgroup had no open QUIC send stream for the in-progress subgroup. Objects arriving with `header_info=None` were silently dropped: `get_stream()` returned `None` and there was no fallback."*
+
+Fix: caches the original `SubgroupHeader` in an `active_headers` map on `Track` (keyed by `StreamId`) when the first object of a new subgroup arrives; entry evicted on publisher unistream close. In `Subscription::handle_track_event()`, when `get_stream()` returns `None` for a mid-subgroup object, the cached header is used to open a new QUIC send stream so the late subscriber receives all objects from the current subgroup's start.
+
+**This is the second consecutive day of relay-conformance bug fixes by Zafer** (PR #199 May 23 *"send FETCH_OK for all non-empty fetch ranges"* + PR #201 May 24 mid-subgroup join). **Pattern**: methodical pre-London relay hardening. PR #202 is the auto-release follow-on.
+
+## moq-wg repos — only MSF Issue #164 sees update
+
+- **moq-wg/msf**: [Issue #164](https://github.com/moq-wg/msf/issues/164) (kixelated, *"Require sample rate and channels"*) updated May 24 17:56 UTC with continued discussion on require-vs-optional audio metadata.
+- **moq-transport / loc / secure-objects / cmsf / catalog-format / privacy-pass**: All quiet.
+
+## Mailing list — 4 messages May 24
+
+- **[Cullen Fluffy Jennings "Re: London Interim Preliminary Agenda"](https://mailarchive.ietf.org/arch/msg/moq/-k2a8R7dGz0AhlwO2MsQfaZOz3c/)** May 24 14:27 UTC — see Cullen agenda-skeptic section above.
+- **[Weekly github digest (Repository Activity Summary Bot)](https://mailarchive.ietf.org/arch/msg/moq/JRn2aRc4w4_xAlhoAldRGvzBHIM/)** May 24 — auto-bot summary covering Issue #1633 / #1634 / #1635 / #1636 (moq-transport) and Issue #164 + initTrack discussion (msf).
+- **[Mo Zanaty "Re: Consensus call on Object filters"](https://mailarchive.ietf.org/arch/msg/moq/fkYN_piZRztviDtWRpzeLHRSMQY/)** May 24 — continuation of the May 23-24 thread, already covered in May 24 wiki entry.
+- **[Alan Mallett "Fwd: Your requested identity verification code"](https://mailarchive.ietf.org/arch/msg/moq/tl6aVWJYg4xdNXvgN5nUiEHsrzw/)** May 24 — **third spam from the same address in 4 days** (May 21, May 22 03:57 UTC, May 24); still no chair moderation follow-up. Pattern suggests the list-moderation channel is currently understaffed.
+
+## Slack #moq — quiet 5 days
+
+No new messages since gazzy's May 20 15:22 CEST Moqintosh announcement. **Longest quiet stretch since the May 11 interim**. `#moq-interop-runner`, `#moq-rs`, `#moq-js`, `#libquicr` all quiet.
+
+The 5-day quiet period overlaps exactly with the **three consecutive overnight moq-dev/moq merge waves** — moq-dev's coordination has fully moved to GitHub PR review threads, with Slack used for community announcements rather than daily implementation discussion.
+
+## Other implementations — all quiet
+
+- **[[moq-rs|cloudflare/moq-rs]]**, **[[moq-js|video-dev/moq-js]]**, **[[imquic|meetecho/imquic]]**, **[[openmoq|mondain/moqxr]]**, **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, **Eyevinn/warp-player**, **Eyevinn/moqtransport**: All quiet.
+- **google/quiche moqt** quiet Day +4 (last `083b83b3` martinduke May 20 22:36 UTC). Pattern of chair-coordination-displacing-engineering-bandwidth continues.
+
+## Interop runner — 168/42/125/0, second consecutive regression
+
+**[2026-05-25 00:45:06 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-25_004506/report.html)**: 168 / 42 / 125 / 0. **−3 pass vs May 24** (45 → 42), pass rate 26.8% → **25.0%** (−1.8pp). **Two consecutive day-over-day regressions** (May 24 −1, May 25 −3) following the May 23 +4 recovery. Rolling 5-day band tightens to **42–46 pass**. **7 consecutive days of daily cadence holding** (May 19/20/21/22/23/24/25). Target still **draft-16** (PR #68 OPEN, no new commits since May 19).
+
+The May 25 report ran at 00:45 UTC, **before** PR #71 (moqx docker adapter) merged at 03:18 UTC. **The May 26 report will be the first to include the docker-adapter-moqx-relay expansion.**
+
+**Plausible attribution for −3**: continued main-branch refactor on moq-dev/moq (moq-codec → moq-video rename in #1484, moq-clock removal in #1494, moq-lite stub removal in #1492, moq-mux follow-ons). The matrix-against-`main` design continues to register the wire-level-refactor signal within 24h.
 
 # Activity (May 23 06:00 UTC → May 24 06:00 UTC) — **moq-dev/moq second consecutive overnight merge wave: Go FFI bindings (4th language), MoQ server API, mandatory LLM-disclaimer norm, distribution-infra (Homebrew + .deb/.rpm), `moq-mux` codec/container restructure; Tobbe substantive comment on MSF Issue #153 (initTrack dedup proposal); moqtail breaks long-quiet with Zafer Gürel FETCH_OK relay fix + Ali Begen client-js commits; Mo Zanaty + afrind continue Object Filters consensus-call thread; interop 168/45/122/0 (−1 pass vs May 23 but skip 1→0); #moq Slack quiet 84h+; google/quiche moqt quiet Day +3; no new drafts; MoQ Monthly Day +24**
 

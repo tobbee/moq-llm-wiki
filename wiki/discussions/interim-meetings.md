@@ -2,9 +2,11 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-23
+last_updated: 2026-05-25
 status: current
 ---
+
+> **2026-05-25 note**: **[[cullen-jennings|Cullen Jennings]] (Cisco)** publishes [the first agenda-skeptic letter](https://mailarchive.ietf.org/arch/msg/moq/-k2a8R7dGz0AhlwO2MsQfaZOz3c/) on the May 21 final London agenda May 24 14:27 UTC — *"I do not think we will make any progress with this agenda. Every topic on it does not have enough time for any meaningful discussion to resolve the issues."*; recommends *"pick a limited set of important topics that needs face to face time and finish them"*; identifies **filters / top N** as his London priority. Aligns with [[mo-zanaty|Mo Zanaty]]'s dominant Object Filters mailing-list voice (3-of-4 messages May 23-24). Two senior contributors converging on *"more filters, less of everything else"* within 48 hours of the final agenda publication. If [[martin-duke|Martin Duke]] concedes agenda repacking after the May 26 interim, the targets are afrind's 180-min MOQT-issues block and Will Law's 35-min MSF/CMSF slot.
 
 # Upcoming Meetings
 
