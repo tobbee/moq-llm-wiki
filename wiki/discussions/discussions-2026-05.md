@@ -2,11 +2,150 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 25 06:00 UTC → May 26 06:00 UTC) — **wilaw absorbs Tobbe's #153 initDatas[] proposal into PR #166 + 3 sibling MSF PRs (#165 / #167 / #168); Martin Duke schedules post-London virtual interims June 22 + July 6 (feedback deadline June 8 = day before London); moq-dev/moq lighter day (~8 merges + cluster-discovery regression-fix PR #1504 closes natmurella #1499 in ~12h, CLAUDE.md PR #1503 broadens AI Attribution into its own H2 — third evolution of the LLM-disclaimer norm in 4 days); PR #71 moqx docker adapter lands in matrix but +9 tests not the gmarzot-predicted ~+75; interop 177/47/129/0 (matrix-shape change first observed; +5 pass / +9 total); 4 new moq-dev/moq issues from external users in 24h; #moq Slack quiet 6 days; google/quiche moqt quiet Day +5**
+
+**TL;DR**:
+- wilaw shipped 4 MSF PRs on May 25 covering Tobbe's offered `initDatas[]` change (PR #166, partial fix for #153), kixelated's required-fields ask #164 (PR #165), and 2 wilaw-own follow-ups (#167 target buffer, #168 catalog-object renumbering). wilaw pings Tobbe directly on #153: *"please review #166 and see if it meets your needs"* — Tobbe's offered PR is **absorbed back into Akamai-authored form** within 48 hours.
+- Martin Duke May 25 17:44 UTC ("[Moq] Upcoming Virtual Interims") schedules June 22 + July 6 16:30–18:00 UTC virtual interims in the London → Vienna interval. Feedback deadline **June 8** — explicitly *"the day before London begins"*. **First post-London cadence announcement**.
+- moq-dev/moq runs a smaller ~8-PR day (vs ~17 the prior 3 days). Centerpieces: **PR #1504 *"moq-relay: restore gossip-style cluster discovery via --cluster-node"*** (OPEN, opened ~12h after natmurella #1499 was filed, directly fixes the leaf-discovery regression); **PR #1503 *"docs(claude): tighten conventions"*** broadens the AI-Attribution rule from a sub-bullet under Comment Conventions to its **own H2** covering "LLM-authored prose visible to humans" — third evolution in 4 days (PR #1469 May 23 → PR-body dogfooding May 24 → policy H2 promotion May 25). **PR #1509** fixes a jemalloc init crash (closes #1507, kixelated self-filed at 03:58 UTC + fixed at 04:26 UTC — **28-minute self-issue-to-merge cycle**).
+- Interop runner **177 / 47 / 129 / 0** at 2026-05-26 00:43:38 UTC — total tests **168 → 177 (+9)** is the **first observed effect of [PR #71](https://github.com/englishm/moq-interop-runner/pull/71) (moqx docker adapter, merged May 25 03:18 UTC)**, but **far smaller than gmarzot's local-validation prediction of ~+75**. Pass count 42 → 47 (+5), partial recovery from the May 24-25 −1/−3 sequence. **Three implementations still on draft-18 main vs matrix target draft-16** (PR #68 still OPEN since May 18).
+- moqtail/moqtail: one demo fix (Ali Begen `3e9b788c` *"fix(demo): use next group start for sub"*). Other tracked impls all quiet — **google/quiche moqt Day +5 silent**, **cloudflare/moq-rs / video-dev/moq-js / Eyevinn-* / Moqintosh / quiche_moq / imquic / mondain/moqxr** all quiet.
+
+## moq-wg/msf — wilaw 4-PR cluster May 25 absorbs Tobbe's #153 catalog-bloat initDatas[] proposal
+
+**Two days** after [[tobbe-einarsson|Torbjorn Einarsson]] posted his May 23 16:02 UTC 4-point comment on [Issue #153](https://github.com/moq-wg/msf/issues/153) — including offering to ship a `initDatas[]` + `initDataRefID` PR — **[[will-law|Will Law]] (Akamai)** shipped 4 PRs against `moq-wg/msf` on May 25 between 12:55–16:24 UTC. The first (PR #166) is **explicitly the implementation of Tobbe's offered design**:
+
+| PR | Title | Files / Δ | Fixes | Notes |
+|---|---|---|---|---|
+| [#165](https://github.com/moq-wg/msf/pull/165) | *"Update bitrate and related properties in draft"* | 1 / +49/−24 | [#164](https://github.com/moq-wg/msf/issues/164) (kixelated) | (1) New `maxGOPDuration` track property, (2) new `maxGroupDuration` track property, (3) new `averageBitrate` property, (4) **`sampleRate` + `channels` required for audio tracks**, (5) **`codec` + `width` + `height` required for video tracks**, (6) redefines `bitrate` as maximum bitrate. Direct response to kixelated's May 22 *"it's reaally annoying that everything is optional"* ask. |
+| [#166](https://github.com/moq-wg/msf/pull/166) | *"Enhance root catalog with Initialization Data List"* | 1 / +25/−12 | [#153](https://github.com/moq-wg/msf/issues/153) (partial) | **Adds root-level `initDataList[]` and updates per-track `initData` references** so init segments live once at the catalog root and tracks reference them by ID. PR body: *"The purpose of this change is to make the catalog more human readable by grouping all init data and placing it at the end of the JSON document."* **wilaw comments on #153 14:03 UTC: *"@tobbee — please review https://github.com/moq-wg/msf/pull/166 and see if it meets your needs."*** |
+| [#167](https://github.com/moq-wg/msf/pull/167) | *"Introduce target buffer property in track object"* | 1 / +21/−0 | #150 | Adds `targetBuffer` property. |
+| [#168](https://github.com/moq-wg/msf/pull/168) | *"Revise catalog object specifications and numbering"* | 1 / +19/−9 | #149 | Object ID rule clarifications. |
+
+**Plus 1 prior-day merge in the same cluster**: [PR #157](https://github.com/moq-wg/msf/pull/157) by [[suhas-nandakumar|Suhas Nandakumar]] *"Clarify Group numbering requirements for restarts (#147)"* (10/−13) MERGED May 25 09:16 UTC — addresses #147, the publisher-restart group-numbering semantics topic.
+
+### Structural significance
+
+**The wiki user is structurally subsumed**: Tobbe's May 23 4-point comment offered to write a PR for `initDatas[]` + `initDataRefID`; wilaw shipped his own version of that exact design 48 hours later. **wilaw's PR #166 covers Point (2) — readability via root-level dedup — but does NOT cover the AVC1-vs-AVC3 Safari/FairPlay Point (4) or the per-language override Point (3)**. These remain open dimensions on #153 that Tobbe's offered PR was meant to cover holistically. **Pattern read**: editor (wilaw, MSF spec author) maintains editorial control by shipping the closest sub-feature himself; external contributors' design proposals get **partially absorbed** rather than directly merged via outside PR.
+
+**Carry-forward**: Tobbe's review of PR #166 (wilaw's explicit ping) becomes the first MSF-side review comment by an outside contributor with a design stake. The remaining 3 of Tobbe's 4 points (lang override, AVC1 vs AVC3 / Safari-FairPlay, the broader mid-stream-init-change problem) still need spec disposition. The MSF schema-strengthening cadence is now **3 distinct PRs in 24 hours** (#165 + #166 + #167 + #168) — Will Law is sprinting toward the London Day-2 35-min MSF/CMSF slot with concrete diffs.
+
+## moq-wg/cmsf — wilaw PR #19 merged + Issue #16 reactivated for Denver-Feb-5 emsg agenda
+
+**[[will-law|Will Law]]** continues the spec-side push on `moq-wg/cmsf`:
+- **[PR #19](https://github.com/moq-wg/cmsf/pull/19) MERGED May 25 09:19 UTC** by wilaw *"Clarify media content and group packaging requirements"* (+2/−3, fixes [Issue #12](https://github.com/moq-wg/cmsf/issues/12) by **yekuiwang**) — adopts yekuiwang's wording cleanup: *"GOP"* in §3.4 second bullet was loose terminology (moq-transport already replaced GOP with "independently coded sequence" per [moq-wg/moq-transport#951](https://github.com/moq-wg/moq-transport/issues/951)), and "media content encoded in decode order" in §3.3 is redundant because ISOBMFF already guarantees it. yekuiwang's issue was raised earlier; PR #19 is wilaw's spec-text resolution.
+- **[Issue #16](https://github.com/moq-wg/cmsf/issues/16) reactivated May 25 09:41 UTC** by wilaw — original issue by [[gwendal-simon|Gwendal Simon]] *"issues at Denver MSF meeting Feb 5 2026"* covered handling **`emsg` boxes** in CMAF in CMSF, **init segment per track for key rotation**, and **Extension parameters for DRM key rotation**. wilaw now asks Gwendal a 3-question follow-up:
+  1. Do we signal in catalog track description that EMSG boxes are present (so players know to spend ISO box parsing effort)?
+  2. If so, signal `scheme_id_uri` defining the payload? (example given: `"emsg": "urn:scte:scte35:2013:xml"` adjacent to `"emsg": "..."` field in the catalog track description)
+  3. Are multiple `emsg` tags allowed per track?
+
+**Carry-forward**: this is the **third active CMSF schema-touching thread** moving toward London (alongside the cross-PR work via #19 and the wilaw 4-PR MSF cluster above). Gwendal's response on emsg field signaling will likely produce a follow-on PR before London Day-2.
+
+## Mailing list — Martin Duke schedules June 22 + July 6 virtual interims
+
+**[Martin Duke "[Moq] Upcoming Virtual Interims"](https://mailarchive.ietf.org/arch/msg/moq/v9HTExYYS9GnP0nzmxAY3WQM3Qc/)** May 25 17:44 UTC: chairs propose **June 22 + July 6, both 16:30–18:00 UTC** as virtual interims between London (June 9-12) and Vienna IETF (later in July). Feedback deadline **June 8**, *"the day before London begins"*.
+
+**Structural significance**:
+- **First post-London interim cadence announcement**. The cascading consensus-call deadlines (May 26 Object Filters + DTS/SWITCH show-of-hands → June 4 DTS/SWITCH close → June 5 Filters close → June 11-12 London formal) all close before the proposed June 22 interim, so **June 22 is the first interim after all four consensus calls** have closed.
+- The 6-week London → June 22 → July 6 → Vienna cadence reads as **two-interims-in-the-gap pacing**, the same pattern used between Apr 27 (interim-14) and May 26 (interim-16), giving 3 weeks per slot for written discussion + editorial follow-through on London commitments.
+- **June 8 feedback deadline** strategically lands during London hackathon (June 9-10) and prior to formal sessions (June 11-12), so the schedule will be settled before participants arrive.
+
+**Plus**: weekly github digest auto-bot summary May 25 17:48 UTC (Repository Activity Summary Bot). No spam carry-forward from Alan Mallett this cycle. No new substantive non-procedural mailing-list messages.
+
+## moq-dev/moq — lighter ~8 PR day; cluster-discovery regression closed in ~12h; AI-attribution policy promoted to its own H2
+
+After three consecutive ~14–17-PR overnight waves (May 22-25), May 25-26 settles to **8 merged PRs + 1 still-open PR #1504**. Theme shifts from feature-velocity to **convention-tightening + first downstream-feedback resolution**.
+
+### PR #1504 — gossip cluster discovery restored within ~12h of natmurella's regression report
+
+**Yesterday's wiki-flagged [Issue #1499 by natmurella](https://github.com/moq-dev/moq/issues/1499) "old leaf discovery strategy gone?"** filed May 25 05:02 UTC observed that the May 18-25 refactor (`91ea43c5` and follow-ons) removed the `cluster.node` variable, forcing operators to manually enumerate all relays in each peer's `cluster.connect`. kixelated opens **[PR #1504](https://github.com/moq-dev/moq/pull/1504)** May 25 17:18 UTC (**~12 hours later**) — *"moq-relay: restore gossip-style cluster discovery via --cluster-node"* (**+797/−121, 7 files**, currently OPEN). Mechanism:
+
+- Re-introduces `--cluster-node <self-url>` to publish a placeholder broadcast at `.internal/origins/<url>`, which peers reached via `--cluster-connect` then discover and dial automatically. **Multiple nodes form a full mesh after a single rendezvous**.
+- New `.block(prefix)` view on `OriginProducer` / `OriginConsumer` (symmetric with `scope` and `with_root`) that **refuses publishes and hides announces** under a prefix. Applied to non-mTLS sessions so JWT and anonymous clients can never see or publish into `.internal/*`.
+- `--cluster-root` / `cluster.root` retained as a hidden migration-warning option that bails at startup with a pointer to `--cluster-connect` and `--cluster-node`.
+- Demos: `demo/relay/leaf{0,1}.toml` switch from a hardcoded `connect = [root, leaf0]` list to gossip (`connect = [root]` + `node`).
+
+**Structural significance**: this is the **first downstream-user-flagged regression in the entire May 22-25 refactor wave to get a same-day fix-in-flight**. The 12-hour issue-to-PR cycle plus the explicit *"Fixes #1499"* + bringing back the **previously-removed variable name** confirms kixelated's *"intentional behavior change"* hypothesis is wrong — the removal was a refactor casualty. **Carry-forward**: PR #1504 review on `OriginProducer::block` semantics likely closes Wednesday May 27; once merged, natmurella's deploy can return to the prior gossip topology without manual config.
+
+### PR #1503 — AI Attribution promoted to its own H2 (third evolution in 4 days)
+
+**[PR #1503](https://github.com/moq-dev/moq/pull/1503) MERGED May 25 17:25 UTC** by kixelated *"docs(claude): tighten conventions for cross-package sync, tests, comments"* (+33/−3 to `CLAUDE.md`). Of 6 changes, the **fourth is structurally the most significant**:
+
+> **Unattributed LLM-authored prose** — promoted from a buried Comment Conventions bullet into its own **AI Attribution H2**, broadened to "LLM-authored prose visible to humans," with an explicit no-tag list (code, doc comments, `/doc` pages).
+
+**Three-day evolution of the LLM-disclaimer norm**:
+1. **PR #1469 May 23 20:34 UTC** — first formal rule, 2-line addition to `CLAUDE.md` requiring `// Written by Claude` on AI-authored **source-code comments**.
+2. **PRs #1484 + #1494 May 24 22:41 + May 25 00:02 UTC** — kixelated dogfoods the norm in **PR descriptions** (an editorial surface PR #1469 didn't formally cover).
+3. **PR #1503 May 25 17:25 UTC** — norm promoted to its own H2 covering **"LLM-authored prose visible to humans"** generally, with an explicit no-tag list (so it doesn't pollute code / doc-comments / `/doc` pages with disclaimers that would clutter without informing).
+
+**Plus the other 5 changes in PR #1503**:
+- **Cross-Package Sync table**: lists for each crate which paired packages + doc pages must move with it (e.g., touching `moq-ffi` requires updating `libmoq` / `py/moq-rs` / Swift / Kotlin docs). Addresses observed *"/doc drift + missed language wrappers"*.
+- **Testing Approach**: defaults to **end-to-end** (publisher ↔ relay ↔ subscriber, asserting observed bytes); unit tests reserved for module-local surfaces.
+- **Refactor As You Go**: 4+ args or a repeated trio at multiple call sites = struct, **in the same PR**.
+- **Voice bullet for Comment Conventions**: *"the way you'd say it out loud, not the way a doc generator would"*, skip throat-clearing.
+- **Benchmarks section**: names `divan` for `moq-net` / `hang` / `moq-mux` / `moq-audio`; requires before/after numbers in PR description when changing a hot path.
+
+**Carry-forward**: AI Attribution as a standalone policy section is the **most structurally explicit AI-disclosure framework in any tracked MoQ codebase**. The decision to **exempt code + doc-comments + `/doc` pages** from the marker is sophisticated norm design — it preserves disclosure where it matters editorially (PR bodies, issue replies, design docs) and avoids disclosure-noise where humans don't read it (in-source documentation).
+
+### PR #1509 — 28-minute self-issue-to-merge cycle on jemalloc init crash
+
+- **[Issue #1507](https://github.com/moq-dev/moq/issues/1507)** by kixelated May 26 03:58 UTC: *"moq_native::jemalloc: profiling activation errors should warn, not be fatal"*. Root cause: `rs/moq-native/src/jemalloc.rs` had a dead-code branch attempting to flip `prof.active=true` at runtime, which fails with EINVAL unless the jemalloc profiling backend was initialised via `MALLOC_CONF=prof:true` at process start. moq-relay always sets this via its systemd unit (hit the `Ok(true)` branch and never noticed); moq-boy doesn't, so it took the broken `Ok(false)` path and crashed on every startup.
+- **[PR #1509](https://github.com/moq-dev/moq/pull/1509) MERGED May 26 04:26 UTC** by kixelated *"moq-native(jemalloc): drop runtime activation; fixes moq-boy startup crash"* (+11/−10) — drops the activation attempt entirely; if `prof.active=false`, log a hint and return `Ok(())`. **28-minute issue-filed-to-merged cycle** (03:58 → 04:26 UTC).
+- **[Issue #1508](https://github.com/moq-dev/moq/issues/1508)** also kixelated May 26 03:59 UTC: *"moq_native::reconnect: DNS failure leaves publisher stuck instead of retrying"* — DNS lookups during `Reconnect` are not retried under exponential backoff (unlike connection-refused / timeout), so a transient resolver hiccup leaves the publisher stuck in a paused state forever. Not yet fixed. Carry-forward operational-edge-case backlog item.
+
+### PRs #1502 / #1505 / #1506 — Swift release-pipeline shakedown
+
+The Swift Package Manager mirror publishing pipeline (introduced as Phase A in [PR #1448](https://github.com/moq-dev/moq/pull/1448) May 23) gets its first end-to-end exercise:
+
+- **[PR #1502](https://github.com/moq-dev/moq/pull/1502) MERGED May 25 16:11 UTC** *"ci(swift): decouple release manifest from dev Package.swift and gate publish on SPM resolve"* (+201/−31, 7 files). The `moq-dev/moq-swift` mirror at v0.2.13 was unusable from SPM because the mirror shipped the **dev-mode** Package.swift (path-based `binaryTarget` for local testing) instead of the **release-mode** one (URL + SHA-256). Decouples by maintaining a separate release-template manifest. New publish step gates on a passing `xcodebuild -resolvePackageDependencies` against the staged package.
+- **[PR #1505](https://github.com/moq-dev/moq/pull/1505) MERGED May 25 17:26 UTC** *"moq-ffi: bump to 0.2.14"* — manual patch bump because `release-plz` only detects API/source changes via `cargo semver-checks` which doesn't inspect binary-only `cdylib`/`staticlib` crates. Triggers a fresh `moq-ffi-v*` tag exercising the new pipeline end-to-end.
+- **[PR #1506](https://github.com/moq-dev/moq/pull/1506) MERGED May 26 03:36 UTC** *"ci(swift): reference staged package by its SPM identity in verify smoke"* (+11/−2) — CI fix for the `Verify staged package resolves` job on the `moq-ffi-v0.2.14` tag run: SPM derives a path-based package's identity from the final path component (`moq-ffi-0.2.14-swift`), not from the manifest's `name:` field. Symlinks the staged dir to fix the dependency lookup.
+
+**Net result**: by end of May 26 ~04:30 UTC, the SPM release pipeline has been exercised end-to-end **at least once** with the v0.2.14 tag; the next moq-ffi semver bump (currently dormant) will validate the steady-state pipeline.
+
+### New issues from external users (4 in 24h)
+
+| # | Author | Title | Note |
+|---|---|---|---|
+| [#1499](https://github.com/moq-dev/moq/issues/1499) | natmurella | old leaf discovery strategy gone? | Closed in flight by PR #1504 (12h later). |
+| [#1500](https://github.com/moq-dev/moq/issues/1500) | mirakae | moq-mux/hls: audio produces ~47 MoQ groups/s with no way to control fMP4 fragment aggregation | HLS fMP4 ingest with `-c:a aac -b:a 128k -ar 48000 -ac 2 -hls_segment_type fmp4 -hls_time 1` produces **~47 `moof` boxes per second per audio track** (one per AAC frame of 1024 samples ≈ 21.3ms), each mapped to a separate MoQ group. Asks for a control knob (group-per-N-fragments aggregation) or an automatic batching heuristic. |
+| [#1501](https://github.com/moq-dev/moq/issues/1501) | danrossi | No error promise returned from the connection or attempts to reload | JS `Connection.reload()` (in `js/net/src/connection/reload.ts:111`) silently hangs when the relay is unavailable — no error rejected on the promise, no reconnect attempt, no status update. Requested: error signal for fallback to alternate sources + reload-attempt count + connection-status update. |
+| [#1507](https://github.com/moq-dev/moq/issues/1507) | kixelated (self) | jemalloc profiling activation errors should warn, not be fatal | Closed by PR #1509 in 28 min. |
+| [#1508](https://github.com/moq-dev/moq/issues/1508) | kixelated (self) | reconnect: DNS failure leaves publisher stuck instead of retrying | Open. Awaits operational-edge-case fix. |
+
+**Pattern**: **3 of 5 issues from external production-deploying users (natmurella, mirakae, danrossi)**, all describing concrete operational bugs from the May 22-25 refactor period. Adoption signal — moq-dev/moq is being deployed against live encoders and live relays by people willing to file actionable issues.
+
+## moqtail/moqtail — single demo fix Day +1
+
+After the 2-day relay-conformance push (Zafer PR #199 FETCH_OK May 23 + PR #201 mid-subgroup join May 24), moqtail returns to lower velocity:
+- **Ali C. Begen** `3e9b788c` May 25 18:52 UTC — *"fix(demo): use next group start for sub"* (client-js demo fix).
+- PR #202 (release-bot) still OPEN.
+
+## Interop runner — first observed matrix-shape change from PR #71 (smaller than predicted)
+
+[2026-05-26 00:43:38 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-26_004338/report.html): **177 / 47 / 129 / 0** (total / pass / fail / skip). **Total tests 168 → 177 (+9)** — the matrix-shape change from [PR #71](https://github.com/englishm/moq-interop-runner/pull/71) (moqx docker adapter, merged May 25 03:18 UTC, after May 25's report cut) **first appears**. Pass count **42 → 47 (+5)**, partial recovery from the May 24-25 regression sequence. Pass rate 25.0% → 26.6%.
+
+**Smaller-than-predicted matrix expansion**: [[giovanni-marzot|Giovanni Marzot]]'s local validation table predicted **~+75 passes** with full moqx-as-relay docker adoption. The actual matrix added **+9 tests / +5 passes**, not +75. Likely explanation: PR #71 added moqx-as-relay rows only against a subset of clients (not all 162-cell columns), or the docker adapter is producing failures the local validation didn't see. **Carry-forward**: the gap between gmarzot's local-validation table and the runner's observed counts will need a runner-side post-mortem. The matrix is now larger (177 vs 168) but still well below the 162-cell-per-relay-impl ceiling.
+
+**Cadence**: **8 consecutive days of daily reports** (May 19/20/21/22/23/24/25/26) — longest streak since cadence recovery May 19. Target still **draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) still OPEN since May 18, no new commits since May 19; **three implementations on draft-18 main**: moq-dev/moq, mondain/moqxr, meetecho/imquic).
+
+Version breakdown of the 177 tests: **97 at target (draft-16) · 8 ahead · 72 behind**.
+
+## google/quiche moqt — Day +5 silent
+
+No new commits to `quiche/quic/moqt` since `083b83b3` (martinduke May 20 22:36 UTC). **5-day silence is now the longest period since draft-18 publication** for the chair-led C++ implementation. Plausible cause: martinduke is consumed by the four open consensus calls (May 21 Joining FETCH, May 21 DTS/SWITCH, May 22 Filters, May 25 virtual interim scheduling) plus the May 26 interim outcome management.
+
+## #moq Slack — quiet 6 days
+
+Last substantive message remains [[gazzy|gazzy]]'s Moqintosh announcement May 20 15:22 CEST. May 21 17:08 CEST had only Alina joining. **6-day quiet stretch is now the longest since the May 11 interim** — pattern reads as the discussion has fully migrated to GitHub PRs + mailing list for the consensus-call deadlines.
+
+---
 
 # Activity (May 24 06:00 UTC → May 25 06:00 UTC) — **moq-dev/moq third consecutive overnight merge wave: audio FFI gap closure (`moq-audio` crate + Opus encode/decode), Rust/JS namespace cleanup (moq-lite stub removal, JS `@moq/net` as `Net`, `moq-clock` moved to example), first PRs dogfooding PR #1469 `(Written by Claude)` disclaimer norm, external metapox SUBSCRIBE_UPDATE double-merge (24-day Issue #1363 close cycle); Cullen Jennings publishes first agenda-skeptic letter on May 21 final London agenda (*"pick a limited set of important topics... filters / top N"*); moqx docker adapter PR #71 ready for May 26 matrix (expected 13/18 → ~75+/162 moqx-as-relay coverage); moqtail Day-2 relay-conformance fix (Zafer PR #201 mid-subgroup join); interop 168/42/125/0 (−3 pass vs May 24, second consecutive regression); #moq Slack quiet 5 days; google/quiche moqt quiet Day +4; no new drafts; MoQ Monthly Day +25**
 

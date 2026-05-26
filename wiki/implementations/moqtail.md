@@ -2,10 +2,12 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 status: current
 ---
 
+> **2026-05-26**: **Single client-js demo fix Day +1 after the 2-day relay-conformance push** — **Ali C. Begen** `3e9b788c` May 25 18:52 UTC *"fix(demo): use next group start for sub"*. PR #202 release-bot auto-PR still OPEN. **Cadence**: the May 23-24 dual-day fix burst (Zafer PR #199 FETCH_OK + PR #201 mid-subgroup join) tapers to demo-layer polish on May 25; relay-conformance push appears to be paused or completed for the pre-London window.
+>
 > **2026-05-25**: **Second consecutive day of relay-conformance bug fixes by Zafer Gürel**. **[PR #201](https://github.com/moqtail/moqtail/pull/201) MERGED May 24 21:15 UTC** *"fix(relay): deliver mid-subgroup objects to late subscribers"* (+165/−67, 5 files): new subscribers joining a track mid-subgroup previously had no open QUIC send stream for the in-progress subgroup, so objects arriving with `header_info=None` were silently dropped (`get_stream()` returned `None`, no fallback). Fix caches the `SubgroupHeader` in an `active_headers` map on `Track` (keyed by `StreamId`) when the first object of a new subgroup arrives; entry evicted on publisher unistream close; subscription handler uses the cached header to open a new QUIC send stream when `get_stream()` returns `None`, so the late subscriber receives all objects from the current subgroup's start. Plus PR #202 (release-bot auto-PR). **Pattern**: methodical pre-London relay-conformance hardening (PR #199 FETCH_OK May 23, PR #201 mid-subgroup join May 24); could shift moqtail rows in the May 26 interop matrix.
 >
 > **2026-05-24**: **First material dev activity since the May 7-13 registry-merge window** — May 23 sees commits from both maintainers: **Zafer Gürel** `1c209c5b` *"fix(relay): send FETCH_OK for all non-empty fetch ranges"* (PR #199, May 23 19:47 UTC) — conformance bug fix that could affect moqtail rows in the interop matrix; **Ali C. Begen** `28c04571` *"refactor(client-js): move query string log level setting to app.tsx"* (May 23 20:32 UTC) + `b69009be` *"fix(client-js): skip seeking if video is already playing"* (May 23 20:32 UTC) — continued client-js polish post-Demuxed. Plus 2 release-bot commits (PRs #198, #200). Breaks the long-quiet streak since May 13 interop-runner registry merge.

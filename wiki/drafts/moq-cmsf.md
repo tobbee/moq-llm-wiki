@@ -2,12 +2,14 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
-last_updated: 2026-05-23
+last_updated: 2026-05-26
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
 ---
 
+> **2026-05-26**: **[[will-law|Will Law]] CMSF spec edits May 25**: **[PR #19](https://github.com/moq-wg/cmsf/pull/19) MERGED May 25 09:19 UTC** *"Clarify media content and group packaging requirements"* (+2/−3, fixes [Issue #12](https://github.com/moq-wg/cmsf/issues/12) by **yekuiwang**) — drops the §3.3 *"MUST contain media content encoded in decode order"* line (redundant — ISOBMFF already guarantees decode-order) and changes §3.4 from *"one or more contiguous Groups of Pictures (GOPs)"* to *"one or more contiguous independently coded sequences of media samples"*. **Rationale**: GOP is a loose term and moq-transport already replaced GOP with "independently coded sequence" per [moq-wg/moq-transport#951](https://github.com/moq-wg/moq-transport/issues/951); the type of media could be other than video (audio sequences also need the same treatment). **[Issue #16 reactivated May 25 09:41 UTC](https://github.com/moq-wg/cmsf/issues/16)** by wilaw — original Feb 5 Denver MSF meeting agenda issue from [[gwendal-simon|Gwendal Simon]] covering `emsg` boxes in CMAF in CMSF + init segment per track for key rotation + Extension parameters for DRM key rotation; wilaw now asks Gwendal 3 follow-up questions about emsg signaling: (1) catalog signaling of EMSG presence so players know to parse ISO boxes, (2) per-track `scheme_id_uri` indicating payload (example: `"emsg": "urn:scte:scte35:2013:xml"`), (3) multiple emsg tags per track. **Carry-forward**: emsg signaling is the third active CMSF schema thread alongside #12 (now closed) and the May 22-23 [[moq-dev|moq-dev/moq]] CMSF pipeline implementation (PR #1444); Gwendal's emsg response likely lands as a follow-on PR before London Day-2 Will Law slot.
+>
 > **2026-05-23**: **CMSF unified pipeline lands in [[moq-dev|moq-dev/moq]] via [PR #1444](https://github.com/moq-dev/moq/pull/1444) MERGED May 22 21:12 UTC** (+1278/−14, [[luke-curley|kixelated]]) — kixelated forks AWS's #1429 (which had superseded #1408), strips out-of-scope C API + caller-driven group boundaries, ships the MSF-catalog core. **Third AWS-vs-kixelated design-cycle resolution in 9 days** (#1413 close → #1408→#1429 50% shrink → #1429→#1444 33% shrink); total AWS net code in merged result is ~25-30% of original #1408 scope. **Architectural principle**: *"CMSF is CMAF with a different catalog format"* — `hang::Catalog` serves as intermediate representation, single import pipeline serializes to MSF or Hang catalog formats. **First fully-working CMSF muxer/demuxer in any tracked open-source MoQ implementation**.
 
 **draft-ietf-moq-cmsf-00** | 9 pages | Expires 2025-12-01

@@ -2,10 +2,12 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 status: current
 ---
 
+> **2026-05-26 note**: **[[martin-duke|Martin Duke]] schedules June 22 + July 6 virtual interims** in the [Upcoming Virtual Interims mailing-list message](https://mailarchive.ietf.org/arch/msg/moq/v9HTExYYS9GnP0nzmxAY3WQM3Qc/) May 25 17:44 UTC. **Both 16:30–18:00 UTC**, between London (June 9-12) and Vienna IETF. Feedback deadline **June 8** — *"the day before London begins"*. **First post-London interim cadence announcement**. The cascading consensus-call deadlines (May 26 Object Filters close + DTS/SWITCH show-of-hands → June 4 DTS/SWITCH close → June 5 Filters close → June 11-12 London formal) all close before June 22, making **June 22 the first interim after all four consensus calls** are resolved. The 6-week London → June 22 → July 6 → Vienna cadence mirrors the Apr 27 (interim-14) → May 26 (interim-16) two-interims-in-the-gap pacing.
+>
 > **2026-05-25 note**: **[[cullen-jennings|Cullen Jennings]] (Cisco)** publishes [the first agenda-skeptic letter](https://mailarchive.ietf.org/arch/msg/moq/-k2a8R7dGz0AhlwO2MsQfaZOz3c/) on the May 21 final London agenda May 24 14:27 UTC — *"I do not think we will make any progress with this agenda. Every topic on it does not have enough time for any meaningful discussion to resolve the issues."*; recommends *"pick a limited set of important topics that needs face to face time and finish them"*; identifies **filters / top N** as his London priority. Aligns with [[mo-zanaty|Mo Zanaty]]'s dominant Object Filters mailing-list voice (3-of-4 messages May 23-24). Two senior contributors converging on *"more filters, less of everything else"* within 48 hours of the final agenda publication. If [[martin-duke|Martin Duke]] concedes agenda repacking after the May 26 interim, the targets are afrind's 180-min MOQT-issues block and Will Law's 35-min MSF/CMSF slot.
 
 # Upcoming Meetings
@@ -22,6 +24,8 @@ status: current
 | **interim-2026-moq-09** | **2026-06-12** | London interim (formal session day 2). **CONDITIONAL on June 4 SWITCH/DTS consensus call outcome** — full Day-2 agenda assumes SWITCH and/or DTS are adopted. Otherwise compressed to Top-N (Mo+Cullen+Suhas) + MSF/CMSF (Will, 20 min) + Privacy Pass (Suhas, 10 min) + Secure Objects (Cullen, 10 min). |
 | **interim-2026-moq-10** | **2026-06-12 08:30 UTC** | London interim (formal session day 2) |
 | **interim-2026-moq-11** | **2026-06-12 12:30 UTC** | London interim (formal session day 2) |
+| **Virtual interim (post-London #1)** | **2026-06-22 16:30–18:00 UTC** | Proposed by [[martin-duke\|Martin Duke]] May 25 ([archive](https://mailarchive.ietf.org/arch/msg/moq/v9HTExYYS9GnP0nzmxAY3WQM3Qc/)). Feedback / objections deadline **June 8** (day before London opens). First interim after the four May-26-to-June-5 consensus calls all close. |
+| **Virtual interim (post-London #2)** | **2026-07-06 16:30–18:00 UTC** | Proposed by [[martin-duke\|Martin Duke]] May 25, same feedback deadline. Pre-Vienna IETF slot. |
 
 **London interim registration deadline: Thursday 2026-06-04** — attendees must add name + affiliation to the GitHub wiki by that date so [[mike-english]] can pass names to Cloudflare building security. See [Mike English's May 15 mailing-list message](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/) for the full announcement. Follow-up message with arrival procedures, sign-in instructions, reception timing, and remote-participant details still to come.
 
