@@ -2,11 +2,193 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-26
+last_updated: 2026-05-27
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 26 06:00 UTC → May 27 06:00 UTC) — **wilaw revises PR #166 to Tobbe's typed-objects design (1-day review-to-merge); Martin Duke posts first chair technical position on SWITCH consensus call (4 days before May 26 interim); Will Law votes Yes/Yes on DTS+SWITCH adoption; Mo Zanaty endorses Object + Track filters; moq-dev/moq PR #1512 advertises QUIC preferred_address for anycast BGP deploy; 4 more PRs dogfooding the PR #1503 AI Attribution H2 norm; new external-user Issue #1516 from danrossi (cargo-vet supply-chain audit); interop 177/48/128/0 (+1 pass, 9-day cadence); google/quiche moqt Day +6 silent; #moq Slack quiet 7 days**
+
+**TL;DR**:
+- **[[will-law|Will Law]] revises [PR #166](https://github.com/moq-wg/msf/pull/166) May 26 13:05 UTC adopting [[tobbe-einarsson|Tobbe]]'s typed-object design** (`{"id": "1", "type": "inline", "data": "..."}` instead of bare base64 strings + numeric indices). **Tobbe approves 12 minutes later** (*"That's perfect. I didn't wanted to introduce the init tracks now, but just make the format future extensible."*). The "partially absorbed" framing from May 26 **flips to "design accepted"**: wilaw kept commit authorship but adopted the underlying design verbatim, including named-string `id` refs and forward-extensibility hooks for non-`"inline"` types in a future PR. Plus **4 more wilaw events on `moq-wg/msf` May 26**: PR #170 *"Undo commit ae4b7c4"* MERGED in 1 minute reverting an accidental direct-to-main commit; PR #171 *"Add optional parent namespace field to clone tracks"* OPEN (fixes #146); PR #169 *"Update MOQT mapping details"* OPEN (fixes #148); Vasil V comment on [Issue #144](https://github.com/moq-wg/msf/issues/144) — *"Accept-Encoding does not really work with MoQ model of fan-out (in general, data can flow from publisher to subscribers, but not back)"* (rejects Tobbe's May 25 17:21 UTC negotiated-compression suggestion as architecturally incompatible).
+- **Mailing list 5 messages May 26-27** — first post-final-agenda technical content from the chair + first explicit yes-vote on DTS+SWITCH adoption + Mo Zanaty endorses both consensus calls. **[Martin Duke "Thoughts on SWITCH"](https://mailarchive.ietf.org/arch/msg/moq/DgZFn6lBJC8pnm4k-aN9wrxYP8U/)** May 26 17:33 UTC = first technical chair position on the SWITCH consensus call (4 days before May 26 interim, 8 days before June 4 close). **[Will Law "Yes/Yes/Yes/Yes" on DTS+SWITCH adoption](https://mailarchive.ietf.org/arch/msg/moq/-hu1KQLMI3emEtpG6xoCbn_dUmA/)** May 26 17:50 UTC. **Mo Zanaty 2 messages May 27 00:31-01:00 UTC** endorsing Object Filters + Track Filters/Top-N.
+- **[[moq-dev|moq-dev/moq]] 5 merges + 4 OPEN PRs + 1 new external issue May 26-27**. Headline: **[PR #1512](https://github.com/moq-dev/moq/pull/1512) MERGED 17:20 UTC** *"moq-native: advertise QUIC preferred_address in the server config"* (+81/−0) unlocks **anycast-based BGP deployment** for MoQ relays. **PR #1513 / #1514 / #1515 OPEN** all with `(Written by Claude)` — 4 more PRs dogfooding the PR #1503 AI Attribution H2 norm. **New Issue [#1516](https://github.com/moq-dev/moq/issues/1516)** by **danrossi** May 27 05:12 UTC: cargo-vet supply-chain audit request.
+- **Implementations**: **[[moq-dev|moq-dev/moq]]** 5 merges + 4 OPEN PRs + Issue #1516; **[[moqtail|moqtail/moqtail]]** quiet 24h+; **[[moq-rs|cloudflare/moq-rs]]**, **[[moq-js|video-dev/moq-js]]**, **[[imquic|meetecho/imquic]]**, **[[openmoq|mondain/moqxr]]**, **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, **Eyevinn/warp-player**, **Eyevinn/moqtransport**, **englishm/moq-interop-runner**, **google/quiche moqt** all quiet (last quiche commit `083b83b3` May 20 22:36 UTC = **Day +6**).
+- **Interop**: **177 / 48 / 128 / 0** at [2026-05-27 00:44:59 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-27_004459/report.html) — **+1 pass vs May 26** (47 → 48, pass rate 26.6% → 27.1%, +0.5pp). **9 consecutive days of daily cadence**. Target still **draft-16** (PR #68 OPEN, three impls on draft-18 main).
+
+## moq-wg/msf — wilaw revises PR #166 to Tobbe's typed-object shape in <24h; 4 more events May 26
+
+### PR #166 — Tobbe's design adopted
+
+The headline event: less than 24 hours after [[tobbe-einarsson|Tobbe]]'s May 25 18:44 UTC review comment on [PR #166](https://github.com/moq-wg/msf/pull/166) proposing a typed-object shape for `initDataList`, **wilaw revised the PR at May 26 13:05 UTC** to match:
+
+**Before** (wilaw's original May 25 12:55 UTC commit):
+```json
+"initDataList": ["AAAA…base64…", "BBBB…base64…"]
+```
+with per-track `"initRef": 0` numeric indices.
+
+**After** (wilaw's May 26 13:05 UTC revision):
+```json
+"initDataList": [
+  {"id": "1", "type": "inline", "data": "AAAA…base64…"},
+  {"id": "2", "type": "inline", "data": "BBBB…base64…"}
+]
+```
+with per-track `"initRef": "1"` named string refs.
+
+**wilaw's commit comment** May 26 13:05 UTC: *"@tobbee — see the latest commits. I have revised the indexing to follow the id | type | data structure you propose. I agree that this is more extensible. I have only allowed the single type of `"inline"` for now, as we previously had init tracks and then rolled them back for various reasons. So we can add them in later if we have implementation demand. For now, the structure is extensible, but still simple."*
+
+**Tobbe approves 12 min later** May 26 13:16 UTC: *"That's perfect. I didn't wanted to introduce the init tracks now, but just make the format future extensible."*
+
+**Structural significance**: the May 26 wiki entry framed Tobbe's contribution as "partially absorbed — wilaw kept editorial control by shipping his own version". The May 27 revision **upgrades that to "design accepted"**: wilaw still has commit authorship (Tobbe doesn't get a PR-author byline) but adopted the underlying design verbatim, including:
+- **Typed objects with `id` | `type` | `data` discriminator** — opens space for future `"type": "moqRef"` (init data delivered in a separate MoQ track), `"type": "url"` (HTTP-hosted init), `"type": "cid"` (content-addressed) without breaking older parsers.
+- **Named string `id` refs instead of numeric indices** — catalog edits remain safe under append / remove / reorder operations (this was Tobbe's argument #2 in the May 25 review comment).
+
+Tobbe's remaining 3 of 4 original Issue #153 points (per-language `lang` override, Safari/FairPlay AVC1-vs-AVC3, mid-stream-init-change scheduling) are still open. The typed-object PR #166 shape **pre-positions a follow-on PR** for time-varying init via the same `initDataList` references (Tobbe's `"initSchedule": [{"fromGroup": 0, "ref": "v1"}]` sketch fits cleanly on top).
+
+**The 1-day review-to-revision cycle is the fastest spec-side feedback loop the wiki has tracked on `moq-wg/msf` in May 2026** — the prior fastest was wilaw's May 14 *"reserve 0x78 for MSF_COMPRESSION"* counter-proposal on PR #159 (which took 2 days to land in suhasHere's diff).
+
+### PR #170 — accidental commit revert in 1 minute
+
+**[PR #170](https://github.com/moq-wg/msf/pull/170) by wilaw OPENED May 26 13:58:16 UTC** *"Undo commit ae4b7c4"* (+3/−13) — *"This PR undoes an accidental commit directly to main of a feature change."* **MERGED May 26 13:59:50 UTC** (1-minute open-to-merge cycle). The reverted commit added a `parent_namespace` field; wilaw subsequently re-opens the change properly via PR #171.
+
+### PR #171 — clone tracks get an optional parent namespace field
+
+**[PR #171](https://github.com/moq-wg/msf/pull/171) OPEN May 26 14:22:37 UTC** by wilaw *"Add optional parent namespace field to clone tracks"* (+13/−3, fixes [Issue #146](https://github.com/moq-wg/msf/issues/146)) — re-introduces the same feature change reverted by PR #170 via a normal PR review flow.
+
+### PR #169 — MOQT mapping details for media transmission
+
+**[PR #169](https://github.com/moq-wg/msf/pull/169) OPEN May 26 13:25:05 UTC** by wilaw *"Update MOQT mapping details in media transmission section"* (+3/−3, fixes [Issue #148](https://github.com/moq-wg/msf/issues/148)) — *"Clarified mapping of MOQT Groups and Objects to Streams."*
+
+### Issue #144 — Vasil V rejects Accept-Encoding as architecturally incompatible with MoQ fan-out
+
+**[[victor-vasiliev|Victor Vasiliev]] comment on [Issue #144](https://github.com/moq-wg/msf/issues/144)** May 26 16:27 UTC, replying to **Tobbe's May 25 17:21 UTC suggestion** *"It would be nice to have some general way of signaling an 'Accept-Encoding' in a FETCH or SUBSCRIBE, and have the publisher signal back what compression it used if any"*:
+
+> "Accept-Encoding" does not really work with MoQ model of fan-out (in general, data can flow from publisher to subscribers, but not back).
+
+**Structural significance**: this is a substantive architectural rejection — the MoQ fan-out tree means a SUBSCRIBE-side Accept-Encoding negotiation can't be honored differently per subscriber on a shared relay path. **Carry-forward**: closes Tobbe's negotiated-compression suggestion as a non-starter at the protocol layer; either the publisher unilaterally picks the encoding (per the wilaw + suhasHere May 12-13 design direction on PR #159) or the spec falls back to a single MAY-implement compression algorithm without negotiation.
+
+### wilaw 9 MSF events in 3 days
+
+| Day | Events | Theme |
+|---|---|---|
+| **May 25** | 4 new PRs (#165, #166 v1, #167, #168) + PR #157 merge (suhasHere) + Issue #153 ping to Tobbe + Issue #163 update | Schema strengthening (kixelated #164 ask) + readability dedup (Tobbe #153) + target buffer (#150) + catalog renumbering (#149) |
+| **May 26** | PR #166 v2 typed-object revision + PR #170 (1-min revert) + PR #171 (parent namespace) + PR #169 (MOQT mapping) + Issue #144 → Vasil V rejects Accept-Encoding | Design absorption (#166 revised to Tobbe's shape) + namespace cleanup (#170/#171) + spec clarity (#169) + architectural close on #144 |
+| **May 27** | — | (window starts) |
+
+**Largest MSF spec-side push by a single contributor since the draft was adopted** — Will Law is sprinting toward the London Day-2 35-min MSF/CMSF slot with 4+ concrete diffs to land.
+
+## Mailing list — Martin Duke posts first chair SWITCH analysis; Will Law votes Yes/Yes; Mo Zanaty endorses both filter calls
+
+### Martin Duke "Thoughts on SWITCH" + self-reply
+
+**[Martin Duke "Thoughts on SWITCH"](https://mailarchive.ietf.org/arch/msg/moq/DgZFn6lBJC8pnm4k-aN9wrxYP8U/)** May 26 17:33 UTC (10:33 PDT) — **first technical chair position on the SWITCH consensus call** (4 days before May 26 interim, 8 days before June 4 close). Quoted summary:
+
+- **Scenario**: subscriber on Group 33 wants to bandwidth-down-switch to a different track at Group 34.
+- **Current draft (3-message dance)**: REQUEST_UPDATE to end the old track at Group 33 + SUBSCRIBE to the new track + Absolute Joining FETCH starting at Group 34.
+- **Identical-to-SWITCH branch**: *"if the relay has the new track in cache, it will open a FETCH stream from 34 to wherever the live edge is"* — behaves the same as SWITCH would.
+- **Divergent branch (relay has no cache)**: **SWITCH continues delivering the high-bandwidth track** until upstream content arrives, **vs Absolute Joining FETCH immediately terminates the old track**. Trade-off: keep bandwidth pressure during transition (SWITCH) vs accept silence (Absolute Joining FETCH).
+- **For up-switch**: Duke recommends SUBSCRIBE + Absolute Joining FETCH with **delayed close of the low-bandwidth subscription** as a make-before-break strategy.
+- **Conclusion**: *"I don't have strong opinions, but I do think the trade-off analysis here is correct"* — leaves room for the May 26 show-of-hands to drive the disposition.
+
+**[Self-reply](https://mailarchive.ietf.org/arch/msg/moq/XrRbydFVqcZatdwdAt9dzZsdvY4/)** 18:08 UTC clarifies framing.
+
+**Structural significance**: this is the **chair (Martin Duke) doing active substance contribution to consensus, not just procedural facilitation**. The moq-wg's chair-cadence has matured from "schedule and moderate" (Apr-May 2026) to "scheduling + interim outcomes + technical position-taking" (late May 2026). **Carry-forward**: combined with the Cullen May 24 + Mo May 23-24 + Mo May 27 "more filters less of everything else" pattern, the May 26 interim agenda risk is that **SWITCH gets show-of-hands consensus to adopt but loses agenda territory to filters/top-N** for the formal London June 11-12 sessions.
+
+### Will Law votes Yes/Yes/Yes/Yes
+
+**[[will-law|Will Law]] (Akamai)** May 26 17:50 UTC ([archive](https://mailarchive.ietf.org/arch/msg/moq/-hu1KQLMI3emEtpG6xoCbn_dUmA/)) on Martin Duke's May 21 *"Consensus Call: DTS and SWITCH"*:
+
+| Question | Vote |
+|---|---|
+| DTS — Should the WG adopt? | **Yes** |
+| DTS — Integrate into MOQT draft? | **Yes** |
+| SWITCH — Should the WG adopt? | **Yes** |
+| SWITCH — Integrate into MOQT draft? | **Yes** |
+
+**First explicit on-list vote** on the DTS+SWITCH consensus call from a co-author of one of the two specs (Will Law co-authored SWITCH PR #1378 with Gwendal Simon + Ali Begen + Zafer Gürel) — the vote itself is structurally expected, but the **on-list publication** is what's new: the May 21 consensus call had been quiet for 5 days until this vote landed simultaneously with Martin Duke's Thoughts-on-SWITCH analysis.
+
+### Mo Zanaty endorses both filter consensus calls
+
+**[Mo Zanaty Object Filters](https://mailarchive.ietf.org/arch/msg/moq/BQU-RTLoJrZ775mtTByalnO7HSE/)** May 27 00:31 UTC:
+> "I support Object Range Filters in MOQT. While it is optional, disabled by default, and negotiated like an extension, I strongly believe it will help surface and resolve some core issues, such as gaps in object ID, complete vs incomplete subgroups, track vs object properties, object properties on first vs later objects in a subgroup, aggregating downstream subscriptions upstream, and more."
+
+Notes that if Object Range Filters merge into MOQT, **a comparable design for Location filters (referencing [PR #1401](https://github.com/moq-wg/moq-transport/pull/1401)) could simplify existing subscription filters, fetch operations, and joining fetch issues**, with that Location filters proposal to be presented separately at London.
+
+**[Mo Zanaty Track Filters and Top-N](https://mailarchive.ietf.org/arch/msg/moq/flfZgx5zQp4CM7YJq8WUI8YKH9k/)** May 27 01:00 UTC:
+> "I'm very keen to hear, discuss, and resolve any technical concerns on the list, in the PR, in London, or privately."
+
+Lists concerns the filters help address: *"Subscribe Namespace/Tracks interactions, authorization scopes, Forward parameter ambiguity and overloading, asym/amp attacks, handling large namespaces, server ABR, aggregating downstream subscriptions upstream, and more."* Closes: *"My primary concern is finalizing the desired behavior, regardless of whether this lands in MOQT or an extension."*
+
+**Structural significance**: Mo's two-message May 27 endorsement continues the **Cullen-Mo "more filters less of everything else"** convergence pattern that started May 23-24. Combined with Will Law's same-day SWITCH/DTS yes-vote and Martin Duke's chair analysis, the **May 26 interim window will have to resolve a "filters vs SWITCH/DTS vs make-before-break vs MSF/CMSF" agenda-priority tension** that the May 21 final agenda already had pre-baked. Interim outcome (May 26 16:30 UTC start) is the structural disposition signal.
+
+## moq-dev/moq — PR #1512 QUIC preferred_address for anycast deploy + 4 PRs dogfooding LLM-disclaimer
+
+### PR #1512 — anycast BGP deployment unlock
+
+**[PR #1512](https://github.com/moq-dev/moq/pull/1512) MERGED May 26 17:20 UTC** by kixelated *"moq-native: advertise QUIC preferred_address in the server config"* (+81/−0, 3 files).
+
+**What it does**: adds `preferred_v4: Option<SocketAddrV4>` + `preferred_v6: Option<SocketAddrV6>` to `moq_native::ServerConfig` (CLI: `--server-preferred-v{4,6}`, env: `MOQ_SERVER_PREFERRED_V{4,6}`, TOML: `[server] preferred_v{4,6} = "..."`). Plumbs both into `quinn::ServerConfig::preferred_address_v{4,6}` so QUIC's RFC 9000 §9.6 `preferred_address` transport parameter is set during handshake.
+
+**Why it matters**: unlocks a **clean BGP anycast deployment shape**:
+- Every relay announces a shared anycast `/24` (handshake target).
+- Each relay advertises its own per-host unicast IP as `preferred_address`.
+- New clients route via anycast to the nearest POP; **steady-state connections pin to the unicast IP and survive BGP reconvergence**.
+- An overloaded host can withdraw the anycast route from BGP without dropping existing connections (they're no longer using that address).
+
+**Client coverage**: Chrome M131+ (Nov 2024) on by default with ~99% migration success per Google's measurements; any native Quinn client (`moq-cli`, `moq-ffi`-based iOS/Android/Swift/Kotlin); Firefox via neqo has the implementation though kixelated couldn't confirm the glue layer wires it through; Safari has no public confirmation.
+
+**Structural significance**: combined with the May 22-25 packaging story (Homebrew + .deb + .rpm + Cloudflare Worker apt/rpm hosts), the May 24 cluster-discovery PR #1504 still-open in-flight, and the May 26 preferred_address landing, **moq-dev/moq has gone from "kixelated's research prototype" to "first MoQ implementation operationally on par with HTTP/3 CDN deployments"** within a 5-day window.
+
+### PRs #1513 / #1514 / #1515 — 3 more open PRs dogfooding `(Written by Claude)`
+
+| PR | Title | Δ | Disclaimer |
+|---|---|---|---|
+| [#1513](https://github.com/moq-dev/moq/pull/1513) | moq-net: map MoQ versions to required qmux versions | +171/−0 | `(Written by Claude)` |
+| [#1514](https://github.com/moq-dev/moq/pull/1514) | moq-net: linger upstream subscriptions across consumer churn (moq-lite) | +397/−95 | `(Written by Claude)` + `🤖 Generated with Claude Code` |
+| [#1515](https://github.com/moq-dev/moq/pull/1515) | moq-mux: add seek(sequence) on importers for explicit group boundaries | +221/−2 | `(Written by Claude)` + `Generated by Claude Code` |
+
+PR #1512 also carries `(Written by Claude)`. **4 PRs in 24h carrying the disclaimer** — continues dogfooding the PR #1503 AI Attribution H2 norm.
+
+**PR #1514 in particular** is structurally interesting: implements a **5-second upstream-subscription linger across consumer churn** in moq-lite. When the last viewer of a track drops, the upstream subscription used to tear down immediately, so a returning viewer milliseconds later triggered a fresh Subscribe and the publisher re-served the latest cached group. Under churn (page reloads, reconnects, toggles), the same group got re-fetched repeatedly. PR #1514 sends `SubscribeUpdate(priority=0)` + FIN upstream and waits up to 5s for one of: upstream FIN (Complete), 5s timeout (Cancelled), or returning consumer with `start_group = latest + 1` (Reused). **First moq-lite-only operator-quality feature added since the moq-lite → moq-net rename May 19-20** — kixelated continues to add moq-lite-specific improvements that don't have IETF MOQT counterparts.
+
+### PR #1510 — external-contributor docs fix
+
+**[PR #1510](https://github.com/moq-dev/moq/pull/1510) MERGED May 26 22:27 UTC** by **diegonieto** (Diego Nieto, **first contribution to the repo**) *"docs: update GStreamer text"* (+2/−2, no body). Small docs polish — but **the second external-user contribution in 7 days** (after metapox's May 24 SUBSCRIBE_UPDATE merge), continuing the pattern of moq-dev/moq attracting external contributors against the May 22-25 high-velocity main-branch refactor.
+
+### PR #1511 — CHANGELOG repair
+
+**[PR #1511](https://github.com/moq-dev/moq/pull/1511) MERGED May 26 16:22 UTC** by kixelated *"fix(changelog): repair malformed CHANGELOGs blocking release-plz"* (+80/−132). Operational housekeeping — release-plz was blocked by malformed CHANGELOG files.
+
+### New Issue #1516 — cargo-vet supply chain audit request
+
+**[Issue #1516](https://github.com/moq-dev/moq/issues/1516)** by **danrossi** May 27 05:12 UTC: *"Cargo project audit checks — Crates is now vulnerable to supply chain attacks. I discovered this tool to run on the project and audit before running the rust tools, resolving packages and compiling. It might be worth adding into the CI checks or build system somehow. Like there is npm audit and pip audit. I have run cargo-vet on the project and no issue yet."* References [`cargo-vet`](https://mozilla.github.io/cargo-vet/setup.html) Mozilla tool.
+
+**Carry-forward**: danrossi's third external-user issue in 5 days (#1501 May 25 JS Connection.reload, #1516 May 27 supply chain). The cargo-vet ask is a follow-on to **[PR #1486](https://github.com/moq-dev/moq/pull/1486) (cargo-deny CI step merged May 24)** — moq-dev/moq has cargo-deny for license + advisory + duplicate-version audits but not the deeper attestation-based vet that cargo-vet provides.
+
+## moqtail/moqtail — quiet 24h+
+
+No new commits since Ali Begen's May 25 18:52 UTC `3e9b788c` *"fix(demo): use next group start for sub"*. PR #202 release-bot still OPEN.
+
+## google/quiche moqt — Day +6 silent
+
+No new commits to `quiche/quic/moqt` since `083b83b3` (martinduke May 20 22:36 UTC). **6-day silence is now the longest period since draft-18 publication** for the chair-led C++ implementation. Plausible cause: martinduke is consumed by the May 26 interim outcome + Thoughts-on-SWITCH technical analysis + the four open consensus calls.
+
+## Interop runner — 177/48/128/0 (+1 pass, 9-day cadence)
+
+[2026-05-27 00:44:59 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-27_004459/report.html): **177 / 48 / 128 / 0** (total / pass / fail / skip). **+1 pass vs May 26** (47 → 48, pass rate 26.6% → 27.1%, +0.5pp). Matrix shape steady at 177 post-PR-71 expansion. **9 consecutive days of daily reports** (May 19/20/21/22/23/24/25/26/27) — longest sustained streak since the May 14-18 outage.
+
+**Rolling 5-day band**: 42 → 47 → 48 (last 3 days monotonically up). Target still **draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) OPEN since May 18, no new commits since May 19; **three implementations on draft-18 main**: moq-dev/moq, mondain/moqxr, meetecho/imquic). Version breakdown: **97 at target · 8 ahead · 72 behind**.
+
+**London hackathon 13 days away**. The draft-revision lag (matrix on draft-16 vs three impls on draft-18) remains the only outstanding matrix-shape item; PR #68's merger will be the next discrete event re-shaping the matrix.
+
+## #moq Slack — quiet 7 days
+
+Last substantive message remains gazzy's May 20 15:22 CEST Moqintosh announcement. May 21 17:08 CEST had only Alina joining. **7-day quiet stretch is now the longest since the May 11 interim**.
+
+---
 
 # Activity (May 25 06:00 UTC → May 26 06:00 UTC) — **wilaw absorbs Tobbe's #153 initDatas[] proposal into PR #166 + 3 sibling MSF PRs (#165 / #167 / #168); Martin Duke schedules post-London virtual interims June 22 + July 6 (feedback deadline June 8 = day before London); moq-dev/moq lighter day (~8 merges + cluster-discovery regression-fix PR #1504 closes natmurella #1499 in ~12h, CLAUDE.md PR #1503 broadens AI Attribution into its own H2 — third evolution of the LLM-disclaimer norm in 4 days); PR #71 moqx docker adapter lands in matrix but +9 tests not the gmarzot-predicted ~+75; interop 177/47/129/0 (matrix-shape change first observed; +5 pass / +9 total); 4 new moq-dev/moq issues from external users in 24h; #moq Slack quiet 6 days; google/quiche moqt quiet Day +5**
 
