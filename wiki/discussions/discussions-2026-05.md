@@ -2,11 +2,165 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 27 06:00 UTC → May 28 06:00 UTC) — **Gwendal Simon disputes Martin Duke's chair SWITCH framing in 4 points; Cullen Jennings rejects Magnus Westerlund's separate-draft path for Track Filters/Top-N; #moq Slack ends 7-day silence with Lorenzo's moq-mi-vs-LOC strategic question + Alan Frindell's novel self-fetch question; wilaw MSF sprint Day 3 = 3 merged + 3 open + Issue #150 close + Issue #172 new; afrind 13-event single-day openmoq/moqx burst (largest single-author day tracked); cloudflare/moq-rs PR #169 AuthHook trait design ends 17-day quiet streak; moq-dev/moq PR #1518 Lite05Wip version variant + PR #1519 multi-tool lint; interop 177/46/130/0 (−2 pass, 10-day cadence first double-digit streak); google/quiche moqt Day +7 silent**
+
+**TL;DR**:
+- **[[gwendal-simon|Gwendal Simon]] May 27 10:58 UTC disputes [[martin-duke|Martin Duke]]'s "Thoughts on SWITCH" with [4-point rebuttal](https://mailarchive.ietf.org/arch/msg/moq/bKiCDYOz10Be0f8nRkR4PNA71f8/)**: (1) down-switch is actually **4 messages not 3** (REQUEST_UPDATE + SUBSCRIBE + Absolute Joining FETCH + REQUEST_UPDATE priority reset) with **break-before-make hard-freeze vulnerability**; (2) up-switch group N+k selection **requires relay-side info** subscribers cannot compute; (3) **SWITCH is additive not replacive** — coexists with current approach; (4) **4 independent teams** have implemented/explored SWITCH = real OTT Live TV demand. First strong technical rebuttal of the chair's May 26 framing. **[Cullen Fluffy Jennings May 27 19:26 UTC](https://mailarchive.ietf.org/arch/msg/moq/Fq2rsYiCNiEmGjMF-O7XWk9TkhY/)** rejects Magnus Westerlund's suggestion to move Track Filters + Top-N to a separate draft: *"I disagree it should be done as a separate draft. I think it should be worked as a PR that can be discussed in context"* — references DTS experience as evidence off-base-spec extension drafts create unnecessary confusion. **Two senior contributors pushing back on chair-side procedural framing in the same 24h window**.
+- **`#moq` Slack ends 7-day silence with two substantive questions**. **[[lorenzo-miniero|Lorenzo Miniero]] May 27 08:21 UTC**: *"Is moq-mi still relevant, or should all A/V efforts focus on LOC now?"* — strategic moq-mi-vs-LOC consolidation question paired with his own [meetecho/imquic PR #27](https://github.com/meetecho/imquic/pull/27) MoQ LOC demos using moq-encoder-player property IDs (draft-14 stuck). **[[alan-frindell|Alan Frindell]] May 28 04:43 UTC**: *"we allow self-subscribe. Do we allow self-fetch?"* — novel question extending publisher-as-own-subscriber symmetry to FETCH.
+- **moq-wg/msf wilaw sprint Day 3 (May 27)** — 7 events: **[PR #166](https://github.com/moq-wg/msf/pull/166) MERGED 08:35 UTC** (Tobbe's typed-object design), **[PR #168](https://github.com/moq-wg/msf/pull/168) MERGED 08:14 UTC** (catalog object numbering, fixes #149), **[PR #167](https://github.com/moq-wg/msf/pull/167) MERGED 20:22 UTC** introducing `targetBuffer` per-track property **closing [[luke-curley|kixelated]]'s Apr 1 [Issue #150 "Wall clock is problematic"](https://github.com/moq-wg/msf/issues/150)** (open 56 days); plus **PR #171** OPEN parent-namespace, **PR #173** OPEN normative refs (fixes new **[Issue #172](https://github.com/moq-wg/msf/issues/172)** flagging MSF still references draft-mzanaty-moq-loc-05 instead of draft-ietf-moq-loc-02), **PR #174** OPEN timestamp rounding. **wilaw 16 MSF events in 4 days (May 24-27)** = largest single-contributor MSF push since draft adopted.
+- **Implementations**: **[[openmoq|openmoq/moqx]]** **[[alan-frindell|afrind]] 13-event single-day burst May 27** = 6 merged (#338 moxygen sync, #341 perf, #342 cross-exec, #343 fixture accessors, #344 verifyOnRelayExec, #345 NGR test) + 6 open (#346 PublishOk NGR, #348 res→reply, #349 TSan, #350 cBPF reuseport steering, #351 IOThreadPoolExecutor, #352 CrossExecFilter) + Issue #347 (picoquic FC blocking) = **largest single-author single-day push the wiki has tracked across any MoQ implementation**. **[[moq-rs|cloudflare/moq-rs]]** ends 17-day quiet streak: **[PR #169 OPEN](https://github.com/cloudflare/moq-rs/pull/169)** by [[mike-english|englishm-cloudflare]] *"docs: add AuthHook trait design proposal"* (+724/−0) — pluggable trait surface for PrivacyPass + C4M (CAT for MoQ) auth in parallel; first design PR since [PR #167 Suhas filter-framework May 11](https://github.com/cloudflare/moq-rs/pull/167) (still OPEN Day +16). **[[moq-js|video-dev/moq-js]]** **[PR #72](https://github.com/video-dev/moq-js/pull/72) OPEN** by itzmanish (Manish) since May 26 12:49 UTC *"Refactor project structure and APIs"* (+11205/−22195, draft-16 baseline). **[[moq-dev|moq-dev/moq]]** 5 merges (#1510 docs, #1515 moq-mux seek, #1518 Lite05Wip unadvertised version variant, #1519 multi-tool lint +973/−656, #1520 moq-ffi 0.2.15) + 3 open (#1513 qmux version map per WG decision, #1514 moq-lite linger, #1517 gzipped stats broadcast) + Issue #1499 CLOSED (kixelated explains cluster nodes now proxy multi-hop SJ→TX→VA→LON). **[[imquic|meetecho/imquic]] PR #27** still OPEN (lminiero LOC demos, +3057/−492). **[[moqtail|moqtail/moqtail]]**, **[[openmoq|mondain/moqxr]]**, **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, **Eyevinn/warp-player**, **Eyevinn/moqtransport**, **englishm/moq-interop-runner**, **google/quiche moqt** all quiet (last quiche commit `083b83b3` May 20 22:36 UTC = **Day +7**).
+- **Interop**: **177 / 46 / 130 / 0** at [2026-05-28 00:41:34 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-28_004134/report.html) — **−2 pass vs May 27** (48 → 46, 26.0% pass rate, **−1.1pp**). **10 consecutive days of daily reports** (May 19-28) — first double-digit cadence streak. Target still **draft-16** (PR #68 OPEN since May 18, three impls on draft-18 main). **London hackathon 12 days away**.
+
+## Mailing list — Gwendal Simon disputes Martin Duke 4-point + Cullen Jennings rejects separate-draft path
+
+### Gwendal Simon "Re: Thoughts on SWITCH" May 27 10:58 UTC
+
+[Archive link](https://mailarchive.ietf.org/arch/msg/moq/bKiCDYOz10Be0f8nRkR4PNA71f8/). Gwendal Simon (Synamedia, SWITCH co-author with Will Law + Ali Begen + Zafer Gürel) responds to [[martin-duke|Martin Duke]]'s May 26 17:33 UTC chair analysis of the May 21 SWITCH/DTS consensus call. Four numbered points:
+
+**Point 1 — Four messages, not three (break-before-make hard freeze)**. Martin Duke counted the down-switch sequence as 3 messages (UNSUBSCRIBE + SUBSCRIBE + Absolute Joining FETCH). Gwendal corrects: the actual sequence is **REQUEST_UPDATE (terminate old track) + SUBSCRIBE (new track at low priority) + Absolute Joining FETCH (high priority catch-up) + REQUEST_UPDATE (reset priority after FETCH completes)**. The first REQUEST_UPDATE creates a *"break-before-make vulnerability where if the FETCH fails or the new track is unavailable, the old subscription is already gone"*, producing *"an unacceptable hard freeze in live streaming contexts"*. The fourth REQUEST_UPDATE arrives asynchronously after detecting FETCH stream closure, requiring subscribers to *"maintain state across the lifetime of the FETCH stream"* and implement complex state-machine logic.
+
+**Point 2 — Up-switch N+k selection requires relay-side info**. Determining the correct future group N+k for up-switching requires *"relay-side information"* that subscribers lack. SWITCH computes the smallest group where both tracks are fully available — a **relay-side computation subscribers cannot perform independently**.
+
+**Point 3 — SWITCH is additive, not replacive**. SWITCH doesn't replace existing approaches; it coexists with them. Those preferring current methods (REQUEST_UPDATE + SUBSCRIBE + AJF) can continue using them without objection unless SWITCH causes *"concrete harm"*.
+
+**Point 4 — Real-world implementation evidence**. *"Four independent teams have already implemented (or explored) SWITCH"*, indicating genuine demand for OTT Live TV (subscribers operating *"2–5 groups behind the live edge"*).
+
+**Structural significance**: this is the first instance the wiki has tracked of a non-chair WG member directly contesting a chair-published technical analysis on the moq mailing list with multi-point structured argument. Martin Duke's May 26 framing missed the 4-message hard-freeze risk and underweighted the relay-side N+k computation requirement. Combined with [[will-law|Will Law]]'s May 26 Yes/Yes vote and the May 26 interim outcome (yet to publish on list), the May 26 consensus call effectively re-runs on the mailing list ahead of the June 4 close.
+
+### Cullen Fluffy Jennings "Re: Support for Track Filters and Top-N" May 27 19:26 UTC
+
+[Archive link](https://mailarchive.ietf.org/arch/msg/moq/Fq2rsYiCNiEmGjMF-O7XWk9TkhY/). Cullen Jennings (Cisco) responds to Magnus Westerlund's proposal to progress Track Filters and Top-N as a separate Internet-Draft extension rather than including directly in MOQT:
+
+> *"I disagree it should be done as a separate draft. I think it should be worked as a PR that can be discussed in context. I would like to keep working on this as a PR. Thoughts? or are you concluding that it cannot move forward as something we put in MoQT?"*
+
+References the **Digital Technology Suite (DTS) experience** as evidence that working on specifications separately *"creates unnecessary confusion"*. Position: contextual discussion within the existing MOQT specification framework over fragmenting work into independent documentation.
+
+**Pattern**: combined with the May 24 Cullen agenda-skepticism letter, the May 23-24 Mo Zanaty Object Filters dominance, and the May 27 00:31-01:00 UTC Mo Zanaty endorsements, this is the **Cisco-led "more filters less of everything else" convergence pattern** continuing — but now with explicit pushback against the procedural alternative (separate draft) that the chairs may prefer for managing London agenda load.
+
+## `#moq` Slack — 7-day silence ends with Lorenzo's moq-mi-vs-LOC + Alan Frindell's self-fetch
+
+### Lorenzo Miniero "Is moq-mi still relevant?" May 27 08:21 UTC
+
+After 7 days of `#moq` silence (Paul Gregoire's May 20 15:22 CEST Moqintosh announcement was the prior message), [[lorenzo-miniero|Lorenzo Miniero]] posts a strategic question:
+
+> *"Is moq-mi still relevant, or should all A/V efforts focus on LOC now? I've started playing with media in my demo applications, and my first step was to revive the old interop I had with moq-encoder-player: that used moq-mi, though, and I'm not sure if it's still considered of interest for interop purposes. I started tinkering with catalogs too, so if I want to play with different codecs the latest LOC makes more sense, but from my understanding it may change a lot post the upcoming interims."*
+
+**Context**: Lorenzo's [meetecho/imquic PR #27](https://github.com/meetecho/imquic/pull/27) (still OPEN since May 25 15:56 UTC, +3057/−492) implements `imquic-moq-loc-send` (webcam + microphone capture, H.264 via libavcodec + Opus via libopus) and `imquic-moq-loc-recv` (SDL2 audio/video render) — using the **LOC property IDs from moq-encoder-player (Facebook, stuck on MoQT v14)** because *"that's what I used to test my MoQ/WebRTC integration in Janus with that project"*. The PR body explicitly acknowledges the dual-identity question: *"this started arguably more of an implementation of [moq-mi](https://www.ietf.org/archive/id/draft-cenzano-moq-media-interop-03.html), as that's what moq-encoder-player [arguably is]"*.
+
+**No one had answered Lorenzo on Slack as of May 28 06:00 UTC**. The unanswered question matters: imquic PR #27 currently uses draft-14-era LOC property IDs, and an answer of *"focus on LOC going forward"* would mean re-doing the PR against either draft-ietf-moq-loc-02 (WG draft, 19 pages) or the **conflicting moq-transport-18 §15.8-2 property type IDs** (TIMESTAMP=0x06, TIMESCALE=0x08) that [[moq-dev|moq-dev/moq]]'s May 23 PR #1388 ships — the cross-spec coordination gap that [moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20) surfaced and that no WG-level resolution has yet been published.
+
+### Alan Frindell "self-fetch?" May 28 04:43 UTC
+
+> *"we allow self-subscribe. Do we allow self-fetch?"*
+
+Short, novel question. moq-transport-18 §6.1 explicitly permits self-subscribe (a publisher subscribes to its own track, useful for relay-cache testing and self-paired publisher-subscriber instrumentation). afrind asks whether the symmetry extends to FETCH (publisher fetches its own past objects out of its own egress cache).
+
+**Relevance**: in afrind's same-day 13-event openmoq/moqx burst, [PR #346](https://github.com/openmoq/moqx/pull/346) adds relay-level PublishOk NGR forwarding tests. Self-fetch would be a natural extension of the same test scaffolding (publisher acts as its own subscriber-fetcher).
+
+## moq-wg/msf — wilaw sprint Day 3 closes Issue #150 (open 56 days)
+
+### PR #167 MERGED + Issue #150 CLOSED
+
+**[PR #167](https://github.com/moq-wg/msf/pull/167) "Introduce target buffer property in track object"** MERGED May 27 20:22 UTC (+37/−0, fixes [Issue #150](https://github.com/moq-wg/msf/issues/150)). Adds per-track `targetBuffer` property defining the required end-to-end buffer in seconds for smooth playback.
+
+**[Issue #150 "Wall clock is problematic"](https://github.com/moq-wg/msf/issues/150)** was filed by [[luke-curley|kixelated]] **Apr 1 2026** asking why MSF specified a publisher wall-clock as the synchronization mechanism — *"This will catastrophically fail without clock synchronization between the publisher and every viewer. It's very common to have clients with stale/disabled NTP synchronization."*. wilaw's April reply argued MPEG DASH disproved the catastrophic-failure prediction; the issue had been open 56 days with no further movement. **wilaw's PR #167 resolution sidesteps the wall-clock debate**: rather than removing the wall-clock or defining synchronization semantics, it adds an explicit per-track buffer-depth property that gives subscribers actionable guidance independent of publisher-clock accuracy.
+
+### PR #166 + PR #168 MERGED in same morning
+
+**[PR #166](https://github.com/moq-wg/msf/pull/166)** (Tobbe's typed-object initDataList design) **MERGED 08:35 UTC** — the structural [[tobbe-einarsson|Tobbe]]-design adoption from May 26 lands in `main`.
+
+**[PR #168](https://github.com/moq-wg/msf/pull/168) "Revise catalog object specifications and numbering"** **MERGED 08:14 UTC** (+19/−9, fixes #149). Catalog object spec cleanup.
+
+### PR #173 + new Issue #172
+
+**[Issue #172 "Reference the latest version of LOC"](https://github.com/moq-wg/msf/issues/172)** OPENED by wilaw May 27 10:37 UTC — flags that MSF currently references `draft-mzanaty-moq-loc-05` (individual, superseded) instead of `draft-ietf-moq-loc-02` (WG, current). **[PR #173](https://github.com/moq-wg/msf/pull/173)** OPEN minutes later updates the normative reference.
+
+### PR #174 timestamp rounding
+
+**[PR #174](https://github.com/moq-wg/msf/pull/174) "Update media presentation timestamp rounding description"** OPEN 12:24 UTC (+3/−2, fixes #108). Clarification.
+
+### wilaw 16-events-in-4-days pace
+
+wilaw MSF events May 24-27 = (May 24: PR #165 + PR #166 + PR #167-open + PR #168-open) + (May 25: PR #157 Suhas merge + PR #169 + PR #170 + PR #171) + (May 26: PR #166 revision + PR #170 revert merge + PR #171 still open + Issue #144 Vasil V) + (May 27: PR #166 merge + PR #168 merge + PR #167 merge + PR #171 still open + PR #173 + PR #174 + Issue #172 + Issue #150 close) = **16 events** by single contributor. Largest single-contributor push on `moq-wg/msf` since draft adopted.
+
+## `openmoq/moqx` — afrind 13-event single-day burst
+
+**13 events May 27 17:29-23:37 UTC by [[alan-frindell|afrind]]** = 6 PRs MERGED + 6 PRs OPEN + Issue #347 OPEN. Largest single-author single-day push the wiki has tracked across any MoQ implementation.
+
+### Merged PRs (May 27 17:34-22:42 UTC)
+
+- **[PR #338](https://github.com/openmoq/moqx/pull/338)** *"sync: moxygen 5c8f066"* (automated submodule update, 17:34 UTC)
+- **[PR #341](https://github.com/openmoq/moqx/pull/341)** *"scripts: perf-test and perf-metrics improvements"* (+111/−10, 22:38 UTC) — adds `--perf-events`, `--perf-stat`, `--trace-script`, `--client-args`; macOS fallback for `lsof`-vs-`ss` port-in-use check; per-io-thread CPU% via /proc
+- **[PR #342](https://github.com/openmoq/moqx/pull/342)** *"relay: add cross-exec handle wrappers for Publisher/Subscriber results"* (+213/−8, 22:39 UTC) — *"The original filters only handled the initial verbs (publish, subscribe, etc). The returned handles that are used for e.g. unsubscribe, requestUpdate, and the passed relay→session (pubNsCancel, subNs response) were missed"*
+- **[PR #343](https://github.com/openmoq/moqx/pull/343)** *"test: add publisherInterface/subscriberInterface accessors to relay test fixture"* (+52/−30, 22:42 UTC)
+- **[PR #344](https://github.com/openmoq/moqx/pull/344)** *"test: wrap relay state queries in verifyOnRelayExec"* (+105/−53, 22:42 UTC)
+- **[PR #345](https://github.com/openmoq/moqx/pull/345)** *"test: remove MoQForwarder::Subscriber downcast in NGR test"* (+106/−57, 22:42 UTC) — last dynamic_cast removed
+
+### Open PRs (May 27 22:55 UTC → May 28 05:02 UTC)
+
+- **[PR #346](https://github.com/openmoq/moqx/pull/346)** *"test: add relay-level PublishOk NGR forwarding tests; remove last dynamic_cast"* (+125/−114)
+- **[PR #348](https://github.com/openmoq/moqx/pull/348)** *"test: wire up res→reply coroutine in relay publish tests"* (+15/−0)
+- **[PR #349](https://github.com/openmoq/moqx/pull/349)** *"build: add TSan (ThreadSanitizer) build mode"* (+38/−0)
+- **[PR #350](https://github.com/openmoq/moqx/pull/350)** *"bpf: attach classic reuseport steering filter to QUIC worker sockets"* (+141/−4) — *"Adds MOQX_ENABLE_BPF_STEERING (default ON on Linux) which overrides mvfst's weak mvfst_hook_on_socket_create hook to attach a cBPF filter that routes non-initial QUIC packets directly to the owning worker by decoding the workerId from mvfst's default V1 connection ID encoding. Long-header (initial/handshake) packets are spread by UDP source port. Note: threads is still forced to 1 so this doesn't do anything yet but it will real soon now (TM)"*
+- **[PR #351](https://github.com/openmoq/moqx/pull/351)** *"relay: IOThreadPoolExecutor owned exclusively by main"* (+13/−16)
+- **[PR #352](https://github.com/openmoq/moqx/pull/352)** *"relay: wrap consumer in CrossExecFilter inside PublisherCrossExecFilter"* (+58/−6)
+
+### Issue #347
+
+**[Issue #347](https://github.com/openmoq/moqx/issues/347)** OPENED 23:20 UTC — *"moqx+picoquic can block when the highest pri stream is flow control blocked"*: *"Video relayed through the pico EVB server is choppy. Root cause: processEgressEvents and onJitProvideData each mark only one stream active at a time in picoquic using a priority queue, but flow-control-blocked streams can sit at the head of that queue with no mechanism to skip them or re-activate when their window opens."*
+
+### Theme
+
+**Cross-exec thread-safety + multi-threaded I/O prep + relay-level test scaffolding + perf measurement**. afrind is staging openmoq/moqx for multi-threaded production deployment in time for his London Day-1 0900-1045 *"MOQT Issues"* (180-min) slot. PR #350's cBPF reuseport filter is foundational infrastructure for multi-thread mvfst — paired with PR #351 IOThreadPoolExecutor isolation and PR #352 CrossExecFilter wrapping, the openmoq/moqx multi-thread story is being assembled PR-by-PR with explicit acknowledgement that thread count is still forced to 1 (*"will real soon now (TM)"*).
+
+## cloudflare/moq-rs — PR #169 AuthHook trait design ends 17-day quiet streak
+
+**[PR #169](https://github.com/cloudflare/moq-rs/pull/169) OPENED May 28 03:13 UTC** by [[mike-english|englishm-cloudflare]]:
+
+> *"docs: add AuthHook trait design proposal. Design sketch for a pluggable AuthHook trait to support intra-scope authorization in the relay. Covers the trait surface, supporting types, invocation points, and reference implementation sketches for PrivacyPass and C4M (CAT for MoQ) auth schemes. Intended as a shared reference for contributors working on PP and C4M implementations in parallel."*
+
++724/−0 across 1 markdown file — documentation-only design proposal. **First cloudflare/moq-rs design-PR since [PR #167 Suhas filter-framework](https://github.com/cloudflare/moq-rs/pull/167) May 11** (still OPEN Day +16).
+
+**Significance**: explicitly frames the trait surface as a coordination mechanism for **PrivacyPass + C4M in parallel** — letting PrivacyPass for [[moq-privacy-pass|moq-privacy-pass-auth-02]] (afrind-authored WG draft) and C4M for CAT for MoQ (Cisco-led) ship as parallel implementations rather than as competing forks. The PR moves auth-scheme coordination work from the mailing list / moq-wg/moq-transport into cloudflare/moq-rs's repo, structurally pushing trait-surface decisions toward implementation-driven design.
+
+## video-dev/moq-js — PR #72 Manish refactor (+11205/−22195)
+
+**[PR #72](https://github.com/video-dev/moq-js/pull/72) OPEN May 26 12:49 UTC** by **itzmanish (Manish)** *"Refactor project structure and APIs"* (+11205/−22195, draft-16 baseline). Massive code reorganization — same external contributor whose PR #121 (refactor: simplified remote manager) took **155 days** to merge in cloudflare/moq-rs and whose [PR #131](https://github.com/cloudflare/moq-rs/pull/131) (draft-16) is still open. Manish is now a structural cross-impl contributor across both Cloudflare-stewarded MoQ TypeScript/Rust stacks.
+
+## moq-dev/moq — 5 merges + 3 open + #1499 close
+
+### PR #1518 Lite05Wip version variant (unadvertised)
+
+**[PR #1518](https://github.com/moq-dev/moq/pull/1518)** MERGED May 27 21:26 UTC (+60/−5) — adds `Lite05Wip` to Rust `lite::Version` and `DRAFT_05_WIP` to JS `Version`, reserves wire code `0xff0dad05` and ALPN string `moq-lite-05-wip` for future feature work; **deliberately omitted from `ALPNS` and `Versions::all()`** so the variant exists in the codebase but doesn't change default server/client behavior. *"We want to start landing moq-lite-05 features (gated match version arms in encoders/decoders) without exposing the version on the wire yet."*
+
+### PR #1519 multi-tool lint
+
+**[PR #1519](https://github.com/moq-dev/moq/pull/1519)** MERGED May 27 23:24 UTC (+973/−656) — wires `shellcheck` + `shfmt` (19 scripts), `actionlint` (workflows), `taplo` (every TOML in-tree), `nixfmt` RFC-style (`flake.nix`), `just --fmt --unstable` (17 justfiles) into `just check` / `just ci`. All tools come from `nixpkgs` via single `lintDeps` group in `flake.nix`. Closes the major unlinted surfaces in the repo.
+
+### PR #1513 qmux version mapping (WG-decided)
+
+**[PR #1513](https://github.com/moq-dev/moq/pull/1513) OPEN** (+430/−116) — *"The MoQ WG decided qmux's draft version is tied to the moq-transport version: moq-transport-18 must ride on qmux-01, moq-transport-14..17 on qmux-00. moq-lite is unconstrained."* Adds `QmuxVersion` enum + `Version::qmux_versions` table + `Versions::qmux_alpns` for `Sec-WebSocket-Protocol` list construction. **First explicit moq-dev/moq commitment** to the moq-transport ↔ qmux version-pinning decision.
+
+### Issue #1499 close
+
+**[Issue #1499 (natmurella cluster discovery)](https://github.com/moq-dev/moq/issues/1499)** CLOSED May 27 19:42 UTC by kixelated's explanation: *"The cluster nodes now proxy, so there can be multiple hops. San Jose → Texas → Virginia → London. Before, every node would connect to every other node directly (ex. San Jose → London). Hurting the cache efficiency. But yeah the downside is you need to manually specify the hop possibilities."* natmurella requests the old gossip-style behavior preserved as opt-in.
+
+## meetecho/imquic — PR #27 LOC demos still OPEN
+
+**[PR #27 OPEN May 25 15:56 UTC](https://github.com/meetecho/imquic/pull/27)** by [[lorenzo-miniero|lminiero]] *"New MoQ demos to test publishing/subscribing LOC with live capture/playback"* (+3057/−492). Two new demos:
+
+- **`imquic-moq-loc-send`**: captures local webcam and/or microphone, publishes them to an audio (Opus via libopus) and/or video (H.264 via libavcodec) track using LOC
+- **`imquic-moq-loc-recv`**: subscribes to those tracks, unpacks LOC, decodes media, renders audio/video locally using SDL2
+
+PR body: *"In both cases, I used the LOC property IDs that [moq-encoder-player](https://github.com/facebookexperimental/moq-encoder-player/) used a few months ago, as that's what I used to test my MoQ/WebRTC integration in Janus with that project. moq-encoder-player is (to my knowledge) still stuck to MoQT v14, so I couldn't make interop tests with Janus any longer: I verified that with these demos I can again, which means that, at least in theory, they should provide media streams what are WebCodecs compatible."*
+
+Connects to Lorenzo's Slack moq-mi-vs-LOC question — the PR's draft-14-era property IDs would need re-doing for either LOC-02 or moq-transport-18 §15.8-2.
 
 # Activity (May 26 06:00 UTC → May 27 06:00 UTC) — **wilaw revises PR #166 to Tobbe's typed-objects design (1-day review-to-merge); Martin Duke posts first chair technical position on SWITCH consensus call (4 days before May 26 interim); Will Law votes Yes/Yes on DTS+SWITCH adoption; Mo Zanaty endorses Object + Track filters; moq-dev/moq PR #1512 advertises QUIC preferred_address for anycast BGP deploy; 4 more PRs dogfooding the PR #1503 AI Attribution H2 norm; new external-user Issue #1516 from danrossi (cargo-vet supply-chain audit); interop 177/48/128/0 (+1 pass, 9-day cadence); google/quiche moqt Day +6 silent; #moq Slack quiet 7 days**
 

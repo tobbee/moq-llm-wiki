@@ -2,10 +2,12 @@
 title: "moq-js (video-dev)"
 tags: [implementation, javascript, browser, ietf]
 date: 2026-04-11
-last_updated: 2026-04-21
+last_updated: 2026-05-28
 status: current
 ---
 
+> **2026-05-28**: **[PR #72](https://github.com/video-dev/moq-js/pull/72) OPEN since May 26 12:49 UTC** by **itzmanish (Manish)** *"Refactor project structure and APIs"* (**+11205/−22195** across draft-16 baseline) — massive code reorganization. **Same external contributor whose [PR #121 in cloudflare/moq-rs](https://github.com/cloudflare/moq-rs/pull/121) took 155 days to merge** (Dec 18 2025 → May 20 2026) and whose [PR #131](https://github.com/cloudflare/moq-rs/pull/131) (draft-16 implementation) is still open in cloudflare/moq-rs. **Manish is now a structural cross-impl contributor** across both Cloudflare-stewarded MoQ TypeScript/Rust stacks. **Carry-forward**: net delta -10990 LOC (deletions far exceed additions) suggests Manish is consolidating moq-js around a simpler core API surface; whether englishm/Cloudflare merges before London is the open question — the prior 155-day stewardship lag pattern is a structural risk.
+>
 **Language**: JavaScript/TypeScript
 **Organization**: video-dev
 **Maintainer**: [[mike-english|Mike English]] (@englishm), community
