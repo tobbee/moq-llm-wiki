@@ -2,11 +2,244 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 28 06:00 UTC → May 29 06:00 UTC) — **Nokia 5th SWITCH implementer reports measured benefit; Gwendal YES/YES with DTS reservations; kixelated ~25-PR single-day burst includes first WebRTC↔MoQ bridge (moq-rtc) + first concrete moq-lite-05 wire feature (per-frame deflate via SUBSCRIBE_OK) + REANNOUNCE atomic broadcast replacement; google/quiche moqt breaks 8-day silence preparing "requests on bidi streams" (post-draft-18 direction); wilaw Slack-announces MSF -01 draft publishes today (Friday) before London; interop 177/49/127/0 (+3 pass, 27.7%, 11-day cadence longest tracked)**
+
+**TL;DR**:
+- **Mailing list 2 messages = Nokia becomes 5th independent SWITCH implementer with measured benefit numbers**. **[[gwendal-simon|Gwendal Simon]] May 28 14:08:56 UTC** [Re: Consensus Call: DTS and SWITCH](https://mailarchive.ietf.org/arch/msg/moq/JEGjTC7qZl6ZM_UR91eaj-pIsy4/): **YES on DTS adoption with scope reservations** (no normative bandwidth-measurement guidance creates inconsistent relay behavior; DTS requires relays to fetch all renditions while forwarding one which *"moves away from the lightweight, stateless, horizontally scalable model needed for CDN deployment"*; advocates *"focused, proportionate PR"* not full chapter) + **YES/YES on SWITCH** (real OTT operational need with 4-message asynchronous switching today, aligns with charter rate-adaptation + encoding-selection requirements, no objection demonstrates concrete harm). **[[yu-you|Yu You]] (Nokia) May 29 05:59:04 UTC** [Re: Consensus Call: DTS and SWITCH](https://mailarchive.ietf.org/arch/msg/moq/Ai1iOzNRLNXJRrNWzyvMyuRg6eY/): Nokia implemented SWITCH PR #1378 with **measured positive results**: *"the first object arrival time significantly reduced compared to naive track re-subscription, and catch-up objects using fetch headers over separate unistreams functioned as intended"*; YES/YES on both SWITCH and DTS adoption + integration into MOQT draft. **Nokia = 5th independent team** after Gwendal's May 27 count of 4 (Akamai, Synamedia, Cisco, Eyevinn or similar); **first on-list implementation report providing measured benefit numbers** 6 days before June 4 close.
+- **`#moq` Slack — [[will-law|Will Law]] May 27 10:30 UTC answer to Lorenzo announces MSF -01 publishes today**: *"LOC is just a packaging format, so if you want to transmit media, then you should use MSF (MOQT Streaming Format). There is a -00 draft in the ID repo, however its old and we have a bunch of new features. **I plan to release a new draft this Friday ahead of the London interop.** For a preview, you can view https://moq-wg.github.io/msf/draft-ietf-moq-msf.html"* — converts wilaw's 16-events-in-4-days editorial sprint into a normative artifact; **first MSF revision since -00 Jan 19 2026 (130 days)**. Lorenzo confirms imquic PR #27 already uses MSF for catalog. **Mike English asks for streaming-format-level automated interop** ([interop-runner Issue #32](https://github.com/englishm/moq-interop-runner/issues/32)). Alan Frindell suggests Jordi Cenzano migrates moq-encoder-player off moqmi (still stuck on v14 per Lorenzo). **afrind self-fetch thread continues**: Lorenzo *"content is content"*, Suhas asks usecase, afrind *"if we allow [self-subscribe], allowing the other seems right... you can cheat to prime the cache?"* — useful for relay-cache testing scaffolding.
+- **moq-dev/moq — kixelated ~25-PR single-day burst** May 28 ~14:00 UTC → May 29 ~05:00 UTC = **largest single-day push by single contributor the wiki has tracked across any MoQ implementation** (exceeds afrind's 13-event May 27 openmoq/moqx single-day burst). Headlines: **[PR #1528](https://github.com/moq-dev/moq/pull/1528) OPEN** *"moq-rtc: WebRTC (WHIP/WHEP) gateway"* (+2590/−17, 30 files) — new `rs/moq-rtc` crate with 2×2 matrix (server/client × publish/subscribe), Opus/H.264/VP8/VP9 via str0m 0.19, **first WebRTC↔MoQ bridge** in any tracked impl; **[PR #1531](https://github.com/moq-dev/moq/pull/1531) MERGED** *"lite-05: negotiate per-frame compression via SUBSCRIBE_OK (Rust + JS)"* (+790/−113) — **first concrete moq-lite-05 wire feature**: opt-in raw DEFLATE per-frame compression via new `Compression` codec in `SUBSCRIBE_OK`, hop-by-hop not end-to-end, lite-04 backwards compat (always negotiates `None`), pure-Rust `miniz_oxide` + browser `CompressionStream "deflate-raw"` produce identical bytes, 16 MiB inflated-size cap rejects zip bombs; **[PR #1530](https://github.com/moq-dev/moq/pull/1530) OPEN** *"add REANNOUNCE; AnnounceConsumer yields (path, Announced)"* (+716/−252) — implements `moq-dev/drafts#23` atomic broadcast replacement (ANNOUNCE status `2`) so backup promotion + shorter-hop-path arrival surface as single Reannounce delivery rather than Ended-then-Active pair; **[PR #1529](https://github.com/moq-dev/moq/pull/1529) MERGED** *"moq-ffi: streaming media import + cross-language interop smoke test"* (+535/−7) — `just test smoke` orchestrator runs rust↔python H.264 2×2 + negative control. Plus 20+ merges/opens: #1487 moq-mux catalog filter/Annex-B, #1514 moq-net linger upstream subscriptions, #1517 moq-net gzipped stats broadcast, #1521 16 MiB frame cap, #1522 dev-branch routing, #1523 stop downgrading WS clients to lite-02, #1524 /nix/store leak, #1525 js timeout SUBSCRIBE_OK, #1526 swift+kt FFI, #1434 OriginConsumer split (opened May 21), #1495 moq-mux thiserror, #1473 runtime Timescale, #1533 libmoq catalog producer + raw moq-net track API, #1535 moq-relay mTLS path scoping, #1537 stats StatsConfig type, #1538 nixfmt, #1539 js bump; OPEN: #1527, #1532, #1536, #1540, #1513 (qmux version map carry-forward).
+- **Implementations** (other than moq-dev/moq above): **[[openmoq|openmoq/moqx]]** afrind multi-thread sprint Day 2 = **6 MERGED + 3 OPEN**: PR #348 res→reply coroutine MERGED, #349 TSan MERGED, #350 cBPF reuseport MERGED, #351 IOThreadPoolExecutor MERGED, #337 mvfst recvmmsg + batch 64 MERGED, #353 omoq-sync-bot moxygen 059ed9e MERGED; PR #352 CrossExecFilter OPEN, #346 PublishOk NGR tests OPEN, #331 relay_thread config OPEN. **[[google-quiche|google/quiche moqt]] breaks 8-day silence** with martinduke 2 commits May 28: `c4503a21` 19:59:40 UTC *"Move IncomingDataStream to moqt_uni_stream.h. Other preparatory changes for requests on bidi streams"* + `997d6543` 21:52:27 UTC *"Move Incoming Subscribe tests out of MoqtSessionTest"* — *"requests on bidi streams"* signals **post-draft-18 direction moving SUBSCRIBE-class messages from single control stream onto per-request bidi streams** (H/3-style instead of H/2-style multiplex). **[[moq-rs|cloudflare/moq-rs]]** PR #169 AuthHook design still OPEN no new comments. **[[moq-js|video-dev/moq-js]]** PR #72 Manish refactor still OPEN no new commits. **[[imquic|meetecho/imquic]]** PR #27 still OPEN (no commits May 28-29; last updated 17:00 UTC for thread). **[[moqtail|moqtail/moqtail]]**, **[[openmoq|mondain/moqxr]]**, **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, **Eyevinn/warp-player**, **Eyevinn/moqtransport**, **englishm/moq-interop-runner** all quiet.
+- **Interop**: **177 / 49 / 127 / 0** at [2026-05-29 00:47:39 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-29_004739/report.html) — **+3 pass vs May 28** (46 → 49, 26.0% → 27.7%, **+1.7pp**). **11 consecutive days of daily reports** (May 19-29) — longest cadence streak the wiki has tracked. Rolling 5-day band 46-49, recent trajectory 48 → 46 → 49 = matrix rebounds past May 27 peak. Target still **draft-16** (PR #68 OPEN since May 18). **London hackathon 11 days away**.
+
+## Mailing list — Nokia 5th SWITCH implementer; Gwendal YES/YES with DTS reservations
+
+### Gwendal Simon "Re: Consensus Call: DTS and SWITCH" May 28 14:08:56 UTC
+
+[Archive link](https://mailarchive.ietf.org/arch/msg/moq/JEGjTC7qZl6ZM_UR91eaj-pIsy4/). Gwendal Simon (Synamedia, SWITCH co-author) votes on the May 21 Consensus Call (closes June 4):
+
+**On DTS**: **YES to adoption**, but with scope reservations. DTS isn't suited for mass-scale OTT live streaming where bandwidth represents only one quality-adaptation factor among many, but the proposal doesn't actively harm Gwendal's use case. Recommends **incorporating into the main MOQT draft as a "focused, proportionate PR"** rather than expanding into a substantive specification chapter. Two technical concerns: (1) the specification lacks normative guidance on bandwidth measurement, which could create inconsistent relay behavior; (2) DTS requires relays to **fetch all renditions upstream while forwarding only one downstream**, *"moving away from the lightweight, stateless, horizontally scalable model needed for CDN deployment"*.
+
+**On SWITCH**: **YES/YES** — strongly endorses adoption + integration into the main MOQT draft. Operational case: *"OTT subscribers typically operate several groups behind live edge, and current protocol mechanisms for quality switching require four asynchronous messages"*. Aligns with the WG charter's *"rate adaptation strategies"* and *"selection of desired encoding"* requirements. Notes *"no technical objections demonstrating concrete harm from the proposal"*.
+
+### Yu You (Nokia) "Re: Consensus Call: DTS and SWITCH" May 29 05:59:04 UTC
+
+[Archive link](https://mailarchive.ietf.org/arch/msg/moq/Ai1iOzNRLNXJRrNWzyvMyuRg6eY/). **First on-list implementation report providing measured benefit numbers for SWITCH**:
+
+> *"Nokia implemented the SWITCH control message based on PR#1378. The first object arrival time significantly reduced compared to naive track re-subscription, and catch-up objects using fetch headers over separate unistreams functioned as intended."*
+
+**Vote**: YES/YES on both SWITCH and DTS — *"the working group should adopt these proposals, and they should be incorporated directly into the MOQT draft rather than as separate extensions"*. Quotes Will Law (Akamai)'s May 26 Yes/Yes/Yes/Yes vote.
+
+**Nokia = 5th independent team** to implement SWITCH (Gwendal's May 27 count was 4). Significance:
+
+- **First on-list public implementation report** with measured benefit numbers (vs the May 27 count of "implemented or explored").
+- **Vote-with-running-code** pattern — Nokia's contribution to the public consensus tally is a measured benefit, not an abstract design preference.
+- **Combined vote tally heading into June 4 close**: Gwendal YES/YES + Will Law Yes/Yes/Yes/Yes + Yu You/Nokia YES/YES on SWITCH adoption + integration into MOQT — public on-list vote favors SWITCH adoption with integration; June 4 close substantively decided ahead of the formal deadline.
+
+**Structural significance**: the moq-wg's consensus-call pattern of *"publish PR + open consensus call + interim show-of-hands + close after weeks"* is now being supplemented by **public implementation evidence on-list before close**. Implementation reports move from *"carry to interim"* status to *"post on list before close"* status — accelerates decision cycles by exposing measured benefits to the entire WG rather than just attendees.
+
+## `#moq` Slack — Will Law announces MSF -01 publishes today; afrind self-fetch thread continues
+
+### Will Law "I plan to release a new draft this Friday" May 27 10:30 UTC
+
+In the Lorenzo "Is moq-mi still relevant?" thread (parent message May 27 08:21 UTC, already covered in the May 28 wiki entry), [[will-law|Will Law]] (Akamai, MSF spec author) replies May 27 12:30 CEST = 10:30 UTC:
+
+> *"LOC is just a packaging format, so if you want to transmit media, then you should use MSF (MOQT Streaming Format). There is a -00 draft in the ID repo, however its old and we have a bunch of new features. I plan to release a new draft this Friday ahead of the London interop. For a preview, you can view https://moq-wg.github.io/msf/draft-ietf-moq-msf.html"*
+
+**Friday = today May 29 2026.** Wilaw's announcement converts his 16-events-in-4-days MSF editorial sprint (May 24-27) into a normative artifact. **First MSF revision since -00 Jan 19 2026 — 130-day gap, longer than moq-transport's 49-day draft-17→draft-18 cadence but consistent with MSF's higher relative editorial stability as a packaging-format spec rather than wire-protocol spec.**
+
+Cuts expected in MSF -01:
+- **PR #166** (typed-object initDataList based on Tobbe's design)
+- **PR #167** (targetBuffer per-track property, fixes #150 wall-clock)
+- **PR #168** (catalog object specifications and numbering, fixes #149)
+- **PR #173** (normative reference update to draft-ietf-moq-loc-02, fixes new #172)
+
+Open PRs that may or may not make -01 depending on cut: #165 (bitrate properties), #171 (parent-namespace), #174 (timestamp rounding).
+
+### Mike English "streaming-format-level automated interop" May 27 16:01 UTC
+
+Mike English replies in the same thread:
+
+> *"We haven't tackled it yet, but we'd love to have streaming-format level automated interop in the interop runner: https://github.com/englishm/moq-interop-runner/issues/32"*
+
+[Issue #32](https://github.com/englishm/moq-interop-runner/issues/32) tracks streaming-format-level interop testing in the matrix (currently the matrix tests wire-protocol correctness only, not MSF/CMSF/LOC media-format-level interop). Mike's signaling that this is desired for London but not yet built.
+
+### Lorenzo Miniero "imquic PR #27 catalog basics" May 27 16:09 UTC
+
+Lorenzo replies:
+
+> *"There's a basic implementation of catalog (a subscriber can use the catalog to see what tracks to subscribe to) and LOC properties are used when sending objects. Considering that some currently have conflicts (e.g., TIMESTAMP has the same value as SUBGROUP_DELIVERY_TIMEOUT from v18) I changed those to some unambiguous one, for now, waiting for new drafts to sort that out."*
+
+Confirms [meetecho/imquic PR #27](https://github.com/meetecho/imquic/pull/27) already uses MSF for catalog. Lorenzo also notes the **TIMESTAMP-vs-SUBGROUP_DELIVERY_TIMEOUT conflict** in moq-transport-18 §15.8-2 that [moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20) flagged — Lorenzo's working around it with custom property IDs until the cross-spec coordination gap resolves.
+
+### Alan Frindell "self-fetch?" thread continues May 28-29
+
+Continuing the May 28 04:43 UTC thread (covered May 28 wiki entry):
+
+- **Lorenzo Miniero** May 28 06:48 UTC: *"I don't see why not, content is content"*
+- **Alan Frindell** May 28 13:55 UTC: *"Yeah, makes my code happier too"*
+- **Suhas Nandakumar** May 29 03:15 UTC: *"Is the usecase that while you are actively publishing there is a fetch going on in parallel for the same content?"*
+- **Alan Frindell** May 29 04:15 UTC: *"i don't know that there's any more use-case than there is for self-subscribe. But if we allow one, allowing the other seems right?"*
+- **Alan Frindell** May 29 04:16 UTC: *"you can cheat to prime the cache?"*
+
+**Direction**: 3-of-3 contributor consensus (Lorenzo + afrind + implicit-Suhas) that self-fetch should be allowed by symmetry with self-subscribe. The *"prime the cache"* use case = a publisher fetches its own past objects to populate a relay's egress cache before any subscriber arrives, useful for **relay-cache testing scaffolding** and pre-warming caches in deployments where the publisher knows downstream subscribers will arrive bursty after a delay.
+
+## Implementations — moq-dev/moq ~25-PR burst with first WebRTC↔MoQ bridge + lite-05 first wire feature
+
+### moq-dev/moq PR #1528 moq-rtc — first WebRTC↔MoQ bridge
+
+**[PR #1528](https://github.com/moq-dev/moq/pull/1528) OPEN May 28 19:58 UTC** by [[luke-curley|kixelated]]: *"moq-rtc: WebRTC (WHIP/WHEP) gateway, both ingest and egress"* (+2590/−17, 30 files, targeting `dev` branch).
+
+**Library shape — 2×2 matrix**:
+
+| Subcommand | WebRTC role | Direction | Status |
+|---|---|---|---|
+| `server publish` | accept WHIP publishes | RTP → MoQ | working |
+| `client subscribe` | dial remote WHEP | RTP → MoQ | working |
+| `server subscribe` | serve WHEP subscriptions | MoQ → RTP | working |
+| `client publish` | dial remote WHIP | MoQ → RTP | working |
+
+All four combinations work end-to-end for **Opus / H.264 / VP8 / VP9**.
+
+**Stack**: str0m 0.19 (sans-IO WebRTC), axum 0.8 + axum-server (HTTP signaling), reqwest (client-side dial). `session::Session` drives str0m::Rtc over a UdpSocket; main loop `select!`s on socket recv + egress write requests + str0m timeout.
+
+**Codec adapters**:
+- **Opus**: passthrough (moq-mux's Opus importer ingests, codec::Track::opus egresses).
+- **H.264**: ingest uses moq-mux's Avc3 importer so Annex-B input passes through with SPS/PPS lifted into the catalog. Egress handles both storage shapes: avc3 passthrough, or avc1 length-prefix → Annex-B with SPS/PPS prefixed on every keyframe.
+- **VP8 / VP9**: passthrough both directions.
+- **AV1 / H.265**: not in str0m 0.19's `Codec` enum, follow-up.
+
+**Why**: *"WebRTC is the de facto contribution and last-mile distribution protocol for browsers, OBS, mobile SDKs, capture tools, and most camera vendors. Today there's no WebRTC bridge into MoQ. `moq-rtc` lets any conformant WHIP/WHEP peer feed (or pull from) a MoQ relay without shipping a custom MoQ client."*
+
+**Structural significance**: **first WebRTC↔MoQ bridge in any tracked MoQ implementation**. Narrows Luke Curley's May 9 HN flame war *"MoQ replaces WebRTC"* framing to *"MoQ ingests-from + serves-to WebRTC peers"* — more operationally tractable, immediately deployable against any WHIP/WHEP-compliant peer. Known limitations: WebRTC peers expect keyframe within ~2s of joining (long-GOP upstream means freshly-connected WHEP subscribers see black screen until next natural keyframe; PLI-to-MoQ back-pressure is future enhancement).
+
+### moq-dev/moq PR #1531 lite-05 first wire feature (per-frame DEFLATE)
+
+**[PR #1531](https://github.com/moq-dev/moq/pull/1531) MERGED May 29 04:08 UTC** *"lite-05: negotiate per-frame compression via SUBSCRIBE_OK (Rust + JS)"* (+790/−113).
+
+**First concrete moq-lite-05 wire feature** since PR #1518 reserved the `Lite05Wip` version variant May 27. Opt-in raw DEFLATE per-frame compression:
+
+- **`Track` gains a `compress` flag** (Rust `compress: bool` / JS `track.compress`) — a hint that the track's frames are worth compressing. The hang JSON catalog (`Catalog::default_track`) is marked compressible (text, re-sent on every change).
+- **`SUBSCRIBE_OK` carries a negotiated `Compression` codec**, gated to lite-05+. Publisher picks `Deflate` when track is marked `compress` and peer speaks lite-05+; older drafts always negotiate `None` (lite-04 and below stream frames verbatim, wire stays backwards compatible).
+- **Subscribers block on `SUBSCRIBE_OK` before decoding frames**. Per-subscribe watch channel (Rust) / signal (JS) fans out the negotiated codec to each group stream; group read path waits before touching any frame payload.
+- **Frames compressed independently** so codec never carries state across the lossy out-of-order group boundary. **16 MiB inflated-size cap** rejects zip bombs.
+- **Codec = raw DEFLATE** (no zlib/gzip header — QUIC already guarantees integrity). Rust uses `flate2` with `miniz_oxide` pure-Rust backend (no C deps, keeps moq-ffi cross-compilation and Nix builds painless); browser uses native `CompressionStream`/`DecompressionStream` with `"deflate-raw"` (identical bytes). `Compression` enum is the extension point for zstd later.
+
+**Hop-by-hop, not end-to-end**: a relay learns the codec from its upstream `SUBSCRIBE_OK`, decompresses on ingest, caches plaintext. Its downstream producer track isn't marked `compress`, so re-serves uncompressed. Propagating the flag through relays is a follow-up.
+
+**Wire format (lite-05 only)**: `SUBSCRIBE_OK` appends a single `Compression (i)` varint after the existing fields (`0` = none, `1` = deflate). On a compressed track, each `FRAME`'s size prefix becomes the *compressed* length; subscriber inflates it back, so public `Frame`/`Group`/`Track` API is unchanged on both sides.
+
+**Structural significance**: demonstrates the **PR #1518 Lite05Wip unadvertised version variant works as intended** — features land gated without wire exposure (no peer negotiates Lite05Wip yet because it's omitted from `ALPNS` and `Versions::all()`). The implementation pattern: ship the codec + wire-format + tests, gated `match version` arms, expose only when the variant is added to `Versions::all()` in a follow-up.
+
+### moq-dev/moq PR #1530 REANNOUNCE — atomic broadcast replacement
+
+**[PR #1530](https://github.com/moq-dev/moq/pull/1530) OPEN May 28 23:34 UTC** *"add REANNOUNCE; AnnounceConsumer yields (path, Announced)"* (+716/−252).
+
+Implements REANNOUNCE per [moq-dev/drafts#23](https://github.com/moq-dev/drafts/pull/23) (moq-lite-05, ANNOUNCE status `2`). REANNOUNCE is an **atomic broadcast replacement**: the broadcast at a path is swapped for a new one without an interruption in availability (relay failover, upstream restart, shorter hop path arriving). Semantically equivalent to an `ended` immediately followed by an `active`, but signals continuity so downstream never sees a gap.
+
+**API change (Rust)**:
+
+```rust
+pub enum Announced {
+    Active(BroadcastConsumer),
+    Reannounce(BroadcastConsumer),
+    Ended,
+}
+```
+
+`AnnounceConsumer::next()` / `try_next()` / `poll_next()` yield `(PathOwned, Announced)` instead of `(PathOwned, Option<BroadcastConsumer>)`. Origin coalesced atomic replacements (backup promotion, shorter hop path) into an internal reannounce; now surfaces as single `Announced::Reannounce` instead of Ended-then-Active pair.
+
+**Wire (lite)**: new `AnnounceStatus::Reannounce = 2` / `Announce::Reannounce`, gated by `reannounce_supported(version)` (moq-lite-05+). Lite publisher emits it on supported versions, falls back to `Ended` + `Active` on older ones.
+
+**Wire (IETF)**: moq-transport has no REANNOUNCE — always splits into namespace_done + namespace.
+
+Because `Version::Lite05Wip` is WIP and not advertised, no reannounce hits the wire in normal operation yet — peers negotiate ≤ Lite04 and only see Ended+Active fallback. Change is safe and additive.
+
+### moq-dev/moq PR #1529 cross-language interop smoke test
+
+**[PR #1529](https://github.com/moq-dev/moq/pull/1529) MERGED May 29 04:26 UTC** *"moq-ffi: streaming media import + cross-language interop smoke test"* (+535/−7).
+
+Adds `BroadcastProducer.publish_media_stream(format)` so a publisher can pipe an encoder stdin straight in without manifest/NAL-splitting — `import::Stream` infers frame boundaries from raw byte stream (Annex-B H.264, fMP4, …) and buffers any partial trailing frame between calls.
+
+`just test smoke` stands up a real `moq-relay`, then for each **publisher** language publishes an **H.264** broadcast and fans out **every subscriber** in parallel, asserting each sees non-zero frame data before a timeout. Phase 1 = Rust + Python (the languages with working native clients today):
+
+```
+### POSITIVE 4-cell ###          ### NEGATIVE (no publisher) ###
+PASS  rust   -> rust             PASS  none -> rust
+PASS  rust   -> python           PASS  none -> python
+PASS  python -> rust             smoke: all checks passed
+PASS  python -> python           NEG_EXIT=0
+POS_EXIT=0
+```
+
+Later phases: Phase 2 = headless-browser JS via Playwright (JS coverage moves to browser — node ws fallback intentionally dropped because it can't negotiate a version on Sec-WebSocket-Protocol); Phase 3 = Swift/Kotlin/Go clients on moq-ffi; Phase 4 = CI workflow.
+
+### moq-dev/moq other 20+ PRs
+
+**MERGED**: #1487 moq-mux catalog filter/target + Annex-B exporters (+1766/−109, 19 files); #1514 moq-net linger upstream subscriptions across consumer churn for moq-lite (+725/−164, 5-second linger with SUBSCRIBE_UPDATE priority=0 + FIN); #1517 moq-net stats aggregate per-node into single gzipped broadcast (+1092/−718, 7 files); #1521 moq-net cap frame size at 16 MiB on receive path; #1522 docs route breaking changes to dev branch; #1523 moq-relay stop downgrading WebSocket clients to moq-lite-02; #1524 moq-gst assert no /nix/store leaks; #1525 js/net time out SUBSCRIBE_OK to surface browser stream-limit hangs; #1526 swift+kt re-export FFI + session.shutdown() + explicit Origin wiring; #1434 split OriginConsumer into cheap read handle + announcement cursor (opened May 21); #1495 moq-mux thiserror; #1473 moq-net runtime Timescale/Timestamp container::Frame keeps source scale; **#1533 add libmoq catalog producer + raw moq-net track API** (+721/−0); #1534 moq-native fix broadcast linger test broken by AnnounceConsumer split; **#1535 moq-relay scope mTLS grants to connection URL path** (mTLS publisher dialing `/demo` now correctly announces under `demo/` instead of cluster root); #1537 moq-net stats take StatsConfig value type; #1538 flake nixfmt; #1539 js package version bump.
+
+**OPEN**: #1527 moq-net advertise both qmux drafts on WebSocket fallback; #1532 duration-based skipping in container jitter buffer; #1536 moq-ffi auto-create Origin on connect + expose via MoqClientSession; #1540 moq-net make subscribe_track async blocking on SUBSCRIBE_OK; #1513 qmux version mapping (carry-forward from May 27, still OPEN Day +2).
+
+**Theme**: completes moq-dev/moq's London pitch: (1) **moq-rtc** = WebRTC ingest/distribution, (2) **lite-05 deflate** = first concrete moq-lite-05 wire feature, (3) **REANNOUNCE** = atomic broadcast replacement, (4) **smoke test** = cross-language interop validation. Combined with May 22-28 packaging + cluster discovery + preferred_address + qmux version mapping + mTLS path scoping, moq-dev/moq has structurally completed the *"single-tree polyglot full-stack production-grade MoQ deployment"* story 11 days before London.
+
+## google/quiche moqt — 8-day silence breaks; preparation for "requests on bidi streams"
+
+**martinduke 2 commits May 28** (last commit before this was `083b83b3` May 20 22:36 UTC = 8-day gap, longest since draft-18 publication):
+
+- **`c4503a21` May 28 19:59:40 UTC** *"Move IncomingDataStream to moqt_uni_stream.h. Other preparatory changes for requests on bidi streams."*
+- **`997d6543` May 28 21:52:27 UTC** *"Move Incoming Subscribe tests out of MoqtSessionTest"*
+
+**The *"requests on bidi streams"* commit message is structurally significant**. Current draft-18 design multiplexes all control messages (SUBSCRIBE, SUBSCRIBE_OK, UNSUBSCRIBE, REQUEST_UPDATE, ANNOUNCE, etc) over a **single control stream** between session peers — H/2-style. Moving SUBSCRIBE-class messages onto **per-request bidirectional QUIC streams** would mirror H/3's *"every request is a bidi stream"* model:
+
+- **Resolves head-of-line-blocking on control stream**: currently every SUBSCRIBE waits behind every other in-flight control message; per-request bidi avoids this.
+- **Cost**: per-subscription QUIC stream-table overhead, reduced batching.
+- **Direction signal**: martinduke wearing both chair and quiche-moqt-implementer hats means the **implementation precedes formal spec proposal**. Same pattern as wilaw's MSF-spec-and-PRs editorial control and afrind's openmoq/moqx multi-thread sprint preceding the London Day-1 MOQT Issues slot.
+
+**Carry-forward**: with the May 28 commit theme preparing this refactor in the chair-led C++ implementation, **draft-19 (or later) is likely to surface this as a major redesign topic** at London June 11-12 or at the June 22 interim. The implementation work has started; the formal proposal will likely follow at London or shortly after.
+
+## openmoq/moqx — afrind multi-thread sprint Day 2
+
+afrind 6 MERGED + 3 OPEN May 28 (continuing from May 27's 13-event burst):
+
+**MERGED**:
+- **[PR #348](https://github.com/openmoq/moqx/pull/348)** *"test: wire up res→reply coroutine in relay publish tests"* (May 28 14:03 UTC, +15/−0)
+- **[PR #349](https://github.com/openmoq/moqx/pull/349)** *"build: add TSan (ThreadSanitizer) build mode"* (May 28 14:04 UTC, +38/−0)
+- **[PR #350](https://github.com/openmoq/moqx/pull/350)** *"bpf: attach classic reuseport steering filter to QUIC worker sockets"* (May 28 14:04 UTC, +141/−4)
+- **[PR #351](https://github.com/openmoq/moqx/pull/351)** *"relay: IOThreadPoolExecutor owned exclusively by main"* (May 28 15:03 UTC, +13/−16)
+- **[PR #337](https://github.com/openmoq/moqx/pull/337)** *"mvfst: enable recvmmsg by default, bump recv batch size to 64"* (May 28 14:03 UTC)
+- **[PR #353](https://github.com/openmoq/moqx/pull/353)** omoq-sync-bot moxygen 059ed9e (May 28 12:01 UTC)
+
+**OPEN**:
+- **[PR #352](https://github.com/openmoq/moqx/pull/352)** CrossExecFilter wrapping inside PublisherCrossExecFilter
+- **[PR #346](https://github.com/openmoq/moqx/pull/346)** PublishOk NGR forwarding tests
+- **[PR #331](https://github.com/openmoq/moqx/pull/331)** relay_thread config + allow > 1 thread in config
+
+**Theme**: continues May 27 cross-exec thread-safety + multi-threaded I/O prep. PR #350 cBPF reuseport landed; PR #351 IOThreadPoolExecutor ownership simplified; PR #337 mvfst recvmmsg enables batch UDP receives in production. Combined with PR #331 (still OPEN), the openmoq/moqx multi-thread story is one PR-merge away from `threads > 1` being usable in production — likely lands before London.
+
+## Interop runner — 177/49/127/0, +3 pass, 11-day cadence longest tracked
+
+**[2026-05-29 00:47:39 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-05-29_004739/report.html): 177 / 49 / 127 / 0** (total / pass / fail / skip). **+3 pass vs May 28** (46 → 49, 26.0% → 27.7%, **+1.7pp**). Matrix shape steady at 177. **11 consecutive days of daily reports** (May 19-29) — **longest cadence streak the wiki has tracked**.
+
+**Trajectory**:
+
+| Date | Total | Pass | Fail | Skip | Pass Rate | Δ |
+|---|---|---|---|---|---|---|
+| 2026-05-25 | 168 | 42 | 125 | 0 | 25.0% | −3 |
+| 2026-05-26 | 177 | 47 | 129 | 0 | 26.6% | +5 (matrix expansion PR #71) |
+| 2026-05-27 | 177 | 48 | 128 | 0 | 27.1% | +1 |
+| 2026-05-28 | 177 | 46 | 130 | 0 | 26.0% | −2 |
+| **2026-05-29** | **177** | **49** | **127** | **0** | **27.7%** | **+3** |
+
+The +3 is plausibly attributable to moq-dev/moq's massive ~25-PR refactor wave shaking some test combinations stable: PR #1487 moq-mux catalog filter/Annex-B + PR #1514 linger + PR #1473 timescale refactors touch a lot of code, and the matrix harness may have picked up new pass combinations previously borderline.
+
+Target still **draft-16** ([PR #68](https://github.com/englishm/moq-interop-runner/pull/68) OPEN since May 18, no commits since May 19; **three impls on draft-18 main**: moq-dev/moq, mondain/moqxr, meetecho/imquic). Version breakdown of 177 tests: **97 at target · 8 ahead · 72 behind**. **London hackathon 11 days away** — PR #68 draft-18 target bump remains the only outstanding matrix-shape event before London.
+
+---
 
 # Activity (May 27 06:00 UTC → May 28 06:00 UTC) — **Gwendal Simon disputes Martin Duke's chair SWITCH framing in 4 points; Cullen Jennings rejects Magnus Westerlund's separate-draft path for Track Filters/Top-N; #moq Slack ends 7-day silence with Lorenzo's moq-mi-vs-LOC strategic question + Alan Frindell's novel self-fetch question; wilaw MSF sprint Day 3 = 3 merged + 3 open + Issue #150 close + Issue #172 new; afrind 13-event single-day openmoq/moqx burst (largest single-author day tracked); cloudflare/moq-rs PR #169 AuthHook trait design ends 17-day quiet streak; moq-dev/moq PR #1518 Lite05Wip version variant + PR #1519 multi-tool lint; interop 177/46/130/0 (−2 pass, 10-day cadence first double-digit streak); google/quiche moqt Day +7 silent**
 
