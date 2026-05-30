@@ -2,11 +2,13 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-05-23
+last_updated: 2026-05-30
 status: current
 draft_version: 18
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 ---
+
+> **2026-05-30**: **[[martin-duke|Martin Duke]] [Issue #1637](https://github.com/moq-wg/moq-transport/issues/1637) OPEN May 29 22:30:34 UTC** *"What does MOQT do without bidi stream credit?"* — surfaces a draft-18 design gap: REQUEST_BLOCKED was removed but PUBLISH_BLOCKED retained asymmetrically; *"if both directions are blocked, who is responsible?"*. 3 numbered questions: (1) which request streams retry by MOQT vs. application? (2) when is peer expected to try SUBSCRIBE/PUBLISH inverse? (3) if both directions blocked, who opens? **Cross-repo coordination**: Issue #1637 is the design-discussion counterpart to martinduke's May 28 google/quiche moqt commits `c4503a21` ("Move IncomingDataStream … Other preparatory changes for requests on bidi streams") + `997d6543` — implementation work + design issue publicly paired by same author within 24h, structural draft-19 direction. **[[ian-swett|Ian Swett]] 4 comments through May 30 02:27 UTC** on #1637 + #1519 (vasilvv "Improve design of requests blocking on other requests", open since Mar 2): MoQT typically acts on PUBLISH_BLOCKED, *"create a new MoQT session"* for blocked-direction retry, 3 ABR approaches outlined (explicit-group SUBSCRIBE, bandwidth-check upswitch, use SWITCH or DTS). **Carry-forward**: London Day-1 0900-1045 "MOQT Issues" 180-min slot now structurally anchored around bidi-stream-credit + request-blocking + ABR-switching design, with #1637 + #1519 as the two open issues to resolve.
 
 **draft-ietf-moq-transport-18** | published 2026-05-12 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/18/)
 

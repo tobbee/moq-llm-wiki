@@ -2,11 +2,13 @@
 title: "End-to-End Secure Objects for MOQT"
 tags: [draft, security, encryption]
 date: 2026-04-10
-last_updated: 2026-05-02
+last_updated: 2026-05-30
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-secure-objects/"
 ---
+
+> **2026-05-30**: **[[suhas-nandakumar|Suhas Nandakumar]] [PR #88](https://github.com/moq-wg/secure-objects/pull/88) OPEN May 30 03:26:23 UTC** *"Add test vectors appendix"* (+326/−0 to `draft-ietf-moq-secure-objects.md`, 1 file) — first content PR on the moq-wg/secure-objects repo in weeks; signals draft-01 preparation. Combined with the unfulfilled MSF -01 publication and the moq-wg/moq-transport Issue #1637 bidi-stream-credit design gap, suggests a **coordinated multi-draft London-cycle drop** rather than independent revision cadences.
 
 **draft-ietf-moq-secure-objects-00** | 23 pages | Expires 2026-09-03
 

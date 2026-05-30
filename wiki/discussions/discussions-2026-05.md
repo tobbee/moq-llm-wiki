@@ -2,11 +2,134 @@
 title: "Discussions - May 2026"
 tags: [discussions, slack, github]
 date: 2026-05-01
-last_updated: 2026-05-29
+last_updated: 2026-05-30
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during May 2026.
+
+# Activity (May 29 06:00 UTC → May 30 06:00 UTC) — **Ali Begen 4th explicit YES/YES vote on SWITCH/DTS; MSF -01 wilaw "Friday" promise unfulfilled on Datatracker; martinduke Issue #1637 surfaces bidi-stream-credit design gap as draft-19 direction (pairs with May 28 google/quiche moqt "requests on bidi streams" prep commits); moq-dev/moq cross-language smoke phase 2 completes 3×3 rust×python×js-browser matrix via Playwright + Chromium; cloudflare/moq-rs Manish closes 155-day PR #131, opens fresh draft-16 rewrite PR #170 (+5289/-3115); interop 177/50/126/0 (+1 pass, 28.2%, 12-day cadence longest tracked, first 50+ since cadence recovery)**
+
+**TL;DR**:
+- **Mailing list — Ali Begen 4th explicit YES vote** on SWITCH and DTS adoption + integration into MOQT draft, with note *"my team has already implemented both in MOQtail and plans to share implementation results"*. Brings public on-list tally to **4 YES votes (Will Law + Gwendal + Yu You/Nokia + Ali Begen) and 0 NO** 6 days before June 4 close; 3 of 4 SWITCH co-authors + Nokia implementation report = consensus call substantively decided.
+- **moq-wg/msf — wilaw MSF -01 "Friday" promise unfulfilled on Datatracker May 29**. Wilaw merged 2 more cleanup PRs (#173 normative refs MERGED 08:52 UTC + #174 timestamp rounding MERGED 11:12 UTC, both closing Issues #172 + #108) but **no -01 submission to Datatracker** by EOD May 29 UTC. **First announced-but-unmet draft cadence the wiki has tracked**. **secure-objects PR #88 NEW** May 30 03:26 UTC by suhasHere *"Add test vectors appendix"* (+326/−0) = first secure-objects content PR in weeks, signals draft-01 prep alongside MSF -01.
+- **moq-wg/moq-transport — Martin Duke Issue #1637 NEW** May 29 22:30 UTC *"What does MOQT do without bidi stream credit?"* — surfaces draft-18 asymmetry: REQUEST_BLOCKED removed but PUBLISH_BLOCKED retained, *"if both directions are blocked, who is responsible?"*. 4-comment thread (martinduke 2 + ianswett 2) through May 30 02:27 UTC. **Issue #1637 is the design-discussion counterpart to martinduke's May 28 google/quiche moqt `c4503a21`/`997d6543` "requests on bidi streams" prep commits** — implementation work + design issue now publicly paired by same author within 24h, structural draft-19 direction.
+- **Implementations**: **moq-dev/moq** continues burst — **PR #1528 moq-rtc MERGED** May 30 00:41 UTC (WebRTC bridge from May 28 OPEN now in main, 36h cycle); **PR #1542 MERGED** headless-browser smoke phase 2 (Playwright + Chromium WebCodecs), full **rust × python × js-browser** 3×3 matrix passes both ways; **PR #1544 MERGED** libmoq auto-reconnect with exponential backoff + re-announce + re-subscribe; **PR #1551 OPEN** py split moq-ffi from ergonomic wrapper (+2284/−1016, 133f, architectural Python release-flow change with explicit Swift/Kotlin/Go template); **PR #1541 MERGED** Qizot (new external contrib) Android logcat routing; plus #1536/#1537/#1546/#1547/#1548/#1549 merged. **cloudflare/moq-rs** PR #170 OPEN May 29 07:09 UTC by itzmanish (Manish) *"[Rewrite] Draft-16 migration"* (+5289/−3115, 81f); **PR #131 CLOSED by Manish at 07:09:54 UTC** in favor of #170 — 155-day-old original attempt written off. **openmoq/moqx** afrind sprint Day 3: PR #346 + PR #352 MERGED + PR #354 sync-bot MERGED; mondain CAT token PRs #264/#286 continued commits. **google/quiche moqt** Day +1 silent. **moqtail, moq-js, imquic, mondain/moqxr, birneee/quiche_moq, Moqintosh, moqlivemock, warp-player, Eyevinn/moqtransport, englishm/moq-interop-runner** all quiet.
+- **Interop**: **177 / 50 / 126 / 0** at [2026-05-30 00:43:27 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-30_004327/report.html) — **+1 pass vs May 29** (49 → 50, 27.7% → 28.2%, **+0.5pp**). **12 consecutive days of daily reports** (May 19-30), longest cadence streak the wiki has tracked. Rolling 5-day band 46-50, trajectory 48 → 46 → 49 → 50 = 3-day monotonic uptick, **first 50+ pass count since cadence recovery May 19**. Target still **draft-16** (PR #68 OPEN since May 18). **London hackathon 10 days away**.
+
+## Mailing list — Ali Begen 4th explicit YES vote on SWITCH/DTS
+
+### Ali C. Begen "Re: Consensus Call: DTS and SWITCH" May 29 10:02:29 UTC
+
+[Archive link](https://mailarchive.ietf.org/arch/msg/moq/XOEdtncpJi8g_Nq5qzB4_nTW-vQ/). Ali C. Begen (Ozyegin University, SWITCH co-author, moqtail maintainer) votes on the May 21 Consensus Call (closes June 4):
+
+- **Adoption**: *"My vote for both Switch and DTS is as follows: (1) Should the Working Group adopt the contents of this work in some form? YES"*
+- **Integration into MOQT draft**: *"(2) If yes, should the contents of this work be incorporated into the MOQT draft (as opposed to an extension draft)? YES with a note below."* — would accept *"a separate normative RFC and published together with the MOQT draft"* if necessary; both features are complementary and necessary since different users will prefer each option.
+- **Implementation footnote**: *"my team has already implemented both [SWITCH and DTS] in MOQtail and plans to share implementation results with the working group"*.
+
+**Net public on-list vote tally heading into June 4 close**:
+
+| Voter | Date (UTC) | Adoption | Integration | Note |
+|---|---|---|---|---|
+| [[will-law\|Will Law]] (Akamai, SWITCH co-author) | May 26 17:50 | YES | YES | "Yes / Yes / Yes / Yes" on DTS+SWITCH |
+| [[gwendal-simon\|Gwendal Simon]] (Synamedia, SWITCH co-author) | May 28 14:08 | YES | YES | DTS reservations (lacks bandwidth-measurement guidance; CDN scalability) |
+| [[yu-you\|Yu You]] (Nokia) | May 29 05:59 | YES | YES | Nokia implemented SWITCH, **measured benefit**: *"first object arrival time significantly reduced"* |
+| [[ali-begen\|Ali C. Begen]] (Ozyegin, SWITCH co-author, moqtail) | May 29 10:02 | YES | YES | moqtail implements both; would accept companion-RFC if necessary |
+
+**3 of 4 SWITCH co-authors** (Will Law, Gwendal Simon, Ali Begen) and the only on-list implementation reporter from a non-co-author team (Nokia) have all publicly voted YES. **No on-list NO votes** on SWITCH/DTS adoption to date. **June 4 close substantively decided**.
+
+Open question still on the table: whether SWITCH and DTS land as a **PR against moq-transport-18** (Cullen's May 27 preference) or as a **separate companion RFC** (Ali Begen's May 29 "if necessary" framing). The chair (Martin Duke) has not yet posted a position on the integration question since his May 26 "Thoughts on SWITCH" technical analysis.
+
+**Carry-forward**: with the consensus-call vote tally now structurally settled, the May 26 interim's procedural outcome must publish either a chair-statement-of-consensus or a counter-proposal posting by ~May 31-June 2 to give contributors time to react before June 4. If no chair statement publishes before close, the WG's chair-neutral posture means the running-code-plus-public-vote tally substitutes for formal procedural facilitation.
+
+## moq-wg/msf — wilaw "Friday" MSF -01 promise unfulfilled on Datatracker
+
+Will Law's May 27 Slack pledge to publish MSF -01 "this Friday ahead of the London interop" (May 29) did **NOT** result in a Datatracker submission by EOD May 29 UTC. Datatracker still shows **draft-ietf-moq-msf-00** (Jan 19 2026) as the latest revision.
+
+What did happen May 29 on moq-wg/msf:
+- **[PR #173](https://github.com/moq-wg/msf/pull/173) MERGED 08:52:14 UTC** by wilaw *"Update normative references for MoQ drafts"* (+2/−2, fixes new [Issue #172](https://github.com/moq-wg/msf/issues/172)).
+- **[Issue #172](https://github.com/moq-wg/msf/issues/172) CLOSED 08:52:15 UTC** automatically by PR #173 merge.
+- **[PR #174](https://github.com/moq-wg/msf/pull/174) MERGED 11:12:25 UTC** by wilaw *"Update media presentation timestamp rounding description"* (+2/−2, fixes [Issue #108](https://github.com/moq-wg/msf/issues/108) — open since pre-2026).
+- **[Issue #108](https://github.com/moq-wg/msf/issues/108) CLOSED 11:12:27 UTC** automatically by PR #174 merge.
+
+This suggests the editorial work was completed but the `xml2rfc` submission to Datatracker did not happen. **First announced-but-unmet draft cadence the wiki has tracked**. Plausible causes:
+- (a) wilaw discovered last-minute issues that delayed submission;
+- (b) "Friday" was meant as US-Pacific-evening cutoff which extends into May 30 UTC;
+- (c) the draft was held to coincide with secure-objects PR #88 + transport Issue #1637 ripening for a coordinated London-cycle drop.
+
+**Carry-forward**: with London hackathon **10 days away** and MSF -01 now off-schedule, the **London Day-2 35-min MSF/CMSF slot** loses its anchor normative artifact unless -01 lands in the next ~5 business days. The downstream Lorenzo / Mike English / Mo Zanaty interest in MSF-vs-LOC media-format-level interop ([Issue #32](https://github.com/englishm/moq-interop-runner/issues/32)) needs the -01 cut to anchor implementation choices.
+
+## moq-wg/moq-transport — Martin Duke Issue #1637 bidi-stream-credit design gap
+
+[Issue #1637](https://github.com/moq-wg/moq-transport/issues/1637) OPEN May 29 22:30:34 UTC by [[martin-duke|Martin Duke]] (Google, MoQ co-chair, quiche-moqt implementer):
+
+> *"I don't think the text is clear about what happens when there isn't enough bidi stream credit to send a request. Specifically, does the responsibility to retry lie with MOQT or with the application? We got rid of REQUEST_BLOCKED, and it would be sad to pipe OnCanOpenBidiStream() from QUIC all the way up to the application, so it seems worthwhile to just have MOQT track pending bidi streams. But we have PUBLISH_BLOCKED, which I guess is a way for a subscriber to SUBSCRIBE (where it might have credit). But this is the inverse of SUBSCRIBE_BLOCKED, where the publisher could potentially deliver the stream, but there's no SUBSCRIBE_BLOCKED message."*
+
+Three numbered design questions: (1) which request streams are retried by MOQT vs. requiring the application to do something? (2) when is the peer expected to try the SUBSCRIBE/PUBLISH inverse because the other direction is blocked? (3) if both directions are blocked, who is responsible for finally opening it?
+
+**Same-author cross-repo coordination**: martinduke filed Issue #1637 in moq-wg/moq-transport **one day after** his google/quiche moqt commits `c4503a21` ("Move IncomingDataStream to moqt_uni_stream.h. Other preparatory changes for requests on bidi streams") + `997d6543` ("Move Incoming Subscribe tests out of MoqtSessionTest") on May 28 19:59-21:51 UTC. **The implementation work and the design issue are now publicly paired by the same author within 24h** — chair-as-implementer dual role positions Martin to drive both the C++ implementation refactor and the spec issue simultaneously, same pattern as wilaw's MSF and afrind's openmoq/moqx multi-thread sprint.
+
+[[ian-swett|Ian Swett]] (Google, QUIC + MOQT contributor) 4 comments on #1637 + #1519 through May 30 02:27 UTC:
+- *"Typically, I'd expect MoQT to act on [PUBLISH_BLOCKED], unless it became obvious it was going to be way too many PUBLISHes."*
+- *"No, you don't send a PUBLISH [if also trying to open the PUBLISH stream]"*
+- *"Probably, or create a new MoQT session"* — for the responsibility-to-retry question.
+
+On the orthogonal [Issue #1519](https://github.com/moq-wg/moq-transport/issues/1519) (vasilvv "Improve design of requests blocking on other requests", open since Mar 2), ianswett May 30 02:27 UTC comment outlines 3 ABR approaches: (1) explicit-group SUBSCRIBE + end current subscription (downswitch or audio change), (2) ensure bandwidth before ending current (upswitch), (3) use SWITCH or DTS. For "pause before unpause": *"if you send them in a single packet, I believe you'd achieve the desired outcome"*.
+
+**Carry-forward**: combined with vasilvv Issue #1519's WAIT_FOR/UNBLOCK alternative design proposal still on the table, **MOQT's request-message-on-bidi-stream design space is opening for draft-19** at London. Day-1 0900-1045 "MOQT Issues" 180-min slot is now structurally anchored around bidi-stream-credit + request-blocking + ABR-switching design, with #1637 + #1519 as the two open issues to resolve.
+
+## Implementations — moq-dev/moq cross-language smoke phase 2 + cloudflare/moq-rs Manish restart
+
+### moq-dev/moq — burst continues May 29-30
+
+~15 merges + 3 OPEN across May 29-30. Headlines:
+
+- **[PR #1528](https://github.com/moq-dev/moq/pull/1528) moq-rtc WebRTC↔MoQ bridge MERGED May 30 00:41:14 UTC** (was OPEN May 28 19:58 UTC; 36-hour open-to-merge cycle for +2590/−17, 30 files).
+- **[PR #1542](https://github.com/moq-dev/moq/pull/1542) MERGED** *"test/browser: headless-browser smoke client (phase 2)"* (+228/−5, 11f) — Playwright + nix-provisioned Chromium drives real `<moq-publish>` / `<moq-watch>` web components against fake-camera H.264 WebCodecs encode/decode. **Full `rust × python × js-browser` cross-language matrix passes both ways** (3×3 = 9 cells), first browser-included cross-language interop harness in any tracked MoQ impl. Phase 1 ([PR #1529](https://github.com/moq-dev/moq/pull/1529)) was rust×python; Phase 2 (this PR) adds js-browser; Phase 3 will add Swift/Kotlin/Go; Phase 4 CI workflow.
+- **[PR #1544](https://github.com/moq-dev/moq/pull/1544) MERGED** *"libmoq: auto-reconnect sessions; conducer-based Reconnect notifications"* (+160/−42, 5f) — libmoq C consumers now get exponential-backoff reconnect with re-announced broadcasts + re-subscribed consumers automatically. Closes the Apr "single session that dies permanently" gap.
+- **[PR #1551](https://github.com/moq-dev/moq/pull/1551) OPEN May 30 05:12:44 UTC** *"py: split moq-ffi bindings from the ergonomic wrapper into two packages"* (+2284/−1016, 133f) — architectural Python release-flow change: 2 PyPI distributions (`moq-ffi` raw uniffi bindings tracking `rs/moq-ffi`, `moq` pure-python wrapper). Wrapper depends on `moq-ffi ~= 0.2.16` (PEP 440 compatible release) so installs **float to the latest moq-ffi patch automatically** without wrapper re-release. **Documents the repeatable pattern for Swift/Kotlin/Go to follow later** — multi-language reference architecture for FFI-distributed protocol implementations.
+- **[PR #1541](https://github.com/moq-dev/moq/pull/1541) MERGED** by **[[qizot|Qizot]] (new external contributor)** *"moq-ffi: route Android logs to logcat"* (+76/−37, 13f) — adds android-locat tracing subscriber so logs route to ADB / Android Studio via logcat (parity with iOS Xcode log inspection).
+- **[PR #1546](https://github.com/moq-dev/moq/pull/1546) MERGED** libmoq terminal-callback lifetime contract for C consumers.
+- **[PR #1547](https://github.com/moq-dev/moq/pull/1547) MERGED** kio: rename conducer crate to kio (Rust-side naming consistency).
+- **[PR #1548](https://github.com/moq-dev/moq/pull/1548) MERGED** stats: retain entries by liveness instead of tick-retention window.
+- **[PR #1549](https://github.com/moq-dev/moq/pull/1549) MERGED** go: ship moq.h + linux staticlibs so the Go module builds for consumers.
+- **[PR #1536](https://github.com/moq-dev/moq/pull/1536) MERGED** moq-net auto-create Origin on connect/accept, expose via Session.
+- **[PR #1537](https://github.com/moq-dev/moq/pull/1537) MERGED** moq-net stats: take StatsConfig value type in Stats::new.
+- **[PR #1530](https://github.com/moq-dev/moq/pull/1530) REANNOUNCE still OPEN**; **[PR #1527](https://github.com/moq-dev/moq/pull/1527) qmux 0.1.1 negotiation still OPEN**; **[PR #1540](https://github.com/moq-dev/moq/pull/1540) async subscribe_track still OPEN**; **[PR #1513](https://github.com/moq-dev/moq/pull/1513) qmux version mapping still OPEN Day +3**.
+
+**Combined moq-dev/moq state post-May 30**: 6-language coverage (Rust + TypeScript + Python + Swift + Kotlin + Go) + 9-channel distribution + WebRTC↔MoQ bridge + full cross-language CI harness + libmoq production-grade auto-reconnect + Python release-flow architecture documented as Swift/Kotlin/Go template. **London pitch structurally complete 10 days before hackathon**.
+
+### cloudflare/moq-rs — Manish restarts draft-16 migration
+
+[[itzmanish|itzmanish (Manish)]] May 29 07:09:11 UTC opens **[PR #170](https://github.com/cloudflare/moq-rs/pull/170)** *"[Rewrite] Draft-16 migration"* (+5289/−3115, 81 files) with note: *"please use this branch instead of older #131 because that is not compatible with base branch."* Simultaneously **closes [PR #131](https://github.com/cloudflare/moq-rs/pull/131)** (his own +4384/−2045 draft-16 migration attempt, **155 days old**) at 07:09:54 UTC.
+
+**Manish writes off 155 days of his own work** to restart with a larger rewrite. Combined with [video-dev/moq-js PR #72](https://github.com/video-dev/moq-js/pull/72) (Manish's +11205/−22195 refactor still OPEN since May 26), **Manish is now driving both Cloudflare-stewarded TypeScript/Rust stacks as essentially "from-scratch" rewrites within the same week**.
+
+**Carry-forward**: if PR #170 ships before London, cloudflare/moq-rs gets its first draft-16 (still 2 drafts behind transport-18) baseline merged by an external contributor whose original attempt took 155 days. **Wider impact**: the **external-contributor-rewrites-twice pattern** is structurally different from the corporate-contributor pattern at moq-dev/moq (kixelated owns main and merges his own work in hours) — cloudflare/moq-rs's PR-merge cadence for external contributors is bimodal: same-day for Cloudflare staff, multi-month for external.
+
+### openmoq/moqx — afrind sprint Day 3 + mondain CAT token activity
+
+afrind continues the multi-thread sprint with **PR #346** (relay-level PublishOk NGR forwarding tests) **MERGED** May 29 14:03 UTC + **PR #352** (CrossExecFilter wrapping inside PublisherCrossExecFilter) **MERGED** May 29 13:20 UTC + **PR #354** (omoq-sync-bot moxygen `608fca6` sync) **MERGED** May 29 11:51 UTC.
+
+**[[paul-mondain|Paul Mondain]] CAT token PRs** continue:
+- **[PR #264](https://github.com/openmoq/moqx/pull/264) OPEN** since May 1 *"feat: Add opt-in CAT token authorization"* (+1804/−11, 20f) — per-service auth config block, signed CWT/HMAC token verifier for exp/moqt/moqt-reval claims, AUTHORIZATION_TOKEN setup credentials validation, authorizes PUBLISH_NAMESPACE/PUBLISH/SUBSCRIBE_NAMESPACE/SUBSCRIBE/FETCH/TRACK_STATUS requests, preserves existing relay peering token behavior. Updated May 30 05:47:40 UTC.
+- **[PR #286](https://github.com/openmoq/moqx/pull/286) OPEN** since May 4 *"auth: integrate Catapult CAT token verification"* — stacked on #264, adds Quicr/catapult submodule and replaces local v1 token envelope/CBOR/HMAC parsing with Catapult CWT validation. Updated May 30 04:48:52 UTC.
+
+mondain's CAT token integration is now stacked on afrind's multi-thread refactor and pending review — first openmoq/moqx external-contrib-driven auth path.
+
+### Other implementations — quiet
+
+google/quiche moqt Day +1 silent. moqtail, moq-js, imquic, mondain/moqxr, birneee/quiche_moq, t-gazzy/Moqintosh, Eyevinn/moqlivemock, Eyevinn/warp-player, Eyevinn/moqtransport, englishm/moq-interop-runner all quiet.
+
+## Interop — 177/50/126/0, 12-day cadence, first 50+ pass count
+
+[Report 2026-05-30 00:43:27 UTC](https://englishm.github.io/moq-interop-runner/results/2026-05-30_004327/report.html): **177 / 50 / 126 / 0** = +1 pass vs May 29 (49 → 50, 27.7% → 28.2%, +0.5pp).
+
+**12 consecutive days of daily reports** (May 19-30) — longest cadence streak the wiki has tracked. Rolling 5-day band 46-50, trajectory 48 → 46 → 49 → 50 = 3-day monotonic uptick.
+
+**First time pass count crosses 50** since cadence recovery May 19. Target still draft-16. London hackathon **10 days away**.
+
+---
 
 # Activity (May 28 06:00 UTC → May 29 06:00 UTC) — **Nokia 5th SWITCH implementer reports measured benefit; Gwendal YES/YES with DTS reservations; kixelated ~25-PR single-day burst includes first WebRTC↔MoQ bridge (moq-rtc) + first concrete moq-lite-05 wire feature (per-frame deflate via SUBSCRIBE_OK) + REANNOUNCE atomic broadcast replacement; google/quiche moqt breaks 8-day silence preparing "requests on bidi streams" (post-draft-18 direction); wilaw Slack-announces MSF -01 draft publishes today (Friday) before London; interop 177/49/127/0 (+3 pass, 27.7%, 11-day cadence longest tracked)**
 
