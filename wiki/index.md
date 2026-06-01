@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-05-31
+last_updated: 2026-06-01
 status: current
-updated: 2026-05-31
+updated: 2026-06-01
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -102,6 +102,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 
 # Active Discussions
 
+- [[discussions-2026-06]] - June 2026 discussions
 - [[discussions-2026-05]] - May 2026 discussions
 - [[discussions-2026-04]] - April 2026 discussions
 - [[discussions-2026-03]] - March 2026 discussions (IETF 125 Shenzhen)
