@@ -2,11 +2,133 @@
 title: "Discussions - June 2026"
 tags: [discussions, slack, github]
 date: 2026-06-01
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during June 2026.
+
+# Activity (June 1 06:00 UTC → June 2 06:00 UTC) — **wilaw [moq-transport PR #1638 DTS](https://github.com/moq-wg/moq-transport/pull/1638) OPEN as PR-against-transport-18 (consensus-decided design lands as base-spec PR per Cullen's preference); 3 MSF PRs MERGED (compression #159, bitrate #165, string-version #175) while MSF -01 still NOT submitted Day +134; moq-dev/moq 14 merges + 6 OPEN including MPEG-TS bridge PR #1587 (matches MSFTS/moq2ts) + moq-lite-05 AnnounceOk MERGED + per-track timescale (long-pending #1439) MERGED + qmux version mapping (long-pending #1513) MERGED + subscribe_track async (long-pending #1540) MERGED; cloudflare/moq-rs PR #171 AuthHook + C4M implementation OPEN by suhasHere (+2090/-15, implementation of design proposal #169); mondain/moq2ts MSFTS demonstrator publicly announced on Slack with cross-platform CI build workflow; Martin Duke asks #moq if anyone wants draft-16 interop at London, Alan Frindell + Mike English confirm 14/16/18 multi-version support; google/quiche 2 commits (FETCH stream + RemoteTrack refactor); openmoq/moqx afrind multi-thread relay sprint continues with 5 OPEN PRs; interop 177/51/125/1 first draft-18 target run (-3 pass, 0 at target · 0 ahead · 177 behind reflects impl-registration vs draft-version drift)**
+
+**TL;DR**:
+- **[moq-transport PR #1638](https://github.com/moq-wg/moq-transport/pull/1638) OPEN June 1 11:06 UTC by [[will-law|wilaw]]** *"Add Dynamic Track Switching (DTS)"* (+147/−0, 1 file, fixes [#259](https://github.com/moq-wg/moq-transport/issues/259)) — **DTS lands as a PR-against-moq-transport-18 base spec**, the integration path Cullen Jennings May 27 explicitly preferred (*"I disagree it should be done as a separate draft. I think it should be worked as a PR that can be discussed in context"*) against Magnus Westerlund's separate-Internet-Draft proposal. **The consensus-decided design** from the May 26-Jun 4 mailing-list call (Will Law / Gwendal Simon / Yu You-Nokia / Ali Begen = 4 YES votes) **now has concrete normative text staged for merge**, adds a new `SWITCHING-SET-ASSIGNMENT` parameter, details subscriber operations + relay behavior + bandwidth allocation algorithm. **8 days before London Day-1 0900-1045 "MOQT Issues" slot**, the DTS thread shifts from list-debate to PR-review.
+- **[[moq-msf|MSF]] 3 PRs MERGED June 1** (the trailing editorial work for -01 finally completes): **[PR #159](https://github.com/moq-wg/msf/pull/159) MERGED 09:42 UTC** *"Add catalog compression support via Track/Object Properties"* by [[suhas-nandakumar|suhasHere]] (+114/−4, fixes [#144](https://github.com/moq-wg/msf/issues/144) "Compression for the catalog" by vasilvv that was 21 days OPEN); **[PR #165](https://github.com/moq-wg/msf/pull/165) MERGED 09:33 UTC** *"Update bitrate and related properties in draft"* by [[will-law|wilaw]] (+51/−25 — adds Maximum GOP Duration / Maximum Group Duration / Average Bitrate track properties, makes sample_rate+channels required for audio, codec+width+height required for video, redefines bitrate as maximum); **[PR #175](https://github.com/moq-wg/msf/pull/175) MERGED 13:28 UTC** *"Change version type from Number to String in MSF"* by wilaw (+19/−16, fixes [#163](https://github.com/moq-wg/msf/issues/163) "Version should carry draft info for interop until released"). With these merged, the last remaining MSF PR from wilaw's May 24-27 sprint (PR #165) finally lands; only [PR #156](https://github.com/moq-wg/msf/pull/156) (suhasHere "MOQT Object to Stream mapping implementation-specific") + [PR #169](https://github.com/moq-wg/msf/pull/169) (wilaw MOQT mapping clarification) remain OPEN. **MSF -01 STILL NOT submitted to Datatracker — Day +134** since -00 (Jan 19 2026). 5th consecutive day of slippage on wilaw's May 27 Slack "Friday" pledge.
+- **[[moq-dev|moq-dev/moq]] — kixelated 14-merge + 6-OPEN burst June 1-2** (clearing pre-London backlog including 3 long-pending PRs):
+  - **[PR #1587](https://github.com/moq-dev/moq/pull/1587) OPEN Jun 2 02:25 UTC** *"moq-mux: add MPEG-TS (transport stream) import and export"* (+1548/−2, 15f) — **bridges MoQ ↔ MPEG-2 TS via new `container/ts` demux/mux**, enables `ffmpeg -f mpegts - | moq-cli publish` and `moq-cli subscribe --format ts | ffplay -` without transcode. Single `mpeg2ts` crate handles both directions, codecs H.264/H.265/AAC. **Aligns with [[mondain|Paul Gregoire]]'s [[moq-msfts|MSFTS draft]] + [mondain/moq2ts](https://github.com/mondain/moq2ts) C++ demonstrator** announced same day. **CLAUDE.md update**: "prefer maintained third-party crate over hand-rolling non-core functionality" — first explicit codebase architectural note about scope discipline.
+  - **[PR #1573](https://github.com/moq-dev/moq/pull/1573) MERGED Jun 1 16:09 UTC** moq-lite-05 AnnounceOk (was OPEN in June 1 entry; merged ~13h after open into `dev` branch).
+  - **[PR #1540](https://github.com/moq-dev/moq/pull/1540) MERGED Jun 1 15:34 UTC** *"moq-net: make subscribe_track async, blocking on SUBSCRIBE_OK"* (+1221/−632, 55f) — **long-pending since May 29** (4 days OPEN); reshapes `subscribe_track` so subscription resolves once publisher confirms via SUBSCRIBE_OK, separates `Subscription` (subscriber wire params) from `Track` (publisher immutable properties), concurrent subscribers coalesce. Picks up the idea started in **[PR #1439](https://github.com/moq-dev/moq/pull/1439) MERGED 19:13 UTC** "Add per-track timescale and frame timestamps to moq-lite" — **even longer-pending PR** that finally lands.
+  - **[PR #1513](https://github.com/moq-dev/moq/pull/1513) MERGED 19:03 UTC** *"moq-net: map MoQ versions to required qmux versions"* — concrete code for the WG-decided qmux pinning table (moq-transport-18 must ride on qmux-01, 14-17 on qmux-00, moq-lite unconstrained). Long-pending since May 28.
+  - **[PR #1581](https://github.com/moq-dev/moq/pull/1581) MERGED Jun 2 02:25 UTC** *"relay: unified --auth-api"* (+576/−24, 6f) — one HTTP call returns key + public + alias, supports MoQ CDN dashboard ([moq-dev/moq-pro#47](https://github.com/moq-dev/moq-pro/pull/47)) giving each project a stable id plus an editable vanity path. **Continues moq-pro pattern**: external API resolves `demo` → `x7k2qp` server-side; relay stays topology-agnostic.
+  - Plus **[PR #1585](https://github.com/moq-dev/moq/pull/1585)** moq-net per-track cache age in SUBSCRIBE_OK + reconcile draft field order + port timescale to js/net; **[PR #1586](https://github.com/moq-dev/moq/pull/1586)** libmoq `moq_error()` exposed; **[PR #1579](https://github.com/moq-dev/moq/pull/1579)** don't advertise illegal `qmux-00.moqt-18` pair; **[PR #1580](https://github.com/moq-dev/moq/pull/1580)** WebSocket keep-alive on client path; **[PR #1582](https://github.com/moq-dev/moq/pull/1582)** re-export Hang from `@moq/publish`/`@moq/watch`; **[PR #1576](https://github.com/moq-dev/moq/pull/1576)** split TrackConsumer into track handle + TrackSubscriber; **[PR #1577](https://github.com/moq-dev/moq/pull/1577)** shrink moq-ffi + libmoq staticlibs with LTO; **[PR #1584](https://github.com/moq-dev/moq/pull/1584)** prefer esm.sh over jsDelivr for no-build CDN usage; **[PR #1589](https://github.com/moq-dev/moq/pull/1589)** moq-boy exit non-zero on reconnect give-up.
+  - **OPEN follow-ons**: **[PR #1590](https://github.com/moq-dev/moq/pull/1590)** out-of-band avc1/hvc1 in MPEG-TS export; **[PR #1588](https://github.com/moq-dev/moq/pull/1588)** decouple download gating from Renderer; **[PR #1591](https://github.com/moq-dev/moq/pull/1591)** Computed derived signals; **[PR #1592](https://github.com/moq-dev/moq/pull/1592)** `@moq/watch` component signals inputs vs outputs; **[PR #1583](https://github.com/moq-dev/moq/pull/1583) OPEN** by external contributor nuts-rice "js: add Opus dtx for voice WIP".
+- **[[moq-rs|cloudflare/moq-rs]] [PR #171](https://github.com/cloudflare/moq-rs/pull/171) OPEN June 1 18:40 UTC by [[suhas-nandakumar|suhasHere]]** *"Add pluggable AuthHook trait and C4M token authentication"* (+2090/−15, 30 files) — **implementation of [PR #169 design proposal](https://github.com/cloudflare/moq-rs/pull/169)** from May 28; adds **2 new crates** (`moq-auth` AuthHook trait + AllowAll/KeyValue/Logging hooks + auth types; `moq-auth-cat` C4M hook with signature verification, claims validation, MOQT scope matching), parses AUTHORIZATION TOKEN from CLIENT_SETUP, calls `on_setup` at session establishment (fail-closed), `on_request` before Publish/Subscribe/TrackStatus, CLI flags `--auth-shared-secret` + `--auth-cat-public-key`. **First concrete cross-impl auth implementation engagement** after May 30 thibmeu 8-comment review burst on PR #169 — Suhas advances from trait proposal to working implementation within ~4 days. PR #169 itself remains OPEN; PR #170 (Manish draft-16 rewrite) untouched Day +3.
+- **Slack #moq — London draft-version coordination breaks** May 28-Jun 1 7-day silence:
+  - **[Paul Gregoire](https://quicdev.slack.com/archives/C046V0QF3CK/p1780343010581179) June 1 19:43 UTC**: *"Created a demonstrator for the msfts draft https://github.com/mondain/moq2ts — only works with one relay that I know of at this time, but no one should be surprised by that"* — first publicly-announced reference implementation of [[moq-msfts|draft-gregoire-moq-msfts-00]] (the MSFTS individual draft Paul co-authored with Gwendal Simon, submitted May 6).
+  - **[Martin Duke](https://quicdev.slack.com/archives/C046V0QF3CK/p1780353831190279) June 1 22:43 UTC**: *"Is anyone coming to London interested in draft-16 interop? There is no way we're going to be done with draft-18 migration, but if everyone else will be we might as well break -16."* — reactions: gb (1), face_with_monocle (1). **First London-week multi-version-strategy question**.
+  - **[Alan Frindell](https://quicdev.slack.com/archives/C046V0QF3CK/p1780365027174379) June 2 01:50 UTC**: *"moxygen will have support for 14 and 16, and hopefully enough 18 to get some interop"* — **3-version simultaneous support** (14, 16, 18) for openmoq/moqx-stack.
+  - **[Mike English](https://quicdev.slack.com/archives/C046V0QF3CK/p1780367301774199) June 2 02:28 UTC**: *"moq-rs will also have instances of 14, 16, and a small start on 18 for people to test against."* + *"I'm also feeling like 18+ might be where we finally start on proper multi-version support"* — **first explicit framing of draft-18 as a multi-version-support inflection point** for cloudflare/moq-rs.
+  - **Carry-forward**: 4 impl-team responses to Martin Duke's call within 6 hours = London 2026 will exercise **(14, 16, 17, 18) × N-impls cross-version matrix manually**, beyond the automated runner; this is the first explicit pre-London coordination on how many drafts the hackathon should actually try to interop against, vs. unilateral "everyone's on 18" assumption.
+- **Implementations**: see TL;DR above for [[moq-dev|moq-dev/moq]] (14 merges + 6 OPEN), [[moq-rs|cloudflare/moq-rs]] (PR #171). **[[mondain|mondain/moq2ts]]** (created May 21, language: C++) — surge June 1-2 (~9 commits) on cross-platform CI build workflow (Linux/macOS/Windows via GitHub Actions, AppImage + macdeployqt + windeployqt packaging), ffmpeg 8 + Qt qsizetype build fixes, native AVCaptureSession publish on macOS (libav/avfoundation hangs); links against prebuilt moqxr publisher SDK (pinned `MOQXR_VERSION=v0.3.2`) for relay-capable builds. **[[mondain|mondain/moqxr]]** 3 commits June 1 by [[paul-mondain|Paul Gregoire]] packaging the publisher static library + bundling picoquic/picotls dependencies for the SDK consumer path (enables moq2ts above to link standalone). **[[openmoq|openmoq/moqx]]** [[alan-frindell|afrind]] multi-thread relay sprint continues June 1 — [PR #361](https://github.com/openmoq/moqx/pull/361) `relay_thread` config + allow > 1 thread, [PR #362](https://github.com/openmoq/moqx/pull/362) isolate relay state on dedicated executor for multiple I/O threads, [PR #363](https://github.com/openmoq/moqx/pull/363) MultiThread relay test mode, [PR #364](https://github.com/openmoq/moqx/pull/364) cache as passive subscriber of primary forwarder, [PR #365](https://github.com/openmoq/moqx/pull/365) per-thread local forwarder data path (`use_local_forwarders`) — **5-PR stack OPEN simultaneously** for the `threads > 1` production-deployment milestone. Plus [PR #371](https://github.com/openmoq/moqx/pull/371) bpf reuseport refinement MERGED, [PR #370](https://github.com/openmoq/moqx/pull/370) by gmarzot folly XLOG init OPEN. **[[google-quiche|google/quiche moqt]]** breaks Day +5 silence — **2 commits June 1** by [[martin-duke|martinduke]]: `3b9d5450` 17:28 UTC *"Move parameter handling from session to RemoteTrack"* + `0b92a8b4` 17:34 UTC *"Get rid of MoqtUpstreamFetch::LocationIsValid because FETCH streams are diff-encoded; Malformed Tracks are no longer possible to encode in a FETCH stream"*. **[[moqtail|moqtail/moqtail]]**, **[[moq-js|video-dev/moq-js]]** (PR #72 still OPEN), **[[imquic|meetecho/imquic]]** (PR #27 still OPEN, last update Jun 1 13:15), **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, **Eyevinn/warp-player**, **Eyevinn/moqtransport** all quiet.
+- **Interop**: **177 / 51 / 125 / 1** at [2026-06-02 00:50:22 UTC](https://englishm.github.io/moq-interop-runner/results/2026-06-02_005022/report.html) — **first run at new draft-18 target** following PR #68 merge June 1 05:21 UTC. **−3 pass vs June 1** (54 → 51, 30.5% → 28.8%, **−1.7pp**); **15 consecutive days of daily reports** (May 19-Jun 2), longest cadence streak the wiki has tracked. Version breakdown shifts to **0 at target · 0 ahead · 177 behind** — **NO impl is registered with the runner as advertising draft-18** even though [[moq-dev|moq-dev/moq]], [[mondain|mondain/moqxr]], and [[imquic|meetecho/imquic]] have draft-18 code in main. **Drift between runner-registered-version and impl-main-branch-version** is now the visible structural gap (Martin Duke's Slack question 4h later is the implementer-side response). **London hackathon 7 days away**.
+
+## moq-transport PR #1638 — Dynamic Track Switching lands as base-spec PR
+
+### Will Law opens DTS PR against moq-transport-18 June 1 11:06 UTC
+
+[PR #1638](https://github.com/moq-wg/moq-transport/pull/1638) *"Add Dynamic Track Switching (DTS)"* by [[will-law|wilaw]] — **+147 / −0, 1 file**, fixes [Issue #259](https://github.com/moq-wg/moq-transport/issues/259):
+
+> Adds the Dynamic Track Switching (DTS) feature, detailing subscriber operations, relay behavior, and bandwidth allocation algorithm. Adds a new SWITCHING-SET-ASSIGNMENT parameter.
+
+**Context — consensus call disposition**:
+- **May 26**: Will Law explicit YES on adoption + integration into moq-transport-18 (mailing list).
+- **May 27**: Cullen Jennings explicit YES, prefers PR-against-moq-transport-18 over separate companion RFC: *"I disagree it should be done as a separate draft. I think it should be worked as a PR that can be discussed in context"*.
+- **May 27**: Gwendal Simon (SWITCH co-author) 4-point structured rebuttal of Martin Duke's "Thoughts on SWITCH" framing — down-switch is 4 messages not 3 with break-before-make hard-freeze; up-switch N+k group selection needs relay-side info; SWITCH is additive not replacive; 4 implementations exist.
+- **May 28**: Gwendal Simon YES on adoption + YES on integration with DTS reservations.
+- **May 29**: Yu You (Nokia) YES + YES with measured benefit numbers ("my team has already implemented both").
+- **May 29**: Ali Begen (MOQtail co-author) YES + YES with "if necessary" framing on separate-RFC fallback ("my team has already implemented both in MOQtail and plans to share implementation results").
+- **June 4**: consensus call formal close.
+
+**Tally heading into close**: 4 YES + 0 NO with 3 of 4 SWITCH co-authors + Nokia implementation report = consensus call substantively decided 14 days before close. PR #1638's structural choice (PR-against-transport-18 base spec instead of separate companion Internet-Draft) matches **Cullen's preference and the implementer pattern** (MOQtail + Nokia both implemented DTS as integrated transport feature, not as separate spec) rather than Magnus Westerlund's separate-Internet-Draft proposal that would have given the WG more rev-cycle flexibility.
+
+**Wider impact**:
+- London Day-1 0900-1045 "MOQT Issues" 180-min slot now structurally anchored around: **bidi-stream-credit** ([Issue #1637](https://github.com/moq-wg/moq-transport/issues/1637) martinduke May 29) + **request-blocking design** ([Issue #1519](https://github.com/moq-wg/moq-transport/issues/1519) vasilvv since Mar 2) + **DTS PR #1638** (wilaw June 1) + **EXPIRES extension** ([Issue #1639](https://github.com/moq-wg/moq-transport/issues/1639) + [PR #1640](https://github.com/moq-wg/moq-transport/pull/1640) martinduke June 1 19:50/22:14 UTC).
+- DTS PR #1638 + EXPIRES PR #1640 are the **two normative-text deliverables** for London Day-1; the others are issue-level discussion.
+
+## moq-rs PR #171 — AuthHook trait + C4M implementation lands
+
+### Suhas Nandakumar opens implementation PR June 1 18:40 UTC
+
+[PR #171](https://github.com/cloudflare/moq-rs/pull/171) *"Add pluggable AuthHook trait and C4M token authentication"* by [[suhas-nandakumar|suhasHere]] — **+2090 / −15, 30 files**:
+
+> This PR is an implementation of [#169](https://github.com/cloudflare/moq-rs/pull/169). Adds intra-scope authorization to the relay via a pluggable AuthHook trait, with a C4M (CAT for MoQ) implementation using the cat-token crate.
+
+**New crates**:
+- **`moq-auth`** — AuthHook trait, AllowAll/KeyValue/Logging hooks, auth types
+- **`moq-auth-cat`** — C4M hook: signature verification, claims validation, MOQT scope matching
+
+**Relay integration**:
+- Parses AUTHORIZATION TOKEN from CLIENT_SETUP (USE_VALUE wire format)
+- Calls `on_setup` at session establishment (fail-closed)
+- Calls `on_request` before Publish/Subscribe/TrackStatus operations
+- CLI: `--auth-shared-secret` (token type 0) and `--auth-cat-public-key` (C4M, requires `--features auth-cat`)
+
+**Why this matters**:
+- **First concrete cross-impl auth implementation engagement** after May 30 thibmeu 8-comment review burst on PR #169.
+- The PR text includes end-to-end test plans for **both** shared-secret and C4M auth — Suhas demonstrates working code rather than gating on PR #169 design-discussion closure.
+- The thibmeu review on PR #169 critiqued the trait surface for accommodating Privacy Pass challenge-reply (issuer-aware) — PR #171's implementation **does not** yet address that pivot; Suhas chose to ship the verify-callback shape and let Privacy Pass adapt or extend later. **Design vs implementation cleavage** now visible: PR #169 stays open as design-discussion forum, PR #171 stays open as concrete implementation to test against.
+- **Cross-impl significance**: openmoq/moqx has been driving CAT token auth via PR #264 (paul-mondain) + PR #286 (Catapult submodule) since May 1; cloudflare/moq-rs PR #171 is the **second relay implementation of CAT auth** under the C4M framing, structurally parallels rather than reuses openmoq/moqx's pattern.
+
+**Carry-forward**: London Day-1 PRIVACY_PASS slot (paired with [[moq-privacy-pass]] draft-02 advance) now has **two concrete relay implementations** (openmoq/moqx CAT + cloudflare/moq-rs C4M) plus thibmeu's pending Privacy Pass critique on PR #169 — three vectors of auth-implementation experience to inform draft-19 design.
+
+## mondain/moq2ts — MSFTS demonstrator announced
+
+### Paul Gregoire publicly announces moq2ts on #moq June 1 19:43 UTC
+
+[mondain/moq2ts](https://github.com/mondain/moq2ts) (C++, created May 21 2026, "MOQ + M2TS") — first publicly-announced reference implementation of [[moq-msfts|draft-gregoire-moq-msfts-00]]:
+
+> Created a demonstrator for the msfts draft https://github.com/mondain/moq2ts — only works with one relay that I know of at this time, but no one should be surprised by that 😉
+
+**Surge May 31-Jun 2 (~9 commits)**:
+- **Cross-platform CI build workflow** (`8306eee9` June 1 19:50 UTC) — Linux/macOS/Windows via GitHub Actions, AppImage via linuxdeploy + macdeployqt + windeployqt+ldd packaging.
+- **Real relay-capable binaries by linking moqxr SDK** (`5721c914` June 1 22:34 UTC) — links against prebuilt openmoq publisher SDK pinned `MOQXR_VERSION=v0.3.2`, Linux wraps archives in `--start-group` to resolve circular picohttp/picoquic deps.
+- **ffmpeg 8 + Qt qsizetype build fixes** (`7c143817` 22:56 UTC, `aef64cd0` 23:29 UTC) — `avio_alloc_context` const-buffer change for ffmpeg 8 + cross-version compat via `LIBAVFORMAT_VERSION_MAJOR` check.
+- **Native AVCaptureSession publish on macOS** (`8f281a43` June 2 00:29 UTC) — libavdevice/avfoundation hangs in `avformat_open_input` because it does not pump AVCaptureSession run loop from worker thread; uses native AVCaptureSession directly for preview + publish paths (uyvy422→BGRA in delegate, audio as packed/planar PCM).
+- **README/DEVELOPER refresh for current MSF + MSFTS catalog** (`06a17f7a` + `4e377e17` June 1 19:31-19:34 UTC) — documents `mediatimeline` MSF type for the timeline side-track + compact `[mediaTimeMs,[groupId,objectId],wallclockMs]` record array.
+
+**Synchronicity**: same June 2 02:25 UTC window, **[[moq-dev|moq-dev/moq]] [PR #1587](https://github.com/moq-dev/moq/pull/1587)** opens MPEG-TS import/export support for `moq-mux` via single `mpeg2ts` crate — both **moq2ts** (C++/MSFTS draft-specific) and **moq-dev/moq PR #1587** (Rust/codec-agnostic) advance MPEG-TS↔MoQ bridging within the same 24-hour window. **First concrete cross-impl MPEG-TS interop substrate**.
+
+**Carry-forward**: with mondain/moqxr SDK packaging (`a8ad5f9d`/`deea689f`/`d43d9804` June 1) + moq2ts CI builds linking against it + moq-dev/moq PR #1587 import/export, MSFTS as a streaming-format becomes **the second concrete MoQ-side MPEG-2 TS path** (after [[implementations#moqlivemock|moqlivemock]] catalog work) — directly relevant to London Day-2 35-min MSF/CMSF/MSFTS slot.
+
+## Slack #moq — Martin Duke draft-16-or-18 London poll
+
+### Martin Duke poses draft-version question June 1 22:43 UTC
+
+[Martin Duke Slack #moq June 1 22:43 UTC](https://quicdev.slack.com/archives/C046V0QF3CK/p1780353831190279):
+
+> Hi, is anyone coming to London interested in draft-16 interop? There is no way we're going to be done with draft-18 migration, but if everyone else will be we might as well break -16.
+
+Reactions: 🇬🇧 (1), 🧐 (1).
+
+**Responses** (within ~6h):
+- [Alan Frindell June 2 01:50 UTC](https://quicdev.slack.com/archives/C046V0QF3CK/p1780365027174379): *"moxygen will have support for 14 and 16, and hopefully enough 18 to get some interop"*.
+- [Mike English June 2 02:28 UTC](https://quicdev.slack.com/archives/C046V0QF3CK/p1780367301774199): *"moq-rs will also have instances of 14, 16, and a small start on 18 for people to test against."* + [02:29 UTC](https://quicdev.slack.com/archives/C046V0QF3CK/p1780367365497759): *"I'm also feeling like 18+ might be where we finally start on proper multi-version support"*.
+
+**Cumulative London-week version inventory** (from these 3 responses):
+| Impl | -14 | -16 | -17 | -18 |
+|---|---|---|---|---|
+| moxygen (openmoq/moqx) | ✓ | ✓ | — | partial |
+| moq-rs (cloudflare) | ✓ | ✓ | — | partial |
+| moq-dev/moq | — | ✓ | ✓ | ✓ (main) |
+| moqxr (mondain) | — | — | — | ✓ (main) |
+| imquic (meetecho) | — | — | ✓ | partial |
+| moqtail | ✓ | — | — | — |
+
+**Why this matters**:
+- **Draft-18 was published May 12 — 21 days before London** but no impl has full draft-18 conformance as of June 2; the partials are sufficient for **some** interop only.
+- **Martin Duke's question reframes the matrix**: not "everyone migrates to 18 by London" but "**how many drafts do we actually run cross-impl interop against at London**". The default expectation appears to be 14 + 16 + partial 18 = 3-version matrix during London week.
+- **Mike English's "multi-version support" comment is a structural signal**: until now, MoQ impl strategy has been "track latest draft, migration is best-effort per-impl"; Mike is signaling that **draft-18 may be the version where multi-version support becomes a deliberate impl feature**, not just a side effect of slow migration. This would echo HTTP/2 multi-version support patterns where impls keep older draft codepaths intentionally to support stragglers.
+
+**Carry-forward**: the interop runner is automated-version-locked (one target per matrix run); London Day-week interop is **manual** and operator-driven. Mike's PR #68 draft-18 target bump landed June 1, but **the matrix is now structurally ahead of every impl** (0 at target · 0 ahead · 177 behind) — which gives the manual London interop work latitude to exercise 14/16/18 cross-version freely without contradicting the automated matrix.
 
 # Activity (May 31 06:00 UTC → June 1 06:00 UTC) — **interop runner PR #68 MERGED draft-18 target bump (the matrix-shape lever the wiki has been tracking 14 days); MoQ Monthly #2 published ending Day-+31 silence with London framing + Dan Rayburn town hall + CacheFly/Red5 CDN beta; moq-dev/moq cluster-mesh infrastructure burst (5 merges + 1 OPEN in 12h, externalizes peer-list to operator-owned endpoint + deterministic FNV-1a route tie-break + per-auth-root billing); openmoq/moqx afrind PR #359 fixes relay shutdown hang; mondain/moqxr 2 cancellable-flush commits; moq-wg + mailing list + Slack all quiet; interop 177/54/122/0 (+2 pass, 30.5%, 14-day cadence longest streak, 5-day monotonic uptick to new May+June high, first 30%+ pass rate)**
 
