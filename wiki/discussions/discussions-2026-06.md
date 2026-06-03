@@ -2,11 +2,143 @@
 title: "Discussions - June 2026"
 tags: [discussions, slack, github]
 date: 2026-06-01
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during June 2026.
+
+# Activity (June 2 06:00 UTC → June 3 06:00 UTC) — **draft-ietf-moq-msf-01 PUBLISHED on Datatracker June 2 (Day +134 saga closes); draft-einarsson-moq-locmaf-00 NEW individual draft by Tobbe + Hugo Björs; afrind opens transport [PR #1642](https://github.com/moq-wg/moq-transport/pull/1642) replacing Joining Fetch with Subscription Fill; Tim Evens (Cisco) emerges as new cross-repo contributor (transport Issue #1641 + openmoq/moqx PRs #376/#377); moq-dev/moq ~14 merges incl /health endpoint + moq-lite-05 wire-feature triple + MPEG-TS fMP4 close-out; interop 177/57/119/1 new May+June high 32.2% (+6 pass)**
+
+**TL;DR**:
+- **[[moq-msf|draft-ietf-moq-msf-01]] PUBLISHED June 2 on Datatracker** by [[will-law|Will Law]] (Akamai) + [[suhas-nandakumar|Suhas Nandakumar]] (Cisco) — first MSF revision in **134 days** (since -00 Jan 19 2026); ends the 5-day slippage saga of wilaw's May 27 Slack *"Friday"* pledge. Final pre-submission clean-up was [moq-wg/msf PR #176](https://github.com/moq-wg/msf/pull/176) by wilaw (June 2 11:18 UTC, −7/1f, *"Remove unused RFC references and SCTE35 entry"*). Companion **[moq-wg/cmsf PR #21](https://github.com/moq-wg/cmsf/pull/21)** (+69/−20, MERGED 13:54 UTC, closes [#20](https://github.com/moq-wg/cmsf/issues/20)) updates CMSF's MSF reference from -00 → -01.
+- **[[moq-locmaf|draft-einarsson-moq-locmaf-00]] NEW individual draft submitted June 2** by **[[tobbe-einarsson|Torbjörn Einarsson]] (Eyevinn) + Hugo Björs (KTH)** — *"Low Overhead CMAF for Media over QUIC (LOCMAF)"* — compact wire format carrying CMAF chunk metadata as tagged fields while preserving sample data unchanged; receiver reconstructs functionally equivalent CMAF chunks for MSE/EME playback. **First IETF artifact from the wiki maintainer**. Slots between [[moq-loc|LOC]] (strips fMP4 overhead but loses MSE/EME) and [[moq-cmsf|CMSF]] (keeps CMAF semantics at full chunk size) — compact-fMP4 carrier the player reconstructs to a CMAF chunk in browser memory before handing to MSE.
+- **[moq-transport PR #1642](https://github.com/moq-wg/moq-transport/pull/1642) OPEN June 2 17:01 UTC by [[alan-frindell|afrind]]** *"Replace Joining Fetch with Subscription Fill, add Current Group"* (+188/−148, 1f) — **structural redesign**: Joining Fetch removed entirely; new subscription filter types **AbsoluteStartFill (`0x5`), AbsoluteRangeFill (`0x6`), CurrentGroup (`0x7`), RelativeStartFill (`0x8`)**; new FillDescending (`0x3`) group order; new Current Group Delivery + Fill Semantics sections; publisher opens single fill fetch stream (FETCH_HEADER reusing subscription Request ID) for past objects while delivering current/future via subscribe subgroups/datagrams. **Replaces [[ian-swett|ianswett]]'s [PR #1627](https://github.com/moq-wg/moq-transport/pull/1627)** (OPEN since May 3, ianswett auto-CLOSES it June 3 00:16 UTC, 30 days OPEN). Plus 2 new draft-18 design issues — **[Issue #1641](https://github.com/moq-wg/moq-transport/issues/1641)** by Tim Evens (Cisco) on PUBLISH_DONE control-stream-vs-request-stream wording (afrind reply *"Request streams are considered 'control' streams in most of the text, but we can probably crisp this up"*); **[Issue #1643](https://github.com/moq-wg/moq-transport/issues/1643)** by afrind on bidi-stream FIN semantics. **London Day-1 0900-1045 MOQT Issues 180-min slot now has 3 normative-text deliverables (DTS [PR #1638](https://github.com/moq-wg/moq-transport/pull/1638) + EXPIRES [PR #1640](https://github.com/moq-wg/moq-transport/pull/1640) + Fill [PR #1642](https://github.com/moq-wg/moq-transport/pull/1642)) + 4 design-issue threads** — will require triage.
+- **Implementations**: **[[moq-dev|moq-dev/moq]] another ~14-merge cycle** (June 2 20:00 UTC → June 3 04:00 UTC, all kixelated): **[PR #1604](https://github.com/moq-dev/moq/pull/1604) `/health` load-shedding endpoint** (+905/−5, 11f, first explicit production-CDN feature); **moq-lite-05 wire-feature triple** ([PR #1595](https://github.com/moq-dev/moq/pull/1595) MERGED Frame Start in FETCH + [PR #1601](https://github.com/moq-dev/moq/pull/1601) OPEN TrackConsumer::fetch + [PR #1609](https://github.com/moq-dev/moq/pull/1609) OPEN TRACK_INFO Track Stream `0x6`); **MPEG-TS fMP4 export close-out** ([PR #1590](https://github.com/moq-dev/moq/pull/1590) out-of-band avc1/hvc1 + [PR #1593](https://github.com/moq-dev/moq/pull/1593) AAC esds in fMP4); **API ergonomics** ([PR #1606](https://github.com/moq-dev/moq/pull/1606) ergonomic `subscribe(None)`); **release + dependency wave** (PR #1607 0.12.7 + PR #1596/#1598/#1599/#1602/#1603). moq-lite-05 now has **5 wire features in 7 days** (deflate + AnnounceOk + Frame Start + TrackConsumer::fetch + TRACK_INFO Track Stream) — the most active wire-protocol evolution venue in the ecosystem. **[[openmoq|openmoq/moqx]]**: **Tim Evens (Cisco) emerges as new external contributor** — [PR #376](https://github.com/openmoq/moqx/pull/376) OPEN Debian bookworm + CPM (+92/−31, 5f); [PR #377](https://github.com/openmoq/moqx/pull/377) OPEN macOS Apple Clang 21 fmt workaround (+21/−6, 2f). Same TimEvens filing transport Issue #1641 — cross-repo emergence Day +1 of activity. **3rd Cisco contributor reaching mainline moq-wg artifacts** alongside Suhas Nandakumar + Mo Zanaty. **[[moq-rs|cloudflare/moq-rs]]**: PR #167 minor refresh June 3 05:37 UTC; #169/#170/#171 untouched. **[[mondain]]**, **[[moqtail|moqtail/moqtail]]**, **[[moq-js|video-dev/moq-js]]** (PR #72 OPEN), **[[imquic|meetecho/imquic]]** (PR #27 OPEN), **[[google-quiche|google/quiche moqt]]**, **[[quiche-moq|birneee/quiche_moq]]**, **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]**, Eyevinn/warp-player, Eyevinn/moqtransport all quiet.
+- **Interop**: **177 / 57 / 119 / 1** at [2026-06-03 00:56:06 UTC](https://englishm.github.io/moq-interop-runner/results/2026-06-03_005606/report.html) — **+6 pass vs June 2** (51 → 57, 28.8% → 32.2%, **+3.4pp**), **first 32%+ pass rate since cadence recovery May 19**, largest single-day pass-count jump since the May 19 cadence recovery; **16-day cadence (new longest streak the wiki has tracked)**. Version breakdown still **0 at target · 0 ahead · 177 behind** — impl-registration drift unchanged; the +6 jump comes from **better cross-version compatibility behavior** not registration-side closure. **London hackathon 6 days away**.
+
+## draft-ietf-moq-msf-01 PUBLISHED — 134-day saga closes
+
+[[will-law|Will Law]]'s May 27 Slack pledge *"I plan to release a new draft this Friday ahead of the London interop"* (May 29 UTC) **finally lands on Datatracker June 2** after 4 days of slippage:
+
+| Date | Status | Notes |
+|------|--------|-------|
+| 2026-05-27 12:30 UTC | Pledge | wilaw Slack: *"this Friday"* (May 29) |
+| 2026-05-29 EOD | **Day +130, slip 1** | No submission |
+| 2026-05-30 EOD | **Day +131, slip 2** | No submission |
+| 2026-05-31 EOD | **Day +132, slip 3** | No submission |
+| 2026-06-01 EOD | **Day +133, slip 4** | No submission |
+| 2026-06-02 ~13:54 UTC | **Day +134, submitted** | -01 lands; CMSF reference bump merged shortly after |
+
+**The 5-day slippage was real but contained**: only ~3 trailing editorial PRs landed between announced ETA (May 29) and actual submission (June 2): PR #173 normative refs (May 29), PR #174 timestamp rounding (May 29), PR #171 parent namespace (May 30), PR #159/#165/#175 (June 1 burst), PR #176 RFC refs clean-up (June 2). The longer cycle absorbed Issue #163 version-string fix (PR #175 June 1) + RFC reference clean-up (PR #176 June 2) that would otherwise have needed a -02.
+
+**MSF -01 cadence**: 134 days from -00 (Jan 19) to -01 (June 2). **Sets MSF's publication tempo as ~4 months per revision** — slower than moq-transport (-17 → -18 in 49 days) but consistent with MSF being a packaging-format spec rather than a wire-protocol spec.
+
+**18 wilaw events May 24-June 2** (largest single-contributor MSF push since draft adopted) all absorbed into -01:
+- PR #157 (suhasHere group numbering)
+- PR #159 (suhasHere catalog compression)
+- PR #165 (wilaw bitrate properties + mandatory audio/video fields)
+- PR #166 (wilaw typed-object initDataList; Tobbe's design adopted)
+- PR #167 (wilaw targetBuffer; closes kixelated's Issue #150)
+- PR #168 (wilaw catalog object specs + numbering)
+- PR #171 (wilaw parent namespace for clone tracks)
+- PR #173 (wilaw normative reference update)
+- PR #174 (wilaw timestamp rounding)
+- PR #175 (wilaw version-string)
+- PR #176 (wilaw RFC refs + SCTE35 removal)
+
+## draft-einarsson-moq-locmaf-00 — First IETF artifact from the wiki maintainer
+
+[[tobbe-einarsson|Torbjörn Einarsson]] (Eyevinn Technology) + Hugo Björs (KTH) submit **draft-einarsson-moq-locmaf-00** *"Low Overhead CMAF for Media over QUIC (LOCMAF)"* June 2 on Datatracker. Per abstract: *"LOCMAF defines a compact wire format that enables streaming low-latency CMAF media over MoQ Transport with significantly reduced per-object overhead. The format carries CMAF chunk metadata as tagged fields while preserving sample data unchanged, with the receiver reconstructing functionally equivalent CMAF chunks suitable for MSE/EME playback pipelines."*
+
+**Design position**: slots between LOC (lean container, no MSE/EME compat) and CMSF (full CMAF chunks). LOCMAF's distinguishing choice: **carry CMAF chunk metadata as tagged fields**, **preserve sample data unchanged**, **reconstruct CMAF chunk receiver-side** — transparent to MSE/EME consumers (the player still sees standard CMAF chunks) while removing redundant box headers from the wire.
+
+**Motivation**: Eyevinn's existing CMAF-based pipeline (HLS/DASH origins + low-latency CMAF chunked encoding) needs a MoQ wire shape that doesn't force re-architecting the player-side MSE/EME glue. LOCMAF preserves that. Also resolves Tobbe's May 23 [moq-wg/msf Issue #153](https://github.com/moq-wg/msf/issues/153) Point 4 (*"AVC3 doesn't resolve the mid-stream-change question because Safari (notably for FairPlay DRM) requires `avc1`/`hvc1` sample entries"*) by allowing parameter sets out-of-band as tagged fields.
+
+**See** [[moq-locmaf|the new wiki page for moq-locmaf]] for details.
+
+## afrind PR #1642 — Joining Fetch removed, Subscription Fill introduced
+
+afrind's [PR #1642](https://github.com/moq-wg/moq-transport/pull/1642) (+188/−148, 1f) **structurally redesigns MOQT's past-object retrieval**:
+
+**Removed**:
+- Joining Fetch types
+- Joining Fetches section
+- Joining Fetch Range Calculation
+- Joining Location
+- INVALID_JOINING_REQUEST_ID error code
+
+**Added** (new subscription filter types):
+- AbsoluteStartFill (`0x5`)
+- AbsoluteRangeFill (`0x6`)
+- CurrentGroup (`0x7`)
+- RelativeStartFill (`0x8`)
+- FillDescending (`0x3`) group order (descending for fill, ascending for subscribe)
+
+**Added** (new sections):
+- **Current Group Delivery** — publisher subgroup ordering + relay object accounting requirements, applies to any filter covering current group
+- **Fill Semantics** — defines fill fetch stream behavior
+
+**Modified**:
+- Standalone Fetch fields inlined directly into FETCH wire format
+- LARGEST_OBJECT serves as fill boundary in SUBSCRIBE_OK
+- FILL_TIMEOUT extended to apply in SUBSCRIBE messages with fill filter types
+- REQUEST_UPDATE with a fill filter type opens a new fill fetch stream using the REQUEST_UPDATE's Request ID
+- Fill filter types + CurrentGroup disallowed in PUBLISH_OK (stale LARGEST_OBJECT); recommends `forward=0` + REQUEST_UPDATE pattern instead
+
+**Publisher behavior**: opens a single fill fetch stream (FETCH_HEADER reusing the subscription's Request ID) for past objects while delivering current/future via subscribe subgroups/datagrams.
+
+**Replaces [[ian-swett|ianswett]]'s [PR #1627](https://github.com/moq-wg/moq-transport/pull/1627)** *"SUBSCRIBE with Joining Fetch"* OPEN May 3 → CLOSED June 3 00:16 UTC (30 days OPEN). The architectural simplification (one filter dimension instead of two request types) and FillDescending group order directly answer ianswett's [Issue #1614](https://github.com/moq-wg/moq-transport/issues/1614) "(JOINING) FETCH + SUBSCRIBE prioritization".
+
+## Tim Evens (Cisco) emerges as new cross-repo contributor
+
+Tim Evens files **3 contributions across 2 repos within ~18h June 2 06:19 UTC → June 3 05:09 UTC**:
+
+| Repo | PR/Issue | When | Subject |
+|------|----------|------|---------|
+| moq-wg/moq-transport | [Issue #1641](https://github.com/moq-wg/moq-transport/issues/1641) | June 2 06:19 UTC | *"Publish DONE, control stream or request stream?"* (draft-18 wording inconsistency) |
+| openmoq/moqx | [PR #376](https://github.com/openmoq/moqx/pull/376) | June 2 23:42 UTC | *"Fix Debian bookworm builds and switch deps to CPM"* (+92/−31, 5f) |
+| openmoq/moqx | [PR #377](https://github.com/openmoq/moqx/pull/377) | June 3 05:09 UTC | *"fix macOS deps build with Apple Clang 21+ and tidy sanitizer flags"* (+21/−6, 2f) |
+
+**Cisco footprint across MoQ now spans 3 named individuals + 2 implementations + 4 specs**:
+
+| Contributor | Specs | Implementations |
+|-------------|-------|----------------|
+| Suhas Nandakumar | cmsf, msf, secure-objects, privacy-pass | cloudflare/moq-rs (PR #167 + #171) |
+| Mo Zanaty | loc (draft author), agenda | — |
+| Tim Evens | moq-transport draft-18 design (#1641) | openmoq/moqx (#376, #377) |
+
+**Structurally the most distributed corporate presence in the MoQ ecosystem.** Tim Evens's emergence in the same week as the multi-thread sprint stack (PR #361-#365 OPEN) + Suhas's C4M AuthHook (PR #171 OPEN) means **multi-author multi-corporation collaboration on openmoq/moqx is now visible in main-branch PR list** — distinct from the kixelated-solo pattern at moq-dev/moq.
+
+## moq-dev/moq operational milestone — `/health` endpoint
+
+[PR #1604](https://github.com/moq-dev/moq/pull/1604) (+905/−5, 11f) adds an unauthenticated `GET /health` to moq-relay's existing web server:
+
+- **Returns**: `200 ok` when every configured threshold passes; `503 overloaded` + one plain-text line per breached threshold when any threshold breaches
+- **No thresholds configured**: pure liveness probe
+- **Metrics**: cross-platform [`sysinfo`](https://crates.io/crates/sysinfo) crate; load-average flag Unix-only
+- **Config** under `[web.health]` with matching `--web-health-*` flags + `MOQ_WEB_HEALTH_*` env vars:
+  - `cpu` — global CPU usage (`75` or `75%`)
+  - `ram` — memory usage (`80%` of total or `32GB`/`32GiB` absolute used)
+  - `rx` / `tx` — aggregate throughput (unit required; lowercase `b` = bits, uppercase `B` = bytes)
+
+**First explicit production-CDN load-shedding feature** in any tracked MoQ implementation. Pairs with PR #1571 May 31 (externalized `--cluster-connect-api` peer list) + PR #1574 May 31 (per-auth-root presence-based billing). Together: **moq-dev/moq is now structurally a production CDN substrate** with load-balancer integration, peer-list externalization, presence billing, and the moq-pro pattern consolidated.
+
+## moq-lite-05 wire-feature triple — pace continues
+
+Counting from PR #1518 (Lite05Wip variant May 27) the wire-feature additions in 7 days are:
+
+1. **PR #1531** May 28 — `Compression` codec field in SUBSCRIBE_OK (deflate compression)
+2. **PR #1573** June 1 — `AnnounceOk` message (responder origin + initial active count)
+3. **PR #1595** June 3 — `Frame Start (i)` field in FETCH (resume mid-group)
+4. **PR #1601 OPEN** June 3 — `TrackConsumer::fetch` first-class single-group FETCH
+5. **PR #1609 OPEN** June 3 — `TRACK_INFO` Track Stream `0x6` (immutable props off SUBSCRIBE_OK)
+
+**All gated on `Lite05Wip`** so default ALPN/Versions don't advertise — opt-in for testing without disrupting Lite04 default negotiation.
+
+**moq-lite-05 is structurally the most active wire-protocol evolution venue in the MoQ ecosystem** — 5 wire features in 7 days outpaces moq-transport's draft-18 → draft-19 prep both in feature count and merge cadence.
+
+---
 
 # Activity (June 1 06:00 UTC → June 2 06:00 UTC) — **wilaw [moq-transport PR #1638 DTS](https://github.com/moq-wg/moq-transport/pull/1638) OPEN as PR-against-transport-18 (consensus-decided design lands as base-spec PR per Cullen's preference); 3 MSF PRs MERGED (compression #159, bitrate #165, string-version #175) while MSF -01 still NOT submitted Day +134; moq-dev/moq 14 merges + 6 OPEN including MPEG-TS bridge PR #1587 (matches MSFTS/moq2ts) + moq-lite-05 AnnounceOk MERGED + per-track timescale (long-pending #1439) MERGED + qmux version mapping (long-pending #1513) MERGED + subscribe_track async (long-pending #1540) MERGED; cloudflare/moq-rs PR #171 AuthHook + C4M implementation OPEN by suhasHere (+2090/-15, implementation of design proposal #169); mondain/moq2ts MSFTS demonstrator publicly announced on Slack with cross-platform CI build workflow; Martin Duke asks #moq if anyone wants draft-16 interop at London, Alan Frindell + Mike English confirm 14/16/18 multi-version support; google/quiche 2 commits (FETCH stream + RemoteTrack refactor); openmoq/moqx afrind multi-thread relay sprint continues with 5 OPEN PRs; interop 177/51/125/1 first draft-18 target run (-3 pass, 0 at target · 0 ahead · 177 behind reflects impl-registration vs draft-version drift)**
 
