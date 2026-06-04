@@ -2,11 +2,108 @@
 title: "Discussions - June 2026"
 tags: [discussions, slack, github]
 date: 2026-06-01
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during June 2026.
+
+# Activity (June 3 06:00 UTC → June 4 06:00 UTC) — **draft-ietf-moq-cmsf-01 PUBLISHED on Datatracker June 3 (2nd WG draft to land in 2 days); LOCMAF Slack thread engages afrind + wilaw on initData carriage; sharmafb editorial sprint files 5 draft-18 issues/PRs in 18 min; openmoq/moqx paul-mondain CAT token PR #264 MERGES after 33 days; google/quiche moqt starts draft-19 wire prep (new varint, CLIENT/SERVER SETUP merge); moq-dev/moq ~12 merges incl. voice-AI latency range; 2 new external contribs (arielmol SCTE-35, vipyne AI-voice flush); interop 177/54/122/0 (−3 pass)**
+
+**TL;DR**:
+- **[[moq-cmsf|draft-ietf-moq-cmsf-01]] PUBLISHED on Datatracker June 3** by [[will-law|Will Law]] (Akamai) — **2nd MoQ WG draft revision in 2 days** (MSF -01 June 2 → CMSF -01 June 3). Final pre-submission clean-up was [moq-wg/cmsf PR #22](https://github.com/moq-wg/cmsf/pull/22) MERGED June 3 11:32 UTC *"Fix I-D nits"* (+7/−6). wilaw also posts "MSF updates" + "CMSF updates" announcement messages to the IETF MoQ mailing list — first per-spec author-led list updates from wilaw the wiki has tracked.
+- **[[moq-locmaf|LOCMAF]] Slack thread engages afrind + wilaw on initData carriage**. [[tobbe-einarsson|Tobbe]] announces [LOCMAF -00](https://www.ietf.org/archive/id/draft-einarsson-moq-locmaf-00.html) at June 3 08:51 CEST citing msf draft-01's new `initData` catalog references + catalog compression as enablers; [[alan-frindell|afrind]] 18:13 CEST asks *"Have we considered init data as a track property?"*, then 20:06 CEST *"InitData as a separate subgroup?"*, then 22:00 CEST *"Only Publish the init subgroup in groups where it changed."*. [[will-law|wilaw]] 21:37 CEST responds *"we have added the init structure in MSF as an extensible scheme. if the init is not going to change for the life of the track, then we could add indeed add it as a defined track property… Currently we do not allow track init properties to change once publish has begun."* **5-reply thread surfaces 3-way design space**: catalog-referenced vs track-property vs per-group-subgroup. Promotes the stale [moq-msf Issue #153](https://github.com/moq-wg/msf/issues/153) ("initTrack does not work") to active design engagement within 12h of LOCMAF announcement.
+- **moq-transport: sharmafb (Cisco) 5-item editorial sprint June 3 21:09-21:27 UTC** (18-minute window): **[PR #1645](https://github.com/moq-wg/moq-transport/pull/1645)** *"Change PUBLISH_OK = 0x1E in table"* (PUBLISH_OK was removed); **[Issue #1646](https://github.com/moq-wg/moq-transport/issues/1646)** *"Application-specific property codepoints conflict"* (§2.5 reserves 0x38-0x3F vs §15.8 reserves 0x78-0x7F); **[Issue #1647](https://github.com/moq-wg/moq-transport/issues/1647)** *"TIMESTAMP and SUBGROUP_DELIVERY_TIMEOUT have same value"*; **[PR #1648](https://github.com/moq-wg/moq-transport/pull/1648)** *"Soften one mandatory response for a REQUEST_UPDATE"*; **[PR #1649](https://github.com/moq-wg/moq-transport/pull/1649)** *"Modify text about PUBLISH_DONE on a control stream"* (companion to Tim Evens's [#1641](https://github.com/moq-wg/moq-transport/issues/1641)). Plus **[Issue #1644](https://github.com/moq-wg/moq-transport/issues/1644)** by kixelated *"Duplicate Track Properties on repeated SUBSCRIBE_OK / FETCH_OK"* — same gap that moq-lite-05 PR #1609 already addresses via TRACK_INFO Track Stream. **draft-18 errata-style issues now outpace design-issue resolution**: 5 of 5 sharmafb items are wire-table-vs-text/codepoint-collision-style. **[[google-quiche|google/quiche moqt]] starts draft-19 wire prep**: vasilvv 3 commits June 3 — `4096d2e3` *"Switch MOQT to using new varint format"*, `8427f949` *"Use delta encoding for Subscribe Filters of type Absolute Range"*, `96c9a9c0` *"Merge CLIENT_SETUP and SERVER_SETUP into a single control message"*. First sustained draft-19 wire-prep work the wiki has tracked from any impl.
+- **Implementations**: **[[moq-dev|moq-dev/moq]] ~12 merges + 7 OPEN cycle** (June 3 ~05:00 → June 4 ~05:00 UTC, all kixelated unless noted). Highlights: **[PR #1620](https://github.com/moq-dev/moq/pull/1620) OPEN** *"feat(watch): latency range with buffered playback"* — reframes playback latency as a range `[min, max]` unifying live and buffered playback into one mechanism, **unblocks voice-AI/TTS use cases** ([pipecat-ai/pipecat#4629](https://github.com/pipecat-ai/pipecat/pull/4629)) where the response is written *faster than real-time*. **2 new external contributors in 24h**: **arielmol [PR #1617](https://github.com/moq-dev/moq/pull/1617) OPEN** SCTE-35 from MPEG-TS into a new `data` catalog track (first broadcast-ad-marker plumbing in moq-dev/moq); **vipyne [Issue #1614](https://github.com/moq-dev/moq/issues/1614) + [PR #1615](https://github.com/moq-dev/moq/pull/1615) OPEN** AudioProducer Python flush/cancel for AI voice agent interruption use cases. Together PR #1620 + #1615 + #1617 = **3 PRs adding new use-case verticals in 24h**: AI-voice playback, AI-voice ingest, broadcast-ad-marker carriage. Plus watch refactor (PR #1591 Computed signals MERGED, PR #1592 inputs-vs-outputs MERGED, PR #1588 stop downloads when muted/paused/off-screen), CI release pipeline shakedown (PR #1619/#1622/#1623), moq-net per-control-stream task (PR #1621), apt keyring rename (PR #1611). **[[openmoq|openmoq/moqx]]**: **paul-mondain CAT token [PR #264](https://github.com/openmoq/moqx/pull/264) MERGED June 3 22:57 UTC** after 33 days OPEN (+1807/−13, 20f) — first openmoq/moqx external-contrib-driven auth path now landed in `main`. Plus **Tim Evens [PR #376](https://github.com/openmoq/moqx/pull/376) + [PR #377](https://github.com/openmoq/moqx/pull/377) MERGED** (Debian bookworm + macOS Apple Clang 21); **gmarzot [PR #370](https://github.com/openmoq/moqx/pull/370) MERGED** folly XLOG. **afrind opens 3 new issues**: **[#380](https://github.com/openmoq/moqx/issues/380)** standard token type values; **[#381](https://github.com/openmoq/moqx/issues/381)** auth for MOQT peers; **[#382](https://github.com/openmoq/moqx/issues/382)** Draft-18 updates for relay behavior (priority-ranked sub-issues = draft-18 catch-up backlog scoped). **[[mondain]]/moqxr**: **[PR #14](https://github.com/mondain/moqxr/pull/14) OPEN** by **TilsonJoji (new external contributor)** *"Add SRT MPEG-TS ingest with fMP4 repackaging and MoQ object publishing"* — first MoQ-side SRT ingest path in the openmoq orbit. **[[quiche-moq|google/quiche moqt]]**: vasilvv 3 draft-19 wire-prep commits (see above). **[[moq-rs|cloudflare/moq-rs]]**: PR #167 + PR #171 untouched. **[[moqtail|moqtail/moqtail]]**, **[[moq-js|video-dev/moq-js]]** (PR #72 OPEN), **[[imquic|meetecho/imquic]]** (PR #27 OPEN, updated June 3 17:14 UTC), **[[moqintosh|t-gazzy/Moqintosh]]**, **[[moqlivemock]]** (PR #90 dependabot quic-go bump), Eyevinn/warp-player, Eyevinn/moqtransport, **[[quiche-moq|birneee/quiche_moq]]**, Quicr/cat-token all quiet.
+- **Interop**: **177 / 54 / 122 / 0** at [2026-06-04 00:55:39 UTC](https://englishm.github.io/moq-interop-runner/results/2026-06-04_005539/report.html) — **−3 pass vs June 3** (57 → 54, 32.2% → 30.5%, **−1.7pp**), reverses Jun 3's +6 jump symmetrically; skip drops 1 → 0; **17-day cadence streak (new longest the wiki has tracked)**. Version breakdown still **0 at target · 0 ahead · 177 behind** — impl-registration drift unchanged. **Slack signal June 2 09:18 UTC by Yu You (Nokia)**: *"we are in the process to host a remote relay for the interop. we have the support of v17 and v18 (basic ones with current interop test cases) for testing"* — first announced impl-side v18 endpoint, would close the 0-at-target gap if registered. **London hackathon 5 days away**.
+
+## draft-ietf-moq-cmsf-01 PUBLISHED — 2nd WG draft in 2 days
+
+[[will-law|Will Law]]'s CMSF -01 lands on Datatracker June 3, **187 days after -00** (Dec 2025). The 2-day MSF→CMSF publication cluster aligns the two streaming-format specs for the **London Day-2 35-min MSF/CMSF Will Law slot**.
+
+**Mailing-list announcements June 3** by wilaw:
+- *"MSF updates"* — companion narrative to MSF -01 (the [134-day-saga draft that landed June 2](#draft-ietf-moq-msf-01-published-—-134-day-saga-closes))
+- *"CMSF updates"* — companion narrative to CMSF -01
+
+First wilaw-authored per-spec mailing-list update tracked by the wiki — historically he announces draft revisions via Slack rather than email. The June 3 list posts pair CMSF -01 with MSF -01 as a coordinated London-cycle update.
+
+## LOCMAF Slack thread — initData carriage as 3-way design space
+
+Under Tobbe's [[moq-locmaf|LOCMAF -00]] announcement on `#moq` June 3 08:51 CEST, **5 substantive replies through 22:00 CEST** form the first cross-author engagement on the new individual draft:
+
+| When | Author | Substance |
+|------|--------|-----------|
+| 08:51 CEST | [[tobbe-einarsson|Tobbe]] | Announcement of LOCMAF -00; cites msf draft-01 `initData` references + catalog compression as enablers for the reduced-complexity v0.2 design |
+| 18:13 CEST | [[alan-frindell|afrind]] | *"Have we considered init data as a track property?"* |
+| 19:14 CEST | Tobbe | Replies: msf -01 introduces `initData` type currently only `"inline"`, but extensible to a track reference; links [moq-msf Issue #153](https://github.com/moq-wg/msf/issues/153) |
+| 20:06 CEST | afrind | *"InitData as a separate subgroup?"* |
+| 21:37 CEST | [[will-law|wilaw]] | *"As Torbjorn mentioned, we have added the init structure in MSF as an extensible scheme. if the init is not going to change for the life of the track, then we could add indeed add it as a defined track property. Adding it as a subgroup would be wasteful, as you would have to continually re-send it. Currently we do not allow track init properties to change once publish has begun."* |
+| 22:00 CEST | afrind | *"Only Publish the init subgroup in groups where it changed."* |
+
+The thread **surfaces 3-way design space for initData carriage**:
+1. **Catalog-referenced** (msf -01's `inline` type extended to a track reference) — Tobbe's interpretation
+2. **Track property** (afrind suggestion, wilaw seconds for steady-state immutability)
+3. **Per-group subgroup with only-when-changed delivery** (afrind suggestion, key-rotation case)
+
+**Significance**: First substantive cross-author engagement on LOCMAF, **counter-signal to the "individual drafts sit with no engagement" pattern**. Promotes the stale [moq-msf Issue #153](https://github.com/moq-wg/msf/issues/153) ("initTrack does not work") to active design engagement. Likely surfaces at the **London Day-2 35-min MSF/CMSF Will Law slot** as a structured design discussion of init carriage that also affects [[moq-cmsf|CMSF]] (full CMAF chunks) and [[moq-loc|LOC]] (self-initializing per-object).
+
+## sharmafb 5-item draft-18 editorial sprint
+
+[[suhas-sathyanarayana|sharmafb]] (Cisco; not to be confused with Suhas Nandakumar) files **5 contributions in 18 minutes June 3 21:09-21:27 UTC**, all draft-18 errata-style:
+
+| Item | Subject |
+|------|---------|
+| [PR #1645](https://github.com/moq-wg/moq-transport/pull/1645) | *"Change PUBLISH_OK = 0x1E in table"* — PUBLISH_OK message type was removed but its table row remained |
+| [Issue #1646](https://github.com/moq-wg/moq-transport/issues/1646) | *"Application-specific property codepoints conflict"* — §2.5 reserves 0x38-0x3F + 0x3800-0x3FFF for application use, but §15.8 reserves 0x78-0x7F. Direct codepoint collision |
+| [Issue #1647](https://github.com/moq-wg/moq-transport/issues/1647) | *"TIMESTAMP and SUBGROUP_DELIVERY_TIMEOUT have same value"* — §15.8 codepoint collision |
+| [PR #1648](https://github.com/moq-wg/moq-transport/pull/1648) | *"Soften one mandatory response for a REQUEST_UPDATE"* — §10.9.1 already allows coalesced failed updates to produce only one REQUEST_ERROR |
+| [PR #1649](https://github.com/moq-wg/moq-transport/pull/1649) | *"Modify text about PUBLISH_DONE on a control stream"* — companion to Tim Evens's [Issue #1641](https://github.com/moq-wg/moq-transport/issues/1641) |
+
+**Combined with [Issue #1644](https://github.com/moq-wg/moq-transport/issues/1644)** by kixelated June 3 15:55 UTC *"Duplicate Track Properties on repeated SUBSCRIBE_OK / FETCH_OK"* (the moq-transport-side surfacing of the same gap that moq-lite-05 PR #1609 already addresses with TRACK_INFO Track Stream `0x6`), the **draft-18 errata + design issue load now stands at 14 active items** (6 normative PRs OPEN + 8 design issues OPEN) heading into London Day-1 0900-1045 "MOQT Issues" 180-min slot — **infeasible to ship all 6 PRs on the floor**; chairs will likely defer pure-editorial items (PUBLISH_OK code change [#1645](https://github.com/moq-wg/moq-transport/pull/1645) + PUBLISH_DONE wording [#1649](https://github.com/moq-wg/moq-transport/pull/1649)) to editor discretion, leaving DTS + EXPIRES + Fill as the substantive merges-on-floor candidates.
+
+## google/quiche moqt starts draft-19 wire prep in earnest
+
+**3 vasilvv commits June 3** (03:08 — 10:58 UTC) all directly altering MOQT wire shape:
+
+| SHA | When | Subject |
+|-----|------|---------|
+| `4096d2e3` | 03:08 UTC | *"Switch MOQT to using new varint format"* — draft-19 wire bump |
+| `8427f949` | 03:22 UTC | *"Use delta encoding for Subscribe Filters of type Absolute Range"* — wire compaction |
+| `96c9a9c0` | 10:58 UTC | *"Merge CLIENT_SETUP and SERVER_SETUP into a single control message"* — handshake simplification |
+
+Plus martinduke `52de014c` June 2 22:45 UTC (MoqtResponseCallback MessageParameters in REQUEST_OK) + `c25d5258` June 3 15:30 UTC (ASAN fix).
+
+**First sustained draft-19 wire-prep work** the wiki has tracked from any impl — up until now quiche moqt commits since May 14 have been refactor work (stream-class factoring + subscription publisher extraction). With vasilvv pivoting to wire-format changes, **the implementation track for draft-19 is now open** — moq-transport spec text changes for these will likely surface at London.
+
+## openmoq/moqx — PR #264 paul-mondain CAT token MERGED after 33 days OPEN
+
+**[paul-mondain PR #264](https://github.com/openmoq/moqx/pull/264) MERGED June 3 22:57 UTC** — the largest single moqx merge so far (+1807/−13, 20 files). Adds **opt-in CAT-style token authentication** with per-service auth config block, internal signed CWT/HMAC token verifier for `exp`/`moqt`/`moqt-reval` claims, AUTHORIZATION_TOKEN credential validation, and authorization checks on PUBLISH_NAMESPACE/PUBLISH/SUBSCRIBE_NAMESPACE/SUBSCRIBE/FETCH/TRACK_STATUS. Preserves existing relay peering token behavior.
+
+**Cross-impl auth status June 4**: 3 cross-impl auth-relay-path PRs were open in parallel — openmoq/moqx PR #264 (paul-mondain CAT, OPEN since May 1) + cloudflare/moq-rs PR #169 (englishm-cloudflare AuthHook design) + cloudflare/moq-rs PR #171 (suhasHere C4M implementation). **PR #264 lands first**; PRs #169/#171 still OPEN and untouched June 3-4. Combined with [PR #286](https://github.com/openmoq/moqx/pull/286) (paul-mondain Catapult submodule wiring, stacked on #264) still OPEN, the openmoq/moqx auth story still has one more stack-on-top to land before complete.
+
+**afrind opens 3 new issues June 3 23:09-23:43 UTC**:
+
+- **[Issue #380](https://github.com/openmoq/moqx/issues/380)** *"auth: use standard token type values"* — *"Now we support cat4moq, but allow the operator to configure the token type. We should use whatever the spec defines."* (filed ~10 min after PR #264 merge)
+- **[Issue #381](https://github.com/openmoq/moqx/issues/381)** *"auth: how does it work for MOQT peers?"* — relay-peer auth bypass / inter-relay token presentation question
+- **[Issue #382](https://github.com/openmoq/moqx/issues/382)** *"Draft-18 updates for relay behavior"* — priority-ranked sub-issues including NAMESPACE_TOO_LARGE error+reset enforcement, SUBSCRIBE_NAMESPACE stream closure semantics, plus *"see what's coming from upstream into moxygen/relay/MoQRelay and moxygen/relay/MoQCache -- we likely need to port these over"*. **First openmoq/moqx draft-18 catch-up backlog scoped as a tracking issue**.
+
+## TilsonJoji emerges at mondain/moqxr — SRT MPEG-TS ingest
+
+**[mondain/moqxr PR #14](https://github.com/mondain/moqxr/pull/14) OPEN by TilsonJoji** (new external contributor; OPEN June 1, last updated June 3 17:51 UTC) *"Add SRT MPEG-TS ingest with fMP4 repackaging and MoQ object publishing"* — first MoQ-side SRT ingest path in the openmoq orbit. Parallel to [moq-dev/moq PR #1587](https://github.com/moq-dev/moq/pull/1587) (MPEG-TS over MoQ via mpeg2ts crate) + [mondain/moq2ts](https://github.com/mondain/moq2ts) (MSFTS demonstrator). **The mondain ecosystem now spans 3 MPEG-TS-adjacent paths**: moqxr (SRT MPEG-TS ingest), moq2ts (MSFTS demonstrator), and the moqxr-as-SDK link target.
+
+## moq-dev/moq voice-AI / TTS use case lands at the player
+
+**[PR #1620](https://github.com/moq-dev/moq/pull/1620) OPEN by kixelated** *"feat(watch): latency range with buffered playback"* (+726/−75, 14 files) **reframes playback latency in `@moq/watch` as a range `[min, max]`**. The PR body opens:
+
+> Reframes playback latency in `@moq/watch` as a **range** `[latency-min, latency-max]`, unifying live (minimize-latency) and buffered playback into a single mechanism. This unblocks voice-AI / TTS use cases (e.g. [pipecat-ai/pipecat#4629](https://github.com/pipecat-ai/pipecat/pull/4629)) where a response is written *faster than real-time* with future timestamps and should be buffered and played at the encoded pace, rather than the player aggressively minimizing latency and skipping ahead.
+
+> Latency was never really a single point — it's a range, and "minimize latency" is just the degenerate case where the range collapses (`max == min`).
+
+The sync reference (wall-clock anchor) is re-anchored (skipped forward) **only when** keeping it would push latency past the bounds. Pairs with **[PR #1615](https://github.com/moq-dev/moq/pull/1615)** by **vipyne (new external contributor)** addressing the ingest side: AudioProducer (Python) flush/cancel primitive for real-time interruption (AI voice agents). Together with **[PR #1617](https://github.com/moq-dev/moq/pull/1617)** by **arielmol (new external contributor)** *"Ingest SCTE-35 from MPEG-TS into a data catalog track"* (broadcast-ad-marker plumbing), moq-dev/moq adds **3 new use-case verticals in 24h**: AI-voice playback (PR #1620), AI-voice ingest (PR #1615), broadcast-ad-marker carriage (PR #1617).
+
+## Yu You (Nokia) announces v17+v18 remote relay for interop
+
+[[yu-you|Yu You]] (Nokia) Slack `#moq` June 2 09:18 CEST: *"we are in the process to host a remote relay for the interop. we have the support of v17 and v18 (basic ones with current interop test cases) for testing."* — **first impl-side v18 endpoint announcement** as pre-London infrastructure addition. If registered with the interop runner, this would be the **first impl-registered v18** entry, finally closing the runner's 0-at-target gap. Pairs with Yu You's earlier May 29 mailing-list YES vote on DTS adoption (with measured Nokia implementation benefit numbers) as continued Nokia engagement across spec consensus + production deployment.
 
 # Activity (June 2 06:00 UTC → June 3 06:00 UTC) — **draft-ietf-moq-msf-01 PUBLISHED on Datatracker June 2 (Day +134 saga closes); draft-einarsson-moq-locmaf-00 NEW individual draft by Tobbe + Hugo Björs; afrind opens transport [PR #1642](https://github.com/moq-wg/moq-transport/pull/1642) replacing Joining Fetch with Subscription Fill; Tim Evens (Cisco) emerges as new cross-repo contributor (transport Issue #1641 + openmoq/moqx PRs #376/#377); moq-dev/moq ~14 merges incl /health endpoint + moq-lite-05 wire-feature triple + MPEG-TS fMP4 close-out; interop 177/57/119/1 new May+June high 32.2% (+6 pass)**
 
