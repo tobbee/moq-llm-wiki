@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-06-04
+last_updated: 2026-06-07
 status: current
-updated: 2026-06-04
+updated: 2026-06-07
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -70,6 +70,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 - [[shaka-player]] - Google's media player with experimental MSF/CMSF support incl. DRM (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 - [[moqintosh]] - Pure-Swift iOS client by gazzy / Toshiro Igarashi (draft-14, client-only)
+- **Moqtopus** - C++/MsQuic client for Unreal Engine by Kota Yatagai ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus), announced June 4 2026; targeting draft-18 for the London interop)
 
 ## Draft Version Support Summary
 

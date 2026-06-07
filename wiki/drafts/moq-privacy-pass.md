@@ -2,11 +2,13 @@
 title: "Privacy Pass Authentication for MOQ"
 tags: [draft, security, authentication]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-06-07
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/"
 ---
+
+> **2026-06-07**: **[[thibault-meunier|Thibault Meunier]] (Cloudflare, co-author) opens 2 design issues June 5** on [moq-wg/privacy-pass](https://github.com/moq-wg/privacy-pass/issues) — **[#14](https://github.com/moq-wg/privacy-pass/issues/14)** *"MOqTokenChallenge should be base64 encoded"* and **[#15](https://github.com/moq-wg/privacy-pass/issues/15)** *"Find how to pass MoQTokenChallenge in reply to a SETUP closure without using ReasonPhrase"*. These move thibmeu's **issuer-aware challenge-reply** concerns — first raised in his [May 30 review of cloudflare/moq-rs PR #169](https://github.com/cloudflare/moq-rs/pull/169) (the AuthHook trait) — from cross-impl review into the draft's own issue tracker. The core wire question: a relay that wants to challenge a client must send a `MoQTokenChallenge` back, but with draft-18 collapsing CLIENT_SETUP/SERVER_SETUP and using a `ReasonPhrase` on session close, there is **no clean carrier for a structured (base64) challenge in a SETUP-closure reply**. Lands one week before the **June-12 London Privacy Pass slot (Suhas)**; see [[interim-meetings]] + [[discussions-2026-06]].
 
 **draft-ietf-moq-privacy-pass-auth-02** | 31 pages | Expires 2026-03-02
 
