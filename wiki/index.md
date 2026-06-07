@@ -27,7 +27,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
-| [[moq-locmaf]] | draft-00 | Individual (**NEW 2026-06-02**) | Low Overhead CMAF for Media over QUIC — Tobbe + Hugo Björs |
+| [[moq-locmaf]] | draft-00 | Individual (**NEW 2026-06-02**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
 For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), and draft-englishm-moq-relay-dos-00 (relay DoS considerations).
@@ -101,6 +101,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 - [[mike-english]] - Cloudflare, maintainer of moq-rs/moq-js, interop runner
 - [[lorenzo-miniero]] - Meetecho, Janus-based implementation
 - [[martin-duke]] - Google, rewind proposal, quiche-moq developer
+- [[tobbe-einarsson|Torbjörn Einarsson]] - Eyevinn, co-author of LOCMAF, author of moqlivemock/warp-player, wiki maintainer
 
 # Active Discussions
 
