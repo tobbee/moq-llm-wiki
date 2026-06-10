@@ -2,12 +2,14 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-05-23
+last_updated: 2026-06-10
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
 
+> **2026-06-10**: **Live London-hackathon interop exposes a LOC private-properties encoding ambiguity.** Building LOC+catalog live A/V publish/subscribe demos ([[imquic]] [PR #27](https://github.com/meetecho/imquic/pull/27) `imquic-moq-loc-send`/`-recv`), **Lorenzo Miniero** raises June 9 12:38 CEST that the LOC draft *"mentions public properties and private properties, but doesn't say much about how those private properties work. Are they always there, with just a `00` when there are none, or is the whole MoQ payload the media frame when there are none?"* — currently he writes **no private-properties block at all** (whole payload = media frame). **Suhas Nandakumar** (from his C++ impl): *"if there are no private properties, then you basically write nothing… same as how you encode other properties."* **Lorenzo presses**: *"but writing nothing still means writing at least `00` to say 'no parameters', right? Since you need the number of parameters first."* The unresolved choice — **omit the block entirely** vs **write a zero-count varint** — is a wire-format gap that only surfaces under two-impl media interop, and joins the LOC property-ID coordination dispute ([moq-wg/loc Issue #20](https://github.com/moq-wg/loc/issues/20)) as a London-floor item. The June-12 Day-2 LOC-update slot (Mo Zanaty) is the natural venue. See [[discussions-2026-06]].
+>
 > **2026-05-23**: **First LOC encoder/decoder library merged in the [[moq-dev|moq-dev/moq]] stack** — [PR #1388](https://github.com/moq-dev/moq/pull/1388) MERGED May 22 22:53 UTC by [[luke-curley|kixelated]] (+844/−16, 30 files). New `moq-loc` Rust crate + `@moq/loc` JS package providing `encode()` / `decode()` for the LOC frame wire format, integrated into `moq-mux` + hang catalog + watch player. **Implementation chooses [[moq-transport]]-18 §15.8-2 property type IDs (TIMESTAMP=0x06, TIMESCALE=0x08) over the conflicting historical draft-ietf-moq-loc-02 values (TIMESTAMP=0x02)** — kixelated effectively votes-with-code for the moq-transport-18 assignments to win the cross-spec coordination dispute surfaced by Issue [#20](https://github.com/moq-wg/loc/issues/20). Catalog timescale defaults to 1,000,000 microseconds; per-frame timescale override supported via 0x08 property. LOC preference in audio source selection: prioritized after legacy, before CMAF. **Carry-forward**: until LOC spec PR #1624 (provisional IANA registry) propagates into a draft-ietf-moq-loc-03 with aligned values, the moq-dev/moq LOC implementation is the *de facto* reference for post-draft-18 property type assignments.
 
 **draft-ietf-moq-loc-02** | 19 pages | Expires 2026-03-15

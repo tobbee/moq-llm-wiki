@@ -2,9 +2,11 @@
 title: "Moxygen (Meta)"
 tags: [implementation, cpp, meta]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-06-10
 status: current
 ---
+
+> **2026-06-10**: **moxygen relay live on draft-18 at the London hackathon.** [[alan-frindell|afrind]] brought the relay up at `fb.mvfst.net:9448` (QUIC + WebTransport) supporting **versions 14/16/18** on June 9 — the first publicly-announced draft-18 relay endpoint. Known gaps: no REDIRECT errors, no GOAWAY-on-request-stream, no PUBLISH_BLOCKED. afrind also shipped a draft-18 wire decoder (`moqx/tools/moq_decode.py`, [openmoq/moqx PR #398](https://github.com/openmoq/moqx/pull/398)) to help debug interop failures. See [[interop-endpoints]], [[discussions-2026-06]], [[openmoq]].
 
 **Language**: C++ (mvfst-based)
 **Organization**: Meta
