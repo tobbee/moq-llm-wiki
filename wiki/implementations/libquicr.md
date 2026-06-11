@@ -2,9 +2,11 @@
 title: "LibQuicR (Cisco)"
 tags: [implementation, cpp, go, cisco]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-06-11
 status: current
 ---
+
+> **2026-06-11 (London hackathon Day 2)**: **The quicr ecosystem's web client, [quicr/moq-web](https://github.com/quicr/moq-web) (a draft-18 deploy branch at `quicr.github.io/moq-web/branches/draft-18/`), drove the floor's cross-implementation draft-18 interop.** [[suhas-nandakumar|Suhas Nandakumar]] reported working publish/subscribe flow against three independent relays over June 10 — Lorenzo's [[imquic]] (sub-namespace flow still WIP), the Nokia Research relay (`moqt.nokiaresearch.com:4443/moq`), and afrind's [[moxygen]] relay (`fb.mvfst.net:9448`) — the first *successful* draft-18 cross-impl media the wiki has recorded. See [[discussions-2026-06]], [[interop-runner]].
 
 **Language**: C++ with Go bindings
 **Organization**: Cisco (QuicR project)

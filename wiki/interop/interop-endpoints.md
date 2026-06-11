@@ -2,12 +2,14 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
-last_updated: 2026-06-10
+last_updated: 2026-06-11
 status: current
 ---
 
 Public relay endpoints available for MOQ interop testing.
 
+> **2026-06-11 (London hackathon Day 2)**: **Four draft-18 relays are now live for the floor** — afrind tallies them as *"Luke, Yu, Lorenzo and us"*: [[moxygen]] `fb.mvfst.net:9448`, the **Nokia Research relay `moqt.nokiaresearch.com:4443/moq`** (Yu You; the v17/v18 relay pre-announced June 2, now reachable), [[imquic]] `lminiero.it:9000`, and Luke Curley's `cdn.moq.dev`. **Suhas Nandakumar's quicr/moq-web (draft-18) reported working publish/subscribe interop against moxygen, Nokia, and imquic** over June 10 (sub-namespace flow still WIP vs imquic). **Two of these are now registered with the [[interop-runner]]** — `moqt-nr` (Nokia) and `imquic` draft-18 — breaking the matrix's 9-day 0-at-target floor. See [[discussions-2026-06]].
+>
 > **2026-06-10 (London hackathon Day 1)**: **afrind brought the [[moxygen]] relay up on draft-18** at `fb.mvfst.net:9448` (QUIC + WebTransport, versions **14/16/18**) — the first publicly-announced draft-18 relay endpoint; **known gaps**: no REDIRECT errors, no GOAWAY-on-request-stream, no PUBLISH_BLOCKED. **[[imquic]] `lminiero.it:9000`** also runs draft-18 (imquic `main` since May; Lorenzo merged further LOC fixes June 9). **Luke Curley's `cdn.moq.dev`** is hop-routed across 14 edge nodes. See [[discussions-2026-06]].
 
 # Cloudflare ([[moq-rs]])
@@ -66,7 +68,13 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
-| `lminiero.it:9000` | 16, 17, **18** | QUIC + WebTransport | Runs imquic `main` (draft-18 since May 18; further LOC fixes June 9) |
+| `lminiero.it:9000` | 16, 17, **18** | QUIC + WebTransport | Runs imquic `main` (draft-18 since May 18; further LOC fixes June 9). Registered with the runner at draft-18 (June 11) |
+
+# Nokia ([[yu-you|Yu You]])
+
+| Endpoint | Draft | Transport | Notes |
+|----------|-------|-----------|-------|
+| `moqt.nokiaresearch.com:4443/moq` | 17, **18** | QUIC + WebTransport | Nokia Research relay; pre-announced June 2, live for the June 9-10 hackathon. Registered with the [[interop-runner]] as `moqt-nr` at draft-18 (June 11) |
 
 # Related
 
