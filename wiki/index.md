@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 status: current
-updated: 2026-06-12
+updated: 2026-06-13
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -25,6 +25,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
 | [[moq-media-interop]] | draft-03 | Individual (expires **Apr 23**) | Media wire format over LOC for H.264/Opus/AAC |
 | [[moq-lite]] | draft-04 | Individual | Simplified transport protocol by Luke Curley |
+| [[moq-timestamp]] | draft-00 | Individual (**NEW 2026-06-12**) | MoQ Object Timestamp Extension — Timescale/Timestamp/Duration for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
 | [[moq-locmaf]] | draft-00 | Individual (**NEW 2026-06-02**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs |

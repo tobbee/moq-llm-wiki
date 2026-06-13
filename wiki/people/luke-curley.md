@@ -2,7 +2,7 @@
 title: "Luke Curley"
 tags: [person, implementer]
 date: 2026-04-13
-last_updated: 2026-05-15
+last_updated: 2026-06-13
 status: current
 ---
 
@@ -13,6 +13,7 @@ status: current
 
 - Creator of the original moq-rs (now [[moq-dev]]), which also spawned [[moq-rs]] (Cloudflare) and [[moq-js]] (video-dev) as sibling forks
 - Author of [[moq-lite]] ([draft-lcurley-moq-lite-04](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)) — simplified transport protocol, now at version 04
+- Author of [[moq-timestamp|draft-lcurley-moq-timestamp-00]] (posted 2026-06-12) — MoQ Object Timestamp Extension: track-level Timescale + object-level Timestamp + optional Duration, so relays make age-based drop/timeout decisions without parsing media; lifts the moq-lite-05 per-frame timestamp wire change into a portable MOQT extension
 - Runs public interop infrastructure at `cdn.moq.dev`
 - Author of [[compressed-mp4|draft-lcurley-compressed-mp4-00]] — varint compression scheme for ISO BMFF reducing per-fragment overhead from ~96 to ~21 bytes
 - Created the qmux library for TCP fallback
