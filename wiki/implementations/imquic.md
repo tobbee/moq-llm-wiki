@@ -2,10 +2,12 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-06-16
+last_updated: 2026-06-17
 status: current
 ---
 
+> **2026-06-17**: **Lorenzo opens a push-to-talk MoQ demo.** **[PR #31](https://github.com/meetecho/imquic/pull/31) OPEN June 16 14:49 CEST** (lminiero, *"Push-to-talk MoQ demo"*, +1330/−4) — a new conversational-media demo built on top of the LOC send/recv pair ([PR #27](https://github.com/meetecho/imquic/pull/27)), exercising MoQ for a half-duplex talk pattern (subscribe-and-listen vs publish-on-press). It's the next demo surface after the June-15 nested-namespace notification fix ([PR #30](https://github.com/meetecho/imquic/pull/30)) hardened imquic's relay role; the `lminiero.it:9000` relay stays current on draft-18 `main`. See [[discussions-2026-06]].
+>
 > **2026-06-16**: **imquic fixes a nested-namespace SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS notification bug found in interop testing.** **[PR #30](https://github.com/meetecho/imquic/pull/30) MERGED June 15 10:14 UTC** (lminiero, *"Fix broken SUBSCRIBE_NAMESPACE and SUBSCRIBE_TRACKS behaviour"*, +100/−27) — interop tests surfaced that imquic's POC relay mishandled **nested namespaces**: a `SUBSCRIBE_NAMESPACE` for `A` correctly notified when exactly `A` was already announced, but **failed to notify for an already-announced `A-B-C`** (and the reverse ordering). The fix lands on imquic `main` (draft-18), keeping the `lminiero.it:9000` relay current; it is the kind of bug only cross-impl interop exposes — the draft-18 SUBSCRIBE_NAMESPACE→SUBSCRIBE_TRACKS split (and the rate-limit/filter questions in moq-transport [#1744](https://github.com/moq-wg/moq-transport/issues/1744) + Ian Swett's *"Filters on SUBSCRIBE_TRACKS"* list thread) is still settling its prefix-matching semantics. See [[discussions-2026-06]].
 >
 > **2026-06-13**: **imquic ships a LOC private-object payload-prefix mechanism — the implementation answer to the June-9 floor ambiguity.** **[PR #29](https://github.com/meetecho/imquic/pull/29) MERGED June 12 08:54 CEST** (lminiero, *"Add mechanism for adding payload prefix (for LOC private objects)"*, +151/−52) — imquic now writes an explicit **payload prefix for LOC private objects**, resolving the omit-the-block-vs-write-a-zero-count question Lorenzo himself raised June 9 while building the `imquic-moq-loc-send`/`-recv` live-media demos ([PR #27](https://github.com/meetecho/imquic/pull/27)). The fix lands on imquic `main` (draft-18), keeping the `lminiero.it:9000` relay current. See [[moq-loc]], [[discussions-2026-06]].
