@@ -2,11 +2,13 @@
 title: "QMux - QUIC Multiplexing over TCP"
 tags: [concept, transport, fallback]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-06-18
 status: current
 ---
 
 A fallback transport mechanism for [[moq-transport]] when UDP/QUIC is unavailable.
+
+> **2026-06-18 — WG charter status: MOQT-over-QMux is OUT of the current charter.** **[[magnus-westerlund|Magnus Westerlund]] (co-chair) posted *"MOQT over QMUX"*** to the moq@ietf.org list June 17, conveying a decision from the chairs + AD (**Mike Bishop**): running MoQT over QMux is **outside the MoQ WG's current charter**. The agreed path forward: (1) maintain a **separate individual draft** documenting the technical requirements (`draft-nandakumar-moq-qmux-moqt`); (2) interested parties may **continue implementation + interop testing**; (3) **progress updates** via the list + WG sessions are permitted. **Hard constraint**: WG documents **cannot incorporate QMUX specs/discussion until a recharter happens**. This **scopes [[alan-frindell|afrind]]'s [PR #1628](https://github.com/moq-wg/moq-transport/pull/1628)** *"Add QMux framing for moqt-18 over TLS+TCP"* (OPEN, fixes [#1626](https://github.com/moq-wg/moq-transport/issues/1626)) out of the [[moq-transport]] draft for now. QMux itself is progressing in the QUIC WG as **`draft-ietf-quic-qmux`** (v01); the June-9/11 London hackathon ran live *"draft-18 over qmux-01"* TCP-fallback interop. See [[discussions-2026-06]].
 
 # Problem
 
