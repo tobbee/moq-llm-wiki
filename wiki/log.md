@@ -2,11 +2,24 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-06-20
+last_updated: 2026-06-22
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-06-22 (supplemental) — catalog-format concept page reconciled with MSF-01
+
+**TL;DR**:
+- Brought [[catalog-format]] current with [[moq-msf|MSF draft-01]]: fixed a stale error (the page claimed PR #141 *added* `initTracks`, but it was **reverted by PR #154**), rewrote init data around the typed-object `initDataList[]` design (PR #166), refreshed Key Fields (mandatory `codec`/`width`/`height` + `sampleRate`/`channels` per PR #165, `targetBuffer` per PR #167, string `version` per PR #175), and recorded compression-via-Track/Object-Properties (PR #159, closes #144).
+- Refreshed Active Issues against live `moq-wg/msf` state: moved #149/#146/#145/#144/#140/#136 to *closed-for-01*; surfaced the London-opened catalog issues still OPEN (#183 property mutability, #178 initData-in-Object, #130 `catalog`-by-convention, #129 FORWARD/publish racing, #135 generic deltas). Added Validation (Tobbe's CUE validator → PR #177) and Implementation Status (moq-dev PR #1834) sections.
+- **Implementations**: no code change — documentation/maintenance edit only. (moq-dev MSF-01 pickup already logged in the main June 22 entry below.)
+- **Interop**: no new run.
+
+**Operation**: Update (maintenance)
+**Sources**: `moq-wg/msf` issues/PRs via `gh` (live state as of 2026-06-22); existing [[moq-msf]] draft page.
+**Pages updated**: [[catalog-format]]
+**Key findings**: The catalog concept page had drifted ~2 months behind the MSF draft page and carried one outright factual error (reverted `initTracks` PR described as merged). Most of its "Active Issues" list had been closed during the May 24–Jun 2 wilaw editorial sprint that produced MSF-01.
 
 # 2026-06-22 — June 22 interim runs off-calendar; moq-dev adds MSF draft-01 + H.265 HW codecs
 
