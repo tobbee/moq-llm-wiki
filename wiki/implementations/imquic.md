@@ -2,10 +2,12 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-06-20
+last_updated: 2026-06-23
 status: current
 ---
 
+> **2026-06-23**: **Post-demo relay/demo polish.** Lorenzo lands two fixes June 22–23: a **relay-side fix for broken NAMESPACE / NAMESPACE_DONE notifications** (a follow-on to the June-15 nested-namespace notification fix) and a **crash fix in the LOC sender demo** when publishing audio-only or video-only. The `lminiero.it:9000` relay stays current on draft-18 `main`. See [[discussions-2026-06]].
+>
 > **2026-06-20**: **The push-to-talk demo MERGES and goes live — Lorenzo posts a working in-browser MoQ push-to-talk app, breaking #moq's near-silence.** **[PR #31](https://github.com/meetecho/imquic/pull/31) MERGED June 19 15:00 UTC** (lminiero, *"Push-to-talk MoQ demo"*, **+1376/−20**) — the conversational-media demo OPEN since June 16 lands. Two hours later (June 19 17:22 CEST) Lorenzo announces the **live web demo** on `#moq`: [`lminiero.it/moqp2t/`](https://lminiero.it/moqp2t/), running against **his own `lminiero.it:9000` relay**, with the **client side built on [[moqtail|Moqtail]]** (Ali C. Begen's TS impl) plus a **native demo bundled in the imquic repo**. The mechanics: every client subscribes to the `push2talk` namespace; holding the spacebar publishes an `audio` track to `push2talk-<name>` so everyone receives the PUBLISH, with **QUIC datagrams** carrying the audio packets. Chrome-only (relies on `MediaStreamTrackProcessor`), encode/decode runs off the main thread-less path (no workers yet) — "a silly demo," but the **first publicly-reachable real-time conversational-media app the wiki has tracked running over MoQ**, exercising the PUBLISH-driven (vs SUBSCRIBE-driven) delivery pattern + datagram media end-to-end across two independent impls (imquic relay ↔ Moqtail client). See [[moqtail]], [[discussions-2026-06]].
 >
 > **2026-06-17**: **Lorenzo opens a push-to-talk MoQ demo.** **[PR #31](https://github.com/meetecho/imquic/pull/31) OPEN June 16 14:49 CEST** (lminiero, *"Push-to-talk MoQ demo"*, +1330/−4) — a new conversational-media demo built on top of the LOC send/recv pair ([PR #27](https://github.com/meetecho/imquic/pull/27)), exercising MoQ for a half-duplex talk pattern (subscribe-and-listen vs publish-on-press). It's the next demo surface after the June-15 nested-namespace notification fix ([PR #30](https://github.com/meetecho/imquic/pull/30)) hardened imquic's relay role; the `lminiero.it:9000` relay stays current on draft-18 `main`. See [[discussions-2026-06]].

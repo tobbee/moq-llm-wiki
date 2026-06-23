@@ -2,12 +2,21 @@
 title: "SWITCH and Client-Side ABR"
 tags: [concept, transport, abr, media]
 date: 2026-04-10
-last_updated: 2026-06-22
+last_updated: 2026-06-23
 status: current
 ---
 
 One of the most debated topics in MOQ - whether the transport layer needs a dedicated SWITCH message for adaptive bitrate track switching.
 
+> **2026-06-23 — DTS is renamed SSTS, and the switching algorithm becomes an extensible IANA registry.** The [[interim-meetings|June 22 interim]] (minutes posted June 23 as [interim-2026-moq-17](https://datatracker.ietf.org/doc/minutes-interim-2026-moq-17-202606221630/)) closed the design questions left open after the spring SWITCH/DTS consensus call:
+> - **Rename**: *"Dynamic Track Switching" (DTS) → "Sender Side Track Switching" (SSTS)* — *"this title more accurately reflects the functionality"* (RFC editors keep final naming say). The mechanism: a publisher exposes a **switching set** of renditions and the relay forwards exactly one, toggling the forward state to switch.
+> - **Extensible algorithm**: rather than freezing one algorithm, switching is keyed by a **numeric ID in an IANA table**, negotiated via an **array of preferred algorithms** (client requests, relay answers with its supported set). The current implementation is the mandatory **"Algorithm Zero"** baseline in the base spec; future algorithms register + negotiate.
+> - **DDoS-protection properties removed**: the per-switching-set **concurrent-track / throughput limits** (the (D)DoS vector [[gwendal-simon|Gwendal Simon]] flagged on DTS [PR #1638](https://github.com/moq-wg/moq-transport/pull/1638)) are **dropped from negotiated properties** — protection is deferred to **authorization tokens + existing relay-side mechanisms**.
+> - **Message shape**: keep **single-message** switching-set assignment (the WG decided against splitting it); **unsubscription auto-removes** a track from the set (no explicit removal message).
+> - **Demo**: [[will-law|Will Law]] presented [[yu-you|Yu You]]'s Nokia run — one set of **500/1500/3000 kbps**, relay forwarding one, *"smooth, continuous switching"* including *"fast-frequency switching close to segment boundaries."*
+>
+> The DTS half of the May consensus call had been heading toward a standalone extension draft (`draft-ietf-moq-dts4moq`, still unsubmitted/404); the interim instead folds the baseline ("Algorithm Zero") into the **base spec** with an IANA registry for future algorithms. See [[interim-meetings]], [[discussions-2026-06]].
+>
 > **2026-06-22 — Resolved as a parameter, not a message.** At the June 11–12 London interim the WG chose to deliver ABR track switching via a **`SWITCH_FROM` parameter** rather than [[gwendal-simon|Gwendal Simon]]'s standalone SWITCH message ([PR #1378](https://github.com/moq-wg/moq-transport/pull/1378), now effectively parked). [[alan-frindell]] opened **[PR #1674 "Track Switching via the SWITCH_FROM parameter"](https://github.com/moq-wg/moq-transport/pull/1674)** + **[PR #1675](https://github.com/moq-wg/moq-transport/pull/1675)** (soft mode) on June 14; consensus was to proceed with **"hard mode"** and defer softer modes pending use-case analysis. The DTS/SWITCH consensus call (May 21–June 4) drew 4 on-list YES votes (Will Law, Gwendal, Nokia/Yu You, Ali Begen); **DTS** itself proceeds as an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/), after the June 10 finding that base-spec integration lacked rough consensus. The catch-up/joining half is handled by **fill fetch** + **Range Filters** ([[joining-fetch-dissent]]). See [[interim-meetings]], [[discussions-2026-06]].
 
 # Background

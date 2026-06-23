@@ -2,10 +2,12 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-05-26
+last_updated: 2026-06-23
 status: current
 ---
 
+> **2026-06-23**: **moqtail breaks a near-month-long quiet stretch — raw-QUIC transport lands in two steps.** **Zafer Gürel** merges **[PR #204](https://github.com/moqtail/moqtail/pull/204)** (+543/−89) + **[PR #205](https://github.com/moqtail/moqtail/pull/205)** (2nd step, +364/−127) June 23 adding **raw QUIC support** alongside the existing WebTransport path — the same non-WebTransport transport surface [[qmux|qmux]] addresses, widening the cross-impl test matrix for MoQ over plain QUIC. Plus a **client-js publish tab + unordered-object handling** (June 22) and README updates. (Draft support on `main` was last tracked at draft-16; this update did not surface a version bump.) See [[discussions-2026-06]].
+>
 > **2026-05-26**: **Single client-js demo fix Day +1 after the 2-day relay-conformance push** — **Ali C. Begen** `3e9b788c` May 25 18:52 UTC *"fix(demo): use next group start for sub"*. PR #202 release-bot auto-PR still OPEN. **Cadence**: the May 23-24 dual-day fix burst (Zafer PR #199 FETCH_OK + PR #201 mid-subgroup join) tapers to demo-layer polish on May 25; relay-conformance push appears to be paused or completed for the pre-London window.
 >
 > **2026-05-25**: **Second consecutive day of relay-conformance bug fixes by Zafer Gürel**. **[PR #201](https://github.com/moqtail/moqtail/pull/201) MERGED May 24 21:15 UTC** *"fix(relay): deliver mid-subgroup objects to late subscribers"* (+165/−67, 5 files): new subscribers joining a track mid-subgroup previously had no open QUIC send stream for the in-progress subgroup, so objects arriving with `header_info=None` were silently dropped (`get_stream()` returned `None`, no fallback). Fix caches the `SubgroupHeader` in an `active_headers` map on `Track` (keyed by `StreamId`) when the first object of a new subgroup arrives; entry evicted on publisher unistream close; subscription handler uses the cached header to open a new QUIC send stream when `get_stream()` returns `None`, so the late subscriber receives all objects from the current subgroup's start. Plus PR #202 (release-bot auto-PR). **Pattern**: methodical pre-London relay-conformance hardening (PR #199 FETCH_OK May 23, PR #201 mid-subgroup join May 24); could shift moqtail rows in the May 26 interop matrix.

@@ -2,9 +2,11 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-04-22
+last_updated: 2026-06-23
 status: current
 ---
+
+> **2026-06-23**: **PUBLISH moves to a bidi stream.** A June 23 commit *"Move PUBLISH to a Bidi stream"* lands in `quiche/quic/moqt` — aligning Google's C++ impl with the draft direction of carrying PUBLISH on a bidirectional stream. (The public relay's registered interop target still lags at draft-16; this is `main`-branch protocol-tracking work.) See [[discussions-2026-06]].
 
 **Language**: C++
 **Organization**: Google
