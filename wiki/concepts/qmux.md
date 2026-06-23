@@ -21,11 +21,12 @@ QMux provides QUIC-like multiplexing over TLS+TCP, enabling MOQT to work over TC
 # ALPN Negotiation
 
 QMux versions are indicated in the ALPN string:
+- `qmux-01.moqt-18` - QMux version 1, MOQT draft-18 (the London hackathon ran live `draft-18 over qmux-01` TCP-fallback interop, June 9/11)
 - `qmux-00.moqt-17` - QMux version 0, MOQT draft-17
 - `qmux-00.moqt-16` - QMux version 0, MOQT draft-16
 - `qmux-00` alone implies draft-14 (legacy, technically incorrect)
 
-When `qmux-01` comes out, it would double the ALPN permutations. Luke's qmux library automatically adds/strips the prefix for supported versions.
+`qmux-01` (now progressing in the QUIC WG as `draft-ietf-quic-qmux`) doubles the ALPN permutations. Luke's qmux library automatically adds/strips the prefix for supported versions.
 
 # Design Discussion
 

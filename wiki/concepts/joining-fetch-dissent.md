@@ -2,11 +2,13 @@
 title: "Joining Fetch Dissent"
 tags: [concept, transport, design-debate]
 date: 2026-04-12
-last_updated: 2026-04-19
+last_updated: 2026-06-22
 status: current
 ---
 
-A cluster of open issues and competing proposals around how subscribers join a live stream mid-session. Tagged "Joining Fetch Dissent" on GitHub.
+A cluster of open issues and competing proposals around how subscribers join a live stream mid-session. Tagged "Joining Fetch Dissent" on GitHub. **The April five-way debate documented below was resolved at the June 11–12 London interim — see Resolution.**
+
+> **2026-06-22 — Resolution.** The mid-April five-way contest collapsed at the **London interim (June 11–12)** into two consolidated workstreams: **fill fetch** (subscription filters delivering past groups over fetch-formatted streams — replaces Joining FETCH, absorbs REWIND / LargestGroup / CurrentGroupFill) and **SWITCH_FROM** (a parameter, not a standalone message, for ABR track switching — see [[switch-abr]]). The live wire-design item is **[[mo-zanaty|Mo Zanaty]]'s [Range Filters PR #1765](https://github.com/moq-wg/moq-transport/pull/1765)** (June 16, OPEN). REWIND was parked at -02; the May 1 consensus call closed with no chair conclusion. As of June 22 the transport editorial pipeline is **frozen for a 4th straight day**, all these PRs OPEN, held for the June 22 virtual interim. See [[interim-meetings]], [[discussions-2026-06]].
 
 # The Problem
 
@@ -21,19 +23,35 @@ When joining a live stream, a subscriber needs historical data (e.g., the latest
 - **#1039** - Simplifying joining at the latest available join point (wilaw)
 - **#1023** - Subgroups + DELIVERY_TIMEOUT = pathological FETCH (afrind, Past Deadline)
 
-# Competing Proposals
+# Competing Proposals (and their fate)
 
-1. **Current Joining Fetch** (in draft-17) - Separate FETCH alongside live SUBSCRIBE
-2. **PR #1362** - Prior Group Subscription Filter (ianswett) - Filter-based approach
-3. **Subscribe Rewind** ([[martin-duke]]) - Extend SUBSCRIBE with a Rewind subscription filter for best-effort past group retrieval ([draft-02 published Apr 2](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/))
-4. **Join Subscription Filters** ([[alan-frindell]]) - Filter-based join point selection. Alan says his is "more of an extension to Martin's."
-5. **LargestGroup / CurrentGroup / CurrentGroupFill filters** (emerging Apr 17–18) - Simpler SUBSCRIBE filter that delivers only the latest/current group. Multiple concrete forms:
-   - **PR #1607 — Largest Available Group filter** ([Victor Vasiliev](https://github.com/moq-wg/moq-transport/pull/1607), Draft/RFC, Apr 18): current group only, always complete group, no explicit relay backfill, "probably really easy to implement."
-   - **[afrind/moq-transport#15 CurrentGroupFill](https://github.com/afrind/moq-transport/pull/15)** ([[alan-frindell]]): parallel draft targeting the same "current group" filter niche.
-   - **Luke Curley's LargestGroup proposal** (mailing-list, informal) — same shape, framed as "the intended behaviour 99% of the time" so the first group stops being a special case.
+| # | Proposal | Author | Fate (as of June 22) |
+|---|----------|--------|----------------------|
+| 1 | **Joining FETCH** (separate FETCH alongside live SUBSCRIBE; moved-to-SUBSCRIBE-stream = [PR #1604](https://github.com/moq-wg/moq-transport/pull/1604)) | in draft-17/18 | **CLOSED June 4** — replaced by fill fetch |
+| 2 | **PR #1362** Prior Group Subscription Filter | ianswett | folded into the filter line of work |
+| 3 | **Subscribe Rewind** ([draft-duke-moq-subscribe-rewind](https://datatracker.ietf.org/doc/draft-duke-moq-subscribe-rewind/)) | [[martin-duke]] | **parked at -02**; function folded into fill fetch |
+| 4 | **Join Subscription Filters** ("more of an extension to Martin's") | [[alan-frindell]] | superseded by fill fetch |
+| 5 | **LargestGroup / CurrentGroup / CurrentGroupFill** filters | Vasiliev / afrind / Luke | **#1607 CLOSED June 4**; `CurrentGroup` filter type absorbed into fill fetch |
+| 6 | **SWITCH** ([PR #1378](https://github.com/moq-wg/moq-transport/pull/1378), charter ABR argument) | [[gwendal-simon]] | superseded by **SWITCH_FROM** parameter ([[switch-abr]]) |
+
+The Apr 17–18 detail on these:
+
+- **PR #1607 — Largest Available Group filter** ([[victor-vasiliev]], Apr 18): current group only, always complete group, no explicit relay backfill, "probably really easy to implement." **CLOSED June 4.**
+- **[afrind/moq-transport#15 CurrentGroupFill](https://github.com/afrind/moq-transport/pull/15)** ([[alan-frindell]]): parallel draft targeting the same "current group" niche; absorbed into the official fill-fetch PRs ([#1642](https://github.com/moq-wg/moq-transport/pull/1642) → [#1673](https://github.com/moq-wg/moq-transport/pull/1673)).
+- **Luke Curley's LargestGroup proposal** (mailing-list, informal) — same shape, framed as "the intended behaviour 99% of the time" so the first group stops being a special case.
 
 # Latest Developments
 
+## May–June 2026 consolidation (newest first)
+
+- **June 16** — [[mo-zanaty|Mo Zanaty]] opens **[PR #1765 "Add Range Filters"](https://github.com/moq-wg/moq-transport/pull/1765)** (follow-up to the London object-range-filter consensus + the action item to re-add the location filter separately; builds on his long-open [PR #1518](https://github.com/moq-wg/moq-transport/pull/1518)). "The active design thrust." OPEN through the June editorial freeze.
+- **June 14** — [[alan-frindell]] opens **[PR #1673](https://github.com/moq-wg/moq-transport/pull/1673)** *"Replace Joining FETCH with fill fetch streams"* (revises [#1642](https://github.com/moq-wg/moq-transport/pull/1642), closes #1023) **plus [PR #1674/#1675](https://github.com/moq-wg/moq-transport/pull/1674)** SWITCH_FROM hard/soft mode — all in a 33-minute window.
+- **June 11–12 — London interim consensus**: *fill fetch replaces Joining FETCH*; *SWITCH_FROM hard mode* (soft deferred); keep the object-ID filter, split the location filter into a separate PR; draft-18 = Vienna interop target; Top-Tracks filter stays an extension.
+- **June 4** — REWIND/SWITCH consensus call closes; **[PR #1604](https://github.com/moq-wg/moq-transport/pull/1604) (Joining FETCH) and [PR #1607](https://github.com/moq-wg/moq-transport/pull/1607) (LargestGroup) both CLOSED**. DTS resolved June 10 as an extension (`draft-ietf-moq-dts4moq`), not base-spec.
+- **June 2** — afrind opens [PR #1642](https://github.com/moq-wg/moq-transport/pull/1642) *"Replace Joining Fetch with Subscription Fill, add Current Group."*
+- **May 1** — REWIND consensus call deadline reached with **no chair conclusion** (split outcome); REWIND parked at -02. The WG proceeded on the filter-based path.
+
+## April 2026 (historical)
 
 - **Interim moq-13 outcome** (Apr 13) - WG declined to integrate REWIND into core v1. Editors will land minimal band-aids: **FETCH timeouts (PR #1490, merged Apr 14)** and subgroup filters; sophisticated joining deferred to future extensions.
 - **REWIND Consensus Call** (Apr 16, Magnus Westerlund) - Three options open until **2026-05-01**:

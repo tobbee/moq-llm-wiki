@@ -2,11 +2,13 @@
 title: "Subgroups and Objects"
 tags: [concept, transport, data-model, wire-format]
 date: 2026-04-10
-last_updated: 2026-04-27
+last_updated: 2026-06-22
 status: current
 ---
 
-The data hierarchy in [[moq-transport]], with a focus on how the on-wire encoding evolved across **draft-14 → draft-16 → draft-17**.
+The data hierarchy in [[moq-transport]], with a focus on how the on-wire encoding evolved across **draft-14 → draft-16 → draft-17 → draft-18**.
+
+> **draft-18** (2026-05-12) touches this page's data plane in one place: a **`FIRST_OBJECT` bit (0x40)** was added to the SUBGROUP_HEADER Type (#1618), *replacing* the rejected "Subgroup ID == first Object ID" proposal (#1608, **closed unmerged**). The per-Object record encoding is otherwise unchanged from draft-17. FETCH delta encoding (#1586) and the reset-code generalization (#1606) landed as captured below.
 
 # Hierarchy
 
@@ -104,6 +106,9 @@ Type bits (`0b00X1XXXX`):
 Bytes-on-the-wire are **identical to draft-16**. Only differences:
 - `Extensions` → `Properties`, `EXTENSIONS` bit (0x01) → `PROPERTIES` bit. Field becomes `Object Properties { Properties Length (vi64), Properties (..) }`.
 - All field annotations switch from `(i)` (RFC 9000 varint reference) to `(vi64)` (MoQ's own self-contained varint, see [[moq-transport]] §1.4.1). Encoded byte ranges differ (no 7-byte length, the `11111100` prefix is invalid).
+
+### draft-18 (FIRST_OBJECT bit)
+Per-Object record bytes unchanged. The only header change: a **`FIRST_OBJECT` bit (0x40)** is added to the SUBGROUP_HEADER Type, signalling the Subgroup contains the publisher's first Object; the Type byte widens from `0b00X1XXXX` to `0b0XX1XXXX` (still a 1-byte varint) (PR #1618). This *replaced* the **rejected** PR #1608 ("Subgroup ID == first Object ID", closed unmerged May 1).
 
 ## Datagram Object encoding
 
@@ -227,17 +232,17 @@ Beyond per-Object delta encoding, the **Key-Value-Pair Type itself** became delt
 # Other notable encoding changes
 
 - **Self-contained varint (`vi64`) in draft-17.** draft-14/16 reference RFC 9000 §16 varints, which max out at **2⁶²−1** (4 valid lengths: 1, 2, 4, 8 bytes). Draft-17 defines its own encoding inline (§1.4.1) using a unary-style length prefix, with eight valid encoded lengths (1, 2, 3, 4, 5, 6, 8, 9 bytes) and a **new range of 0 to 2⁶⁴−1** via the 9-byte form (prefix `11111111`, 64 usable value bits). Extending the range to the full unsigned-64 was a primary motivator for the new encoding. The 7-byte length code (prefix `11111100`) is **invalid** and MUST close the session with PROTOCOL_VIOLATION. Wire impact of PR #1595.
-- **Subgroup ID = first Object ID rule.** Stable across 14/16/17. In 14 it's a Type lookup value; in 16/17 it's `SUBGROUP_ID_MODE = 0b01`. PR #1608 (Apr 23, 2026) tightens the *publisher* normative rule: "Original publishers SHOULD assign each Subgroup a Subgroup ID equal to the Object ID."
+- **Subgroup ID = first Object ID mode.** Stable across 14/16/17/18. In 14 it's a Type lookup value; in 16/17/18 it's `SUBGROUP_ID_MODE = 0b01`. A PR to *tighten* this into a normative "Subgroup ID equal to Object ID" rule (#1608) was **rejected/closed unmerged** (May 1); draft-18 instead added an explicit **FIRST_OBJECT bit** (#1618) to mark the first-Object Subgroup.
 - **Object ID delta + 1 rule** (subgroup stream) is **identical** in all three drafts.
 - **Stream Cancellation reset codes** grew over time: 14 had INTERNAL_ERROR / CANCELLED / DELIVERY_TIMEOUT / SESSION_CLOSED. 16 added UNKNOWN_OBJECT_STATUS (0x4) and MALFORMED_TRACK (0x12). 17 added TOO_FAR_BEHIND (0x5) and EXCESSIVE_LOAD (0x9), and PR #1606 (Apr 23 2026) generalised the codes (`GOING_AWAY`, `EXPIRED_AUTH_TOKEN`, `SESSION_CLOSED`).
 - **Malformed Tracks list** went from 4 items (14) to 10 (16); 17 expanded item 7 to mention the END_OF_GROUP bit.
 
-# Active Issues (April 2026)
+# Issue / PR status (updated June 2026)
 
-- **PR #1586** — *Make Object ID and Group ID delta encoded in Fetch responses* — **merged Apr 27 2026** (closes Martin's long-running #877 "Pack the bits"). This is the work captured above for draft-16/17 FETCH framing.
-- **PR #1608** — *Make Subgroup ID identical to first Object Id in the Subgroup* (fixes #1405, closes #1593) — on the Apr 27 interim agenda.
-- **PR #1593** — Allow framing single Objects without Subgroup ID — to be closed by #1608.
-- **#1550** — Properties Type collision between moq-transport-16 and loc-01.
+- **PR #1586** — *Make Object ID and Group ID delta encoded in Fetch responses* — **merged Apr 27** (closes Martin's long-running #877 "Pack the bits"). Captured above for the draft-16/17/18 FETCH framing.
+- **PR #1608** — *Make Subgroup ID identical to first Object Id* — **CLOSED unmerged May 1**, replaced by the **FIRST_OBJECT bit** (PR #1618, in draft-18).
+- **PR #1593** — Allow framing single Objects without Subgroup ID — **closed** (subsumed by the FIRST_OBJECT-bit resolution).
+- **#1550** — Properties Type collision (moq-transport-16 vs loc-01) — **CLOSED Apr 30** via PR #1624 (a provisional IANA registry for LOC properties, no renumbering). **But a sibling collision remains open**: **#1632** (May 14) reports draft-18 §15.8 still assigns Property Type IDs diverging from LOC-02 (e.g. MOQT `TIMESTAMP`=0x06 vs LOC `TIMESTAMP`=0x02). See [[track-properties]].
 
 # Related
 

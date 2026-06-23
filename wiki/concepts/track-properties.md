@@ -2,11 +2,13 @@
 title: "Track Properties"
 tags: [concept, transport, metadata, wire-format]
 date: 2026-04-10
-last_updated: 2026-04-27
+last_updated: 2026-06-22
 status: current
 ---
 
 Metadata system in [[moq-transport]] for conveying information about tracks and objects. Built on **Key-Value-Pair (KVP)** lists.
+
+> **draft-18** (2026-05-12) does **not** rename or re-encode Properties — the wire format below is unchanged from draft-17. Two developments touch this page: the #1550 cross-draft collision was **resolved Apr 30** (PR #1624) but a sibling collision (#1632) remains open (see Known Issues); and post-18, **Range Filters** ([PR #1765](https://github.com/moq-wg/moq-transport/pull/1765), OPEN) introduces a `PROPERTY_FILTER` letting subscribers filter on Object Properties — the first message-level *consumer* of the Properties system. See [[joining-fetch-dissent]].
 
 # Naming Evolution
 
@@ -62,8 +64,8 @@ draft-17 carved out application-private ranges for Properties:
 
 # Known Issues
 
-## Properties Type Collision (#1550)
-Type-ID collision between **moq-transport-16** and **loc-01**. [[alan-frindell]] noted Apr 16 2026 that loc-02 also has unresolved collisions. Resolution still open.
+## Properties Type Collision (#1550 → #1632)
+Type-ID collision between **moq-transport-16** and **loc-01**. [[alan-frindell]] noted Apr 16 2026 that loc-02 also had unresolved collisions. **#1550 was CLOSED Apr 30** via **PR #1624** — a *provisional IANA registry for LOC properties* that resolves the 0x02/0x04 cross-draft collision **without renumbering existing codepoints**. The fix didn't fully stick, though: **#1632** (yuanchao-chris, May 14) reports that draft-18 §15.8-2 assigns Property Type IDs still diverging from LOC-02 (e.g. MOQT `TIMESTAMP`=0x06 vs LOC `TIMESTAMP`=0x02) — the registry values weren't adopted into the §15.8 table. So the *class* of problem is closed; a sibling collision remains **open**. A LOC -03 carrying the registry is still pending.
 
 ## Parsing confusion in request messages
 [[lorenzo-miniero]] (2026-03-18) reported confusion over Object Properties (length-prefixed) vs. request-message Properties (length inferred from remainder). [[alan-frindell]] confirmed the 14→16 diff removed the length field from the request-side diagram while the surrounding text still referenced it; cleaned up since.

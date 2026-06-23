@@ -2,20 +2,23 @@
 title: "SWITCH and Client-Side ABR"
 tags: [concept, transport, abr, media]
 date: 2026-04-10
-last_updated: 2026-04-19
+last_updated: 2026-06-22
 status: current
 ---
 
 One of the most debated topics in MOQ - whether the transport layer needs a dedicated SWITCH message for adaptive bitrate track switching.
 
+> **2026-06-22 — Resolved as a parameter, not a message.** At the June 11–12 London interim the WG chose to deliver ABR track switching via a **`SWITCH_FROM` parameter** rather than [[gwendal-simon|Gwendal Simon]]'s standalone SWITCH message ([PR #1378](https://github.com/moq-wg/moq-transport/pull/1378), now effectively parked). [[alan-frindell]] opened **[PR #1674 "Track Switching via the SWITCH_FROM parameter"](https://github.com/moq-wg/moq-transport/pull/1674)** + **[PR #1675](https://github.com/moq-wg/moq-transport/pull/1675)** (soft mode) on June 14; consensus was to proceed with **"hard mode"** and defer softer modes pending use-case analysis. The DTS/SWITCH consensus call (May 21–June 4) drew 4 on-list YES votes (Will Law, Gwendal, Nokia/Yu You, Ali Begen); **DTS** itself proceeds as an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/), after the June 10 finding that base-spec integration lacked rough consensus. The catch-up/joining half is handled by **fill fetch** + **Range Filters** ([[joining-fetch-dissent]]). See [[interim-meetings]], [[discussions-2026-06]].
+
 # Background
 
 In traditional ABR streaming (HLS/DASH), the client decides which quality to fetch next. In MOQ's [[publish-subscribe]] model, switching quality means changing which track you subscribe to. The question is whether SUBSCRIBE/UNSUBSCRIBE is sufficient or a dedicated SWITCH message is needed.
 
-# PR #1378 - SWITCH for Client-Side ABR
+# PR #1378 - SWITCH for Client-Side ABR (superseded)
 
-**Author**: Gwendal Simon (Nov 2025)
+**Author**: [[gwendal-simon|Gwendal Simon]] (Nov 2025)
 **Labels**: Needs Discussion, ABR, Design
+**Status**: still OPEN but **superseded in direction** — London chose the `SWITCH_FROM` parameter approach (PR #1674/#1675) over this standalone message.
 
 Proposes a SWITCH message at the transport level to enable seamless client-side ABR. The PR adds a new control message that atomically transitions a subscription from one track to another.
 
@@ -61,7 +64,16 @@ In a [mailing-list reply on the REWIND consensus call](https://mailarchive.ietf.
 - The real blocker is a **semantic constraint**, not head-of-line blocking: past objects are currently not allowed in a PUBLISH stream. His ask is a scoped reconsideration of that rule.
 - His proposed solution is a **Joining PUBLISH with live semantics**, prototyped in PR #1378.
 
-This positions SWITCH as the only design currently on the table that actually addresses mid-stream quality switching inside V1, and sets up a tension with the LargestGroup/CurrentGroup convergence in [[joining-fetch-dissent]].
+This positioned SWITCH as the only April design on the table addressing mid-stream quality switching inside V1, in tension with the LargestGroup/CurrentGroup convergence in [[joining-fetch-dissent]].
+
+# How It Resolved (June 2026)
+
+Gwendal's charter argument was **addressed structurally, but not via his standalone SWITCH message**. The WG split the problem in three:
+- **ABR track switching** → the **`SWITCH_FROM` parameter** (PR #1674 hard mode, PR #1675 soft mode; afrind, June 14). London consensus: proceed with hard mode, defer soft.
+- **Arbitrary past-group retrieval** (Gwendal's "almost always behind the live edge" case) → **fill fetch** ([PR #1673](https://github.com/moq-wg/moq-transport/pull/1673)) + **Range Filters** ([PR #1765](https://github.com/moq-wg/moq-transport/pull/1765)). The "past objects not allowed on a PUBLISH stream" semantic constraint Gwendal flagged is relaxed by delivering the catch-up portion on a separate unidirectional fill-fetch stream. See [[joining-fetch]].
+- **Decode-timestamp signaling** (the DTS half of the SWITCH/DTS consensus call) → an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/) (June 10 finding: no rough consensus for base-spec, no objection to an extension).
+
+So ABR is being delivered as **SWITCH_FROM (in-spec) + fill fetch/Range Filters (in-spec) + DTS (extension)** rather than Gwendal's original standalone SWITCH / Joining-PUBLISH design.
 
 # Related
 

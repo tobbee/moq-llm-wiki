@@ -46,8 +46,8 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 
 # Design Debates
 
-- [[switch-abr]] - SWITCH message for client-side ABR (most debated open issue)
-- [[joining-fetch-dissent]] - Competing proposals for joining live streams
+- [[switch-abr]] - Client-side ABR switching (resolved June 2026 as the SWITCH_FROM parameter)
+- [[joining-fetch-dissent]] - Competing proposals for joining live streams (resolved June 2026: fill fetch + Range Filters)
 - [[open-issues-analysis]] - Full evaluation of all open issues (April 2026)
 
 # Media & Streaming

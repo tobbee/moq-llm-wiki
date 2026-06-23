@@ -8,6 +8,19 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-06-22 (concept-page sweep) — all concept pages reconciled to draft-18 + June resolutions
+
+**TL;DR**:
+- Audited all 12 `wiki/concepts/` pages for staleness and brought the 11 stale ones current. **Transport pages were anchored at draft-17/April**; added a **draft-18** layer (published May 12) across [[streams-and-framing]], [[subgroups-and-objects]], [[track-properties]], [[publish-subscribe]], [[relays]]: Required Request ID removed (#1615), FIRST_OBJECT bit (#1618, replacing rejected #1608), `SUBSCRIBE_NAMESPACE`→`SUBSCRIBE_TRACKS` split (#1542, 0x50/0x51 — **corrected a draft-17 misattribution** in publish-subscribe), `PUBLISH_OK`→`REQUEST_OK` alias (#1611), `DELIVERY_TIMEOUT` split (#1605), #1550 collision closed (#1624) with sibling #1632 still open.
+- Reframed the three **ABR/joining "active debate" pages** ([[joining-fetch]], [[joining-fetch-dissent]], [[switch-abr]]) — the April five-way contest resolved at the **June 11–12 London interim**: fill fetch replaces Joining FETCH (#1604/#1607 closed June 4 → #1673), SWITCH becomes the **SWITCH_FROM parameter** (#1674/#1675), REWIND parked at -02, DTS as extension (`draft-ietf-moq-dts4moq`), Range Filters (#1765) the live front. Refreshed [[media-packaging]] (LOCMAF now `draft-einarsson-moq-locmaf-00`; CMSF -00→-01; media-interop EXPIRED; init-carriage convergence) and [[adaptive-bitrate]] (MSF-01 fields, renderGroup alignment #128/#155 closed).
+- **Implementations**: no code change — documentation/maintenance edit only.
+- **Interop**: no new run.
+
+**Operation**: Update (maintenance)
+**Sources**: 3 parallel research passes over the wiki's own current draft/discussion pages ([[moq-transport]], discussions-2026-05/06, [[interim-meetings]], draft pages) cross-checked against live `moq-wg/moq-transport` PR/issue state via `gh`.
+**Pages updated**: [[adaptive-bitrate]], [[joining-fetch]], [[joining-fetch-dissent]], [[media-packaging]], [[publish-subscribe]], [[qmux]], [[relays]], [[streams-and-framing]], [[subgroups-and-objects]], [[switch-abr]], [[track-properties]], plus index.md
+**Key findings**: The concept layer had drifted behind the daily-updated draft pages. Two genuine errors fixed: (1) publish-subscribe attributed the SUBSCRIBE_NAMESPACE/SUBSCRIBE_TRACKS split to draft-17 (it's draft-18, PR #1542); (2) subgroups-and-objects / streams-and-framing presented the rejected PR #1608 ("Subgroup ID == first Object ID", closed unmerged) as a landed normative rule — actually replaced by the FIRST_OBJECT bit (#1618). No broken wikilinks found.
+
 # 2026-06-22 (supplemental) — catalog-format concept page reconciled with MSF-01
 
 **TL;DR**:

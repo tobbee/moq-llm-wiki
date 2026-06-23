@@ -2,7 +2,7 @@
 title: "Publish/Subscribe Model"
 tags: [concept, transport, core]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-06-22
 status: current
 ---
 
@@ -25,13 +25,16 @@ MOQT uses a publish/subscribe model where:
 ## Subscribing
 1. Subscriber opens session with relay
 2. Subscriber sends `SUBSCRIBE` with track namespace + track name
-3. Relay responds with `REQUEST_OK` (including [[track-properties]] as of draft-17)
+3. Relay responds with `REQUEST_OK` (including [[track-properties]], since draft-17)
 4. Publisher begins sending objects on data streams
 
-## Namespace Discovery (draft-17)
-In draft-17, SUBSCRIBE_NAMESPACE was split into two distinct messages:
-- **SUBSCRIBE_NAMESPACE** - Gets namespace information (NAMESPACE/DONE)
-- **SUBSCRIBE_TRACKS** - Gets PUBLISH notifications
+In **draft-18**, **Required Request ID was removed** (#1615) — a Request ID is now carried only for Joining FETCH and GOAWAY; and **`PUBLISH_OK` is no longer a distinct message type** — it is a textual alias of `REQUEST_OK` (#1611), alongside new aliases `REQUEST_UPDATE_OK` / `TRACK_STATUS_OK` / `SUBSCRIBE_NAMESPACE_OK` / `PUBLISH_NAMESPACE_OK` (#1610).
+
+## Namespace Discovery (draft-18)
+draft-17 had a single `SUBSCRIBE_NAMESPACE` (0x11) covering both discovery and subscription (with a BOTH mode + OPTIONS). **draft-18 split it** (PR #1542, merged May 1) into two distinct messages and dropped the BOTH mode / OPTIONS:
+- **`SUBSCRIBE_NAMESPACE` (0x50)** - Namespace discovery; the response is a `NAMESPACE` message (corrected from PUBLISH_NAMESPACE in #1619), with self-tracks excluded (#1596).
+- **`SUBSCRIBE_TRACKS` (0x51)** - Track subscription / PUBLISH notifications.
+- New **`TRACK_NAMESPACE_PREFIX` (0x34)** field.
 
 Overlaps are not permitted among requests of the same type but are permitted with different types.
 
@@ -50,9 +53,10 @@ Overlaps are not permitted among requests of the same type but are permitted wit
 
 # Active Design Questions
 
-- **Flow control for subscriptions** (PR #1591) - Should there be limits on active subscriptions?
-- **REQUEST_ERROR caching** (Issue #1582) - How should relays cache and propagate errors?
-- **Self-exclusion** (Issue #1585) - Should SUBSCRIBE_NAMESPACE exclude your own tracks?
+- **Subscription filters / Range Filters** ([PR #1765](https://github.com/moq-wg/moq-transport/pull/1765), [[mo-zanaty|Mo Zanaty]], OPEN) - the live post-18 design thrust: adds `SUBGROUP_FILTER` / `OBJECTID_FILTER` / `PRIORITY_FILTER` / `PROPERTY_FILTER` on `SUBSCRIBE_TRACKS` and renames "Subscription Filters" → "Subscription Location Filters". Pairs with **fill fetch** ([PR #1673](https://github.com/moq-wg/moq-transport/pull/1673)) for past-group retrieval. See [[joining-fetch-dissent]].
+- **Flow control for subscriptions** (PR #1591) - limits on active subscriptions; **OPEN, stale** (no activity since May 11). Sibling #1613 (MAX_REQUEST_UPDATES) was approved default-infinity at the London interim.
+- **REQUEST_ERROR caching** (Issue #1582) - how relays cache/propagate errors; **still OPEN** (last touched June 11).
+- **Self-exclusion** (Issue #1585) - should SUBSCRIBE_NAMESPACE exclude your own tracks? **CLOSED Apr 16** via PR #1596 (yes, they are excluded).
 
 # Related
 
