@@ -2,11 +2,46 @@
 title: "Discussions - June 2026"
 tags: [discussions, slack, github]
 date: 2026-06-01
-last_updated: 2026-06-23
+last_updated: 2026-06-24
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during June 2026.
+
+# Activity (June 23 06:00 UTC → June 24) — **A quiet spec day with one genuinely new WG-doc thread: the LOC draft repo wakes up after ~2 weeks dormant. `sharmafb` opens PR #22 (move LOC `TIMESTAMP` from `0x06` to `0x10` because `0x06` collides with MoQ `SUBGROUP_DELIVERY_TIMEOUT` — the next chapter of the cross-spec property-ID coordination dispute), a small editorial fix (#23), and Issue #21 ("No audio config property?" — LOC has a Video Config property but no audio equivalent for codec init data like AAC). On moq-transport the deliberate draft-19 phased review holds — zero merges for a 5th–6th straight day, by design — but afrind nudges two design PRs (#1761 IANA registry for extension/version compatibility, #1763 remove stray relay prioritization SHOULD) and posts "Design PRs to Review" to the list. moq-dev flips its default QUIC backend from quinn to its own `noq` (#1891) and opens a PR making moq-lite-05 timestamps mandatory (#1896). No new draft revision (transport-19 not cut, dts4moq still 404); the interop runner has now skipped its daily cut for ~4 days (newest still the June-21 225/67/128/30 report).**
+
+## LOC repo wakes up — property-ID collision + an audio-config gap
+
+After ~2 weeks of quiet (the last LOC movement was the June-12 interim), `moq-wg/loc` sees three June-23 items from `sharmafb`:
+
+- **[PR #22](https://github.com/moq-wg/loc/pull/22) OPEN** — *"Change TIMESTAMP to value 0x10"*: LOC's current `TIMESTAMP=0x06` **collides with MoQ `SUBGROUP_DELIVERY_TIMEOUT`**. This is the next concrete step in the **cross-spec property-ID coordination dispute** the wiki has tracked since [loc#20](https://github.com/moq-wg/loc/issues/20) — the same conflict moq-dev/moq resolved in code on May 23 by voting-with-code for the transport-18 §15.8 assignments (TIMESTAMP=0x06, TIMESCALE=0x08). With MoQ now reusing `0x06` for `SUBGROUP_DELIVERY_TIMEOUT`, LOC moves its own TIMESTAMP out of the way to `0x10`.
+- **[PR #23](https://github.com/moq-wg/loc/pull/23) OPEN** — an editorial truncated-sentence fix in the MoQ Object Mapping section.
+- **[Issue #21](https://github.com/moq-wg/loc/issues/21) OPEN** — *"No audio config property?"*: LOC defines a **Video Config** property for video decoder setup but has **no audio equivalent**, so codec-specific initialization data not fully captured by the codec string (the issue cites AAC's AudioSpecificConfig) has no standard place to live. A real spec gap, raised as a pre-`-03` design input.
+
+The LOC draft text itself is unchanged (`draft-ietf-moq-loc-02`). See [[moq-loc]].
+
+## moq-transport — the draft-19 phased review holds
+
+No moq-transport PR merged June 23–24; the **two-phase review** set at [[interim-meetings|interim-2026-moq-17]] (Design PRs need two weeks open + stamps from all four editors before the **July-6** submission deadline) keeps the ~16-PR backlog OPEN *by design*. The visible activity is the review phase running on schedule:
+
+- **[[alan-frindell|afrind]] [PR #1761](https://github.com/moq-wg/moq-transport/pull/1761)** *"Add IANA registry for extension/version compatibility"* (updated June 23, OPEN) — adds a **MOQT Extensions registry with an Applicable Versions column** so versions and extensions can record their mutual compatibility (fixes [#1681](https://github.com/moq-wg/moq-transport/issues/1681)). This is the **editorial counterpart to interim-17's IANA-registry-for-extensibility direction** (the same mechanism the SSTS switching algorithm now uses).
+- **afrind [PR #1763](https://github.com/moq-wg/moq-transport/pull/1763)** *"Remove stray relay prioritization SHOULD"* (June 24, OPEN) — a small relay-text cleanup.
+- On the list, **afrind posts *"Design PRs to Review"*** (June 23) — the list-side push to get the four editors' eyes on the open design PRs inside the July-6 window.
+
+**No new transport revision** (transport-18 Day +43; transport-19 not yet cut; `draft-ietf-moq-dts4moq` still 404). **[[interim-meetings|interim-2026-moq-18]] (July 6, 16:30 UTC)** is now on the datatracker meetings page with a minimal *"MoQT issues"* agenda (posted June 18). See [[moq-transport]].
+
+## Implementations — moq-dev defaults to `noq`; moq-lite-05 timestamps go mandatory
+
+The day's implementation activity is mostly a **June-23 tail** of [[moq-dev|moq-dev/moq]] work that landed after the June-23 update's check time, plus a couple of June-24 open PRs:
+
+- **[PR #1891](https://github.com/moq-dev/moq/pull/1891) MERGED** — *"default QUIC backend to noq instead of quinn"* (+40/−26): flips the default-compiled + auto-selected backend across `moq-native` and all binaries from **quinn → noq** (auto-detect priority now `noq > quinn > quiche`), with quinn kept as an opt-in `--features quinn` escape hatch. moq-dev's own QUIC stack becomes the default — the operational culmination of the recurring noq work (mTLS-on-noq June 16, the RUSTSEC-2026-0185 quinn bump June 23).
+- **[PR #1896](https://github.com/moq-dev/moq/pull/1896) OPEN** (June 23 22:31) — *"mandatory timestamps for moq-lite-05"* (+482/−328): makes per-track **timescale** non-optional (defaults to ms) and per-frame **timestamps** mandatory on moq-lite-05, with **moq-transport timestamp pass-through via per-object extension headers**. The moq-lite analogue of [[moq-timestamp|`draft-lcurley-moq-timestamp`]] hardening from optional into a non-optional contract.
+- Other moq-dev: **[#1888](https://github.com/moq-dev/moq/pull/1888) MERGED** expose the broadcast **hop chain** on announcements via moq-ffi; **[#1890](https://github.com/moq-dev/moq/pull/1890) MERGED** make moq-net `request_broadcast`/`subscribe`/`fetch_group` **infallible**; OPEN **[#1894](https://github.com/moq-dev/moq/pull/1894)/[#1895](https://github.com/moq-dev/moq/pull/1895)** usage-stats-in-model, **[#1893](https://github.com/moq-dev/moq/pull/1893)/[#1870](https://github.com/moq-dev/moq/pull/1870)** moq-gst moqsink on GstAggregator, **[#1889](https://github.com/moq-dev/moq/pull/1889)** keep payload compression compressed in RAM.
+- **[[openmoq|moxygen]]** (tooling only): **[#431](https://github.com/openmoq/moqx/pull/431) MERGED** `moq_decode.py` decodes draft-18 SUBSCRIBER_PRIORITY/GROUP_ORDER/FORWARD as `uint8` per transport-18 §10.2.7/8/12; **[#433](https://github.com/openmoq/moqx/pull/433) MERGED** pin the benchmark macOS runner to `macos-15`; OPEN **[#428](https://github.com/openmoq/moqx/pull/428)** parameterized relay config template with a draft-18 fallback + **[#429](https://github.com/openmoq/moqx/pull/429)** jemalloc auto-detection.
+- **[[quiche-moq|google/quiche]]** moqt: two June-23 follow-ons to the PUBLISH-on-bidi change — *"Fold all control-message handlers from the control stream object into the session itself"* (lets the standalone control-stream class go away once control streams are split in two) + *"Fix msan error in moqt_publish_stream_test."*
+- **[[moqtail]]** raw-QUIC support (#204/#205) already logged June 23; **[[moq-rs|cloudflare/moq-rs]]** saw only a docs-request Issue [#166](https://github.com/cloudflare/moq-rs/issues/166); **[[moq-js|video-dev/moq-js]]** #72 refactor still OPEN; **Eyevinn**, **[[imquic]]**, **birneee/quiche_moq**, **Moqtopus** quiet.
+
+**Interop**: no new runner cut — newest is still the [June-21 225/67/128/30 report](https://englishm.github.io/moq-interop-runner/results/2026-06-21_005151/report.html). June 22, 23, and 24 cuts are all absent; with the spec in editorial review and no draft-19 wire change to score, the matrix has nothing new to measure — but the ~4-day cadence gap is the longest the wiki has tracked. See [[interop-runner]].
 
 # Activity (June 22 → June 23 06:00 UTC) — **The June 22 interim's minutes land as `interim-2026-moq-17` and settle the SSTS (ex-DTS) switching design: DTS is renamed Sender Side Track Switching, the switching algorithm becomes an extensible IANA-registered numeric ID with a mandatory "Algorithm Zero" baseline, and the contested per-set DDoS-protection negotiation properties are removed in favour of auth tokens + relay-side protection. The transport "freeze" turns out to be a deliberate draft-19 phased review — only the 2 interim-window PRs merged, the ~16-PR backlog stays open by design behind a 2-week/4-editor-stamp bar, with a July 6 design-PR deadline. moq-dev stays very active (catalog-extension FFI, group-rewind buffer clears, a RUSTSEC quinn bump); moqtail lands raw-QUIC support; google/quiche moves PUBLISH to a bidi stream. No new draft revision (transport-19 not yet cut, dts4moq still 404); no new interop cut.**
 

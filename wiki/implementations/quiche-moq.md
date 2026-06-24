@@ -2,10 +2,12 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-06-23
+last_updated: 2026-06-24
 status: current
 ---
 
+> **2026-06-24**: **PUBLISH-to-bidi follow-ons — control-message handlers fold into the session ahead of a control-stream split.** Two more June-23 commits continue the June-23 PUBLISH-on-bidi work in `quiche/quic/moqt`: *"Fold all control-message handlers from the control stream object into the session itself"* — a refactor that lets the standalone control-stream class go away once control streams are split in two — plus *"Fix msan error in moqt_publish_stream_test."* Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-06]].
+>
 > **2026-06-23**: **PUBLISH moves to a bidi stream.** A June 23 commit *"Move PUBLISH to a Bidi stream"* lands in `quiche/quic/moqt` — aligning Google's C++ impl with the draft direction of carrying PUBLISH on a bidirectional stream. (The public relay's registered interop target still lags at draft-16; this is `main`-branch protocol-tracking work.) See [[discussions-2026-06]].
 
 **Language**: C++
