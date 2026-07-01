@@ -2,10 +2,12 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-06-23
+last_updated: 2026-07-01
 status: current
 ---
 
+> **2026-07-01**: **moqtail fixes a real KVP wire bug — Key-Value-Pair params were encoded as absolute values instead of the draft-mandated v16 deltas.** **[PR #208](https://github.com/moqtail/moqtail/pull/208) MERGED** (+690/−382, *"Fix/delta encode key-value params"*, **closes [Issue #207](https://github.com/moqtail/moqtail/issues/207)**) — a genuine on-the-wire serialization bug where Key-Value-Pair parameters were serialized as *absolute* values rather than the **v16 deltas** the draft mandates, directly relevant to interop correctness. Plus **[PR #206](https://github.com/moqtail/moqtail/pull/206)** (+66/−13, Kerem Bekmez — treat empty extensions as absent) and CI/release plumbing: **[PR #209](https://github.com/moqtail/moqtail/pull/209)** (corepack enable, July 1 00:11 UTC) + **[PR #202](https://github.com/moqtail/moqtail/pull/202)** release (July 1 00:58 UTC). Issue #207 was opened and closed via #208. This is the first substantive moqtail wire-correctness fix the wiki has logged in a while, targeting exactly the cross-version KVP-encoding mismatch that surfaces as interop failures. See [[discussions-2026-06]].
+>
 > **2026-06-23**: **moqtail breaks a near-month-long quiet stretch — raw-QUIC transport lands in two steps.** **Zafer Gürel** merges **[PR #204](https://github.com/moqtail/moqtail/pull/204)** (+543/−89) + **[PR #205](https://github.com/moqtail/moqtail/pull/205)** (2nd step, +364/−127) June 23 adding **raw QUIC support** alongside the existing WebTransport path — the same non-WebTransport transport surface [[qmux|qmux]] addresses, widening the cross-impl test matrix for MoQ over plain QUIC. Plus a **client-js publish tab + unordered-object handling** (June 22) and README updates. (Draft support on `main` was last tracked at draft-16; this update did not surface a version bump.) See [[discussions-2026-06]].
 >
 > **2026-05-26**: **Single client-js demo fix Day +1 after the 2-day relay-conformance push** — **Ali C. Begen** `3e9b788c` May 25 18:52 UTC *"fix(demo): use next group start for sub"*. PR #202 release-bot auto-PR still OPEN. **Cadence**: the May 23-24 dual-day fix burst (Zafer PR #199 FETCH_OK + PR #201 mid-subgroup join) tapers to demo-layer polish on May 25; relay-conformance push appears to be paused or completed for the pre-London window.
