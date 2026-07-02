@@ -2,10 +2,12 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-06-25
+last_updated: 2026-07-02
 status: current
 ---
 
+> **2026-07-02**: **The moqt module resumes after a ~week gap — first commit since June 24.** A July-1 18:39 UTC commit lands in `quiche/quic/moqt`: *"Increment Request ID on SubscribeNamespace"* (`1b65043b`) — a small correctness fix keeping the Request-ID counter monotonic when `SUBSCRIBE_NAMESPACE` requests are issued, ending the June-24 → July-1 quiet stretch. Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-07]].
+>
 > **2026-06-25**: **A WebTransport-only client class is split out of `MoqtClient`.** A June-24 commit lands in `quiche/quic/moqt`: *"Create a dedicated WebTransport-only client class, and switch `MoqtClient` to using it"* — factors a WebTransport-only client out of the general MoQT client, the client-side counterpart to the June-23 control-stream refactoring (handlers folded into the session, control-stream split). Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-06]].
 >
 > **2026-06-24**: **PUBLISH-to-bidi follow-ons — control-message handlers fold into the session ahead of a control-stream split.** Two more June-23 commits continue the June-23 PUBLISH-on-bidi work in `quiche/quic/moqt`: *"Fold all control-message handlers from the control stream object into the session itself"* — a refactor that lets the standalone control-stream class go away once control streams are split in two — plus *"Fix msan error in moqt_publish_stream_test."* Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-06]].
