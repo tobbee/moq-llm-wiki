@@ -2,11 +2,10 @@
 title: "Privacy Pass Authentication for MOQ"
 tags: [draft, security, authentication]
 date: 2026-04-10
-last_updated: 2026-06-19
+last_updated: 2026-07-02
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/"
-last_updated: 2026-07-02
 ---
 
 > **2026-07-02**: **The auth workstream surfaces on the tracker for the first time since London — [[suhas-nandakumar|Suhas]] runs a triage pass July 1 (~16:00–16:24 UTC).** Three weeks after [[thibault-meunier|Thibault Meunier]]'s June-12 issue burst, the [moq-wg/privacy-pass](https://github.com/moq-wg/privacy-pass) tracker gets its first activity — the concrete follow-through on [[martin-duke|Martin Duke]]'s **June-29 reactivation of the "AUTH design team"** list thread. Suhas opens **[#19](https://github.com/moq-wg/privacy-pass/issues/19)** *"Reverse Flow and MOQT Integration"* (NEW) — the **reverse-flow token-exchange** question: can new subscriptions get tokens from the **relay acting as issuer** (not the original PP issuer), and can it **reuse `REQUEST_UPDATE` / `REQUEST_OK` / `REQUEST_ERROR`** as carriers? — and comments on the standing thibmeu issues: on **[#18](https://github.com/moq-wg/privacy-pass/issues/18)** (token challenge/acquisition) a two-part plan — **replace the `ReasonPhrase` carrier with `MoQTokenChallenge`** (the long-tracked "no clean challenge carrier in a SETUP-closure reply" problem) and explore challenging **without closing the session**; on **[#16](https://github.com/moq-wg/privacy-pass/issues/16)** (retry-after-error) that it is *"similar to #18"* and should get supporting text once #18 lands in MoQT. No new revision (still -02). See [[moq-transport]], [[moq-c4m]], [[discussions-2026-07]].
