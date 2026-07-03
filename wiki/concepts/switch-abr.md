@@ -2,12 +2,21 @@
 title: "SWITCH and Client-Side ABR"
 tags: [concept, transport, abr, media]
 date: 2026-04-10
-last_updated: 2026-06-23
+last_updated: 2026-07-03
 status: current
 ---
 
 One of the most debated topics in MOQ - whether the transport layer needs a dedicated SWITCH message for adaptive bitrate track switching.
 
+> **2026-07-03 — the SSTS interim decisions become concrete PR text.** [[will-law|Will Law]] posted **"Add Sender-Side Track Switching (SSTS) #1638"** to the MoQ list **July 2 12:20 UTC**, describing the updates he pushed to **[PR #1638](https://github.com/moq-wg/moq-transport/pull/1638)** to implement the [[interim-meetings|June-22 interim]] (interim-17) action items — the first spec-side motion on SSTS since the interim, ahead of **July 6**:
+> - **Rename**: *"Dynamic Track Switching" → "Sender-Side Track Switching (SSTS)"* (executing the interim's naming call).
+> - **Multi-algorithm via `SSTS_ALGORITHMS`**: SSTS now supports **multiple switching algorithms**, advertised by relays through a new **`SSTS_ALGORITHMS`** setup parameter — the concrete form of the interim's "array of preferred algorithms, client requests / relay answers" negotiation.
+> - **`SWITCHING-SET-ASSIGNMENT` base framework**: a base parameter framework that individual algorithms **extend** — the extension point that gives the IANA-registered numeric algorithm ID something to hang off.
+> - **Algorithm 0 = mandatory default**: the baseline algorithm (throughput thresholds + activation rules), i.e. the interim's mandatory **"Algorithm Zero."**
+> - **Removed `MAX_DTS_CONCURRENT_TRACKS`**: the per-switching-set (D)DoS-protection setup option is **dropped**, per the interim's decision to rely on **authorization tokens + existing relay protections** rather than negotiated concurrency/throughput limits (the resolution to [[gwendal-simon|Gwendal Simon]]'s original (D)DoS concern).
+>
+> Will Law **invites review and alternative-algorithm implementations** to exercise the extension mechanism — a signal the design is meant to be validated by more than the baseline algorithm before draft-19 cuts. The PR remains a **gated Design PR** (two-week + four-editor bar) with the July-6 deadline standing. See [[moq-transport]], [[interim-meetings]], [[discussions-2026-07]].
+>
 > **2026-06-23 — DTS is renamed SSTS, and the switching algorithm becomes an extensible IANA registry.** The [[interim-meetings|June 22 interim]] (minutes posted June 23 as [interim-2026-moq-17](https://datatracker.ietf.org/doc/minutes-interim-2026-moq-17-202606221630/)) closed the design questions left open after the spring SWITCH/DTS consensus call:
 > - **Rename**: *"Dynamic Track Switching" (DTS) → "Sender Side Track Switching" (SSTS)* — *"this title more accurately reflects the functionality"* (RFC editors keep final naming say). The mechanism: a publisher exposes a **switching set** of renditions and the relay forwards exactly one, toggling the forward state to switch.
 > - **Extensible algorithm**: rather than freezing one algorithm, switching is keyed by a **numeric ID in an IANA table**, negotiated via an **array of preferred algorithms** (client requests, relay answers with its supported set). The current implementation is the mandatory **"Algorithm Zero"** baseline in the base spec; future algorithms register + negotiate.
