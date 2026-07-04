@@ -2,15 +2,17 @@
 title: "Live Agent Interaction over MoQ"
 tags: [draft, individual, ai-agent, application-profile]
 date: 2026-06-30
-last_updated: 2026-06-30
+last_updated: 2026-07-04
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-liu-moq-live-agent-interaction/"
 ---
 
+> **2026-07-04**: **-00 → -01 bump (July 3) — the follow-on revision the first-look flagged to watch for.** **`draft-liu-moq-live-agent-interaction-01`** was posted **July 3 2026**, five days after the -00 submission. It remains an **individual** draft (not adopted; RFC stream "None", IESG state "I-D Exists"), and the Datatracker shows **no explicit -00→-01 changelog**; the abstract is unchanged in shape (ASR-transcript / LLM-token / TTS-audio mapping onto MOQT's Group/Subgroup/Object hierarchy, turn-taking with barge-in, a pure application profile). Notable mainly as continued **Alibaba** investment in the "MoQ as a reusable real-time substrate" thesis — a second revision inside a week — but **still undiscussed on the moq@ietf.org list**. Logged as a revision event; watch for any call for adoption or WG-list reaction. See [[discussions-2026-07]].
+>
 > **2026-06-30**: **First-look — a new individual I-D applies MoQ to real-time AI-agent (voice) interaction, the first MoQ + AI-agent draft the wiki has tracked.** **`draft-liu-moq-live-agent-interaction-00`** *"Live Agent Interaction over MoQ"* was submitted **June 29 2026** by **Yanmei Liu (Alibaba Inc.)** and **Dapeng Liu (Alibaba Cloud)** — the second Alibaba MoQ artifact alongside the [[xquic-moq|XQUIC]] implementation. It is a **pure application profile**: it adds no transport-layer mechanism, instead defining **semantic conventions** for mapping a live conversational AI session onto [[moq-transport|MOQT]]'s object hierarchy. Brand new and not yet discussed on the WG list; logged here as a first-look pending any uptake.
 
-**draft-liu-moq-live-agent-interaction-00** | individual submission | submitted 2026-06-29
+**draft-liu-moq-live-agent-interaction-01** | individual submission | -00 submitted 2026-06-29, -01 posted 2026-07-03
 
 # Authors
 - Yanmei Liu (Alibaba Inc.)
@@ -38,7 +40,7 @@ Defines an application-layer protocol for **real-time interactive communication 
 
 # Status & Caveats
 
-- **Individual draft, -00, just submitted (June 29 2026)** — not adopted, not yet discussed on the moq@ietf.org list as of this writing.
+- **Individual draft, now at -01 (posted July 3 2026; -00 June 29 2026)** — not adopted, not yet discussed on the moq@ietf.org list as of this writing; no explicit -00→-01 changelog on the Datatracker.
 - The wiki tracks individual drafts that are actively discussed or referenced; this one is logged as a **first-look** because it opens a new application category for MoQ. Watch for any WG-list reaction or follow-on revision.
 
 # Related

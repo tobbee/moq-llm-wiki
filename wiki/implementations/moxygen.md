@@ -2,10 +2,12 @@
 title: "Moxygen (Meta)"
 tags: [implementation, cpp, meta]
 date: 2026-04-10
-last_updated: 2026-07-03
+last_updated: 2026-07-04
 status: current
 ---
 
+> **2026-07-04**: **A real spec-compliance fix lands — by direct commit, not a GitHub PR.** Moxygen merges to `main` via Meta's internal-diff workflow (direct commits, no GitHub PRs), so PR-based scans miss it: on **July 3** two commits landed — **`c14a6bb9`** (02:23 UTC) *"Draft 16 and below: DELIVERY_TIMEOUT of 0 is PROTOCOL_VIOLATION"* — enforces that a **zero `DELIVERY_TIMEOUT` is a protocol violation** on draft ≤16 (a wire-conformance tightening on the versions moxygen actually advertises) — plus a routine **`e0b58105`** *"Updating hashes"*. The July-1 afrind qlog/viz PRs (#205/#206) and gmarzot's #207 logging fix remain OPEN; relay/stats/TLS work still routes to the [[openmoq|moqx]] fork. See [[openmoq]], [[discussions-2026-07]].
+>
 > **2026-07-03**: **A quiet window upstream — one new OPEN logging fix.** **[PR #207](https://github.com/facebookexperimental/moxygen/pull/207)** (gmarzot, July 2 21:02) *"Fix `FOLLY_XLOG_STRIP_PREFIXES` to strip moxygen's own root"* — corrects the XLOG prefix stripping so log lines show paths relative to moxygen's own source root. No merges July 2–3; the July-1 afrind qlog/viz PRs (#205/#206) remain OPEN. The relay/stats/TLS development this window continues to land on the **[[openmoq|moqx]]** fork (afrind's #478/#477 stats, gmarzot's #460 PKCS#12 TLS) rather than upstream — the standing routing pattern. See [[openmoq]], [[discussions-2026-07]].
 >
 > **2026-07-02**: **The upstream tree pivots to qlog/visualization tooling — two OPEN afrind PRs land July 1.** **[PR #205](https://github.com/facebookexperimental/moxygen/pull/205)** *"Overhaul MoQ viz: NDJSON input, track-alias reconstruction, no CDN dep"* (+1511/−966, OPEN) — a substantial rewrite of the MoQ visualization tool to take NDJSON input, reconstruct track aliases, and drop the CDN dependency; and **[PR #206](https://github.com/facebookexperimental/moxygen/pull/206)** *"qlog: Wire per-connection QLogger via `HQServerTransportFactory::setQLoggerFactory`"* (+13/−0, OPEN) — per-connection qlog wiring (the counterpart to the [[openmoq|moqx]] qlog #464 line). The June-30/July-1 stats/test cluster (#204 stats callbacks, #203/#201 test fixes, #200/#199 relay lifecycle) all stayed **CLOSED-unmerged** via Meta's internal-diff workflow, with only #202 lingering OPEN — so the retraction pattern holds while the new work is qlog/viz rather than relay/stats. See [[openmoq]], [[discussions-2026-07]].
