@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-07-06
+last_updated: 2026-07-07
 status: current
-updated: 2026-07-06
+updated: 2026-07-07
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -16,11 +16,11 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
-| [[moq-transport]] | draft-18 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (published 2026-05-12) |
+| [[moq-transport]] | draft-19 | Active (**-19 2026-07-06**) | Core publish/subscribe transport protocol over QUIC/WebTransport (Range Filters + clarifications; contested design PRs defer) |
 | [[moq-msf]] | draft-01 | Active | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
-| [[moq-loc]] | draft-02 | Active | Low Overhead Media Container for interactive streaming |
-| [[moq-secure-objects]] | draft-00 | Active | End-to-end authenticated encryption for MOQT objects |
-| [[moq-privacy-pass]] | draft-02 | Active | Privacy-preserving authentication via Privacy Pass tokens |
+| [[moq-loc]] | draft-03 | Active (**-03 2026-07-06**) | Low Overhead Media Container for interactive streaming (adds audio config) |
+| [[moq-secure-objects]] | draft-01 | Active (**-01 2026-07-06**) | End-to-end authenticated encryption for MOQT objects (adds test vectors) |
+| [[moq-privacy-pass]] | draft-03 | Active (**-03 2026-07-06**) | Privacy-preserving authentication via Privacy Pass tokens (major MoQT-integration rebuild) |
 | [[moq-c4m]] | draft-01 | Active (**-01 2026-06-18**) | Authorization via CTA WAVE Common Access Tokens (CAT/CWT) — scoped bearer-token auth for MOQT |
 | [[moq-cmsf]] | draft-01 | Active | CMAF-compliant extension of MSF (-01 published 2026-06-03) |
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
@@ -29,12 +29,12 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-timestamp]] | draft-00 | Individual (**NEW 2026-06-12**) | MoQ Object Timestamp Extension — Timescale/Timestamp/Duration for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
-| [[moq-locmaf]] | draft-00 | Individual (**NEW 2026-06-02**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs |
+| [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
 | [[moq-live-agent-interaction]] | draft-01 | Individual (**-01 2026-07-03**) | Live Agent Interaction over MoQ — real-time AI-agent/voice profile (turns→Groups, tokens→Objects); Yanmei Liu + Dapeng Liu (Alibaba) |
 | [[moq-overview]] | draft-00 | Individual (**NEW 2026-06-30**) | Media over QUIC Overview — Informational suite survey; co-chair Magnus Westerlund (Ericsson) + Zaheduzzaman Sarker (Nokia) |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
-For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), and draft-englishm-moq-relay-dos-00 (relay DoS considerations).
+For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), and draft-englishm-moq-relay-dos-01 (relay DoS considerations, **-01 2026-07-06**).
 
 # Protocol Concepts
 

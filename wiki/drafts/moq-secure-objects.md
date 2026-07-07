@@ -2,19 +2,21 @@
 title: "End-to-End Secure Objects for MOQT"
 tags: [draft, security, encryption]
 date: 2026-04-10
-last_updated: 2026-06-30
+last_updated: 2026-07-07
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-secure-objects/"
 ---
 
+> **2026-07-07**: **`draft-ietf-moq-secure-objects-01` is CUT (July 6) — the long-flagged first revision since -00, carrying the June-29 test-vectors appendix into published text.** The -01 folds in the editor's-copy work the page has tracked since May: the **worked AEAD test-vectors appendix** ([PR #88](https://github.com/moq-wg/secure-objects/pull/88), +326/−0, merged June 29) so implementations can verify their encryption/authentication against canonical inputs, plus the AAD-serialization precision work around afrind's [Issue #72](https://github.com/moq-wg/secure-objects/issues/72). No new secure-objects repo activity fell inside the July 6–7 window (the merges predate it). Published alongside transport-19 / loc-03 / privacy-pass-auth-03 in the July-6 [[interim-meetings|interim-2026-moq-18]] draft wave; authors unchanged (Cullen Jennings / [[suhas-nandakumar|Suhas]] / Richard Barnes, all Cisco). See [[discussions-2026-07]], [[moq-transport]].
+>
 > **2026-06-30**: **The test-vectors appendix finally lands — [PR #88](https://github.com/moq-wg/secure-objects/pull/88) MERGED June 29 16:07 UTC** ([[suhas-nandakumar|Suhas Nandakumar]], **+326/−0** to `draft-ietf-moq-secure-objects.md`). This is the **first content merge on the secure-objects repo since the May-1 cleanup wave** — the *"Add test vectors appendix"* PR the page has tracked **OPEN since May 30** (originally the informal-reference fallback if -01 didn't land before London) now lands, adding worked AEAD test vectors so implementations can verify their encryption/authentication against canonical inputs — a concrete **interop-readiness** step. Separately, afrind's standing **Issue [#72](https://github.com/moq-wg/secure-objects/issues/72)** *"Specify how integers are serialized in AAD"* (open since March 20: align the AAD `(i)` varint notation with `vi64` to match MOQT, and note Object ID is not transmitted) drew **new activity June 29 16:22 UTC** — the unresolved AAD-serialization precision item, still relevant as the spec moves toward -01. **Still no Datatracker -01 submission** (secure-objects remains at -00); the merge brings the editor's copy closer to the -01 release line the page has flagged since early May. See [[discussions-2026-06]], [[moq-transport]].
 >
 > **2026-05-31**: **[PR #88](https://github.com/moq-wg/secure-objects/pull/88) still OPEN no new commits May 30-31** (last updated May 30 13:56 UTC). No Datatracker submission for -01. Like [[moq-msf|MSF]], the editorial work for secure-objects -01 is staged but not yet cut on Datatracker — supports the **coordinated multi-draft London-cycle drop** hypothesis. **Carry-forward**: with London hackathon 9 days away, secure-objects -01 publication remains the structural prerequisite for any security-focused London discussion; if it doesn't land before London, the secure-objects spec slot uses -00 + the unmerged PR #88 test vectors appendix as informal reference.
 >
 > **2026-05-30**: **[[suhas-nandakumar|Suhas Nandakumar]] [PR #88](https://github.com/moq-wg/secure-objects/pull/88) OPEN May 30 03:26:23 UTC** *"Add test vectors appendix"* (+326/−0 to `draft-ietf-moq-secure-objects.md`, 1 file) — first content PR on the moq-wg/secure-objects repo in weeks; signals draft-01 preparation. Combined with the unfulfilled MSF -01 publication and the moq-wg/moq-transport Issue #1637 bidi-stream-credit design gap, suggests a **coordinated multi-draft London-cycle drop** rather than independent revision cadences.
 
-**draft-ietf-moq-secure-objects-00** | 23 pages | Expires 2026-09-03
+**draft-ietf-moq-secure-objects-01** | 33 pages | published 2026-07-06 (supersedes -00)
 
 # Authors
 - Cullen Jennings (Cisco)

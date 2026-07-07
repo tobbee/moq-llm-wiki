@@ -2,12 +2,14 @@
 title: "LOCMAF - Low Overhead CMAF for Media over QUIC"
 tags: [draft, media, cmaf, low-overhead, individual]
 date: 2026-06-03
-last_updated: 2026-06-29
+last_updated: 2026-07-07
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/"
 ---
 
+> **2026-07-07**: **`draft-einarsson-moq-locmaf-01` is CUT (July 5, 41 pp) — a *major* consistency rewrite, announced by [[tobbe-einarsson|Tobbe]] on `#moq` (July 6 08:15 CEST) alongside a new standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) reference-impl + golden-vector repo and a coordinated Eyevinn v0.12.0 shipping LOCMAF v0.3.** The -01 pass makes the format **canonical**: two canonical encoders given the same CMAF input produce **byte-identical** LOCMAF Objects, so the wire form is deterministic and golden-vector-testable. Delta encoding is unchanged in spirit (the first chunk of a group carries full metadata as tagged fields via zigzag varints; later chunks carry only field *deltas*, down to ~2 bytes; `mdat` passes through unchanged; DRM/encryption metadata preserved). New in -01: **generic-box** elements carry pre-`moof` boxes (`prft`, `emsg`) **verbatim**, and a **raw-boxes** escape hatch handles chunks outside the field model — making the format **extensible with C2PA `uuid` boxes**. **No IANA actions** (Tobbe: *"the draft no longer needs any IANA-registration, since all codes are internal"*) — generic boxes use self-describing ISO FourCCs, field IDs are LOCMAF-governed, and **packaging is signaled via the [[moq-cmsf|CMSF]] catalog** (`packaging: "locmaf"` + `locmafVersion "0.3"`). **[Eyevinn/locmaf](https://github.com/Eyevinn/locmaf)** (created July 3; v0.1.0 July 4, **v0.1.1** July 5) is a stdlib-only Go **reference codec + conformance suite** (byte-pinned golden vectors + worked examples: negative CTOs, CENC/cbcs, BMDT re-anchoring, event-only chunks); layout `locmaf/` codec · `vi64/` varints+zigzag · `cmd/locmaf/` CLI · `testdata/` golden vectors · `web/` locmaf.dev. Eyevinn v0.12.0 extracts the codec out of moqlivemock into that module ([moqlivemock #96](https://github.com/Eyevinn/moqlivemock/pull/96) +326/−3640, [warp-player #150](https://github.com/Eyevinn/warp-player/pull/150) +3615/−1880). Note this -01 continues on the **standalone individual-draft path** even as the [[moq-cmsf|CMSF]] Issue #24 discussion (fold LOCMAF into CMSF as a packaging mode) proceeds — the two aren't mutually exclusive, since CMSF signals `packaging: "locmaf"` either way. See [[moqlivemock]], [[warp-player]], [[moq-cmsf]], [[discussions-2026-07]].
+>
 > **2026-06-29**: **The path to retiring the standalone draft opens — [[tobbe-einarsson|Tobbe]] files [moq-wg/cmsf Issue #24](https://github.com/moq-wg/cmsf/issues/24) (June 28) to incorporate LOCMAF into [[moq-cmsf|CMSF]] as a packaging mode.** Acting on the **[[interim-meetings|London interim-11]] (Day-2, June 12) agreement** that LOCMAF should *"become part of CMSF rather than proceed as a standalone draft"*, Tobbe opened **[Issue #24](https://github.com/moq-wg/cmsf/issues/24)** *"Incorporate LOCMAF as a packaging mode in CMSF"* — proposing a **`locmaf` packaging** that sits between CMSF's existing `cmaf` (full CMAF chunks) and `loc` (codec-elementary frames): tagged fields + unmodified samples on the wire, with the receiver reconstructing the *same* CMAF chunk a `cmaf` track would carry (MSE) or extracting samples (WebCodecs). The framing leans on LOCMAF's two distinguishing properties — **end-to-end** (relays forward the Object payload unchanged) and **catalog-referenced init** (the 0.2 design choice, relying on [[moq-msf|MSF]] -01's `initData` type, that lets `cmaf` and `locmaf` tracks reference the *same* init) — so LOCMAF reuses CMSF's catalog/init machinery directly. This is the concrete realization of the convergence the June-3 initData thread and wilaw's June-9 dual Track+Object proposal pointed at: rather than four competing low-overhead carriers, LOCMAF becomes a **defined mode of a WG document**, and `draft-einarsson-moq-locmaf-00` is on a path to being folded in (and eventually retired as a standalone individual draft). See [[moq-cmsf]], [[discussions-2026-06]], [[interim-meetings]].
 >
 > **2026-06-10**: **Will Law's London CMSF slides converge the initData-carriage design space onto dual Track+Object properties.** Reviving the June-3/4 thread under Tobbe's LOCMAF announcement, **[[will-law|wilaw]] June 9 16:07 CEST**: *"In the CMSF slides for London, I propose that we create **both Track and Object properties to carry Init Data**. This would solve the two problems of mid-track changes and synchronization."* This resolves the three-way space the thread had opened — **(a) catalog-referenced** (the LOCMAF 0.2 choice), **(b) track property** (steady-state immutable), **(c) per-group subgroup** (only when changed) — by combining (b) and (c): a stable **Track** property carries steady-state init, an **Object** property carries synchronized mid-track changes. It directly answers wilaw's own earlier constraint (*"we do not allow track init properties to change once publish has begun"*) and Tobbe's DASH-period/DRM-rotation concern (*"it may be a bit too strict to never allow updating it"*). For LOCMAF this matters because 0.2 deliberately dropped initData compression in favor of catalog-referenced init (relying on [[moq-msf|MSF]] -01's `initData` type) — a dual Track+Object property model in CMSF/MSF would give LOCMAF a spec-blessed home for the same init-reference it currently leans on. Now a [[interim-meetings|London]] CMSF-slot agenda input rather than a stale [moq-msf Issue #153](https://github.com/moq-wg/msf/issues/153). See [[moq-cmsf]], [[discussions-2026-06]].
@@ -18,7 +20,7 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/"
 >
 > **2026-06-03**: **NEW individual draft submitted June 2 2026** by **[[tobbe-einarsson|Torbjörn Einarsson]] (Eyevinn Technology) and Hugo Björs (KTH)** — *"Low Overhead CMAF for Media over QUIC (LOCMAF)"*. Per the abstract, LOCMAF defines a compact wire format that lets low-latency CMAF media be delivered over [[moq-transport]] with significantly reduced per-object overhead by carrying CMAF chunk metadata as tagged fields while preserving sample data unchanged. The receiver reconstructs functionally equivalent CMAF chunks suitable for MSE/EME playback pipelines. **Slots into the design space between [[moq-loc|LOC]] and [[moq-cmsf|CMSF]]**: LOC strips fMP4 overhead but loses MSE/EME compatibility; CMSF keeps full CMAF chunk semantics; **LOCMAF aims for the middle** — compact-fMP4 carrier the player reconstructs to a CMAF chunk before handing to MSE. **First IETF artifact from the wiki maintainer** (Tobbe), aligns with Eyevinn's longstanding interest in MSE/EME-compatible MoQ playback (see [[moqlivemock]] + [[warp-player|Eyevinn/warp-player]]). **Carry-forward**: LOCMAF may surface at the **London Day-2 35-min MSF/CMSF/MSFTS slot** as one of three competing low-overhead carriers for fMP4-style payloads alongside [[compressed-mp4]] (mzanaty, varint compression of fMP4 boxes) and [[moq-media-interop]] (LOC wire format for H.264/Opus/AAC, expired Apr 23).
 
-**draft-einarsson-moq-locmaf-00** | Individual | Submitted 2 June 2026 | Expires 2 December 2026 (approx.) | [Datatracker](https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/)
+**draft-einarsson-moq-locmaf-01** | Individual | 41 pages | published 2026-07-05 (supersedes -00 of 2026-06-02) | [Datatracker](https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/) · [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) (reference impl + golden vectors)
 
 # Authors
 - **[[tobbe-einarsson|Torbjörn Einarsson]]** (Eyevinn Technology) — wiki maintainer; author of [[moqlivemock]] + mlmtest interop client
@@ -33,8 +35,8 @@ LOCMAF defines a compact wire format that enables streaming low-latency CMAF med
 | Format | Wire shape | MSE/EME compatibility | Standardization |
 |--------|-----------|------------------------|------------------|
 | [[moq-cmsf\|CMSF]] | Full CMAF chunks (init + chunks per CMAF spec) | Direct passthrough to MSE | WG (draft-ietf-moq-cmsf-00) |
-| **LOCMAF** | **Tagged fields + unchanged sample data; receiver reconstructs CMAF chunk** | **Reconstructed; MSE-compatible after receiver-side rebuild** | **Individual (draft-einarsson-moq-locmaf-00)** |
-| [[moq-loc\|LOC]] | Codec-aware compact frame format | No (requires non-MSE pipeline) | WG (draft-ietf-moq-loc-02) |
+| **LOCMAF** | **Tagged fields + unchanged sample data; receiver reconstructs CMAF chunk (canonical, byte-identical)** | **Reconstructed; MSE-compatible after receiver-side rebuild** | **Individual (draft-einarsson-moq-locmaf-01)** |
+| [[moq-loc\|LOC]] | Codec-aware compact frame format | No (requires non-MSE pipeline) | WG (draft-ietf-moq-loc-03) |
 | [[compressed-mp4]] | Varint-compressed fMP4 boxes (96 → ~21 bytes per fragment) | After decompression: MSE-compatible | Individual |
 | [[moq-media-interop]] | LOC wire format for H.264/Opus/AAC | No | Individual, expired Apr 23 |
 
@@ -49,8 +51,10 @@ LOCMAF's distinguishing choice: **carry CMAF chunk metadata as tagged fields**, 
 # Status
 
 - **-00 submitted**: 2026-06-02
-- **WG adoption call**: not yet
-- **Implementation reports**: none yet
+- **-01 published**: 2026-07-05 (major consistency rewrite; canonical reconstruction + generic/raw boxes; no IANA actions)
+- **WG adoption call**: not yet (individual draft)
+- **Reference implementation**: [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) (stdlib-only Go codec + golden-vector conformance suite; v0.1.1, 2026-07-05)
+- **Implementation reports**: [[moqlivemock]] + [[warp-player]] v0.12.0 (LOCMAF v0.3, 2026-07-06)
 
 # Related drafts and concepts
 

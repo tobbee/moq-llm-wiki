@@ -2,12 +2,14 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-06-24
+last_updated: 2026-07-07
 status: current
-draft_version: "02"
+draft_version: "03"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
 
+> **2026-07-07**: **`draft-ietf-moq-loc-03` is CUT (July 6) — the first LOC revision since -02, resolving the June audio-config gap.** Two merges land the revision: **[PR #24](https://github.com/moq-wg/loc/pull/24)** *"Add audio config, revise all audio and video properties"* ([[mo-zanaty|Mo Zanaty]], +26/−17) — the answer to [Issue #21](https://github.com/moq-wg/loc/issues/21) (LOC defined a Video Config but had **no audio equivalent**, leaving codec-specific init like AAC's AudioSpecificConfig with no standard place), which also revises the video/audio property set; and **[PR #23](https://github.com/moq-wg/loc/pull/23)** *"Fix truncated sentence in MoQ Object Mapping"* (sharmafb, +1/−1). Published alongside transport-19 / secure-objects-01 / privacy-pass-auth-03 in the July-6 [[interim-meetings|interim-2026-moq-18]] draft wave. See [[discussions-2026-07]].
+>
 > **2026-06-24**: **The LOC repo wakes up after ~2 weeks dormant — `sharmafb` reopens the cross-spec property-ID dispute and surfaces an audio-config gap.** Three June-23 items on `moq-wg/loc` (the first movement since the June-12 interim): **[PR #22](https://github.com/moq-wg/loc/pull/22) OPEN** *"Change TIMESTAMP to value 0x10"* — LOC's current `TIMESTAMP=0x06` **collides with MoQ `SUBGROUP_DELIVERY_TIMEOUT`**, so LOC moves its own TIMESTAMP out of the way; this is the next concrete step in the **property-ID coordination dispute** tracked since [Issue #20](https://github.com/moq-wg/loc/issues/20) and the May-23 [[moq-dev|moq-dev/moq]] vote-with-code for the transport-18 §15.8 assignments (TIMESTAMP=0x06, TIMESCALE=0x08). **[PR #23](https://github.com/moq-wg/loc/pull/23) OPEN** — an editorial truncated-sentence fix in the MoQ Object Mapping section. **[Issue #21](https://github.com/moq-wg/loc/issues/21) OPEN** *"No audio config property?"* — LOC defines a **Video Config** property for video decoder setup but has **no audio equivalent**, leaving codec-specific init data not fully captured by the codec string (the issue cites AAC's AudioSpecificConfig) with no standard place to live. **The LOC draft text itself is unchanged** (`draft-ietf-moq-loc-02`); these are pre-`-03` design inputs. See [[discussions-2026-06]].
 >
 > **2026-06-13**: **imquic ships an implementation answer to the June-9 LOC private-properties ambiguity.** **[[imquic]] [PR #29](https://github.com/meetecho/imquic/pull/29) MERGED** June 12 08:54 UTC (lminiero, *"Add mechanism for adding payload prefix (for LOC private objects)"*, +151/−52) — imquic now writes an explicit **payload prefix for LOC private objects**, resolving (on the implementation side) the omit-the-block-vs-write-a-zero-count question Lorenzo Miniero raised June 9 while building his LOC live-media demos. The spec text itself is unchanged; the June-12 Day-2 LOC-update slot (Mo Zanaty) remains the venue for codifying the wire convention. See [[imquic]], [[discussions-2026-06]].
@@ -16,7 +18,7 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 >
 > **2026-05-23**: **First LOC encoder/decoder library merged in the [[moq-dev|moq-dev/moq]] stack** — [PR #1388](https://github.com/moq-dev/moq/pull/1388) MERGED May 22 22:53 UTC by [[luke-curley|kixelated]] (+844/−16, 30 files). New `moq-loc` Rust crate + `@moq/loc` JS package providing `encode()` / `decode()` for the LOC frame wire format, integrated into `moq-mux` + hang catalog + watch player. **Implementation chooses [[moq-transport]]-18 §15.8-2 property type IDs (TIMESTAMP=0x06, TIMESCALE=0x08) over the conflicting historical draft-ietf-moq-loc-02 values (TIMESTAMP=0x02)** — kixelated effectively votes-with-code for the moq-transport-18 assignments to win the cross-spec coordination dispute surfaced by Issue [#20](https://github.com/moq-wg/loc/issues/20). Catalog timescale defaults to 1,000,000 microseconds; per-frame timescale override supported via 0x08 property. LOC preference in audio source selection: prioritized after legacy, before CMAF. **Carry-forward**: until LOC spec PR #1624 (provisional IANA registry) propagates into a draft-ietf-moq-loc-03 with aligned values, the moq-dev/moq LOC implementation is the *de facto* reference for post-draft-18 property type assignments.
 
-**draft-ietf-moq-loc-02** | 19 pages | Expires 2026-03-15
+**draft-ietf-moq-loc-03** | 19 pages | published 2026-07-06 (supersedes -02)
 
 # Authors
 - Mo Zanaty (Cisco)
