@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-07-07
+last_updated: 2026-07-08
 status: current
-updated: 2026-07-07
+updated: 2026-07-08
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -31,6 +31,8 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
 | [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
 | [[moq-live-agent-interaction]] | draft-01 | Individual (**-01 2026-07-03**) | Live Agent Interaction over MoQ — real-time AI-agent/voice profile (turns→Groups, tokens→Objects); Yanmei Liu + Dapeng Liu (Alibaba) |
+| [[moq-mocha]] | draft-00 (×6) | Individual (**NEW 2026-07-06**) | MOCHA — "MoQ Open Communication & Hosting Architecture": a 6-part RTC suite (chat, meetings, identity, MLS keying, reactions, address book) over MoQT; Cullen Jennings + Suhas Nandakumar (Cisco) |
+| [[moq-tempo]] | draft-00 | Individual (**NEW 2026-07-06**) | TEMPO — synchronized media playout orchestration (publisher/relay timestamps + PlaySyncServer feedback); Suhas Nandakumar + Cullen Jennings (Cisco) |
 | [[moq-overview]] | draft-00 | Individual (**NEW 2026-06-30**) | Media over QUIC Overview — Informational suite survey; co-chair Magnus Westerlund (Ericsson) + Zaheduzzaman Sarker (Nokia) |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
