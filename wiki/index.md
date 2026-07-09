@@ -16,7 +16,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
-| [[moq-transport]] | draft-19 | Active (**-19 2026-07-06**) | Core publish/subscribe transport protocol over QUIC/WebTransport (Range Filters + clarifications; contested design PRs defer) |
+| [[moq-transport]] | draft-19 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (-19 published 2026-07-06) |
 | [[moq-msf]] | draft-01 | Active | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
 | [[moq-loc]] | draft-03 | Active (**-03 2026-07-06**) | Low Overhead Media Container for interactive streaming (adds audio config) |
 | [[moq-secure-objects]] | draft-01 | Active (**-01 2026-07-06**) | End-to-end authenticated encryption for MOQT objects (adds test vectors) |
