@@ -6,92 +6,39 @@ last_updated: 2026-07-03
 status: current
 ---
 
-One of the most debated topics in MOQ - whether the transport layer needs a dedicated SWITCH message for adaptive bitrate track switching.
-
-> **2026-07-03 — the SSTS interim decisions become concrete PR text.** [[will-law|Will Law]] posted **"Add Sender-Side Track Switching (SSTS) #1638"** to the MoQ list **July 2 12:20 UTC**, describing the updates he pushed to **[PR #1638](https://github.com/moq-wg/moq-transport/pull/1638)** to implement the [[interim-meetings|June-22 interim]] (interim-17) action items — the first spec-side motion on SSTS since the interim, ahead of **July 6**:
-> - **Rename**: *"Dynamic Track Switching" → "Sender-Side Track Switching (SSTS)"* (executing the interim's naming call).
-> - **Multi-algorithm via `SSTS_ALGORITHMS`**: SSTS now supports **multiple switching algorithms**, advertised by relays through a new **`SSTS_ALGORITHMS`** setup parameter — the concrete form of the interim's "array of preferred algorithms, client requests / relay answers" negotiation.
-> - **`SWITCHING-SET-ASSIGNMENT` base framework**: a base parameter framework that individual algorithms **extend** — the extension point that gives the IANA-registered numeric algorithm ID something to hang off.
-> - **Algorithm 0 = mandatory default**: the baseline algorithm (throughput thresholds + activation rules), i.e. the interim's mandatory **"Algorithm Zero."**
-> - **Removed `MAX_DTS_CONCURRENT_TRACKS`**: the per-switching-set (D)DoS-protection setup option is **dropped**, per the interim's decision to rely on **authorization tokens + existing relay protections** rather than negotiated concurrency/throughput limits (the resolution to [[gwendal-simon|Gwendal Simon]]'s original (D)DoS concern).
->
-> Will Law **invites review and alternative-algorithm implementations** to exercise the extension mechanism — a signal the design is meant to be validated by more than the baseline algorithm before draft-19 cuts. The PR remains a **gated Design PR** (two-week + four-editor bar) with the July-6 deadline standing. See [[moq-transport]], [[interim-meetings]], [[discussions-2026-07]].
->
-> **2026-06-23 — DTS is renamed SSTS, and the switching algorithm becomes an extensible IANA registry.** The [[interim-meetings|June 22 interim]] (minutes posted June 23 as [interim-2026-moq-17](https://datatracker.ietf.org/doc/minutes-interim-2026-moq-17-202606221630/)) closed the design questions left open after the spring SWITCH/DTS consensus call:
-> - **Rename**: *"Dynamic Track Switching" (DTS) → "Sender Side Track Switching" (SSTS)* — *"this title more accurately reflects the functionality"* (RFC editors keep final naming say). The mechanism: a publisher exposes a **switching set** of renditions and the relay forwards exactly one, toggling the forward state to switch.
-> - **Extensible algorithm**: rather than freezing one algorithm, switching is keyed by a **numeric ID in an IANA table**, negotiated via an **array of preferred algorithms** (client requests, relay answers with its supported set). The current implementation is the mandatory **"Algorithm Zero"** baseline in the base spec; future algorithms register + negotiate.
-> - **DDoS-protection properties removed**: the per-switching-set **concurrent-track / throughput limits** (the (D)DoS vector [[gwendal-simon|Gwendal Simon]] flagged on DTS [PR #1638](https://github.com/moq-wg/moq-transport/pull/1638)) are **dropped from negotiated properties** — protection is deferred to **authorization tokens + existing relay-side mechanisms**.
-> - **Message shape**: keep **single-message** switching-set assignment (the WG decided against splitting it); **unsubscription auto-removes** a track from the set (no explicit removal message).
-> - **Demo**: [[will-law|Will Law]] presented [[yu-you|Yu You]]'s Nokia run — one set of **500/1500/3000 kbps**, relay forwarding one, *"smooth, continuous switching"* including *"fast-frequency switching close to segment boundaries."*
->
-> The DTS half of the May consensus call had been heading toward a standalone extension draft (`draft-ietf-moq-dts4moq`, still unsubmitted/404); the interim instead folds the baseline ("Algorithm Zero") into the **base spec** with an IANA registry for future algorithms. See [[interim-meetings]], [[discussions-2026-06]].
->
-> **2026-06-22 — Resolved as a parameter, not a message.** At the June 11–12 London interim the WG chose to deliver ABR track switching via a **`SWITCH_FROM` parameter** rather than [[gwendal-simon|Gwendal Simon]]'s standalone SWITCH message ([PR #1378](https://github.com/moq-wg/moq-transport/pull/1378), now effectively parked). [[alan-frindell]] opened **[PR #1674 "Track Switching via the SWITCH_FROM parameter"](https://github.com/moq-wg/moq-transport/pull/1674)** + **[PR #1675](https://github.com/moq-wg/moq-transport/pull/1675)** (soft mode) on June 14; consensus was to proceed with **"hard mode"** and defer softer modes pending use-case analysis. The DTS/SWITCH consensus call (May 21–June 4) drew 4 on-list YES votes (Will Law, Gwendal, Nokia/Yu You, Ali Begen); **DTS** itself proceeds as an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/), after the June 10 finding that base-spec integration lacked rough consensus. The catch-up/joining half is handled by **fill fetch** + **Range Filters** ([[joining-fetch-dissent]]). See [[interim-meetings]], [[discussions-2026-06]].
-
 # Background
 
-In traditional ABR streaming (HLS/DASH), the client decides which quality to fetch next. In MOQ's [[publish-subscribe]] model, switching quality means changing which track you subscribe to. The question is whether SUBSCRIBE/UNSUBSCRIBE is sufficient or a dedicated SWITCH message is needed.
+Adaptive bitrate (ABR) track switching was one of the most debated topics in MOQ: does the transport layer need a dedicated SWITCH message, or is subscription churn enough? In traditional ABR streaming (HLS/DASH), the client decides which quality to fetch next. In MOQ's [[publish-subscribe]] model, switching quality means changing which track you subscribe to, so the central question was whether SUBSCRIBE/UNSUBSCRIBE is sufficient or a dedicated SWITCH message is needed. Underneath it lies a deeper tension: should the publisher or the subscriber decide quality?
 
-# PR #1378 - SWITCH for Client-Side ABR (superseded)
+# Design options and rationale
 
-**Author**: [[gwendal-simon|Gwendal Simon]] (Nov 2025)
-**Labels**: Needs Discussion, ABR, Design
-**Status**: still OPEN but **superseded in direction** — London chose the `SWITCH_FROM` parameter approach (PR #1674/#1675) over this standalone message.
+The original proposal was a transport-level SWITCH message for seamless client-side ABR — a control message that atomically transitions a subscription from one track to another. It came from [[gwendal-simon|Gwendal Simon]]. A later redesign replaced the original FETCH+SUBSCRIBE catch-up delivery with **relay-initiated PUBLISH + inline catch-up**: instead of a SWITCH triggering a separate FETCH for catch-up data and a new SUBSCRIBE for live data (which required coordinating two delivery streams), the catch-up data is delivered inline on the PUBLISH bidirectional stream with the relay initiating the PUBLISH, avoiding the complexity of coordinating separate FETCH and SUBSCRIBE delivery during a switch.
 
-Proposes a SWITCH message at the transport level to enable seamless client-side ABR. The PR adds a new control message that atomically transitions a subscription from one track to another.
+The community was split three ways on where switching should live:
 
-# Issue #1354 - Why do we need a dedicated SWITCH message?
+1. **Transport-level SWITCH** — atomic transition with relay-initiated PUBLISH + catch-up.
+2. **Application-level switching** — just UNSUBSCRIBE the old track and SUBSCRIBE the new one, keeping the transport simple.
+3. **Sender-side ABR** — the publisher decides quality while the subscriber specifies constraints.
 
-**Author**: Ali C. Begen
-**Comments**: 39 (most discussed open issue)
+The case for treating SWITCH as a first-class mechanism rather than an optional extension rested on several durable points: the MoQ charter explicitly lists ABR switching, so relegating it to extensions or "V2" would contradict the charter. During a track switch a subscriber is "almost always behind the live edge" (from congestion or intentional buffering), so switching is not an edge case. ABR switching needs an arbitrary range of past groups, whereas the joining direction (LargestGroup/CurrentGroup/CurrentGroupFill, see [[joining-fetch-dissent]]) covers only one group. The real blocker was identified as a semantic constraint rather than head-of-line blocking: past objects are not allowed in a PUBLISH stream, so the ask was a scoped reconsideration of that rule — a "Joining PUBLISH with live semantics." Informed client-side decisions also depend on the subscriber being able to learn the sender's send rate — a CMSD-equivalent for MOQ.
 
-The issue consolidates the history of ABR discussions in MOQ:
-- **#259** - Sender-side ABR: publisher decides what to send based on congestion
-- **#370** - Probing track approach for bandwidth estimation
-- **#471** - Client-side upswitch causing excessive bandwidth
+# How it resolved
 
-The core tension: should the publisher or subscriber make quality decisions?
+The WG did not adopt a standalone SWITCH message. Instead it split ABR into three pieces:
 
-# Related Open Issues
+- **ABR track switching** → the **`SWITCH_FROM` parameter**, chosen over the standalone message. [[alan-frindell|Alan Frindell]] opened the PRs; consensus was to proceed with "hard mode" and defer softer modes pending use-case analysis.
+- **Arbitrary past-group retrieval** (the "almost always behind the live edge" case) → **fill fetch** + **Range Filters**, delivering the catch-up portion on a separate unidirectional fill-fetch stream, which relaxes the "past objects not allowed on a PUBLISH stream" semantic constraint. See [[joining-fetch]].
+- **Decode-timestamp signaling** → first headed toward an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/), after a finding that base-spec integration lacked rough consensus.
 
-- **#1507** - Mechanism to get sender's bitrate (Luke Curley). Equivalent to CMSD for MOQ. Essential for client-side ABR to make informed decisions.
-- **#1453** - Send Rate parameter (Will Law). Publisher-reported send rate.
-- **#1365** - If you can't deliver an entire Group, should you send any Objects? Affects ABR drop behavior.
-- **#1352** - SUBSCRIBE doesn't need a forward parameter if we have filters (Parked)
+So ABR is delivered as `SWITCH_FROM` (in-spec) + fill fetch/Range Filters (in-spec) + decode-timestamp signaling (extension) rather than a standalone SWITCH / Joining-PUBLISH design.
 
-# Major Redesign (April 15-16, 2026)
+The switching mechanism was then renamed from "Dynamic Track Switching" (DTS) to **Sender-Side Track Switching (SSTS)**, which more accurately reflects the functionality: a publisher exposes a **switching set** of renditions and the relay forwards exactly one, toggling the forward state to switch. Rather than freezing one algorithm, switching is keyed by a **numeric algorithm ID in an IANA registry**, negotiated via an array of preferred algorithms (the client requests, the relay answers with its supported set) advertised through an **`SSTS_ALGORITHMS`** setup parameter. A mandatory baseline, **"Algorithm Zero"** (throughput thresholds + activation rules), is folded into the base spec, with future algorithms extending a **`SWITCHING-SET-ASSIGNMENT`** base framework. Switching-set assignment uses a single message, and unsubscription auto-removes a track from the set. Per-switching-set concurrent-track / throughput (D)DoS limits were dropped in favor of authorization tokens plus existing relay-side protections.
 
-Gwendal Simon pushed 7 commits significantly reworking the SWITCH mechanism. The new design replaces the previous **FETCH+SUBSCRIBE delivery** with **relay-initiated PUBLISH + inline catch-up**:
+# Recent Highlights
 
-- **Old approach**: SWITCH triggered a FETCH for catch-up data and a new SUBSCRIBE for live data, requiring coordination between two delivery streams
-- **New approach**: Catch-up data is delivered inline on the PUBLISH bidirectional stream, with the relay initiating the PUBLISH. This avoids the complexity of coordinating separate FETCH and SUBSCRIBE delivery during track switches.
+Day-by-day PR/issue activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-The PR remains labeled "Needs Discussion" and hasn't been merged or closed. The community is split between:
-
-1. **Transport-level SWITCH** (PR #1378) - Atomic transition with relay-initiated PUBLISH + catch-up
-2. **Application-level switching** - Just UNSUBSCRIBE old track + SUBSCRIBE new track, keep transport simple
-3. **Sender-side ABR** - Publisher decides quality, subscriber specifies constraints
-
-# Charter-Alignment Argument (Apr 18, 2026)
-
-In a [mailing-list reply on the REWIND consensus call](https://mailarchive.ietf.org/arch/msg/moq/1DoFuRdZDWMVXb9e7AXxpgR_EZ8/) (Apr 18), Gwendal Simon reframed SWITCH as **a charter deliverable**, not an optional extension:
-
-- The MoQ charter explicitly lists ABR switching, so relegating it to "innovation for extensions or V2" contradicts the charter.
-- During a track switch a subscriber is "almost always behind the live edge" (congestion or intentional buffering both create lag), so switching is not an edge case.
-- The emerging **LargestGroup / CurrentGroup / CurrentGroupFill** direction (see [[joining-fetch-dissent]]) covers *joining* but only one group — ABR switching needs "an arbitrary range of past groups."
-- The real blocker is a **semantic constraint**, not head-of-line blocking: past objects are currently not allowed in a PUBLISH stream. His ask is a scoped reconsideration of that rule.
-- His proposed solution is a **Joining PUBLISH with live semantics**, prototyped in PR #1378.
-
-This positioned SWITCH as the only April design on the table addressing mid-stream quality switching inside V1, in tension with the LargestGroup/CurrentGroup convergence in [[joining-fetch-dissent]].
-
-# How It Resolved (June 2026)
-
-Gwendal's charter argument was **addressed structurally, but not via his standalone SWITCH message**. The WG split the problem in three:
-- **ABR track switching** → the **`SWITCH_FROM` parameter** (PR #1674 hard mode, PR #1675 soft mode; afrind, June 14). London consensus: proceed with hard mode, defer soft.
-- **Arbitrary past-group retrieval** (Gwendal's "almost always behind the live edge" case) → **fill fetch** ([PR #1673](https://github.com/moq-wg/moq-transport/pull/1673)) + **Range Filters** ([PR #1765](https://github.com/moq-wg/moq-transport/pull/1765)). The "past objects not allowed on a PUBLISH stream" semantic constraint Gwendal flagged is relaxed by delivering the catch-up portion on a separate unidirectional fill-fetch stream. See [[joining-fetch]].
-- **Decode-timestamp signaling** (the DTS half of the SWITCH/DTS consensus call) → an extension, [`draft-ietf-moq-dts4moq`](https://datatracker.ietf.org/doc/draft-ietf-moq-dts4moq/) (June 10 finding: no rough consensus for base-spec, no objection to an extension).
-
-So ABR is being delivered as **SWITCH_FROM (in-spec) + fill fetch/Range Filters (in-spec) + DTS (extension)** rather than Gwendal's original standalone SWITCH / Joining-PUBLISH design.
+- **First working SSTS demo**: [[will-law|Will Law]] presented [[yu-you|Yu You]]'s Nokia run — a single switching set of **500/1500/3000 kbps** with the relay forwarding one rendition, showing "smooth, continuous switching" including fast-frequency switching close to segment boundaries.
 
 # Related
 
