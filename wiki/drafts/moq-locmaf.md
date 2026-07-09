@@ -8,7 +8,8 @@ draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/"
 ---
 
-**draft-einarsson-moq-locmaf-00** | Individual | Submitted 2 June 2026 | Expires 2 December 2026 (approx.) | [Datatracker](https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/)
+**draft-einarsson-moq-locmaf-01** | Individual | published 2026-07-05 (41 pp) | [Datatracker](https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/)
+**draft-einarsson-moq-locmaf-00** | Submitted 2 June 2026
 
 # Authors
 - **[[tobbe-einarsson|Torbjörn Einarsson]]** (Eyevinn Technology) — wiki maintainer; author of [[moqlivemock]] + mlmtest interop client
@@ -38,17 +39,17 @@ LOCMAF's distinguishing choice: **carry CMAF chunk metadata as tagged fields**, 
 
 # Status
 
-- **-00 submitted**: 2026-06-02
-- **WG adoption call**: not as a standalone draft — [[interim-meetings|London interim-11]] agreed LOCMAF should become part of [[moq-cmsf|CMSF]] (as a `locmaf` packaging mode) rather than proceed as a standalone individual draft
-- **Implementation reports**: LOCMAF 0.2 implemented in [[moqlivemock]] (alongside 0.1), with [[warp-player|Eyevinn/warp-player]] on the MSE/EME playback side
+- **-01 published**: 2026-07-05 (41 pp) — a major consistency rewrite; **-00** submitted 2026-06-02
+- **Relationship to CMSF**: [[moq-cmsf|CMSF]] registers LOCMAF as a `locmaf` packaging **by normative reference** (moq-wg/cmsf PR #27), so LOCMAF keeps its independent standalone-draft path rather than being folded into CMSF
+- **Implementation reports**: LOCMAF v0.3 shipped in [[moqlivemock]] v0.12.0, with the codec extracted into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module; [[warp-player|Eyevinn/warp-player]] on the MSE/EME playback side
 
 # Recent Highlights
 
 Day-by-day activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **NEW individual draft** *"Low Overhead CMAF for Media over QUIC (LOCMAF)"* published by [[tobbe-einarsson|Torbjörn Einarsson]] (Eyevinn Technology) and Hugo Björs (KTH) — the first IETF artifact from the wiki maintainer.
-- **First implementation**: LOCMAF 0.2 shipped in [[moqlivemock]] (alongside 0.1), paired with [[warp-player|Eyevinn/warp-player]] for MSE/EME playback; the 0.2 redesign drops initData compression in favor of catalog-referenced init via [[moq-msf|MSF]] -01's `initData` type.
-- **On a path into CMSF**: [[interim-meetings|London interim-11]] agreed LOCMAF should become part of [[moq-cmsf|CMSF]] as a `locmaf` packaging mode; the standalone `draft-einarsson-moq-locmaf-00` is on a path to being folded in and eventually retired.
+- **`draft-einarsson-moq-locmaf-01` cut 2026-07-05** (41 pp, a major consistency rewrite) — the individual draft *"Low Overhead CMAF for Media over QUIC"* by [[tobbe-einarsson|Torbjörn Einarsson]] (Eyevinn) and Hugo Björs (KTH), the first IETF artifact from the wiki maintainer.
+- **First implementation**: LOCMAF v0.3 shipped in [[moqlivemock]] v0.12.0 with the codec extracted into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module, paired with [[warp-player|Eyevinn/warp-player]] for MSE/EME playback; the redesign drops initData compression in favor of catalog-referenced init via [[moq-msf|MSF]] -01's `initData` type.
+- **Adopted into CMSF by reference (not folded in)**: [[moq-cmsf|CMSF]] PR #27 registers a `locmaf` packaging that points at the standalone LOCMAF draft (the approach [[will-law|Will Law]] suggested on CMSF Issue #24), so LOCMAF stays sovereign over the format while CMSF gains the mode — reversing the earlier "fold in and retire the standalone" plan.
 
 # Related drafts and concepts
 

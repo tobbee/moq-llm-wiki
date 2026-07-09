@@ -35,7 +35,7 @@ MOQT is a publish/subscribe protocol that runs over QUIC and WebTransport. It le
 
 ## draft-19 (published 2026-07-06)
 
-Primarily an editorial clarification and validation-rule pass — the product of the post-draft-18 issue read-through and phased Design-PR review; no major new wire mechanisms. Changes since draft-18:
+Cut at the [[interim-meetings|interim-2026-moq-18]] (approved by [[ian-swett|Ian Swett]]); primarily an editorial clarification and validation-rule pass — the product of the post-draft-18 issue read-through and phased Design-PR review, with no major new wire mechanisms. Changes since draft-18:
 - FIRST_OBJECT bit clarified to indicate the first object *ever* published in that subgroup.
 - Malformed-Track conditions extended with explicit Object-ID-ordering checks within Groups.
 - Property-handling rules clarified for relay forwarding of unknown properties.

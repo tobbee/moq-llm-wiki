@@ -8,7 +8,8 @@ draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-secure-objects/"
 ---
 
-**draft-ietf-moq-secure-objects-00** | 23 pages | Expires 2026-09-03
+**draft-ietf-moq-secure-objects-01** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-secure-objects/)
+**draft-ietf-moq-secure-objects-00** | 23 pages
 
 # Authors
 - Cullen Jennings (Cisco)
@@ -39,7 +40,7 @@ Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only
 - **Fixed-width integers for AAD and nonce**: switched from varints to fixed-width integers to remove canonicalization ambiguity in AEAD inputs. Object ID is finalized at 32 bits, so publishers must rotate keys before exhausting the 32-bit Object-ID space within a key generation.
 - **Publisher priority brought under AEAD authentication** so relays cannot manipulate it; a padding property was added for byte-boundary alignment.
 - **Threat model documented**, including fan-out attacks.
-- **Test-vectors appendix added** — worked AEAD test vectors so implementations can verify encryption/authentication against canonical inputs (interop-readiness). The draft still sits at -00 on Datatracker; no -01 submission yet.
+- **Test-vectors appendix + `-01` published (2026-07-06)** — worked AEAD test vectors so implementations can verify encryption/authentication against canonical inputs (interop-readiness); the long-flagged first revision since -00 carries this appendix into published text.
 
 # Related
 

@@ -14,8 +14,8 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 
 | Implementation | Language | Org / Maintainer | Draft(s) | Roles | Focus / notable |
 |---|---|---|---|---|---|
-| [[moq-dev]] | Rust + TS | [[luke-curley\|Luke Curley]] | moq-lite + IETF 14–18 ¹ | Pub · Sub · Relay · Player | moq-lite + Hang; media gateways (RTMP/SRT/WebRTC/HLS/TS); native HW codecs |
-| [[moq-rs]] | Rust | Cloudflare | 14 (prod) · 16 · 18-dev | Pub · Sub · Relay | Strict IETF WG compliance; very active |
+| [[moq-dev]] | Rust + TS | [[luke-curley\|Luke Curley]] | moq-lite + IETF 14–19 ¹ | Pub · Sub · Relay · Player | moq-lite + Hang; media gateways (RTMP/SRT/WebRTC/HLS/TS); native HW codecs |
+| [[moq-rs]] | Rust | Cloudflare | 14 (prod) · 16 · 18 | Pub · Sub · Relay | Strict IETF WG compliance; very active |
 | [[moq-js]] | JS / TS | video-dev | 14 | Pub · Sub · Player | Browser client over WebTransport; `<video-moq>` component; needs a relay |
 | [[moxygen]] | C++ (mvfst) | Meta | 14 · 16 (neg. 15) | Pub · Sub · Relay | Reference relay; [[qmux]]; [[openmoq\|OpenMOQ]] fork |
 | [[libquicr]] | C++ + Go | Cisco (QuicR) | 16 | Pub · Sub | Go bindings; `moq-web` client (18); chat/clock examples |
@@ -23,14 +23,14 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | [[xquic-moq]] | C (XQUIC) | Alibaba | 14 | Relay | Merged into the interop matrix |
 | [[moqlivemock]] | Go + TS | Eyevinn | 14 · 16 | Pub · Sub · Player | CMSF/LOC/MSF/LOCMAF; DRM; `mlmtest` interop tool |
 | [[moqtail]] | Rust + TS | Z. Gürel / A. C. Begen | 16 | Pub · Sub · Relay · Player | LOC + CMSF demos; WebTransport + raw QUIC; WebRTC-over-MoQ demo |
-| [[imquic]] | C | Meetecho | 16 · 17 · 18 (partial) | Pub · Sub | Also RTP-over-QUIC (RoQ); Janus ecosystem |
+| [[imquic]] | C | Meetecho | 16 · 17 · 18 · 19 (wip) | Pub · Sub | Also RTP-over-QUIC (RoQ); Janus ecosystem |
 | [[quiche-moq]] | C++ | Google (QUICHE / Chromium) | 16 | Pub · Sub · Relay | 41/41 conformance; relay/server/chat/simulator tools |
 | [[shaka-player]] | JS | Google | 14 (experimental) | Sub · Player | MSF/CMSF playback; player-only |
 | [[moqintosh]] | Swift | T. Igarashi (t-gazzy) | 14 | Sub (client-only) | First pure-Swift / Apple-native client |
 | [[openmoq]] | C++ (moxygen fork) | Consortium (Akamai, Cisco, RED5, YouTube…) | 14/16 floor · 18 (moqx) | Relay | Consortium; `moqx` server; CAT-token auth; relay testing |
 | **Moqtopus** (no page yet) | C++ / MsQuic | Kota Yatagai | 18 (target) | Client | Unreal Engine client ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus)) |
 
-¹ [[moq-dev]] implements Luke Curley's own [[moq-lite]] protocol plus IETF adapter shims (draft-14 through draft-18); it was the first open-source implementation to ship draft-18.
+¹ [[moq-dev]] implements Luke Curley's own [[moq-lite]] protocol plus IETF adapter shims (draft-14 through draft-19); it was the first open-source implementation to ship draft-18.
 
 # Media & packaging support
 

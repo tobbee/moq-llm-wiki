@@ -39,9 +39,9 @@ The interop runner targets **draft-18** for automated testing. The WG (per [[mik
 
 # Current standing
 
-The runner's most recent published cut is the **[2026-07-04 00:37:04 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-04_003704/report.html): 294 cells; 81 pass / 179 fail / 34 skip** (~27.6% pass; at-target draft-18 152 · 0 ahead · 142 behind), run against an 18-implementation set.
+The runner's most recent published cut is the **[2026-07-08 00:33:49 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-08_003349/report.html): 319 cells; 107 pass / 212 fail / 0 skip** (~33.5% pass), run against an expanded implementation set.
 
-The at-target draft-18 count has held ~152 across the three most recent cuts (July 2–4), following the July-2 matrix expansion that grew the matrix +28 cells to 294 and nearly doubled the at-target count from 78 to 152; the newly-at-target cross-version cells have so far neither converted green nor regressed in bulk.
+A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed +14 (93 → 107) on the July-8 cut as the newly-added cross-version cells began converting green. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6).
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 

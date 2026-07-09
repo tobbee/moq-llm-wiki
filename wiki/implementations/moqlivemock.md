@@ -75,6 +75,7 @@ The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.c
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **v0.12.0 ships LOCMAF v0.3, codec extracted to a standalone module** (Jul 6): the LOCMAF implementation was pulled out of moqlivemock into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module (shared with the [[moq-locmaf|LOCMAF]] draft).
 - **Joining-FETCH catalog retrieval** (Jul 4) landed across all three repos: a subscriber retrieves the current catalog object via a relative joining FETCH instead of SUBSCRIBE-and-wait. moqtransport **v0.9.0** ([PR #14](https://github.com/Eyevinn/moqtransport/pull/14)) added publisher-side joining-FETCH resolution (draft-16); moqlivemock ([PR #95](https://github.com/Eyevinn/moqlivemock/pull/95)) added a `-catalog-mode` flag; warp-player ([PR #149](https://github.com/Eyevinn/warp-player/pull/149)) mirrored it in the TS/MSE player.
 - **Interop-robustness hardening** (Jun, moqlivemock v0.11.1): bound interop SETUP by the per-test deadline and refuse a silent WebTransport draft-14 downgrade, so one hung peer can't stall the sequential interop matrix. The fix was pushed down into moqtransport itself so any consumer benefits.
 - **LOCMAF v0.1** (May 17, v0.9.0): wire format frozen at v0.1 with publisher and player released together, ready for interop.

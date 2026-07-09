@@ -8,7 +8,8 @@ draft_version: "03"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/"
 ---
 
-**draft-ietf-moq-privacy-pass-auth-02** | 31 pages | Expires 2026-03-02
+**draft-ietf-moq-privacy-pass-auth-03** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/)
+**draft-ietf-moq-privacy-pass-auth-02** | 31 pages
 
 # Authors
 - [[suhas-nandakumar]] (Cisco)
@@ -30,7 +31,9 @@ Integrates Privacy Pass tokens with [[moq-transport]] to enable privacy-preservi
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- Privacy-pass is the privacy-preserving half of a **two-track WG auth workstream**; [[moq-c4m|C4M]] (Common Access Tokens) is the signed-bearer-token counterpart, coordinated through [[martin-duke|Martin Duke]]'s "AUTH design team" mailing-list thread. Privacy-pass itself remains at **-02** (no new revision).
+- **`-03` published (2026-07-06)** — a major rebuild of the MoQT integration, converting the July-1 triage and [[thibault-meunier|Thibault Meunier]]'s merged "Key considerations" text (PR #20) into published spec.
+
+- Privacy-pass is the privacy-preserving half of a **two-track WG auth workstream**; [[moq-c4m|C4M]] (Common Access Tokens) is the signed-bearer-token counterpart, coordinated through [[martin-duke|Martin Duke]]'s "AUTH design team" mailing-list thread.
 - **Challenge-carrier design problem**: draft-18 collapsed CLIENT_SETUP/SERVER_SETUP and uses a `ReasonPhrase` on session close, leaving no clean carrier for a structured (base64) `MoQTokenChallenge` in a SETUP-closure reply; the direction is to replace the `ReasonPhrase` carrier with `MoQTokenChallenge` and explore challenging without closing the session.
 - **Reverse-flow token exchange**: new subscriptions may obtain tokens from the relay acting as issuer (not the original PP issuer), potentially reusing `REQUEST_UPDATE` / `REQUEST_OK` / `REQUEST_ERROR` as carriers.
 - Co-author [[thibault-meunier|Thibault Meunier]] (Cloudflare) drives the draft's open design questions — issuer-interaction appendix, retry-after-challenge-error semantics, token challenge/acquisition during regular operation, and base64 encoding of `MoQTokenChallenge`.

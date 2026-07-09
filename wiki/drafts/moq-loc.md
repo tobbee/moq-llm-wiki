@@ -8,7 +8,8 @@ draft_version: "03"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
 
-**draft-ietf-moq-loc-02** | 19 pages | Expires 2026-03-15
+**draft-ietf-moq-loc-03** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/)
+**draft-ietf-moq-loc-02** | 19 pages
 
 # Authors
 - Mo Zanaty (Cisco)
@@ -38,6 +39,8 @@ LOC uses numbered extensions in the object header:
 # Recent Highlights
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **draft-03 published (2026-07-06)** — the first LOC revision since -02; adds an audio-configuration structure and revises all audio config (PR #24), resolving the June audio-config gap.
 
 - **Cross-spec property-ID coordination dispute**: [[moq-transport]]-18 §15.8-2 and draft-ietf-moq-loc-02 diverge on Property Type IDs (MOQ-18 TIMESTAMP=0x06 / TIMESCALE=0x08 / AUDIO_LEVEL=0x0C / VIDEO_FRAME_MARKING=0x0A / VIDEO_CONFIG=0x0D vs LOC-02 TIMESTAMP=0x02 / AUDIO_LEVEL=0x06 / VIDEO_FRAME_MARKING=0x04) — the first post-draft-18 cross-spec coordination failure, with a twin moq-transport issue; the provisional IANA registry for LOC properties did not propagate into the draft-18 assignments. LOC is also moving its own TIMESTAMP off 0x06 because it collides with MoQ `SUBGROUP_DELIVERY_TIMEOUT`.
 - **First LOC encoder/decoder library** shipped in the [[moq-dev|moq-dev/moq]] stack (`moq-loc` Rust crate + `@moq/loc` JS package, integrated into `moq-mux` + hang catalog + watch player). It chose the moq-transport-18 §15.8 property IDs (TIMESTAMP=0x06, TIMESCALE=0x08) over the conflicting historical loc-02 values (TIMESTAMP=0x02) — a vote-with-code making moq-dev/moq the *de facto* reference for post-draft-18 property assignments until a draft-ietf-moq-loc-03 aligns them. Catalog timescale defaults to 1,000,000 µs with per-frame override via the 0x08 property; LOC is prioritized after legacy, before CMAF, in audio source selection.

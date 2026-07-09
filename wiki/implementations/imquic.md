@@ -23,6 +23,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 # Draft Support
 
+- **draft-19 (in progress)** — [PR #32](https://github.com/meetecho/imquic/pull/32) *"Add support for MoQT v19"* (lminiero, opened July 8), the first implementation PR explicitly targeting draft-19.
 - **draft-18 (since May 18, 2026)** — partial: most of the wire-format changes from the draft-17 → draft-18 changelog (SUBGROUP_HEADER FIRST_OBJECT bit, FETCH ID delta encoding, PADDING message, SUBSCRIBE_TRACKS split from SUBSCRIBE_NAMESPACE, REQUEST_UPDATE on both, redirect via REQUEST_ERROR, new error codes); initially missing `REQUEST_UPDATE` for `SUBSCRIBE_NAMESPACE` / `SUBSCRIBE_TRACKS`
 - **draft-16 and draft-17** (version range: `0xff000010` to `0xff000011`) — prior supported set
 - Supports version negotiation - can offer all supported versions or pin to a specific one

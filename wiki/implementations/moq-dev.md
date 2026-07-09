@@ -34,7 +34,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30)
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **[[moq-msf|MSF]]**: draft-01 supported behind a version-agnostic snapshot
-- **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-18**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18)
+- **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-19**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18), and shipped draft-19 (`moqt-19`) within hours of the July-6 cut ([PR #2106](https://github.com/moq-dev/moq/pull/2106))
 
 # Rust Packages
 
@@ -74,7 +74,7 @@ Bidirectional ingest **and** egress bridges between MoQ broadcasts and legacy me
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.
-- **moq-lite-05 wire** landed late June / early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
+- **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
 - **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
