@@ -80,10 +80,13 @@ Substantive topics still being worked as this page is written:
 
 # ALPN Negotiation
 
-Draft-17 uses ALPN strings for version negotiation:
-- `qmux-00.moqt-17` - QUIC multiplexed, draft-17
-- `qmux-00.moqt-16` - QUIC multiplexed, draft-16
-- `qmux-00` with no suffix implies draft-14 (legacy)
+MOQT negotiates the draft revision via the QUIC/WebTransport ALPN. Each revision maps to `moqt-NN` with wire version `0xff0000NN`; the QUIC-multiplexed ([[qmux]]) transport prefixes the same token as `qmux-00.moqt-NN`.
+
+- `moqt-18` — draft-18 (`0xff000012`), the current published revision and the Vienna interop target
+- `moqt-17` — draft-17 (`0xff000011`)
+- `moqt-16` — draft-16 (`0xff000010`)
+- `moq-00` — draft-14 (legacy); the bare `qmux-00` token (no suffix) likewise implies draft-14
+- `moqt-19` — **anticipated** (`0xff000013`): draft-19 is not yet published (still in editorial review), so its ALPN string and wire version follow the established pattern but are not final
 
 # Related Drafts
 - [[moq-msf]] - Streaming format built on MOQT
