@@ -6,12 +6,6 @@ last_updated: 2026-06-27
 status: current
 ---
 
-> **2026-06-27**: **moq-js breaks ~a month of quiet — itzmanish lands three merged PRs June 26, and crucially the maintainers *merge* them, partly easing the stewardship-lag concern the wiki has tracked.** **MERGED June 26** (all itzmanish): **[PR #70](https://github.com/video-dev/moq-js/pull/70)** *"fix: moq-js player lifecycle and browser audio playback"* — real player-runtime fixes (lifecycle + Web Audio playback); **[PR #71](https://github.com/video-dev/moq-js/pull/71)** *"Logger implementation"* — structured logging; **[PR #69](https://github.com/video-dev/moq-js/pull/69)** *"update CF relay url for draft-14"* — repoints the demo at the current Cloudflare draft-14 relay endpoint. The big **[PR #72](https://github.com/video-dev/moq-js/pull/72)** *"Refactor project structure and APIs"* (OPEN since May 26, +11205/−22195) remains **OPEN** — but the smaller fixes merging within ~1 day each is a notable departure from the 155-day stewardship lag that #121-in-moq-rs set as the worry case. **Draft support unchanged** (main branch still draft-14; #69 confirms the draft-14 relay target). See [[discussions-2026-06]].
->
-> **2026-05-29**: **No new activity May 28-29**. [PR #72 itzmanish refactor](https://github.com/video-dev/moq-js/pull/72) still OPEN no new commits or reviews since May 26 12:49 UTC. Day +3 of the OPEN window with no engagement from englishm/Cloudflare maintainers. The 155-day stewardship lag pattern (PR #121 in cloudflare/moq-rs) is the structural risk worth tracking: if PR #72 follows the same pattern, it will not merge before London (now 11 days away).
->
-> **2026-05-28**: **[PR #72](https://github.com/video-dev/moq-js/pull/72) OPEN since May 26 12:49 UTC** by **itzmanish (Manish)** *"Refactor project structure and APIs"* (**+11205/−22195** across draft-16 baseline) — massive code reorganization. **Same external contributor whose [PR #121 in cloudflare/moq-rs](https://github.com/cloudflare/moq-rs/pull/121) took 155 days to merge** (Dec 18 2025 → May 20 2026) and whose [PR #131](https://github.com/cloudflare/moq-rs/pull/131) (draft-16 implementation) is still open in cloudflare/moq-rs. **Manish is now a structural cross-impl contributor** across both Cloudflare-stewarded MoQ TypeScript/Rust stacks. **Carry-forward**: net delta -10990 LOC (deletions far exceed additions) suggests Manish is consolidating moq-js around a simpler core API surface; whether englishm/Cloudflare merges before London is the open question — the prior 155-day stewardship lag pattern is a structural risk.
->
 **Language**: JavaScript/TypeScript
 **Organization**: video-dev
 **Maintainer**: [[mike-english|Mike English]] (@englishm), community
@@ -46,9 +40,13 @@ The two JS projects are now **separate implementations** — video-dev/moq-js fo
 
 kixelated (historical), englishm, JoaquinBCh, itzmanish, Manuel-Barrabino
 
-# Recent Activity (April 2026)
+# Recent Highlights
 
-- **PR #70** (Apr 20, Manish / @itzmanish): *"fix: moq-js player lifecycle and browser audio playback"* — +9542/−6440. Reworks `lib/playback/worker/audio.ts` for browser audio handling, extends `<video-moq>` lifecycle, and updates the subscriber transport plumbing. The volume comes mostly from deleting the legacy `web/` blog site and bundling a fresh `demo/lib/publish.iife.js`. First substantive moq-js PR since mid-April.
+Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **June 2026 merges**: itzmanish landed three merged PRs on June 26, breaking ~a month of quiet — [PR #70](https://github.com/video-dev/moq-js/pull/70) (player lifecycle + browser Web Audio playback fixes), [PR #71](https://github.com/video-dev/moq-js/pull/71) (Logger / structured logging), and [PR #69](https://github.com/video-dev/moq-js/pull/69) (repoints the demo at the current Cloudflare draft-14 relay endpoint). See [[discussions-2026-06]].
+- **PR #72 refactor (open)**: [PR #72](https://github.com/video-dev/moq-js/pull/72) *"Refactor project structure and APIs"* (itzmanish, open since May 26, +11205/−22195) — a massive reorganization consolidating moq-js around a simpler core API surface; still open.
+- **Cross-impl contributor / stewardship lag**: itzmanish (Manish) also contributes to [[moq-rs]] (cloudflare/moq-rs), where his PR #121 took 155 days to merge — the stewardship-lag pattern the wiki tracks as a structural risk for whether large PRs like #72 merge promptly. The smaller June fixes merging within ~1 day each partly eased that concern.
 
 # Related
 

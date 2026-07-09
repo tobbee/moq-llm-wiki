@@ -6,14 +6,6 @@ last_updated: 2026-07-02
 status: current
 ---
 
-> **2026-07-02**: **The moqt module resumes after a ~week gap — first commit since June 24.** A July-1 18:39 UTC commit lands in `quiche/quic/moqt`: *"Increment Request ID on SubscribeNamespace"* (`1b65043b`) — a small correctness fix keeping the Request-ID counter monotonic when `SUBSCRIBE_NAMESPACE` requests are issued, ending the June-24 → July-1 quiet stretch. Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-07]].
->
-> **2026-06-25**: **A WebTransport-only client class is split out of `MoqtClient`.** A June-24 commit lands in `quiche/quic/moqt`: *"Create a dedicated WebTransport-only client class, and switch `MoqtClient` to using it"* — factors a WebTransport-only client out of the general MoQT client, the client-side counterpart to the June-23 control-stream refactoring (handlers folded into the session, control-stream split). Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-06]].
->
-> **2026-06-24**: **PUBLISH-to-bidi follow-ons — control-message handlers fold into the session ahead of a control-stream split.** Two more June-23 commits continue the June-23 PUBLISH-on-bidi work in `quiche/quic/moqt`: *"Fold all control-message handlers from the control stream object into the session itself"* — a refactor that lets the standalone control-stream class go away once control streams are split in two — plus *"Fix msan error in moqt_publish_stream_test."* Still `main`-branch protocol-tracking; the public relay's registered interop target remains draft-16. See [[discussions-2026-06]].
->
-> **2026-06-23**: **PUBLISH moves to a bidi stream.** A June 23 commit *"Move PUBLISH to a Bidi stream"* lands in `quiche/quic/moqt` — aligning Google's C++ impl with the draft direction of carrying PUBLISH on a bidirectional stream. (The public relay's registered interop target still lags at draft-16; this is `main`-branch protocol-tracking work.) See [[discussions-2026-06]].
-
 **Language**: C++
 **Organization**: Google
 **Primary developers**: [[martin-duke]], [[victor-vasiliev|Victor Vasiliev]], with contributions from asedeno, dschinazi
@@ -21,29 +13,33 @@ status: current
 
 # Overview
 
-A substantial C++ MoQT implementation inside Google's QUICHE library (part of Chromium). Includes ~74+ source files plus a tools directory with relay, server, client, chat, and simulator applications. This is one of the more actively developed implementations in the ecosystem, with commits through April 2026.
+A substantial C++ MoQT implementation inside Google's QUICHE library (part of Chromium). Includes ~74+ source files plus a tools directory with relay, server, client, chat, and simulator applications. This is one of the more actively developed implementations in the ecosystem, with commits continuing into mid-2026.
 
 # Draft Support
 
 - **draft-16** — current target for the public relay
 - Passed 41/41 conformance tests from [[alan-frindell]] (Feb 2026)
+- Protocol work lands on `main` ahead of the relay: newer draft-tracking refactors merge in the module while the public relay's registered interop target still lags at draft-16.
 
 # Public Infrastructure
 
 - **`quichemoq.dev:443`** — [[martin-duke]]'s relay (draft-16)
 - Registered in [[interop-runner]] as **quiche-moq**
 
+# Recent Highlights
+
+Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **PUBLISH moved to a bidirectional stream** (June 2026) — aligns Google's C++ impl with the draft direction of carrying PUBLISH on a bidi stream.
+- **Control-stream architecture refactor** (June 2026) — control-message handlers were folded into the session and the control stream split in two; a dedicated WebTransport-only client class was split out of `MoqtClient`.
+- **Session parameter control API** (April 2026) — `MoqtClient` and `MoqtServer` can control session parameters, groundwork for partial-object delivery on the relay.
+- **Removed `moqt::SubscribeWindow`** (April 2026) — dropped legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settled.
+- **Joining FETCH work** (April 2026) — Joining FETCH limited to `largest_object` at time of SUBSCRIBE, with responsibility moved from `MoqtOutgoingQueue` to the session layer, preparing for REWIND's joining FETCH aspects.
+
 # Interop
 
 - Successfully tested with [[moxygen]], [[moq-rs]], and [[moqtail]] at Boulder hackathon (Feb 2026)
 - Registered in the [[interop-runner]] matrix
-
-# Recent Activity (April 2026)
-
-- **Session parameter control API** (Apr 22, [[martin-duke]]): Commit [`1004527761`](https://github.com/google/quiche/commit/1004527761) lets `MoqtClient` and `MoqtServer` control session parameters — groundwork for partial-object delivery on the relay.
-- **`moqt_messages.h` split** (Apr 22, [[martin-duke]]): Commit [`c8ff6dc4`](https://github.com/google/quiche/commit/c8ff6dc4) moves non-message-related data structures out of the monolithic messages header — prep refactor before the session-parameter work above.
-- **Remove `moqt::SubscribeWindow`** (Apr 20, [[martin-duke]]): Commit [`9843feb`](https://github.com/google/quiche/commit/9843feb) drops the `SubscribeWindow` class, continuing the cleanup of legacy SUBSCRIBE window tracking as draft-17's PUBLISH/SUBSCRIBE model settles.
-- **Joining FETCH fix** (Apr 14, [[martin-duke]]): Limit Joining FETCH to `largest_object` at time of SUBSCRIBE rather than using current value. Moves responsibility from `MoqtOutgoingQueue` to the session layer with a new `established_` flag. Prepares for implementing REWIND's joining FETCH aspects.
 
 # Disambiguation
 

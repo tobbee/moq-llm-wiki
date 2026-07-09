@@ -6,53 +6,31 @@ last_updated: 2026-07-07
 status: current
 ---
 
-> **2026-07-06**: **A coordinated Eyevinn v0.12.0 ships LOCMAF v0.3 — and the LOCMAF codec is extracted out of moqlivemock into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module** (all [[tobbe-einarsson|Tobbe]], July 6; announced on `#moq` 08:15 CEST). **[moqlivemock PR #96](https://github.com/Eyevinn/moqlivemock/pull/96) MERGED** *"feat: LOCMAF v0.3 via the Eyevinn/locmaf module"* (**+326/−3640** — the large deletion is the in-repo LOCMAF encoder/decoder moving to the shared Go module) + **[#97](https://github.com/Eyevinn/moqlivemock/pull/97) MERGED** release **v0.12.0**; the browser side ships in lockstep — **[warp-player PR #150](https://github.com/Eyevinn/warp-player/pull/150) MERGED** *"support LOCMAF packaging version 0.3"* (+3615/−1880) + **[#152](https://github.com/Eyevinn/warp-player/pull/152) MERGED** release **v0.12.0** (*"LOCMAF v0.3 release cut + Safari MSE latency stabilization"*). This tracks the **[[moq-locmaf|`draft-einarsson-moq-locmaf-01`]]** major consistency rewrite (canonical byte-identical reconstruction, generic/raw boxes, C2PA `uuid` extensibility, no IANA actions; `locmafVersion "0.3"` signaled via the [[moq-cmsf|CMSF]] catalog). The new **Eyevinn/locmaf** repo (v0.1.1) is a stdlib-only Go reference codec + golden-vector conformance suite. See [[moq-locmaf]], [[warp-player]], [[discussions-2026-07]].
->
-> **2026-07-04**: **Joining-FETCH catalog retrieval lands across all three Eyevinn repos — a coordinated [[tobbe-einarsson|Torbjörn Einarsson]] feature July 4 16:48 → 17:32 UTC.** The mechanism: retrieve the catalog with a **relative joining FETCH** (a FETCH relative to the current group) rather than a plain SUBSCRIBE-and-wait, so a subscriber gets the current catalog object immediately instead of waiting for the next publish. **[Eyevinn/moqtransport **v0.9.0**](https://github.com/Eyevinn/moqtransport/releases/tag/v0.9.0)** (released July 4 16:48 UTC) provides the library primitive — its single change is **[PR #14](https://github.com/Eyevinn/moqtransport/pull/14) MERGED** *"feat: resolve joining FETCH on the publisher side (draft-16)"*, letting a publisher satisfy a joining FETCH. **[moqlivemock PR #95](https://github.com/Eyevinn/moqlivemock/pull/95) MERGED** (July 4 17:30 UTC) *"feat: retrieve catalog via relative joining FETCH"* bumps the `moqtransport` dependency to v0.9.0 and adds a documented **`-catalog-mode`** flag selecting how `mlmtest` fetches the catalog track. **[warp-player PR #149](https://github.com/Eyevinn/warp-player/pull/149) MERGED** (July 4 17:32 UTC) *"feat: retrieve catalog via SUBSCRIBE plus relative joining FETCH"* mirrors the same mode in the TS/MSE player (SUBSCRIBE for live catalog updates + a relative joining FETCH for the current catalog object). First substantive Eyevinn activity since the June-9 hackathon hardening; directly addresses the *"get the current catalog without a full-group wait"* problem that also underlies [[luke-curley|kixelated]]'s [msf #188](https://github.com/moq-wg/msf/issues/188) static-vs-dynamic-catalog question. One day before the [[interim-meetings|July-6 interim]]. See [[discussions-2026-07]], [[moq-msf]].
->
-> **2026-06-09**: **Interop hardening lands across both Eyevinn stacks as the London hackathon opens.** **moqlivemock — [PR #92](https://github.com/Eyevinn/moqlivemock/pull/92) MERGED June 8 21:05 UTC** (the eve's OPEN PR — bound interop SETUP by the per-test deadline; refuse silent WebTransport draft-14 downgrade), **[PR #93](https://github.com/Eyevinn/moqlivemock/pull/93) MERGED** (changelog) + **[PR #94](https://github.com/Eyevinn/moqlivemock/pull/94) MERGED** *"chore(release): prepare v0.11.1"* → **v0.11.1**. **The same fix is pushed down a layer into [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport)** (the Go transport library) so any consumer benefits, not just the test app: **[PR #11](https://github.com/Eyevinn/moqtransport/pull/11) MERGED** *"fix(session): bound SETUP by context; refuse silent WebTransport draft-14 downgrade"* (+97/−2); **[PR #12](https://github.com/Eyevinn/moqtransport/pull/12) MERGED** bumps `golang.org/x/net` to v0.55.0 for **security advisory GO-2026-5026**; **[PR #13](https://github.com/Eyevinn/moqtransport/pull/13) MERGED** *"Bug fixes: draft-16 PUBLISH_NAMESPACE rejection + request hang-proofing"* (+200/−41). This is the first June-cycle activity the wiki has tracked on `moqtransport` itself (vs. the `moqlivemock` test app). Directly serves Martin Duke's June-2 draft-16 interop push as the hackathon's **manual cross-version interop (14/16/17/18)** begins. **London hackathon June 9-10; formal sessions June 11-12.**
->
-> **2026-06-08**: **Interop-robustness hardening ahead of the London hackathon — [PR #92](https://github.com/Eyevinn/moqlivemock/pull/92) OPEN** by [[tobbe-einarsson|Torbjörn Einarsson]] (+16/−10, two draft-16 interop fixes kept as separate commits). **(1) Bound interop SETUP by the per-test deadline** — `mlmtest` interop cases ran under a context deadline that only covered the QUIC dial; `runSession`/`runPublisherSession` then called `Session.Run`, which ignored it. A relay that completed the QUIC/ALPN handshake but **never sent a usable `SERVER_SETUP`** (observed against `moq-rs-draft-16`) hung the client indefinitely, blocking the whole **sequential** interop matrix ([englishm/moq-interop-runner#70](https://github.com/englishm/moq-interop-runner/issues/70), see also [#69](https://github.com/englishm/moq-interop-runner/issues/69)). **(2) Refuse silent WebTransport draft-14 downgrade.** Hardens mlmtest so a single hung peer can't stall the matrix, directly serving Martin Duke's June-2 draft-16 interop push, on the eve of the [[interim-meetings|London hackathon (June 9-10)]]. (Page also carries forward the **v0.11.0** release noted in the [[interop-runner|June-7 log]], shipping MSF/CMSF draft-01 catalogs + LOCMAF 0.2.) **London hackathon starts June 9.**
->
-> **2026-05-17**: **moqlivemock v0.9.0 + warp-player v0.9.0 synchronised LOCMAF release** by [[tobbe-einarsson|Torbjörn Einarsson]]. **3 moqlivemock PRs merged 06:47 → 09:36 UTC** plus the warp-player release at 09:40 UTC: [PR #85](https://github.com/Eyevinn/moqlivemock/pull/85) MERGED May 17 06:47 UTC (+354/−8) *"fix(audio): regenerate 10s loops with uniform MP4 sample durations"* — adds `utils/contentgen/trimaudio` post-processor that strips whole-frame encoder priming, drops trailing short sample, trims to codec target frame count, removes the `elst`, and re-anchors tfdts at 0; `internal/asset.go::GenCMAFChunk` now emits `orig.Dur`. **Audio-loop drift fix** surfacing during multi-loop soak testing. [PR #86](https://github.com/Eyevinn/moqlivemock/pull/86) MERGED 08:58 UTC (+180/−1) *"docs(LOCMAF): add document version banner, logo, and revision history"* — adds the LOCMAF logo (light/dark via `<picture>`), an explicit *"Document version: 0.1 (2026-05-17) — Wire-format `locmafVersion`: \"0.1\""* banner, and a revision-history table with the `locmaf-vX.Y` git-tag snapshot policy. **First formal LOCMAF spec versioning artifact**. [PR #87](https://github.com/Eyevinn/moqlivemock/pull/87) MERGED 09:36 UTC (+66/−7) *"chore(release): prepare v0.9.0"* — v0.9.0 changelog covers LOCMAF packaging + audio loop drift fix. [warp-player PR #129](https://github.com/Eyevinn/warp-player/pull/129) MERGED 09:40 UTC (+91/−13) *"chore: prepare v0.9.0 release"* — new `src/locmaf/` module parses LOCMAF init / `moof` / delta-`moof` per v0.1 with QUIC varints + derived `baseMediaDecodeTime`, routed through MSE; gated on catalog `locmafVersion`. **Eyevinn's pre-London setup is now: LOCMAF wire format frozen at v0.1, publisher + player released together at v0.9.0, ready for interop**.
->
-> **2026-05-16**: **LOCMAF DRM documentation lands** — [PR #84](https://github.com/Eyevinn/moqlivemock/pull/84) MERGED May 16 06:55 → 10:36 UTC by [[tobbe-einarsson|Torbjörn Einarsson]] (+326/−0, docs-only), *"docs: add DRM section to LOCMAF.md"*. New `## DRM with LOCMAF` section covers: end-to-end encrypted-CMAF → LOCMAF-wire → reconstructed-CMAF → MSE/EME/CDM pipeline (mdat bytes byte-equal end-to-end so the CDM sees identical ciphertext); catalog `contentProtections` array + per-track `contentProtectionRefIDs` + `DRMSystem` object (systemID, robustness, laURL/authzURL/certURL, pssh); **cenc vs cbcs IV-on-the-wire comparison table** (cenc carries per-sample IV on every fragment, cbcs carries constant IV once in moov); byte-lossy moof reconstruction is DRM-safe (every field the CDM consumes survives the round-trip). Completes the publisher-side documentation surface for the [[2026-06-09-london-interim|London interim]] LOCMAF demonstration with [[warp-player]] (PR #120 still open). **4 PRs by tobbee in 36 hours** (May 15 PRs #81, #82, #83 + May 16 PR #84).
->
-> **2026-05-14 to 2026-05-15**: **LOCMAF tooling lands and stabilises before London** — 4 LOCMAF PRs merged in 36 hours totalling ~+5215 LOC. [PR #79](https://github.com/Eyevinn/moqlivemock/pull/79) ([[hugo-bjoers|hugobjoers]], May 14 08:08 UTC, +2886/−83) brought initial LOCMAF support. Then [[tobbe-einarsson|Torbjörn Einarsson]] landed a tooling-iteration trio: [PR #81](https://github.com/Eyevinn/moqlivemock/pull/81) (May 15 09:36 UTC, +2115/−61) — encoder/decoder fixes (tfhd `Has*()` gating, signed `elst.media_time`, stpp/wvtt subtitle entries, BMDT discontinuity handling), a new `cmd/locmaf roundtrip` CLI, and a LOCMAF design doc. [PR #82](https://github.com/Eyevinn/moqlivemock/pull/82) (May 15 16:45 UTC, +70/−3) added an explicit **`locmafVersion`** field to the CMSF catalog (LOCMAF wire format is still evolving, e.g. field ID 10 changed semantics for absolute `moofBaseMediaDecodeTime` override). [PR #83](https://github.com/Eyevinn/moqlivemock/pull/83) (May 15 19:37 UTC, +144/−4) fixed CMSF-catalog bitrate reporting for LOCMAF tracks — calls `calcLocmafBitrate` (one full + one delta object pair) instead of misreporting CMAF wire bitrate (128 kbps AAC at one-sample-per-object was reporting 171.5 kbps; correct is ~131.9 kbps).
-
+**Language**: Go (moqtransport, moqlivemock) + TypeScript/JavaScript (warp-player)
 **Organization**: Eyevinn Technology
-**Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
-**Packaging formats**: CMSF, **LOC** (HEVC + AVC + AAC + Opus), **MSF**, **moq-mi** (since v0.8.0); **LOCMAF v0.1** (released v0.9.0 May 17 — encoder/decoder + roundtrip CLI + design doc with logo + catalog `locmafVersion: "0.1"` + LOCMAF-accurate bitrate reporting + DRM section)
+**Maintainer**: [[tobbe-einarsson|Torbjörn Einarsson]]
+**GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport) · [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock) · [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player)
 **Demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
+**Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
+**Packaging formats**: CMSF, LOC (HEVC + AVC + AAC + Opus), MSF, moq-mi (since v0.8.0), LOCMAF v0.1
 
-# Repositories
+# Overview
 
-## moqtransport (v0.9.0 — Jul 4, 2026)
-- **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport)
-- **Language**: Go
-- **Description**: Media over QUIC Transport library supporting draft-14 and draft-16
-- **v0.9.0 highlights** (Jul 4): publisher-side **joining FETCH** resolution (draft-16, [PR #14](https://github.com/Eyevinn/moqtransport/pull/14)) — the library primitive behind moqlivemock #95 / warp-player #149 relative-joining-FETCH catalog retrieval
+Eyevinn's MoQ stack spans three repositories that together cover the full media pipeline: a Go transport library, a Go live publisher/subscriber test app, and a browser-based TypeScript player using MSE. It exercises CMSF, LOC, MSF, moq-mi, and LOCMAF packaging with commercial DRM and interop testing.
 
-## moqlivemock (v0.9.0 — May 17, 2026)
-- **GitHub**: [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock)
-- **Language**: Go
-- **Description**: Live MoQ publisher/subscriber with CMSF, LOC, MSF, moq-mi, and **LOCMAF** media support, DRM, and interop testing
-- **v0.9.0 highlights** (May 17): **LOCMAF (Low Overhead CMAF) v0.1 packaging** — LOC-inspired variant of CMAF encoding only the non-derivable `moof`/`moov` fields as MoQT key-value pairs using QUIC varints (first object = full moof, subsequent objects = delta moofs); audio-loop drift fix via `trimaudio` post-processor; formal `locmaf-vX.Y` git-tag snapshot policy
-- **v0.8.0 highlights** (May 5): HEVC support for LOC packaging, accurate per-packaging bitrate exposed in catalog, MSF/LOC/moq-mi support added
+# Components
 
-## warp-player (v0.9.0 — May 17, 2026)
-- **GitHub**: [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player)
-- **Language**: JavaScript / TypeScript
-- **Description**: Browser-based player for CMSF media (MSE), LOC media (WebCodecs), and **LOCMAF (compressed CMAF)** over MoQ. Supports Widevine, PlayReady, FairPlay, and ClearKey on the MSE path.
-- **v0.9.0 highlights** (May 17): **LOCMAF v0.1 packaging support** — new `src/locmaf/` module parses LOCMAF init / `moof` / delta-`moof` objects per v0.1 with QUIC varints and derived `baseMediaDecodeTime`, routed through the MSE pipeline; gated on catalog `locmafVersion`. TypeScript 6 + dep bumps
-- **v0.8.0 highlights** (May 5): WebCodecs LOC pipeline (HEVC + AVC + AAC + Opus), MSF catalog support, mute toggle UI, namespace filtering UI, Safari `wt.closed` rejection fix
+## moqtransport
+- **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport) — Go. Latest: **v0.9.0** (Jul 4, 2026).
+- Media over QUIC Transport library implementing [[moq-transport]] draft-14 and draft-16.
 
-# Architecture
+## moqlivemock
+- **GitHub**: [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock) — Go. Latest: **v0.11.1** (Jun 9, 2026).
+- Live MoQ publisher (`mlmpub`) and subscriber (`mlmsub`) test tools with CMSF, LOC, MSF, moq-mi, and LOCMAF media support, DRM, and interop testing — plus `mlmtest` for the [[interop-runner]] framework.
 
-The stack covers the full media pipeline:
-- **moqtransport** - Go library implementing [[moq-transport]] draft-14 and draft-16
-- **moqlivemock** - Publisher (`mlmpub`) and subscriber (`mlmsub`) test tools, plus `mlmtest` for the [[interop-runner]] framework
-- **warp-player** - Browser-based player using [[moq-cmsf]] with MSE for playback
+## warp-player
+- **GitHub**: [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player) — JavaScript / TypeScript. Latest: **v0.9.0** (May 17, 2026).
+- Browser-based player for [[moq-cmsf|CMSF]] media (MSE), LOC media (WebCodecs), and LOCMAF (compressed CMAF) over MoQ. Supports Widevine, PlayReady, FairPlay, and ClearKey on the MSE path.
 
 # Catalog Handling
 
@@ -82,16 +60,26 @@ All five namespaces are announced concurrently when `mlmpub` runs, so subscriber
 
 # CMSF ContentProtection
 
-The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.com/moq-wg/cmsf/pull/18), merged Apr 14) was proposed by Eyevinn based on the moqlivemock implementation. DRM support in moqlivemock and warp-player was implemented by Hugo Björs (Eyevinn). warp-player supports Widevine, PlayReady, FairPlay, and ClearKey/ECCP. It was the first running implementation, now joined by [[shaka-player]] ([PR #9972](https://github.com/shaka-project/shaka-player/pull/9972), also merged Apr 14).
+The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.com/moq-wg/cmsf/pull/18), merged Apr 14) was proposed by Eyevinn based on the moqlivemock implementation. DRM support in moqlivemock and warp-player was implemented by [[hugo-bjoers|Hugo Björs]] (Eyevinn). warp-player supports Widevine, PlayReady, FairPlay, and ClearKey/ECCP. It was the first running implementation, now joined by [[shaka-player]] ([PR #9972](https://github.com/shaka-project/shaka-player/pull/9972), also merged Apr 14).
 
-# LOCMAF (Low Overhead CMAF) — experimental, in PR
+# LOCMAF (Low Overhead CMAF)
 
-**[Eyevinn/moqlivemock PR #79](https://github.com/Eyevinn/moqlivemock/pull/79)** (Hugo Björs, **OPEN** since May 7 2026, +2697/−83, 17 files) and **[Eyevinn/warp-player PR #120](https://github.com/Eyevinn/warp-player/pull/120)** (+2211/−188, 14 files) introduce **LOCMAF** — a compact LOC-inspired/compatible CMAF packaging format for MoQT. **Master's-thesis context**, with measurements pending. See [[media-packaging]] for the full design and comparison vs. compressed-mp4. A separate warp-player branch tests LOCMAF + DRM (not in PR #120).
+**LOCMAF** is a compact LOC-inspired/compatible CMAF packaging format for MoQT, encoding only the non-derivable `moof`/`moov` fields as MoQT key-value pairs using QUIC varints (first object = full moof, subsequent objects = delta moofs). It carries a `locmafVersion` field in the CMSF catalog and follows a `locmaf-vX.Y` git-tag snapshot policy. **v0.1** shipped in moqlivemock/warp-player **v0.9.0** (May 17, 2026), including an encoder/decoder, a `cmd/locmaf roundtrip` CLI, a design doc, and a DRM section. Initial support originated in a Master's-thesis context (Hugo Björs). See [[media-packaging]] for the full design and comparison vs. compressed-mp4.
 
 # Demo
 
 - **Live demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
 - [[shaka-player]] by Álvaro Velad Galván (Atème) works with moqlivemock including subtitle display and DRM
+
+# Recent Highlights (as of July 2026)
+
+Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **Joining-FETCH catalog retrieval** (Jul 4) landed across all three repos: a subscriber retrieves the current catalog object via a relative joining FETCH instead of SUBSCRIBE-and-wait. moqtransport **v0.9.0** ([PR #14](https://github.com/Eyevinn/moqtransport/pull/14)) added publisher-side joining-FETCH resolution (draft-16); moqlivemock ([PR #95](https://github.com/Eyevinn/moqlivemock/pull/95)) added a `-catalog-mode` flag; warp-player ([PR #149](https://github.com/Eyevinn/warp-player/pull/149)) mirrored it in the TS/MSE player.
+- **Interop-robustness hardening** (Jun, moqlivemock v0.11.1): bound interop SETUP by the per-test deadline and refuse a silent WebTransport draft-14 downgrade, so one hung peer can't stall the sequential interop matrix. The fix was pushed down into moqtransport itself so any consumer benefits.
+- **LOCMAF v0.1** (May 17, v0.9.0): wire format frozen at v0.1 with publisher and player released together, ready for interop.
+- **LOCMAF DRM support**: end-to-end encrypted-CMAF → LOCMAF-wire → reconstructed-CMAF → MSE/EME/CDM pipeline (mdat bytes byte-equal end-to-end so the CDM sees identical ciphertext); catalog `contentProtections` covering both cenc and cbcs schemes.
+- **v0.8.0** (May 5): added HEVC LOC packaging, MSF/LOC/moq-mi support, and accurate per-packaging bitrate exposed in the catalog.
 
 # Interop
 

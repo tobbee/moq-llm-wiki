@@ -77,6 +77,21 @@ Rules:
 - Keep the existing **Operation** / **Sources** / **Pages updated** / **Key findings** sections below the TL;DR — those are the detail layer.
 - Newest entry goes at the top of `log.md` (chronological-reverse, as the file already is).
 
+### Entity Pages Are Reference, Not Logs
+Pages under `implementations/`, `drafts/`, `people/`, `concepts/`, and `interop/` are **stable reference documents**, not rolling changelogs. The chronological, day-by-day record lives in **`wiki/log.md` only** (and, for narrative context, the monthly `discussions/` digests). Do not turn an entity page into a second copy of the log.
+
+The anti-pattern to avoid: a stack of dated `> **YYYY-MM-DD**: …` blockquotes (or `## <date> …` daily headings) prepended to the top of a page, one per update, each packed with PR numbers and LOC deltas. That is the log's job.
+
+**Implementation page structure** (apply the same spirit to other entity pages):
+1. **Frontmatter**, then an **at-a-glance metadata block at the top** — bold key/value lines (`**Language**`, `**Maintainer**`, `**GitHub**`, `**Website**`, `**Docs**`, `**Slack**`). This is the first thing a reader should see, not something buried below a log.
+2. **Durable reference sections**: Overview, History/timeline (dated *milestones* only), Protocol/versions supported, Packages/components, Interop, Related. Update these in place when a durable fact changes (new draft version shipped, new capability, status change).
+3. **A single `# Recent Highlights` section**: a short bulleted list (**aim ≤ 8 bullets**) of durable, still-relevant milestones — not every PR. Lead the section with a pointer such as *"Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones."* Refresh this list (fold in a new milestone, drop stale detail) rather than appending a new dated entry each day.
+
+Rules:
+- **Never prepend a dated daily blockquote/heading to an entity page during an update.** The daily entry goes in `log.md`; touch the entity page only when a durable fact changed, and edit the relevant section (or the Recent Highlights list) in place.
+- Keep the at-a-glance metadata block at the **top** of the page, above the prose sections.
+- When distilling an over-long page, preserve every durable reference fact; only collapse the redundant day-by-day churn. `wiki/implementations/moq-dev.md` is the reference template for the target shape.
+
 ## Workflows
 
 ### Ingest New IETF Draft
@@ -157,9 +172,9 @@ This will trigger a check of all sources:
 The update should:
 - Add new discussion entries for the current month
 - Update draft pages if new versions are published (check both WG and notable individual drafts)
-- Update implementation pages if version support changed
+- Update implementation pages **only if a durable fact changed** (version support, a new capability, a status change) — edit the relevant section or the `# Recent Highlights` list **in place**. Do **not** prepend a dated daily blockquote to entity pages (see *Entity Pages Are Reference, Not Logs*); the day-by-day record goes in `log.md`.
 - Update interop status if new results are available
-- Append all changes to `wiki/log.md`
+- Append all changes to `wiki/log.md` — this is the single home for the chronological, day-by-day record
 
 **Note on drafts**: The Datatracker page lists both adopted WG documents and related individual Internet-Drafts. Track WG documents closely. For individual drafts, focus on those actively discussed or referenced in implementations (e.g., subscribe-rewind, qlog-moq-events, moq-lite, cdn-provisioning, relay-dos, nmsf). Always distinguish WG documents from individual drafts in wiki pages.
 

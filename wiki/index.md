@@ -62,6 +62,8 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 
 # Implementations
 
+See **[[overview|Implementations Overview]]** for the full comparison — language, draft versions, roles (Pub/Sub/Relay/Player), and media/feature support.
+
 - [[moq-dev]] - Luke Curley's Rust+TypeScript monorepo (moq-lite + Hang player)
 - [[moq-rs]] - Cloudflare's IETF-aligned Rust implementation (cloudflare/moq-rs)
 - [[moq-js]] - IETF-aligned JavaScript/browser library (video-dev/moq-js)
@@ -80,21 +82,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 
 ## Draft Version Support Summary
 
-| Implementation | Language | Draft Version(s) | GitHub |
-|----------------|----------|-------------------|--------|
-| [[moq-dev]] | Rust + TS | moq-lite + IETF shims (14-17) | [moq-dev/moq](https://github.com/moq-dev/moq) |
-| [[moq-rs]] | Rust | 14 (main), 07 (prod) | [cloudflare/moq-rs](https://github.com/cloudflare/moq-rs) |
-| [[moq-js]] | TypeScript | 14 | [video-dev/moq-js](https://github.com/video-dev/moq-js) |
-| [[moxygen]] | C++ | 14, 15, 16 | [facebookexperimental/moxygen](https://github.com/facebookexperimental/moxygen) |
-| [[libquicr]] / quicr-go | C++ / Go | 16 | [quicr/libquicr](https://github.com/quicr/libquicr), [Quicr/quicr-go](https://github.com/Quicr/quicr-go) |
-| [[aiomoqt]] | Python | 14 + 16 (dual) | [gmarzot/aiomoqt](https://github.com/gmarzot/aiomoqt) |
-| [[moqlivemock]] | Go / JS | 14, 16 | [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport), [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock), [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player), [demo](https://moqlivemock.demo.osaas.io/) |
-| [[moqtail]] | Rust/TS | 14 | [moqtail/moqtail](https://github.com/moqtail/moqtail) |
-| [[imquic]] | C | 16, 17 | [meetecho/imquic](https://github.com/meetecho/imquic) |
-| [[quiche-moq]] | C++ | 16 | [google/quiche](https://github.com/google/quiche/tree/main/quiche/quic/moqt) |
-| [[shaka-player]] | JavaScript | 14 (experimental) | [shaka-project/shaka-player](https://github.com/shaka-project/shaka-player) |
-| [[xquic-moq]] | C | 14 | Alibaba (see [[interop-runner]]) |
-| [[moqintosh]] | Swift (iOS) | 14 | [t-gazzy/Moqintosh](https://github.com/t-gazzy/Moqintosh) |
+Moved to the dedicated **[[overview|Implementations Overview]]** page (language, draft versions, roles, and media/feature support in one table).
 
 # People & Organizations
 

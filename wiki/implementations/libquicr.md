@@ -6,13 +6,12 @@ last_updated: 2026-06-11
 status: current
 ---
 
-> **2026-06-11 (London hackathon Day 2)**: **The quicr ecosystem's web client, [quicr/moq-web](https://github.com/quicr/moq-web) (a draft-18 deploy branch at `quicr.github.io/moq-web/branches/draft-18/`), drove the floor's cross-implementation draft-18 interop.** [[suhas-nandakumar|Suhas Nandakumar]] reported working publish/subscribe flow against three independent relays over June 10 — Lorenzo's [[imquic]] (sub-namespace flow still WIP), the Nokia Research relay (`moqt.nokiaresearch.com:4443/moq`), and afrind's [[moxygen]] relay (`fb.mvfst.net:9448`) — the first *successful* draft-18 cross-impl media the wiki has recorded. See [[discussions-2026-06]], [[interop-runner]].
-
 **Language**: C++ with Go bindings
 **Organization**: Cisco (QuicR project)
 **Maintainer**: [[suhas-nandakumar]], Tim Evens
 **GitHub**: [quicr/libquicr](https://github.com/quicr/libquicr)
 **Go bindings**: [Quicr/quicr-go](https://github.com/Quicr/quicr-go)
+**Web client**: [quicr/moq-web](https://github.com/quicr/moq-web)
 **Website**: [quicr.org](http://www.quicr.org)
 **Slack**: #libquicr (C08ER7J16BF)
 
@@ -29,9 +28,12 @@ Cisco's C++ MOQ Transport implementation with recently open-sourced Go bindings.
 - Provides chat-like examples using subscribe namespace for participant discovery
 - Basic clock example included
 
-# Recent Activity
+# Recent Highlights
 
-- Go bindings open-sourced (2026-03-25) by [[suhas-nandakumar]]
+Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **Go bindings open-sourced** (2026-03-25) by [[suhas-nandakumar]].
+- **London hackathon (June 2026)**: the ecosystem's web client [quicr/moq-web](https://github.com/quicr/moq-web) (a draft-18 deploy branch) drove working publish/subscribe against three independent relays — [[imquic]], the Nokia Research relay (`moqt.nokiaresearch.com:4443`), and afrind's [[moxygen]] relay (`fb.mvfst.net:9448`) — the first successful draft-18 cross-impl media the wiki recorded.
 
 # Related
 
