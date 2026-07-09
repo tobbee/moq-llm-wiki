@@ -2,10 +2,12 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-06-25
+last_updated: 2026-07-09
 status: current
 ---
 
+> **2026-07-09**: **imquic opens the first implementation PR explicitly targeting MoQT draft-19.** **[PR #32](https://github.com/meetecho/imquic/pull/32) OPEN** (July 8, lminiero, *"Add support for MoQT v19"*, +238/−168) — Lorenzo Miniero's work to bring imquic up to [[moq-transport|`draft-ietf-moq-transport-19`]] (cut July 6 at [[interim-meetings|interim-2026-moq-18]]). This is the **first draft-19-targeting impl PR** the wiki has tracked in the moq-wg ecosystem beyond [[moq-dev|moq-dev/moq]]'s July-7 wire support ([#2106](https://github.com/moq-dev/moq/pull/2106)); the [[interop-runner]] itself has **not** yet advanced its target from draft-18, so imquic here is running ahead of the automated matrix. The `lminiero.it:9000` relay otherwise stays current on draft-18 `main`. See [[moq-transport]], [[discussions-2026-07]].
+>
 > **2026-06-25**: **The relay demo gains partial dynamic-groups support.** A June-24 commit adds *"partial support for DYNAMIC_GROUPS and NEW_GROUP_REQUEST to the relay demo"* — exercising the dynamic-group-creation path (a subscriber requesting a new group) in imquic's relay demo. The `lminiero.it:9000` relay stays current on draft-18 `main`. See [[discussions-2026-06]].
 >
 > **2026-06-23**: **Post-demo relay/demo polish.** Lorenzo lands two fixes June 22–23: a **relay-side fix for broken NAMESPACE / NAMESPACE_DONE notifications** (a follow-on to the June-15 nested-namespace notification fix) and a **crash fix in the LOC sender demo** when publishing audio-only or video-only. The `lminiero.it:9000` relay stays current on draft-18 `main`. See [[discussions-2026-06]].
