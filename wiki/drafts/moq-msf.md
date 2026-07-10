@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-07-04
+last_updated: 2026-07-10
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
@@ -61,7 +61,7 @@ Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only
 - **Wall-clock concern resolved via `targetBuffer`.** kixelated's long-open "wall clock is problematic" issue (#150) was closed not by removing the wall clock but by adding a per-track `targetBuffer` property that gives subscribers explicit end-to-end buffer-depth guidance independent of publisher-clock accuracy.
 - **Catalog compression resolved as publisher-decides.** Compression is signaled via Track/Object Properties chosen by the publisher rather than a subscriber-negotiated Accept-Encoding; [[victor-vasiliev|Vasiliev]] ruled Accept-Encoding incompatible with MoQ's publisher-to-subscriber fan-out (data cannot flow subscriber→publisher on a shared relay path).
 - **Two open design questions from [[luke-curley|kixelated]]** remain -02 backlog inputs: sequence-aligned groups across tracks are seen as too restrictive (Issue #155) — proposal is to require shared PTS but loosen group alignment, letting [[moq-cmsf|CMSF]] keep alignment for HLS/DASH back-compat; and static-vs-dynamic catalogs (Issue #188) — static-track container formats (fMP4/FLV/MPEG-TS/HLS) cannot add or remove tracks mid-stream while MSF lets tracks change at any time, causing a consumer race condition, so kixelated asks MSF for a way to signal that no more tracks will be added/removed/modified.
-- **Event-timeline formats are being spun out of MSF.** Direction (from the PR #133 discussion): SCTE-35, WebVTT, and IMSC1 each become separate individual drafts under an MSF Event-Timeline-Extensions umbrella (parallel to the [[moq-msfts|MSF Packaging Extensions]] pattern), while CEA-608/708 accessibility metadata stays in MSF.
+- **Event-timeline formats have been spun out of MSF as three individual drafts.** The direction predicted from the May 2026 PR #133 discussion — SCTE-35, WebVTT, and IMSC1 each becoming separate individual drafts under an MSF Event-Timeline-Extensions umbrella (parallel to the [[moq-msfts|MSF Packaging Extensions]] pattern), with CEA-608/708 accessibility metadata staying in MSF — was realized on **2026-07-06** when [[will-law|Will Law]] (Akamai) + [[suhas-nandakumar|Suhas Nandakumar]] (Cisco) submitted all three as `-00` individual drafts: **`draft-wilaw-moq-scte35-event-timeline-00`** ("SCTE35 transmission over MSF Event Timeline", 9 pp — binary + XML SCTE-35 ad/event signals over MSF Event Timeline tracks), **`draft-wilaw-moq-webvtt-msf-00`** ("WebVTT Packaging for MOQT Streaming Format", 8 pp — WebVTT cues packaged as JSON records on the event timeline), and **`draft-law-moq-imsc1-msf-00`** ("IMSC1 Packaging for MOQT Streaming Format", 8 pp — IMSC1 captions with a simplified JSON cue mode and a full XML document mode). These surfaced quietly in the July-6 draft wave alongside transport-19 and the Cisco MOCHA/TEMPO suite.
 - **First runtime and validation exercises.** [[moq-dev|moq-dev/moq]] became the first implementation to land MSF-01 support in code (behind a version-agnostic snapshot); [[tobbe-einarsson|Tobbe]]'s CUE-schema catalog validator ([Eyevinn/msf-catalog-validator](https://github.com/Eyevinn/msf-catalog-validator)) is the first machine-validation feedback loop into the MSF/CMSF specs, and surfaced example/version bugs since fixed.
 
 # Related

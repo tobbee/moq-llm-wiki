@@ -2,7 +2,7 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-07-09
+last_updated: 2026-07-10
 status: current
 ---
 
@@ -41,8 +41,8 @@ The two projects are now considered **sibling implementations** — neither is u
 
 - **main branch**: draft-14 (IETF WG spec) — current production deployment
 - **draft-18**: `draft-18-dev` branch behind the runner-registered `moq-rs-draft-18` relay; the request-stream rework (PR #178, removes `MAX_REQUEST_ID`, moves requests to bidi streams) merged in the July-8 burst
-- **draft-16**: the long-open community rewrite (itzmanish, incl. PUBLISH support PR #181) merged July 8
-- Latest release: `moq-relay-ietf` v0.7.21 (July 8)
+- **draft-16**: the long-open community rewrite ([PR #170](https://github.com/cloudflare/moq-rs/pull/170), itzmanish) merged July 8; its follow-on PUBLISH message support ([PR #181](https://github.com/cloudflare/moq-rs/pull/181), +4049/−624) merged July 9
+- Latest release: `moq-relay-ietf` v0.7.22 (July 9), cut alongside the PUBLISH-support merge with `moq-pub` bumped to a new minor v0.9.0
 - Historical branches: draft-04, 05, 06, 07
 
 # Public Infrastructure
@@ -70,7 +70,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **draft-18 landed and a registered relay went live.** [PR #173](https://github.com/cloudflare/moq-rs/pull/173) ("Start work on draft-18", englishm) opened on the London hackathon floor June 9 and merged June 11. A rolling `draft-18-dev` branch ([PR #176](https://github.com/cloudflare/moq-rs/pull/176)) auto-deploys to `draft-18-interop.cloudflare.mediaoverquic.com:443` and is registered in the [[interop-runner]] as `moq-rs-draft-18` — closing a long-standing two-draft gap (`main` stays draft-14).
 - **draft-18 request-ID removal.** [PR #178](https://github.com/cloudflare/moq-rs/pull/178) (englishm) removes `MAX_REQUEST_ID` and moves requests onto bidi streams — the direction the WG converged on (cf. [[moq-transport]] [Issue #1653](https://github.com/moq-wg/moq-transport/issues/1653)); merged in a July-8 burst that also landed the long-open community draft-16 rewrite (itzmanish) and a `moq-relay-ietf` v0.7.21 release.
 - **Pluggable AuthHook / relay authorization.** [PR #169](https://github.com/cloudflare/moq-rs/pull/169) (englishm) proposed an AuthHook trait for intra-scope relay authorization; [PR #171](https://github.com/cloudflare/moq-rs/pull/171) ([[suhas-nandakumar|Suhas]]) implemented it with new `moq-auth` and `moq-auth-cat` crates (C4M — CAT for MoQ). [[thibault-meunier|Thibault Meunier]]'s review pushed the trait toward issuer-aware challenge/reply so it also fits [[moq-privacy-pass|PrivacyPass]]. Both OPEN as the shared coordination venue.
-- **draft-16 rewrite.** [[itzmanish|Manish]] closed his 155-day-old [PR #131](https://github.com/cloudflare/moq-rs/pull/131) and reopened it as [PR #170](https://github.com/cloudflare/moq-rs/pull/170) ("[Rewrite] Draft-16 migration"), the underlying draft-16 baseline.
+- **draft-16 rewrite + PUBLISH support.** [[itzmanish|Manish]] closed his 155-day-old [PR #131](https://github.com/cloudflare/moq-rs/pull/131) and reopened it as [PR #170](https://github.com/cloudflare/moq-rs/pull/170) ("[Rewrite] Draft-16 migration"), the underlying draft-16 baseline (merged July 8). Its large follow-on [PR #181](https://github.com/cloudflare/moq-rs/pull/181) ("Publish message support", +4049/−624) merged July 9, adding native PUBLISH-message handling and triggering a `moq-relay-ietf` v0.7.22 / `moq-pub` v0.9.0 release round.
 - **Namespace pub/sub and qlog alignment.** [PR #157](https://github.com/cloudflare/moq-rs/pull/157) (Suhas) added Publish/Subscribe Namespace support with a new relay `subscriber_registry`; [PR #163](https://github.com/cloudflare/moq-rs/pull/163) ([[mike-english]]) aligned mlog qlog output with draft-pardue-moq-qlog-moq-events-03.
 - **Relay plumbing.** A `socket_wrapper` hook to wrap the underlying UDP socket landed ([PR #174](https://github.com/cloudflare/moq-rs/pull/174), merged June 10); a proposed warm-cache-linger + upstream `UNSUBSCRIBE` scheme for propagating downstream interest loss is under review ([PR #180](https://github.com/cloudflare/moq-rs/pull/180), OPEN).
 

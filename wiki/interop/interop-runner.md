@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-07-09
+last_updated: 2026-07-10
 status: current
 ---
 
@@ -39,9 +39,9 @@ The interop runner targets **draft-18** for automated testing. The WG (per [[mik
 
 # Current standing
 
-The runner's most recent published cut is the **[2026-07-08 00:33:49 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-08_003349/report.html): 319 cells; 107 pass / 212 fail / 0 skip** (~33.5% pass), run against an expanded implementation set.
+The runner's most recent published cut is the **[2026-07-09 00:37:17 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-09_003717/report.html): 319 cells; 124 pass / 195 fail / 0 skip** (~38.9% pass), run against the same expanded implementation set.
 
-A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed +14 (93 → 107) on the July-8 cut as the newly-added cross-version cells began converting green. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6).
+A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed +14 (93 → 107) on the July-8 cut and a further +17 (107 → 124) on the July-9 cut as the newly-added cross-version cells kept converting green — two straight coverage-to-conversion cuts on a structurally flat matrix (319 cells, 0 skip, at-target draft-18 171). This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 
