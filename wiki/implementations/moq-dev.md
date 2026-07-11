@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-09
+last_updated: 2026-07-11
 status: current
 ---
 
@@ -31,7 +31,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Protocol
 
-- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30)
+- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), with early **-06** work underway in-repo (the `moq-lite-06-wip` PRs adding announce ids, July 10). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **[[moq-msf|MSF]]**: draft-01 supported behind a version-agnostic snapshot
 - **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-19**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18), and shipped draft-19 (`moqt-19`) within hours of the July-6 cut ([PR #2106](https://github.com/moq-dev/moq/pull/2106))
@@ -43,6 +43,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `moq-token` — authentication
 - `moq-native` — QUIC helpers (default backend is moq-dev's own `noq`, quinn opt-in)
 - `moq-mux` — media pipeline (per-codec splitters, container import/export)
+- `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10)
 - `moq-hls`, `moq-rtmp`, `moq-srt`, `moq-rtc` — media gateway crates (see Media gateways below)
 - `moq-ffi` / `libmoq` — C FFI surface for Go/Swift/Kotlin bindings
 
@@ -60,8 +61,8 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 Bidirectional ingest **and** egress bridges between MoQ broadcasts and legacy media transports, built on `moq-mux`:
 
-- **RTMP / enhanced-RTMP**, **SRT**, **WebRTC (WHIP/WHEP)**, **HLS / LL-HLS**, **MPEG-TS**
-- Native hardware codecs (H.264/H.265 encode + decode via VideoToolbox, Media Foundation/DXGI, NVENC, VAAPI), dropping the ffmpeg runtime dependency
+- **RTMP / enhanced-RTMP**, **SRT**, **WebRTC (WHIP/WHEP)**, **HLS / LL-HLS**, **MPEG-TS** — WHIP ingest bridges H.264/H.265/AV1 symmetric with WHEP egress ([PR #2139](https://github.com/moq-dev/moq/pull/2139), July 10)
+- Native hardware codecs (H.264/H.265 encode + decode via VideoToolbox, Media Foundation/DXGI, NVENC/**NVDEC**, VAAPI), dropping the ffmpeg runtime dependency; a **zero-copy NVDEC → NVENC** GPU transcode path keeps frames in GPU memory ([PR #2145](https://github.com/moq-dev/moq/pull/2145), July 10)
 - CMSF muxer/demuxer (first contributed by AWS)
 
 # Public Infrastructure
@@ -76,6 +77,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.
 - **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
 - **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage.
+- **GPU transcoding pipeline** landed July 10: a new `moq-transcode` crate for just-in-time NVENC transcode of Hang broadcasts plus NVDEC hardware decode and a zero-copy NVDEC → NVENC path — a complete GPU decode→transcode→encode chain — and the WebRTC WHIP ingest gained H.265/AV1 bridges to match WHEP egress.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
 
