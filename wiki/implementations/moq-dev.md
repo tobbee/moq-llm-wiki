@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 status: current
 ---
 
@@ -31,7 +31,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Protocol
 
-- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), with early **-06** work underway in-repo (the `moq-lite-06-wip` PRs adding announce ids, July 10). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
+- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), with a **-06** design cycle underway in-repo — the `moq-lite-06-wip` PRs add typed announce ids ([PR #2160](https://github.com/moq-dev/moq/pull/2160), July 10) and cost-based cache-aware routing with a vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179), July 12, OPEN). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **[[moq-msf|MSF]]**: draft-01 supported behind a version-agnostic snapshot
 - **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-19**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18), and shipped draft-19 (`moqt-19`) within hours of the July-6 cut ([PR #2106](https://github.com/moq-dev/moq/pull/2106))
@@ -62,7 +62,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 Bidirectional ingest **and** egress bridges between MoQ broadcasts and legacy media transports, built on `moq-mux`:
 
 - **RTMP / enhanced-RTMP**, **SRT**, **WebRTC (WHIP/WHEP)**, **HLS / LL-HLS**, **MPEG-TS** — WHIP ingest bridges H.264/H.265/AV1 symmetric with WHEP egress ([PR #2139](https://github.com/moq-dev/moq/pull/2139), July 10)
-- Native hardware codecs (H.264/H.265 encode + decode via VideoToolbox, Media Foundation/DXGI, NVENC/**NVDEC**, VAAPI), dropping the ffmpeg runtime dependency; a **zero-copy NVDEC → NVENC** GPU transcode path keeps frames in GPU memory ([PR #2145](https://github.com/moq-dev/moq/pull/2145), July 10)
+- Native hardware codecs (H.264/H.265 encode + decode via VideoToolbox, Media Foundation/DXGI, NVENC/**NVDEC** — NVDEC now also decodes **AV1**, [PR #2178](https://github.com/moq-dev/moq/pull/2178), July 12 — VAAPI), dropping the ffmpeg runtime dependency; a **zero-copy NVDEC → NVENC** GPU transcode path keeps frames in GPU memory ([PR #2145](https://github.com/moq-dev/moq/pull/2145), July 10)
 - CMSF muxer/demuxer (first contributed by AWS)
 
 # Public Infrastructure
