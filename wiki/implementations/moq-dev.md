@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 status: current
 ---
 
@@ -31,7 +31,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Protocol
 
-- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), with a **-06** design cycle underway in-repo — the `moq-lite-06-wip` PRs add typed announce ids ([PR #2160](https://github.com/moq-dev/moq/pull/2160), July 10) and cost-based cache-aware routing with a vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179), July 12, OPEN). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
+- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), hardened by a pre-merge moq-net/js API pass ([PR #2170](https://github.com/moq-dev/moq/pull/2170), July 12) with session Role now advertised in the -05 SETUP ([PR #2201](https://github.com/moq-dev/moq/pull/2201), July 12, OPEN). A **-06** design cycle is underway in-repo — the `moq-lite-06-wip` PRs add typed announce ids ([PR #2160](https://github.com/moq-dev/moq/pull/2160), merged July 12) and cost-based cache-aware routing with a vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179), July 12, OPEN). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **[[moq-msf|MSF]]**: draft-01 supported behind a version-agnostic snapshot
 - **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-19**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18), and shipped draft-19 (`moqt-19`) within hours of the July-6 cut ([PR #2106](https://github.com/moq-dev/moq/pull/2106))
@@ -39,13 +39,14 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 # Rust Packages
 
 - `moq-lite` — core transport library
-- `moq-relay` — server/relay
-- `moq-token` — authentication
-- `moq-native` — QUIC helpers (default backend is moq-dev's own `noq`, quinn opt-in)
+- `moq-relay` — server/relay; exposes a Prometheus `/metrics` endpoint for node traffic ([PR #2172](https://github.com/moq-dev/moq/pull/2172), July 12)
+- `moq-token` — authentication; the connection transport is now forwarded to the `--auth-api` hook ([PR #2132](https://github.com/moq-dev/moq/pull/2132), July 12)
+- `moq-native` — QUIC helpers (default backend is moq-dev's own `noq`, quinn opt-in); `quic::Client` / `quic::Server` transport config ([PR #2161](https://github.com/moq-dev/moq/pull/2161), July 11)
 - `moq-mux` — media pipeline (per-codec splitters, container import/export)
-- `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10)
+- `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10); a `moq transcode` CLI verb plus decode-once-per-source + GPU resize fanout followed ([PR #2158](https://github.com/moq-dev/moq/pull/2158), July 12)
+- `moq-json` — generic (non-media) JSON tracks, split into snapshot/stream modules and exposed through moq-ffi/libmoq ([PR #2196](https://github.com/moq-dev/moq/pull/2196), July 12) — reinforces the "generic for any live data" framing
 - `moq-hls`, `moq-rtmp`, `moq-srt`, `moq-rtc` — media gateway crates (see Media gateways below)
-- `moq-ffi` / `libmoq` — C FFI surface for Go/Swift/Kotlin bindings
+- `moq-ffi` / `libmoq` — C FFI surface for Go/Swift/Kotlin bindings; the July 11–12 expansion added a group-FETCH API ([PR #2142](https://github.com/moq-dev/moq/pull/2142)), a reworked raw-track C ABI ([PR #2171](https://github.com/moq-dev/moq/pull/2171)), track-info accessors ([PR #2177](https://github.com/moq-dev/moq/pull/2177)), raw-frame timestamps + track datagrams ([PR #2174](https://github.com/moq-dev/moq/pull/2174) / [PR #2175](https://github.com/moq-dev/moq/pull/2175)), JSON tracks, and a Go-wrapper catch-up ([PR #2168](https://github.com/moq-dev/moq/pull/2168))
 
 # TypeScript Packages (js/)
 
@@ -56,6 +57,8 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `signals`, `clock`, `common`, `token` — supporting packages
 
 (The UI migrated from SolidJS to vanilla Web Components in May 2026, removing `@moq/ui-core`.)
+
+**Safari support** landed July 12 (fperex): `net` handles WebTransport datagram-API variants ([PR #2198](https://github.com/moq-dev/moq/pull/2198)) and exposes the negotiated transport on `Established` ([PR #2192](https://github.com/moq-dev/moq/pull/2192)); `watch` surfaces unsupported-codec errors ([PR #2197](https://github.com/moq-dev/moq/pull/2197)) and no longer latches the connection off after a Safari `pagehide` ([PR #2185](https://github.com/moq-dev/moq/pull/2185)); Safari hardware-encode + worker capture on the `publish` side and 48 kHz-Opus resampling remain in flight ([PR #2190](https://github.com/moq-dev/moq/pull/2190) / [PR #2191](https://github.com/moq-dev/moq/pull/2191), OPEN). This superseded the earlier single umbrella PR #2163, which was closed and split into these focused changes.
 
 # Media gateways
 
@@ -77,7 +80,9 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.
 - **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
 - **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage.
-- **GPU transcoding pipeline** landed July 10: a new `moq-transcode` crate for just-in-time NVENC transcode of Hang broadcasts plus NVDEC hardware decode and a zero-copy NVDEC → NVENC path — a complete GPU decode→transcode→encode chain — and the WebRTC WHIP ingest gained H.265/AV1 bridges to match WHEP egress.
+- **GPU transcoding pipeline** landed July 10: a new `moq-transcode` crate for just-in-time NVENC transcode of Hang broadcasts plus NVDEC hardware decode and a zero-copy NVDEC → NVENC path — a complete GPU decode→transcode→encode chain — and the WebRTC WHIP ingest gained H.265/AV1 bridges to match WHEP egress. A `moq transcode` CLI verb + decode-once/GPU-resize fanout and NVDEC AV1 decode followed July 12.
+- **C-FFI / embedding surface expansion** (July 11–12): the `moq-ffi` / `libmoq` C ABI grew a group-FETCH API, raw-track ABI, track-info accessors, raw-frame timestamps, track datagrams, and generic JSON tracks, with the Go wrapper caught up — the plumbing that lets non-Rust (Go/Swift/Kotlin) consumers drive the gateway, transcode, and generic-data features.
+- **Safari support** landed July 12 in the TS `net`/`watch`/`publish` stack (WebTransport datagram-API variants, negotiated-transport exposure, `pagehide` connection fix, unsupported-codec errors), with Safari hardware-encode still in flight — broadening browser reach beyond Chromium.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
 

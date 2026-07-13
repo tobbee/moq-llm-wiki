@@ -39,9 +39,9 @@ The interop runner targets **draft-18** for automated testing. The WG (per [[mik
 
 # Current standing
 
-The runner's most recent published cut is the **[2026-07-11 00:32:18 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-11_003218/report.html): 319 cells; 130 pass / 189 fail / 0 skip** (~40.8% pass), run against the same expanded implementation set.
+The runner's most recent published cut is the **[2026-07-12 00:34:35 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-12_003435/report.html): 319 cells; 132 pass / 187 fail / 0 skip** (~41.4% pass), run against the same expanded implementation set.
 
-A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells kept converting green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, and +8 (124 → 132) July-10 — before a small **−2 dip (132 → 130) July-11**, the first pass regression since the expansion (2 cells, within the day-to-day flake band; matrix/skip/at-target all still flat at 319/0/171). This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
+A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells kept converting green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, and +8 (124 → 132) July-10 — dipped **−2 (132 → 130) July-11** (a 2-cell flake), then **recovered +2 (130 → 132) July-12** back to the July-10 high, confirming the dip as noise on a structurally identical matrix (matrix/skip/at-target all flat at 319/0/171 across the whole run). This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 
