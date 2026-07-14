@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-13
+last_updated: 2026-07-14
 status: current
 ---
 
@@ -46,7 +46,8 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10); a `moq transcode` CLI verb plus decode-once-per-source + GPU resize fanout followed ([PR #2158](https://github.com/moq-dev/moq/pull/2158), July 12)
 - `moq-json` — generic (non-media) JSON tracks, split into snapshot/stream modules and exposed through moq-ffi/libmoq ([PR #2196](https://github.com/moq-dev/moq/pull/2196), July 12) — reinforces the "generic for any live data" framing
 - `moq-hls`, `moq-rtmp`, `moq-srt`, `moq-rtc` — media gateway crates (see Media gateways below)
-- `moq-ffi` / `libmoq` — C FFI surface for Go/Swift/Kotlin bindings; the July 11–12 expansion added a group-FETCH API ([PR #2142](https://github.com/moq-dev/moq/pull/2142)), a reworked raw-track C ABI ([PR #2171](https://github.com/moq-dev/moq/pull/2171)), track-info accessors ([PR #2177](https://github.com/moq-dev/moq/pull/2177)), raw-frame timestamps + track datagrams ([PR #2174](https://github.com/moq-dev/moq/pull/2174) / [PR #2175](https://github.com/moq-dev/moq/pull/2175)), JSON tracks, and a Go-wrapper catch-up ([PR #2168](https://github.com/moq-dev/moq/pull/2168))
+- `moq-ffi` / `libmoq` — C FFI surface for Go/Swift/Kotlin bindings; the July 11–12 expansion added a group-FETCH API ([PR #2142](https://github.com/moq-dev/moq/pull/2142)), a reworked raw-track C ABI ([PR #2171](https://github.com/moq-dev/moq/pull/2171)), track-info accessors ([PR #2177](https://github.com/moq-dev/moq/pull/2177)), raw-frame timestamps + track datagrams ([PR #2174](https://github.com/moq-dev/moq/pull/2174) / [PR #2175](https://github.com/moq-dev/moq/pull/2175)), JSON tracks, and a Go-wrapper catch-up ([PR #2168](https://github.com/moq-dev/moq/pull/2168)); July 13 layered ergonomic per-language wrappers on top — Swift JSON wrappers with explicit snapshot mode ([PR #2236](https://github.com/moq-dev/moq/pull/2236)), Go raw-frame-timestamp writes ([PR #2230](https://github.com/moq-dev/moq/pull/2230)), a compile+test Kotlin `just kt check` ([PR #2227](https://github.com/moq-dev/moq/pull/2227)), and a **Python `moq-rs` 0.3.2** release with JSON stream wrappers ([PR #2214](https://github.com/moq-dev/moq/pull/2214))
+- `moq-video` — native capture/encode/decode; gained **PipeWire screen capture on Linux** ([PR #2238](https://github.com/moq-dev/moq/pull/2238), July 13), a native desktop capture source alongside the browser capture paths
 
 # TypeScript Packages (js/)
 
@@ -81,8 +82,8 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
 - **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage.
 - **GPU transcoding pipeline** landed July 10: a new `moq-transcode` crate for just-in-time NVENC transcode of Hang broadcasts plus NVDEC hardware decode and a zero-copy NVDEC → NVENC path — a complete GPU decode→transcode→encode chain — and the WebRTC WHIP ingest gained H.265/AV1 bridges to match WHEP egress. A `moq transcode` CLI verb + decode-once/GPU-resize fanout and NVDEC AV1 decode followed July 12.
-- **C-FFI / embedding surface expansion** (July 11–12): the `moq-ffi` / `libmoq` C ABI grew a group-FETCH API, raw-track ABI, track-info accessors, raw-frame timestamps, track datagrams, and generic JSON tracks, with the Go wrapper caught up — the plumbing that lets non-Rust (Go/Swift/Kotlin) consumers drive the gateway, transcode, and generic-data features.
-- **Safari support** landed July 12 in the TS `net`/`watch`/`publish` stack (WebTransport datagram-API variants, negotiated-transport exposure, `pagehide` connection fix, unsupported-codec errors), with Safari hardware-encode still in flight — broadening browser reach beyond Chromium.
+- **C-FFI / embedding surface expansion** (July 11–13): the `moq-ffi` / `libmoq` C ABI grew a group-FETCH API, raw-track ABI, track-info accessors, raw-frame timestamps, track datagrams, and generic JSON tracks, with the Go wrapper caught up; July 13 layered ergonomic per-language wrappers on top — Swift JSON wrappers with explicit snapshot mode, Go raw-frame-timestamp writes, a compile+test Kotlin build check, and a Python `moq-rs` 0.3.2 release — the plumbing that lets non-Rust (Go/Swift/Kotlin/Python) consumers drive the gateway, transcode, and generic-data features.
+- **Platform reach broadened** (July 12–13): Safari support landed in the TS `net`/`watch`/`publish` stack (WebTransport datagram-API variants, negotiated-transport exposure, `pagehide` connection fix, unsupported-codec errors), with Safari hardware-encode still in flight; and `moq-video` gained **PipeWire screen capture on Linux** ([PR #2238](https://github.com/moq-dev/moq/pull/2238)) — MoQ now reaches more browsers and more native capture sources, not just Chromium + camera.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
 
