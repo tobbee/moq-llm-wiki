@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-07-14
+last_updated: 2026-07-15
 status: current
 ---
 
@@ -39,9 +39,9 @@ The interop runner targets **draft-18** for automated testing. The WG (per [[mik
 
 # Current standing
 
-The runner's most recent published cut is the **[2026-07-13 00:34:24 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-13_003424/report.html): 319 cells; 132 pass / 187 fail / 0 skip** (~41.4% pass), run against the same expanded implementation set — **byte-for-byte flat versus the July-12 cut** (matrix/pass/fail/skip/at-target all unchanged at 319/132/187/0/171).
+The runner's most recent published cut is the **[2026-07-14 00:31:08 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-14_003108/report.html): 319 cells; 130 pass / 189 fail / 0 skip** (~40.8% pass), run against the same expanded implementation set — **pass −2 versus the July-13 cut** (matrix/skip/at-target unchanged at 319/0/171), a second small dip mirroring July-11's −2.
 
-A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells kept converting green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, and +8 (124 → 132) July-10 — dipped **−2 (132 → 130) July-11** (a 2-cell flake), **recovered +2 (130 → 132) July-12** back to the July-10 high, and then **held flat at 132 July-13** — confirming the dip as noise and the draft-18 surface as settled at 132/319 on a structurally identical matrix (matrix/skip/at-target all flat at 319/0/171 across the whole run). This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
+A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells converted green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, +8 (124 → 132) July-10 — and has since **oscillated 130↔132** on a byte-for-byte identical matrix: −2 (132 → 130) July-11, +2 (130 → 132) July-12, flat 132 July-13, −2 (132 → 130) July-14. Read across the week (107 → 124 → 132 → 130 → 132 → 132 → 130) the hardening phase (July 8–10) has given way to a **converged draft-18 surface** where 1–2 cells flip on run-to-run flake rather than a trend, with matrix/skip/at-target frozen at 319/0/171 throughout. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 
