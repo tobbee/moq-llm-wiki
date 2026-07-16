@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-15
+last_updated: 2026-07-16
 status: current
 ---
 
@@ -41,7 +41,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `moq-lite` — core transport library
 - `moq-relay` — server/relay; exposes a Prometheus `/metrics` endpoint for node traffic ([PR #2172](https://github.com/moq-dev/moq/pull/2172), July 12)
 - `moq-token` — authentication; the connection transport is now forwarded to the `--auth-api` hook ([PR #2132](https://github.com/moq-dev/moq/pull/2132), July 12)
-- `moq-native` — QUIC helpers (default backend is moq-dev's own `noq`, quinn opt-in); `quic::Client` / `quic::Server` transport config ([PR #2161](https://github.com/moq-dev/moq/pull/2161), July 11)
+- `moq-native` — QUIC helpers; the **default QUIC backend flipped to quinn** ([PR #2285](https://github.com/moq-dev/moq/pull/2285), July 15; previously moq-dev's own `noq` with quinn opt-in), with `quic::Client` / `quic::Server` transport config ([PR #2161](https://github.com/moq-dev/moq/pull/2161), July 11)
 - `moq-mux` — media pipeline (per-codec splitters, container import/export)
 - `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10); a `moq transcode` CLI verb plus decode-once-per-source + GPU resize fanout followed ([PR #2158](https://github.com/moq-dev/moq/pull/2158), July 12)
 - `moq-json` — generic (non-media) JSON tracks, split into snapshot/stream modules and exposed through moq-ffi/libmoq ([PR #2196](https://github.com/moq-dev/moq/pull/2196), July 12) — reinforces the "generic for any live data" framing
@@ -53,7 +53,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 - `lite` — browser-compatible moq-lite transport
 - `hang` — Hang media layer (total rewrite, not derived from kixelated/moq-js)
-- `watch` — viewer/subscriber
+- `watch` — viewer/subscriber; the **MSE backend was removed and the WebCodecs pipeline inlined** ([PR #2288](https://github.com/moq-dev/moq/pull/2288), July 15) — the player is now WebCodecs-only
 - `publish` — publisher
 - `signals`, `clock`, `common`, `token` — supporting packages
 
@@ -80,7 +80,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.
 - **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
-- **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage.
+- **Media-gateway breadth reached `main`** through June via `dev` → `main` backport sweeps — the full `moq-mux` pipeline plus the RTMP/SRT/RTC/HLS gateway crates. External users now file gateway bugs (e.g. open-GOP round-trip, catalog-track lifetime), a sign of real usage. **`moq-hls` is being hardened into a standalone HLS origin** (July 14–15): `export::Broadcaster` rewritten as an owned poll-driven state machine ([PR #2258](https://github.com/moq-dev/moq/pull/2258)) plus byte-range honoring, master-variant audio-group handling, and catalog-rendition reconciliation ([PR #2271](https://github.com/moq-dev/moq/pull/2271) / [PR #2264](https://github.com/moq-dev/moq/pull/2264) / [PR #2266](https://github.com/moq-dev/moq/pull/2266)) — the behavior needed to serve legacy HLS players from a MoQ ingest.
 - **GPU transcoding pipeline** landed July 10: a new `moq-transcode` crate for just-in-time NVENC transcode of Hang broadcasts plus NVDEC hardware decode and a zero-copy NVDEC → NVENC path — a complete GPU decode→transcode→encode chain — and the WebRTC WHIP ingest gained H.265/AV1 bridges to match WHEP egress. A `moq transcode` CLI verb + decode-once/GPU-resize fanout and NVDEC AV1 decode followed July 12.
 - **C-FFI / embedding surface expansion** (July 11–13): the `moq-ffi` / `libmoq` C ABI grew a group-FETCH API, raw-track ABI, track-info accessors, raw-frame timestamps, track datagrams, and generic JSON tracks, with the Go wrapper caught up; July 13 layered ergonomic per-language wrappers on top — Swift JSON wrappers with explicit snapshot mode, Go raw-frame-timestamp writes, a compile+test Kotlin build check, and a Python `moq-rs` 0.3.2 release — the plumbing that lets non-Rust (Go/Swift/Kotlin/Python) consumers drive the gateway, transcode, and generic-data features.
 - **Platform reach broadened** (July 12–14): Safari support landed in the TS `net`/`watch`/`publish` stack (WebTransport datagram-API variants, negotiated-transport exposure, `pagehide` connection fix, unsupported-codec errors), and the Safari hardware-encode path closed out July 14 with fperex's [PR #2211](https://github.com/moq-dev/moq/pull/2211) (prefer the codecs Safari actually HW-encodes); `moq-video` also gained **PipeWire screen capture on Linux** ([PR #2238](https://github.com/moq-dev/moq/pull/2238)) — MoQ now reaches more browsers and more native capture sources, not just Chromium + camera.
