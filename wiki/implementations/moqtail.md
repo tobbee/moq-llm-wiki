@@ -2,13 +2,13 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-07-16
+last_updated: 2026-07-17
 status: current
 ---
 
 **GitHub**: [moqtail/moqtail](https://github.com/moqtail/moqtail)
 **Maintainers**: [[zafer-gurel|Zafer Gürel]], Ali C. Begen
-**Draft support**: **draft-16 on `main`, with a draft-18 alignment sprint underway** (July 2026) — ALPN bumped to `moqt-18`, Extension Headers renamed to Properties, draft-18 constants + varint conformance vectors added; the moqtail-ts API break is tracked in a ~20-issue backlog (draft-14 docs removed May 4 2026)
+**Draft support**: **draft-16 on `main`, with a draft-18 alignment sprint underway** (July 2026) — ALPN bumped to `moqt-18`, Extension Headers renamed to Properties, single unified SETUP (CLIENT_SETUP/SERVER_SETUP collapsed), split delivery timeouts, control-message-type table + LOC property ids renumbered to draft-18, and draft-18 constants + varint conformance vectors added; the moqtail-ts API break is tracked in a ~20-issue backlog (draft-14 docs removed May 4 2026)
 
 # Overview
 
@@ -40,7 +40,7 @@ MOQ Transport protocol libraries for publisher, subscriber, and relay components
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **draft-18 alignment sprint (July 2026)**: after months at draft-16, moqtail began converging on the interop-runner's **draft-18** target — ALPN bumped to `moqt-18` ([PR #280](https://github.com/moqtail/moqtail/pull/280)), **Extension Headers renamed to Properties** ([PR #281](https://github.com/moqtail/moqtail/pull/281), the -18/-19 terminology), and **draft-18 constants + varint conformance vectors** shared for cross-impl testing ([PR #283](https://github.com/moqtail/moqtail/pull/283)). The `moqtail-ts` API break — `moqt://` URL scheme, the SUBSCRIBE_NAMESPACE / SUBSCRIBE_TRACKS split, PUBLISH_BLOCKED, GREASE, and a LOC property-id renumber ([#282](https://github.com/moqtail/moqtail/issues/282)) — is tracked in a ~20-issue backlog. Makes moqtail a second non-moq-dev implementation actively converging on the runner's target.
+- **draft-18 alignment sprint (July 2026)**: after months at draft-16, moqtail began converging on the interop-runner's **draft-18** target. Day 1 (July 15): ALPN bumped to `moqt-18` ([PR #280](https://github.com/moqtail/moqtail/pull/280)) and **Extension Headers renamed to Properties** ([PR #281](https://github.com/moqtail/moqtail/pull/281), the -18/-19 terminology). Day 2 (July 16) landed the bulk of the wire changes: **CLIENT_SETUP/SERVER_SETUP collapsed into a single SETUP** ([PR #286](https://github.com/moqtail/moqtail/pull/286)), **delivery timeouts split** into object/subgroup + rendezvous/fill with param numbers aligned ([PR #287](https://github.com/moqtail/moqtail/pull/287)), the **control-message-type table** moved to draft-18 ([PR #284](https://github.com/moqtail/moqtail/pull/284)), **LOC property ids renumbered** ([PR #285](https://github.com/moqtail/moqtail/pull/285), pairing with [[moq-loc|loc]] #25), plus **draft-18 constants + varint conformance vectors** shared for cross-impl testing ([PR #283](https://github.com/moqtail/moqtail/pull/283)); adding the FIRST_OBJECT SUBGROUP_HEADER bit is in flight ([PR #290](https://github.com/moqtail/moqtail/pull/290)). The `moqtail-ts` API break — `moqt://` URL scheme, the SUBSCRIBE_NAMESPACE / SUBSCRIBE_TRACKS split, PUBLISH_BLOCKED, GREASE — is tracked in a ~20-issue backlog, with **Kerem Bekmez** now a second active contributor. Makes moqtail a second non-moq-dev implementation actively converging on the runner's target.
 - **Wire-correctness fixes (interop-relevant)**: Key-Value-Pair parameters, previously serialized as absolute values, are now delta-encoded as the draft mandates ([PR #208](https://github.com/moqtail/moqtail/pull/208)); subgroup-header type detection moved to bitmask dispatch ([PR #211](https://github.com/moqtail/moqtail/pull/211)). Both target cross-version mismatches that surface as interop failures.
 - **Relay conformance hardening**: FETCH_OK is now sent for all non-empty fetch ranges ([PR #199](https://github.com/moqtail/moqtail/pull/199)), and late subscribers joining a track mid-subgroup receive the in-progress subgroup from its start instead of silently dropping objects ([PR #201](https://github.com/moqtail/moqtail/pull/201)).
 - **Upstream FETCH on cache miss**: the relay now sends FETCHes upstream to the publisher for groups missing from its local cache — a contributor-led capability landed via sharmafb's [1/n]–[3/n] series ([PR #186](https://github.com/moqtail/moqtail/pull/186) / [#187](https://github.com/moqtail/moqtail/pull/187) / [#188](https://github.com/moqtail/moqtail/pull/188)) and completed in [PR #193](https://github.com/moqtail/moqtail/pull/193).

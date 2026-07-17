@@ -2,7 +2,7 @@
 title: "Moxygen (Meta)"
 tags: [implementation, cpp, meta]
 date: 2026-04-10
-last_updated: 2026-07-04
+last_updated: 2026-07-17
 status: current
 ---
 
@@ -41,6 +41,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **The active relay/stats/TLS development line runs through the [[openmoq|moqx]] fork** rather than the upstream tree — afrind's relay/stats hardening and gmarzot's PKCS#12 TLS work land there. See [[openmoq]].
 - **qlog + visualization tooling**: per-connection QLogger wiring (`HQServerTransportFactory::setQLoggerFactory`) and an overhauled MoQ viz tool (NDJSON input, track-alias reconstruction, no CDN dependency).
 - **Wire-conformance tightening**: a zero `DELIVERY_TIMEOUT` is now a PROTOCOL_VIOLATION on draft ≤16 (the versions moxygen advertises).
+- **draft-18 REQUEST_UPDATE / FORWARD work** (mid-July 2026, direct commits): subscriber-side `request_updates` for **SUBSCRIBE_TRACKS** and **SUBSCRIBE_NAMESPACE**, *Forward* made updatable in REQUEST_UPDATE for SUBSCRIBE_TRACKS, and subgroup-reopen gated on v18 forward resume — the implementation side of the upstream FORWARD-on-REQUEST_UPDATE / INCLUDE_PROPERTIES cluster ([[ian-swett|ianswett]]'s [moq-transport #1813](https://github.com/moq-wg/moq-transport/pull/1813)). Breaks a weeks-long GitHub-visible quiet streak (consistent with the Phabricator-diff workflow above).
 
 # Interop
 
