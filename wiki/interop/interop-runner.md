@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-07-18
+last_updated: 2026-07-19
 status: current
 ---
 
@@ -37,11 +37,21 @@ The interop runner automates testing between MOQ implementations, publishing res
 
 The interop runner targets **draft-18** for automated testing. The WG (per [[mike-english]]'s Interop Report) agreed to hold draft-18 as the interop target while expanding case coverage from a handful of cases to ~70. Each matrix cell is categorized as at-target (both endpoints on draft-18), ahead, or behind.
 
+[[alan-frindell|Alan Frindell]] **reaffirmed on Slack (July 18) that the official interop target for moq-transport is still draft-18** — "since there's been some confusion" — while welcoming intrepid implementers to try draft-19 because filter feedback is valuable. This came as the Vienna Hackathon began generating the first draft-19 activity (see Live interop below).
+
 # Current standing
 
-The runner's most recent published cut is the **[2026-07-17 00:33:44 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-17_003344/report.html): 319 cells; 137 pass / 182 fail / 0 skip** (~42.9% pass), run against the same expanded implementation set — **pass +1 versus the July-16 cut** (136 → 137), with matrix/skip/at-target flat at 319/0/171. A single cell flipping fail→pass, extending the plateau just above the week-long 130↔132 band.
+The runner's most recent published cut is the **[2026-07-18 00:30:14 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-18_003014/report.html): 319 cells; 132 pass / 187 fail / 0 skip** (~41.4% pass), run against the same expanded implementation set — **pass −5 versus the July-17 cut** (137 → 132), with matrix/skip/at-target flat at 319/0/171. A dip back into the churn band: the cut ran at 00:30 UTC and so reflects the **July-17 daytime** merges (google/quiche's draft-18 migration burst, moqtail #290/#291) — which coincided with a −5 move, not the gain one might expect, keeping the surface inside the week-plus 130↔137 flake band rather than trending.
 
-A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells converted green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, +8 (124 → 132) July-10 — then **oscillated 130↔132** for a week on a byte-for-byte identical matrix: −2 (132 → 130) July-11, +2 (130 → 132) July-12, flat 132 July-13, −2 (132 → 130) July-14, flat 130 July-15 — before **breaking upward to 136** July-16 (+6) and edging to **137** July-17 (+1). Read across the run (107 → 124 → 132 → 130 → 132 → 132 → 130 → 130 → 136 → 137) the July-8–10 hardening phase gave way to a settled band, and July-16/17 mark the first structural move up since. The July-17 cut ran at 00:33 UTC, so it reflects **July-16** evening work rather than the July-17 daytime merges (google/quiche's draft-18 migration burst, moqtail #290/#291); with at-target frozen at 171 it reads as cell-conversion within the existing set, not new coverage — whether the July-17 impl convergence pushes the matrix past 137 is the near-term thing to watch. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
+A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells converted green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, +8 (124 → 132) July-10 — then **oscillated 130↔132** for a week on a byte-for-byte identical matrix: −2 (132 → 130) July-11, +2 (130 → 132) July-12, flat 132 July-13, −2 (132 → 130) July-14, flat 130 July-15 — before **breaking upward to 136** July-16 (+6), edging to **137** July-17 (+1), and slipping back to **132** July-18 (−5). Read across the run (107 → 124 → 132 → 130 → 132 → 132 → 130 → 130 → 136 → 137 → 132) the July-8–10 hardening phase gave way to a settled band, the July-16/17 uptick did not hold, and with at-target frozen at 171 throughout the moves read as cell-conversion/flake within the existing set, not new coverage. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
+
+# Live interop (Vienna Hackathon)
+
+The IETF-126 Hackathon (Vienna, week of July 20) began generating **live, human-run interop** on July 18 — supplementing the automated nightly runner:
+
+- **[[mike-english|Mike English]]'s draft-18 single-instance testing relay** `draft-18-interop.cloudflare.mediaoverquic.com:443` (also the runner's `moq-rs-draft-18` endpoint) was put forward for live testing. [[yu-you|Yu You]] (Nokia) ran a basic v18 conformance client against it: **4 / 7 tests pass** (setup-only, announce-only, publish-namespace-done, subscribe-error) but **announce-subscribe, object-vectors, and subscribe-before-announce all fail** — the relay rejects `PUBLISH` with `errCode=0x0 reason="not supported"` (the Cloudflare draft-18 relay does not yet accept the upstream PUBLISH flow).
+- **[[lorenzo-miniero|Lorenzo Miniero]]'s first draft-19 [[imquic]] relay** at `lminiero.it:9000` (see [[interop-endpoints]]) — a call for draft-19 peers, with filters only partially supported.
+- **[[luke-curley|Luke Curley]]'s Hang stack** demoed against Jordi Cenzano (Meta): `cdn.moq.pro/anon` (draft 14-19), the `moq.pub` / `moq.watch` JS clients, the `moq-cli` Rust CLI, and RTMP/SRT/WHEP converters — all fronting the same broadcast.
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 

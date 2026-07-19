@@ -2,7 +2,7 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
-last_updated: 2026-06-12
+last_updated: 2026-07-19
 status: current
 ---
 
@@ -33,6 +33,9 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `cdn.moq.dev/anon` | 14-17 | QUIC + WebTransport | Browser pub/sub testing; hop-routed across 14 edge nodes |
+| `cdn.moq.pro/anon` | **14-19** | QUIC + WebTransport | Hang CDN relay; announced at the July-18 Vienna Hackathon as supporting the full draft-14…19 range. Also fronts RTMP (`rtmps://cdn.moq.pro:1935`), SRT (`srt://cdn.moq.pro:877`), and WHEP (`https://cdn.moq.pro/whep/…`) converters into/out of Hang broadcasts |
+
+**Clients (Luke Curley):** the JS player/publisher at `moq.pub?relay=<host>` and `moq.watch?relay=<host>` and the Rust `moq-cli` (`cargo install moq-cli`) both support draft-14…19 against any relay (demoed at the July-18 Hackathon).
 
 Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/concept/standard/interop.html)
 
@@ -65,7 +68,7 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
-| `lminiero.it:9000` | 16, 17, **18** | QUIC + WebTransport | Runs imquic `main` (draft-18 since May 18; further LOC fixes June 9). Registered with the runner at draft-18 (June 11) |
+| `lminiero.it:9000` | 16, 17, 18, **19** (partial) | QUIC + WebTransport | Runs imquic `main` (draft-18 since May 18; further LOC fixes June 9). Registered with the runner at draft-18 (June 11). **A first draft-19 build was deployed here July 18** for the Vienna Hackathon — filter serialization/deserialization works, but `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are currently ignored |
 
 # Nokia ([[yu-you|Yu You]])
 

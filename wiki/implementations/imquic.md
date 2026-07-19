@@ -2,7 +2,7 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-07-09
+last_updated: 2026-07-19
 status: current
 ---
 
@@ -10,7 +10,7 @@ status: current
 **Organization**: Meetecho
 **Maintainer**: [[lorenzo-miniero]]
 **GitHub**: [meetecho/imquic](https://github.com/meetecho/imquic)
-**POC relay**: lminiero.it port 9000 (raw QUIC + WebTransport, draft-18 as of May 18, 2026)
+**POC relay**: lminiero.it port 9000 (raw QUIC + WebTransport; draft-18 since May 18, 2026, **a first draft-19 build deployed July 18, 2026** for the Vienna Hackathon)
 
 # Overview
 
@@ -23,7 +23,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 # Draft Support
 
-- **draft-19 (in progress)** — [PR #32](https://github.com/meetecho/imquic/pull/32) *"Add support for MoQT v19"* (lminiero, opened July 8), the first implementation PR explicitly targeting draft-19.
+- **draft-19 (in progress)** — [PR #32](https://github.com/meetecho/imquic/pull/32) *"Add support for MoQT v19"* (lminiero, opened July 8), the first implementation PR explicitly targeting draft-19. **A first draft-19 build was deployed to the `lminiero.it:9000` POC relay on July 18** (Vienna Hackathon) — the bulk of the draft-18 → -19 delta being the new **filters**: serialization/deserialization works and the basic filters function in initial tests, but `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are currently ignored (open question on their intended semantics). The draft-19 code was not yet on the public `main` branch at deploy time — the running relay is ahead of the repo.
 - **draft-18 (since May 18, 2026)** — partial: most of the wire-format changes from the draft-17 → draft-18 changelog (SUBGROUP_HEADER FIRST_OBJECT bit, FETCH ID delta encoding, PADDING message, SUBSCRIBE_TRACKS split from SUBSCRIBE_NAMESPACE, REQUEST_UPDATE on both, redirect via REQUEST_ERROR, new error codes); initially missing `REQUEST_UPDATE` for `SUBSCRIBE_NAMESPACE` / `SUBSCRIBE_TRACKS`
 - **draft-16 and draft-17** (version range: `0xff000010` to `0xff000011`) — prior supported set
 - Supports version negotiation - can offer all supported versions or pin to a specific one
@@ -32,12 +32,13 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 # Public Infrastructure
 
-- Relay at `lminiero.it:9000` (raw QUIC and WebTransport), tracking draft-18 `main`
+- Relay at `lminiero.it:9000` (raw QUIC and WebTransport), tracking draft-18 `main`; **running a first draft-19 build as of July 18, 2026** (partial filter support — see Draft Support)
 
 # Recent Highlights
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **First draft-19 relay deployment in the ecosystem** — Miniero stood up a draft-19 build of the `lminiero.it:9000` relay for the July-18 Vienna Hackathon and put out a call for draft-19 peers to test against. Filter serialization/deserialization and the basic filters work; `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are ignored pending clarity on their semantics. The wiki's first tracked draft-19 *interop endpoint* (vs [[moq-dev|moq-dev]]'s draft-19 client/relay support), though the official interop target remains **draft-18** per [[alan-frindell|afrind]].
 - **Live-media LOC demos** — [PR #27](https://github.com/meetecho/imquic/pull/27) merged at the June 2026 London hackathon: `imquic-moq-loc-send` captures webcam + mic and publishes audio (Opus) + video (H.264) LOC tracks; `imquic-moq-loc-recv` subscribes, decodes, and renders via SDL2. Replaces the prior moq-clock-only demos and uses MSF for the catalog. See [[moq-loc]].
 - **Push-to-talk conversational demo** — [PR #31](https://github.com/meetecho/imquic/pull/31) merged June 19, with a live web demo at [lminiero.it/moqp2t/](https://lminiero.it/moqp2t/): every client subscribes to the `push2talk` namespace and holding spacebar publishes an audio track carried over QUIC datagrams. Client side built on [[moqtail|Moqtail]], plus a native demo in the repo — the first publicly-reachable real-time conversational-media app over MoQ the wiki has tracked, exercising the PUBLISH-driven (vs SUBSCRIBE-driven) delivery pattern.
 - **LOC private-object payload prefix** — [PR #29](https://github.com/meetecho/imquic/pull/29) added an explicit payload prefix for LOC private objects, resolving the omit-the-block-vs-write-a-zero-count encoding question surfaced while building the LOC demos.
