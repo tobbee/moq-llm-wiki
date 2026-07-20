@@ -33,7 +33,7 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `cdn.moq.dev/anon` | 14-17 | QUIC + WebTransport | Browser pub/sub testing; hop-routed across 14 edge nodes |
-| `cdn.moq.pro/anon` | **14-19** | QUIC + WebTransport | Hang CDN relay; announced at the July-18 Vienna Hackathon as supporting the full draft-14…19 range. Also fronts RTMP (`rtmps://cdn.moq.pro:1935`), SRT (`srt://cdn.moq.pro:877`), and WHEP (`https://cdn.moq.pro/whep/…`) converters into/out of Hang broadcasts |
+| `cdn.moq.pro/anon` | **14-19** | QUIC + WebTransport | Hang CDN relay; announced at the July-18 Vienna Hackathon as supporting the full draft-14…19 range. Also fronts RTMP (`rtmps://cdn.moq.pro:1935`), SRT (`srt://cdn.moq.pro:877`), and WHEP (`https://cdn.moq.pro/whep/…`) converters into/out of Hang broadcasts. **Caveats (July-19 Hackathon):** the IETF path is *"nowhere near as tested"* as Hang's own clients (Luke Curley) — SUBSCRIBE against a foreign publisher was hitting *"Track does not exist"* / *"publisher not found"* for Miniero, Jordi Cenzano, and afrind; the relay currently sends **unsolicited `PUBLISH_NAMESPACE`** (a legacy holdover for clients that don't implement `SUBSCRIBE_NAMESPACE`, to be changed to require it); QUIC `PATH` support was recently added but may not be deployed. **Filters are not implemented and Luke says he likely never will** — they *"complicate billing"* (a relay would have to charge on the unfiltered byte count) |
 
 **Clients (Luke Curley):** the JS player/publisher at `moq.pub?relay=<host>` and `moq.watch?relay=<host>` and the Rust `moq-cli` (`cargo install moq-cli`) both support draft-14…19 against any relay (demoed at the July-18 Hackathon).
 
@@ -74,7 +74,7 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
-| `moqt.nokiaresearch.com:4443/moq` | 17, **18** | QUIC + WebTransport | Nokia Research relay; pre-announced June 2, live for the June 9-10 hackathon. Registered with the [[interop-runner]] as `moqt-nr` at draft-18 (June 11) |
+| `moqt.nokiaresearch.com:4443/moq` | 17, **18** | QUIC + WebTransport | Nokia Research relay; pre-announced June 2, live for the June 9-10 hackathon. Registered with the [[interop-runner]] as `moqt-nr` at draft-18 (June 11). **Actively re-tested at the July-19 Vienna Hackathon** with fixes for redundant request_ids and force-forwarding changes by subscribers; both **PUB_NS + SUBSCRIBE** and **PUBLISH + SUBSCRIBE_TRACKS** flows verified working (afrind, Kota Yatagai). Note: by default the relay only issues upstream subscriptions when there is an active publisher for a track (a `RENDEZVOUS_TIMEOUT`=0 behavior) — a rendezvous-semantics interpretation Yu You patched mid-Hackathon so PUB_NS-then-SUBSCRIBE routes without a timeout |
 
 # Related
 

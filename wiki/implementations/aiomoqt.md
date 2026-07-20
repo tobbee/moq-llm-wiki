@@ -2,7 +2,7 @@
 title: "aiomoqt (Python)"
 tags: [implementation, python, async]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-07-20
 status: current
 ---
 
@@ -17,9 +17,13 @@ Python async implementation of MOQ Transport, using aiopquic for the QUIC transp
 
 # Draft Support
 
-- **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16)
-- Latest release: v0.6.2
+- **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16), since extended toward the current interop drafts
+- Latest release: **v0.10.6** (released ~July 8, 2026; PyPI [`aiomoqt`](https://pypi.org/project/aiomoqt/))
 - Interop tested against 6 relay implementations across both drafts
+
+# Vienna Hackathon (IETF 126)
+
+At the **July-19 IETF-126 Vienna Hackathon**, Giovanni Marzot ran a **control-plane interop regression with aiomoqt v0.10.6** ([CI run](https://github.com/gmarzot/aiomoqt/actions)), reporting *"good results"* and logging the output to the [ad-hoc interop wiki](https://github.com/moq-wg/moq-transport/wiki/ad-hoc-interop-reports). Marzot also maintains the [openmoq/moqx](https://github.com/openmoq/moqx) `moq_decode.py` decoder — used by other Hackathon participants (afrind) to debug wire-format errors — and landed a July-19 request_id cleanup ([moqx PR #496](https://github.com/openmoq/moqx/pull/496)) aligning it with draft-18.
 
 # Related Projects
 

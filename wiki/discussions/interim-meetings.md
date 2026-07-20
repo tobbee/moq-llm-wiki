@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-07-18
+last_updated: 2026-07-20
 status: current
 ---
 
@@ -65,7 +65,7 @@ status: current
 | **Virtual interim** | **2026-08-24 16:30–18:00 UTC** | Second of four biweekly Vienna→Seattle virtual sessions ([[martin-duke\|Martin Duke]], list July 16). |
 | **Virtual interim** | **2026-09-08 (Tue) 16:30–18:00 UTC** | Third session; shifted to Tuesday off US Labor Day. |
 | **Virtual interim** | **2026-09-21 16:30–18:00 UTC** | Fourth session before the October Seattle hybrid interim. |
-| **October hybrid interim (in-person, Seattle)** | **2026-10-12 to 2026-10-15** | Venue + dates set by [[martin-duke\|Martin Duke]]'s *"Next Hybrid Interim"* (list, July 15): **F5 Tower, 801 5th Avenue, Seattle, WA**. **Oct 12–13 = interop testing; Oct 14–15 = issue/technical discussion** (interop-first split mirrors London). Resolves the June 21 venue poll (deadline July 5). First in-person interim past IETF 126 (Vienna). See the 2026-07-16 note above. |
+| **October hybrid interim (in-person, Seattle)** | **2026-10-12 to 2026-10-15** | Venue + dates set by [[martin-duke\|Martin Duke]]'s *"Next Hybrid Interim"* (list, July 15): **F5 Tower, 801 5th Avenue, Seattle, WA**. **Oct 12–13 = interop testing; Oct 14–15 = issue/technical discussion** (interop-first split mirrors London). Resolves the June 21 venue poll (deadline July 5). First in-person interim past IETF 126 (Vienna). **The IESG Secretary formally announced the Oct 14 + Oct 15 in-person sessions July 19** (12:00–17:00 Pacific / 19:00–00:00 UTC, agenda TBD, Meetecho remote; requested by chair **Morgan Condie**, session 35741). See the 2026-07-16 note above. |
 
 **London interim registration deadline: Thursday 2026-06-04** — attendees must add name + affiliation to the GitHub wiki by that date so [[mike-english]] can pass names to Cloudflare building security. See [Mike English's May 15 mailing-list message](https://mailarchive.ietf.org/arch/msg/moq/iYxssMkuvIX68SHSZGnn9u3YnOQ/) for the full announcement. Follow-up message with arrival procedures, sign-in instructions, reception timing, and remote-participant details still to come.
 
