@@ -2,7 +2,7 @@
 title: "moq-rs (Cloudflare)"
 tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
-last_updated: 2026-07-20
+last_updated: 2026-07-21
 status: current
 ---
 
@@ -42,7 +42,7 @@ The two projects are now considered **sibling implementations** — neither is u
 - **main branch**: draft-14 (IETF WG spec) — current production deployment
 - **draft-18**: `draft-18-dev` branch behind the runner-registered `moq-rs-draft-18` relay; the request-stream rework (PR #178, removes `MAX_REQUEST_ID`, moves requests to bidi streams) merged in the July-8 burst. **SUBSCRIBE_NAMESPACE support** ([PR #187](https://github.com/cloudflare/moq-rs/pull/187), itzmanish/Manish) merged to `main` July 19, and `draft-18-dev` was rebased onto `main` the same day to prep the Vienna Hackathon relay
 - **draft-16**: the long-open community rewrite ([PR #170](https://github.com/cloudflare/moq-rs/pull/170), itzmanish) merged July 8; its follow-on PUBLISH message support ([PR #181](https://github.com/cloudflare/moq-rs/pull/181), +4049/−624) merged July 9
-- Latest release: `moq-relay-ietf` **v0.7.23** (July 19, alongside the SUBSCRIBE_NAMESPACE merge, [PR #188](https://github.com/cloudflare/moq-rs/pull/188)) with `moq-pub` v0.9.1 / `moq-sub` v0.4.12 / `moq-clock-ietf` v0.6.18 / `moq-test-client` v0.1.10
+- Latest release: `moq-relay-ietf` **v0.7.24** (July 20, [PR #190](https://github.com/cloudflare/moq-rs/pull/190)) with `moq-native-ietf` **v0.10.0** (minor bump) / `moq-pub` v0.9.2 / `moq-sub` v0.4.13 / `moq-clock-ietf` v0.6.19 / `moq-test-client` v0.1.11 — following the July-19 v0.7.23 SUBSCRIBE_NAMESPACE batch. The July-20 batch also merged [PR #189](https://github.com/cloudflare/moq-rs/pull/189) *forward local accept IP to the connection tagger* (itzmanish). New bug [issue #191](https://github.com/cloudflare/moq-rs/issues/191) (dmorn): the relay retains an upstream track subscription after the last downstream subscriber leaves
 - Historical branches: draft-04, 05, 06, 07
 
 # Public Infrastructure

@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-07-20
+last_updated: 2026-07-21
 status: current
 ---
 
@@ -31,7 +31,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 
 # Protocol
 
-- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), hardened by a pre-merge moq-net/js API pass ([PR #2170](https://github.com/moq-dev/moq/pull/2170), July 12) with session Role now advertised in the -05 SETUP ([PR #2201](https://github.com/moq-dev/moq/pull/2201), merged July 14). A **-06** design cycle is underway in-repo — the `moq-lite-06-wip` PRs add typed announce ids ([PR #2160](https://github.com/moq-dev/moq/pull/2160), merged July 12) and cost-based cache-aware routing with a vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179), July 12, OPEN). IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
+- **[[moq-lite]]**: Simplified transport protocol (Luke's own spec, [draft-lcurley-moq-lite](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)); wire tracks the **-05** revision (published 2026-06-30), hardened by a pre-merge moq-net/js API pass ([PR #2170](https://github.com/moq-dev/moq/pull/2170), July 12) with session Role now advertised in the -05 SETUP ([PR #2201](https://github.com/moq-dev/moq/pull/2201), merged July 14). A **-06** design cycle is underway in-repo — the `moq-lite-06-wip` PRs add typed announce ids ([PR #2160](https://github.com/moq-dev/moq/pull/2160), merged July 12) and cost-based cache-aware routing with a vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179), July 12). **Cost-based routing landed July 20** — [PR #2424](https://github.com/moq-dev/moq/pull/2424) *route by cumulative cost on lite-06 announcements* (+1174/−109), paired with [PR #2419](https://github.com/moq-dev/moq/pull/2419) unannounce-as-soon-as-the-last-route-detaches. IETF draft sources are now vendored into the monorepo and built with nix + just ([PR #2159](https://github.com/moq-dev/moq/pull/2159), July 10).
 - **Hang**: Media-specific encoding/streaming layer on top of moq-lite
 - **[[moq-msf|MSF]]**: draft-01 supported behind a version-agnostic snapshot
 - **IETF adapter shims**: interop with IETF draft implementations (draft-14 through **draft-19**); first open-source implementation to ship draft-18 ([PR #1418](https://github.com/moq-dev/moq/pull/1418), 2026-05-18), and shipped draft-19 (`moqt-19`) within hours of the July-6 cut ([PR #2106](https://github.com/moq-dev/moq/pull/2106)). **The Hang CDN (`cdn.moq.pro`) does not implement the draft-19 filters and Luke says it likely never will** — filters *"complicate billing"* (a relay would have to charge on the unfiltered byte count), stated at the July-19 Vienna Hackathon. The IETF path is also *"nowhere near as tested"* as Hang's own clients (unsolicited `PUBLISH_NAMESPACE` holdover, SUBSCRIBE-against-foreign-publisher gaps surfaced at the Hackathon).

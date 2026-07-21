@@ -2,14 +2,14 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-07-07
+last_updated: 2026-07-21
 status: current
-draft_version: "03"
+draft_version: "04"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
 
-**draft-ietf-moq-loc-03** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/)
-**draft-ietf-moq-loc-02** | 19 pages
+**draft-ietf-moq-loc-04** | published 2026-07-20 | 20 pages | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/)
+**draft-ietf-moq-loc-03** | published 2026-07-06
 
 # Authors
 - Mo Zanaty (Cisco)
@@ -40,6 +40,7 @@ LOC uses numbered extensions in the object header:
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **draft-04 published (2026-07-20)** — the first revision after IANA's July-16 early review of loc-03. It **fixes the MoQ Properties IANA registry** ([loc #28](https://github.com/moq-wg/loc/pull/28), Mo Zanaty, +15/−17), coordinated with the twin [[moq-transport|moq-transport #1818]] *"Fix IANA Properties for LOC/SecureObjects"* fix — the six LOC properties are now registered at **IDs 0x08 / 0x09 / 0x0C / 0x0D / 0x0F / 0x10**, moving TIMESTAMP off the 0x06 value that collided with MoQ `SUBGROUP_DELIVERY_TIMEOUT` (building on [loc #27](https://github.com/moq-wg/loc/pull/27)'s July-19 TIMESTAMP-value bump). Resolves the registry name/reference mismatches IANA flagged (see [loc #26](https://github.com/moq-wg/loc/issues/26)). Landed the morning of the IETF-126 Monday session.
 - **draft-03 published (2026-07-06)** — the first LOC revision since -02; adds an audio-configuration structure and revises all audio config (PR #24), resolving the June audio-config gap.
 
 - **Cross-spec property-ID coordination dispute**: [[moq-transport]]-18 §15.8-2 and draft-ietf-moq-loc-02 diverge on Property Type IDs (MOQ-18 TIMESTAMP=0x06 / TIMESCALE=0x08 / AUDIO_LEVEL=0x0C / VIDEO_FRAME_MARKING=0x0A / VIDEO_CONFIG=0x0D vs LOC-02 TIMESTAMP=0x02 / AUDIO_LEVEL=0x06 / VIDEO_FRAME_MARKING=0x04) — the first post-draft-18 cross-spec coordination failure, with a twin moq-transport issue; the provisional IANA registry for LOC properties did not propagate into the draft-18 assignments. LOC is also moving its own TIMESTAMP off 0x06 because it collides with MoQ `SUBGROUP_DELIVERY_TIMEOUT`.
@@ -47,7 +48,7 @@ Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only
 - **LOC private-properties encoding is underspecified**: the draft does not say how private properties behave when absent — omit the block entirely vs write a zero-count varint. Surfaced under live two-impl media interop; [[imquic]] resolved it implementation-side by writing an explicit payload prefix for LOC private objects.
 - **No audio config property**: LOC defines a Video Config property for video decoder setup but has no audio equivalent, leaving codec-specific init data (e.g. AAC's AudioSpecificConfig) without a standard place and not fully captured by the codec string.
 - **Other open design topics**: moving redundant properties in the catalog, delta-compressing timestamps, Unix epoch + Timescale, Video Frame Marking vi64 encoding ambiguity, WebCodecs avc3/hev1 formats, track-property authentication, and moving LOC header metadata from object-header extensions to the object payload.
-- **The LOC draft text itself remains `draft-ietf-moq-loc-02`** — the items above are pre-`-03` design inputs, not yet reflected in the published draft.
+- **Draft status**: the published text is now **`draft-ietf-moq-loc-04`** (2026-07-20); several of the design-tension items above (property-ID coordination, audio config, IANA registry names) were folded into the -03/-04 revisions, while the open topics (delta-compressed timestamps, VFM vi64 encoding, track-property authentication) remain design inputs. A new [loc issue](https://github.com/moq-wg/loc/issues) *"Frame durations and discontinuities"* was opened during IETF-126 week (per the July-19 weekly GitHub digest).
 
 # Related
 

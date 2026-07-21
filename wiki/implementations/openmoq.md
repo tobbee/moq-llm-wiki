@@ -2,7 +2,7 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-07-04
+last_updated: 2026-07-21
 status: current
 ---
 
@@ -74,6 +74,7 @@ Core infrastructure development is ongoing. The consortium has completed industr
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Alan Frindell's OpenMOQ consulting arrangement disclosed (July 20, 2026)** — in an IETF "Change in employment disclosure" to the MoQ list, [[alan-frindell|Alan Frindell]] noted he has moved from **full-time to part-time at Meta** (Meta still sponsors his IETF participation, which remains on Meta's behalf), and in his non-Meta hours now **runs a consulting business contracted with OpenMOQ to build open-source software — specifically the `moqx` relay.** This formalizes the sponsorship behind the moqx work he has driven on the fork, and gives OpenMOQ a named, funded relay project.
 - **Multi-threaded relay scaling** — [[alan-frindell|Alan Frindell]] (afrind, Meta) drove a sustained effort (late May–June) making moqx deployable with `threads > 1`: a cBPF reuseport worker-steering filter, `recvmmsg` batch receives, per-thread local forwarders, and a `relay_thread` config knob, plus follow-on lock-free-mode relay-correctness hardening.
 - **CAT-token authentication** — [[paul-mondain|Paul Mondain]]'s [PR #264](https://github.com/openmoq/moqx/pull/264) (merged June 3, the largest single moqx merge) added opt-in CAT-style token auth/authorization for MOQT relay services, verifying signed CWT/HMAC `exp`/`moqt`/`moqt-reval` claims; afrind then refactored it into per-session auth filters, and a CAT4MOQ / [[moq-c4m|C4M]] issuer utility followed.
 - **Floor-relay version policy** — moxygen (moqx) deliberately defaults to advertising **draft 14/16** and excludes draft-18 (June 16–17), staying a stable floor relay while `moq-rs-draft-18` carries the at-target draft-18 interop cells. A known hazard ([Issue #472](https://github.com/openmoq/moqx/issues/472)) is that the default version order can cap negotiation at 16 even when 18 is mutually supported.
