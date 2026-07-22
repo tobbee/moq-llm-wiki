@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-07-18
+last_updated: 2026-07-22
 status: current
 draft_version: 19
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -77,6 +77,7 @@ Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only
 - **June 22 interim (`interim-17`)** renamed DTS → **Sender-Side Track Switching (SSTS)**, made the switching algorithm an extensible IANA-registered numeric ID with a mandatory "Algorithm Zero", and removed the per-set DDoS-protection negotiation properties (rely on auth tokens + existing relay protections). See [[interim-meetings]].
 - **draft-19 published (2026-07-06)**: an editorial clarification pass following [[cullen-jennings|Cullen Jennings]]'s ~59-issue read-through of draft-18 (June 15); issues were converted into PRs under a phased review, with "Design" PRs needing two weeks open + four-editor stamps to make the July-6 cut.
 - **IANA early review of draft-19 (2026-07-16)**: IANA (Amanda Baber, ticket #1456083) reviewed the draft ahead of IETF 126 and returned a pre-Last-Call punch-list — the IANA Considerations section is incomplete; the new registries need a named group ("Media over QUIC Transport"), RFC 8126 designated-expert guidance, protocol-differentiated names, and explicit numeric bounds; and the allocations must be reconciled against **inconsistent/duplicate registry values requested by [[moq-loc|loc]], [[moq-secure-objects|secure-objects]], and [[moq-msf|msf]]**. This was **one of five reviews Baber filed the same morning** — companion early reviews landed for [[moq-loc|loc-03]] (#1456079), [[moq-msf|msf-01]] (#1456080), [[moq-privacy-pass|privacy-pass-auth-03]] (#1456081), and [[moq-secure-objects|secure-objects-01]] (#1456082), all flagging the same defect class (registry name/reference mismatches vs the registries transport-19 establishes + missing RFC 8126 boilerplate) — i.e. IANA's cross-document verdict on the whole MoQ set. Tracked in [issue #1814](https://github.com/moq-wg/moq-transport/issues/1814) (afrind); the msf side is [msf #191](https://github.com/moq-wg/msf/issues/191) (Will Law), with [[will-law|Will Law]]'s cleanup PRs [msf #192–#195](https://github.com/moq-wg/msf/pull/192) opened July 17. Reframes the "Path to WGLC" work as enumerated registry/IANA items rather than open protocol design.
+- **WGLC-prep security/editorial cluster (2026-07-21)**: during IETF 126 week the editors merged a six-PR hardening pass on the editor's copy — **no new published revision (transport-19 stands)** — closing security-considerations and registry-hygiene gaps: impersonation-prevention detail ([#1789](https://github.com/moq-wg/moq-transport/pull/1789), [[suhas-nandakumar|Suhas]]), `moqt://` URI-scheme security per **RFC 7595 §3.7** ([#1772](https://github.com/moq-wg/moq-transport/pull/1772)), a hex-enumeration→**bitfield code-point syntax** rewrite ([#1774](https://github.com/moq-wg/moq-transport/pull/1774)), expanded **mutual-TLS** security considerations ([#1786](https://github.com/moq-wg/moq-transport/pull/1786), [[alan-frindell|afrind]]), a **REDIRECT retry-interval-0** clarification ([#1785](https://github.com/moq-wg/moq-transport/pull/1785)), and **FORWARD on a REQUEST_UPDATE for SUBSCRIBE_TRACKS** ([#1812](https://github.com/moq-wg/moq-transport/pull/1812), sharmafb).
 - **MOQT-over-QMux ruled out of the WG's current charter** (chairs + AD, June 17): the TLS+TCP fallback proceeds as an individual draft until a recharter, scoping the QMux-framing work out of the transport draft. See [[qmux]].
 - **AUTH design team** (formed June 12) produced the WG's first new draft since transport-18 — [[moq-c4m|`draft-ietf-moq-c4m-01`]] (Common Access Token authorization).
 
@@ -90,6 +91,7 @@ Substantive topics still being worked as this page is written:
 - **Subgroup-start signalling**: draft-18 shipped the FIRST_OBJECT bit (PR #1618), but the list debated alternatives (Subgroup ID == first Object ID; Luke Curley's per-subgroup counter for cache-gap detection).
 - **Compression layering**: whether compression belongs at the transport, [[moq-msf|MSF]]/streaming-format, or Full-Track-Name layer, and hop-by-hop vs end-to-end semantics. See [[moq-dev]].
 - **7-byte varint / non-minimal encodings**: allowed since draft-17 (PR #1595), but flagged as a footgun in the draft-19 read-through.
+- **SUBSCRIPTION_STATE_UPDATE**: [[alan-frindell|afrind]]'s proposal (July 21) for a new control message to update subscription state ([PR #1820](https://github.com/moq-wg/moq-transport/pull/1820), OPEN). Related: [issue #1821](https://github.com/moq-wg/moq-transport/issues/1821) (Otto Hermann) asks *what a subscriber is entitled to observe after an Object becomes unavailable* — both touch draft-19's clarified subscription-state destruction timing.
 
 # ALPN Negotiation
 

@@ -2,11 +2,63 @@
 title: "Discussions - July 2026"
 tags: [discussions, slack, github]
 date: 2026-07-01
-last_updated: 2026-07-21
+last_updated: 2026-07-22
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during July 2026.
+
+# Activity (July 21 → July 22) — **Between IETF-126 MoQ sessions, WGLC-prep hardening moves entirely to GitHub — a transport security/IANA cluster, a moqtail relay-DoS batch, and AV1 lands in moqlivemock.** With Monday's session done and the next MoQ slots on Thursday July 23 / Friday July 24, the IETF list, datatracker, and Slack `#moq` were all quiet (no new threads, no draft revisions past loc-04, `minutes-126-moq` still unposted). GitHub carried the day. **[[moq-transport]] merged a 6-PR security/IANA cluster (all July 21)**: impersonation-prevention detail ([#1789](https://github.com/moq-wg/moq-transport/pull/1789), [[suhas-nandakumar|Suhas]]), URI-scheme security per RFC 7595 §3.7 ([#1772](https://github.com/moq-wg/moq-transport/pull/1772)), a hex→bitfield code-point rewrite ([#1774](https://github.com/moq-wg/moq-transport/pull/1774)), expanded mutual-TLS security considerations ([#1786](https://github.com/moq-wg/moq-transport/pull/1786), [[alan-frindell|afrind]]), a REDIRECT retry-interval-0 clarification ([#1785](https://github.com/moq-wg/moq-transport/pull/1785)), and FORWARD-on-REQUEST_UPDATE for SUBSCRIBE_TRACKS ([#1812](https://github.com/moq-wg/moq-transport/pull/1812), sharmafb) — plus afrind's OPEN [#1820 SUBSCRIPTION_STATE_UPDATE](https://github.com/moq-wg/moq-transport/pull/1820) proposal and Otto Hermann's [issue #1821](https://github.com/moq-wg/moq-transport/issues/1821) on object-unavailability observability (no new published revision; transport-19 stands). **[[moqtail]] shipped a matching relay-resilience / DoS-protection batch** ([[zafer-gurel|Zafer Gürel]], six PRs July 21: PUBLISH_BLOCKED, GOAWAY+REDIRECT, EXCESSIVE_LOAD shedding, SIGTERM drain, TOO_FAR_BEHIND reset, SUBSCRIBE precedence). **[[moq-dev|moq-dev/moq]]** ran a busy July-21 day (stats→model-layer refactor #2427 +1491/−1040, quinn congestion-control knob, per-frame mux fragments) and gained a **new contributor, t0ms**, opening DVB-service-layer work. **[[moqlivemock|Eyevinn/moqlivemock]] added AV1** as a first-class CMSF/CMAF + LOCMAF codec ([#102](https://github.com/Eyevinn/moqlivemock/pull/102), tobbee). Interop's July-21 cut reshuffled **+8 to 142 pass** (338/142/196/0, ~42.0%; at-target draft-18 flat 190). No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues.**
+
+## Between sessions — the Path to WGLC continues on the editor's copy
+
+The IETF-126 MoQ WG met Monday July 20; the next two sessions are **Thursday July 23 (14:30 UTC)** and **Friday July 24 (14:00 UTC)**. Across the mid-week gap the IETF mailing list, datatracker, and Slack produced nothing new — no fresh threads, no draft-revision bumps (loc-04 remains the newest, 2026-07-20), the agenda stayed at `agenda-126-moq-04` with its 9 slide decks, and formal `minutes-126-moq` are still not posted. The only new Slack `#moq` traffic was Christian Huitema's off-topic July-21 beach photo. So the day's substance was entirely on GitHub, where the "Path to WGLC" editorial and IANA work continued.
+
+**[[moq-transport]] merged a six-PR security/IANA cluster on July 21**, all editorial/security refinements to the editor's copy (no new published revision — transport-19 stands):
+
+- **Preventing impersonation** — [#1789](https://github.com/moq-wg/moq-transport/pull/1789) ([[suhas-nandakumar|Suhas Nandakumar]], +30/−1) adds detail on impersonation prevention.
+- **URI-scheme security** — [#1772](https://github.com/moq-wg/moq-transport/pull/1772) (Suhas) adds `moqt://` URI-scheme security considerations per **RFC 7595 §3.7**.
+- **Bitfield code-point syntax** — [#1774](https://github.com/moq-wg/moq-transport/pull/1774) (Suhas, +31/−29) replaces hex code-point enumerations with bitfield syntax across the spec.
+- **Mutual-TLS security considerations** — [#1786](https://github.com/moq-wg/moq-transport/pull/1786) ([[alan-frindell|afrind]], +16/−9) expands the mTLS security-considerations text.
+- **REDIRECT retry-interval-0** — [#1785](https://github.com/moq-wg/moq-transport/pull/1785) (afrind) clarifies the meaning of a Retry Interval of 0 with REDIRECT.
+- **FORWARD on REQUEST_UPDATE** — [#1812](https://github.com/moq-wg/moq-transport/pull/1812) (sharmafb) allows FORWARD on a REQUEST_UPDATE for SUBSCRIBE_TRACKS.
+
+Two threads stayed open: afrind's new control-message proposal **[#1820 "Add SUBSCRIPTION_STATE_UPDATE message"](https://github.com/moq-wg/moq-transport/pull/1820)**, and **[issue #1821](https://github.com/moq-wg/moq-transport/issues/1821)** from Otto Hermann (ojhermann) — *"What is a subscriber entitled to observe after an Object becomes unavailable?"* — a subscription-state-observability question that dovetails with draft-19's clarified subscription-state destruction timing. See [[moq-transport]].
+
+## moqtail builds out the relay-resilience / DoS-protection surface
+
+After weeks of draft-18 wire alignment and a control-plane restructure, [[moqtail]]'s July-21 work is entirely **relay operations** — the graceful-shutdown, load-management, and DoS-protection surface tracked by its RL-* task list ([[zafer-gurel|Zafer Gürel]], all six merged July 21):
+
+- **PUBLISH_BLOCKED message** ([#308](https://github.com/moqtail/moqtail/pull/308), +151/−11, closes #248).
+- **GOAWAY Request ID + Timeout and the REDIRECT structure** ([#310](https://github.com/moqtail/moqtail/pull/310), +300/−66) — the per-request migration/redirect scaffolding.
+- **EXCESSIVE_LOAD shedding on request streams** ([#311](https://github.com/moqtail/moqtail/pull/311), part of #250).
+- **SIGTERM drain with GOAWAY + new-request rejection** ([#312](https://github.com/moqtail/moqtail/pull/312), RL-5) — graceful shutdown.
+- **TOO_FAR_BEHIND reset of slow subscribers** ([#313](https://github.com/moqtail/moqtail/pull/313), part of #250).
+- **SUBSCRIBE precedence over SUBSCRIBE_TRACKS** ([#314](https://github.com/moqtail/moqtail/pull/314)).
+
+Still OPEN: [#317](https://github.com/moqtail/moqtail/pull/317) (standalone FETCH range validation + End Location clamp) and issues #315/#316 (RL-7 FETCH prior-object / joining-fetch forward-state semantics) and #309 (GOAWAY per-request migration + REDIRECT retry). No new release — relay@0.14.1 stands. This makes moqtail the second non-moq-dev codebase maturing relay operations beyond interop conformance. See [[moqtail]].
+
+## moq-dev/moq: stats refactor, and a new DVB contributor
+
+[[moq-dev|moq-dev/moq]] ran a busy July-21 day (Luke Curley + David von Wrangel), largely internal plumbing:
+
+- **Stats moved into the model layer** — [#2427](https://github.com/moq-dev/moq/pull/2427) *refactor(stats)!: collect traffic counters in the model layer* (+1491/−1040), with [#2430](https://github.com/moq-dev/moq/pull/2430) adding datagram counters.
+- **quinn congestion-control knob** — [#2432](https://github.com/moq-dev/moq/pull/2432) exposes a congestion-control setting on the quinn backend (+371/−9).
+- **moq-mux per-frame fragments** — [#2426](https://github.com/moq-dev/moq/pull/2426) emits per-frame fragments without waiting for a successor frame (+429/−471); plus a js/net reconnect fix ([#2442](https://github.com/moq-dev/moq/pull/2442)), a qmux 0.3.1 WebSocket-crash fix ([#2437](https://github.com/moq-dev/moq/pull/2437)), and an fMP4 CMAF timeline import ([#2428](https://github.com/moq-dev/moq/pull/2428)).
+
+The notable ecosystem signal is a **new external contributor, t0ms**, who opened **DVB-service-layer round-trip work** ([#2434](https://github.com/moq-dev/moq/pull/2434), OPEN) and an issue to **carry the DVB service layer through the TS catalog** ([#2433](https://github.com/moq-dev/moq/issues/2433)) — early DVB/broadcast interest in the moq-dev stack. Also OPEN: an API-review contract fix ([#2439](https://github.com/moq-dev/moq/pull/2439) *correct catalog/timeline/token/teardown contracts*) and a moq-hls broadcaster pool ([#2438](https://github.com/moq-dev/moq/pull/2438)). **No new release** — v0.13.7 stands.
+
+## AV1 lands in moqlivemock; small moves elsewhere
+
+- **[[moqlivemock|Eyevinn/moqlivemock]]** merged **[#102](https://github.com/Eyevinn/moqlivemock/pull/102)** *"add AV1 test content and CMSF pipeline support"* (tobbee, +355/−72) — **AV1 (`av01`) is now a first-class video codec in the CMSF/CMAF + LOCMAF path** alongside AVC and HEVC (SVT-AV1 low-delay CBR, appearing in every CMSF catalog as CMAF + LOCMAF renditions; **gracefully excluded from LOC/moq-mi**, and warp-player AV1 playback is still to come). Adds a `Codec:` overlay line to all generated test video. The wiki's first AV1-over-MoQ media path. See [[moqlivemock]].
+- **[[moxygen]]** — direct commits: *"Centralize MoQ SETUP default limits as shared constants"* (aman-sharma, July 22) and a gmock-1.14 test-compile fix ([#209](https://github.com/facebookexperimental/moxygen/pull/209), gmarzot).
+- **[[openmoq|moqx]]** — [#497](https://github.com/openmoq/moqx/pull/497) *parse draft-18 SETUP and name extension types* in `moq_decode.py` (afrind, +108/−24) merged; the rolling snapshot release refreshed July 21.
+- **google/quiche** (moqt) — a single ASAN test fix (*"Fix ASAN error in MoqtBidiStreamTest"*, [[martin-duke|Martin Duke]]), the first moqt-subtree commit since July 17.
+- **[[moq-rs|cloudflare/moq-rs]]**, **[[imquic]]**, **[[moq-js]]**, **[[aiomoqt]]**, **birneee/quiche_moq**, **[[kota-yatagai|Moqtopus]]**, and Eyevinn (warp-player / moqtransport / [[moq-locmaf|locmaf]]) were quiet.
+
+## Interop
+
+The runner cut once — the **[July-21 00:34:11 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-07-21_003411/report.html): 338/142/196/0** (~42.0% pass; **at-target draft-18 190** · 0 ahead · 148 behind). Versus the July-20 00:34 cut (338/134/204/0, at-target 190): matrix flat 338, skip flat 0, at-target flat 190, **pass +8 (134 → 142)**, fail −8. This is a pass/fail reshuffle, not scope growth — the July-20 structural expansion added 19 draft-18 cells (`moq-go`, `moq5`, `xquic-draft-18`) that all failed on their first cut, and eight of them began converging green here. The cut ran at 00:34 UTC, before July-21's daytime merges. Still targets **draft-18**. No July-22 cut at check time. See [[interop-runner]].
 
 # Activity (July 20 → July 21) — **IETF 126 Vienna opens on the "Path to WGLC," Hackathon Day 2 lands the ecosystem's first cross-implementation draft-19 interop, and a coordinated IANA registry fix ships as loc-04.** The **first IETF-126 MoQ session ran Monday July 20 (12:00 UTC)** — the agenda bumped to [`agenda-126-moq-04`](https://datatracker.ietf.org/meeting/126/materials/agenda-126-moq) the morning of the session, now with **9 slide decks** (added MSF & CMSF, Sender-Side Track Switching, and "MOQT Issues and PRs Part 1"), led by [[alan-frindell|Alan Frindell]]'s **"MOQT Updates Since IETF 125" paired with an explicit "Path to WGLC"** slot; formal minutes are not yet posted. On the Hackathon floor, Day 2's headline was the **first cross-implementation draft-19 interop** — [[luke-curley|Luke Curley]]'s `moq-cli` (moq-dev) published/subscribed against [[lorenzo-miniero|Miniero]]'s [[imquic]] draft-19 relay in **forced draft-19** (76,804 bytes, 5.23 s, H.264-validated) — while relay debugging continued (Nokia fixed its SUBSCRIBE_TRACKS/NAMESPACE split; Cloudflare passed Moqtopus but still dropped Jordi Cenzano's objects by closing control streams after SUBSCRIBE_OK; `cdn.moq.pro`'s native-QUIC `/anon` stayed 401-broken, surfacing a **PUBLISH_NAMESPACE-vs-SUBSCRIBE_NAMESPACE auth-model debate**). IANA cleanup landed: **[[moq-loc|draft-ietf-moq-loc-04]] published July 20**, fixing the MoQ Properties registry ([loc #28](https://github.com/moq-wg/loc/pull/28)) in lockstep with [[moq-transport|transport #1818]] *"Fix IANA Properties for LOC/SecureObjects."* The code kept converging on draft-18 ([[moqtail]] #303/#305/#306/#308; [[moq-rs|moq-rs]] cut a v0.7.24 / moq-native v0.10.0 batch; [[moq-dev|moq-dev/moq]] landed moq-lite-06 cost-based routing + empty-PATH handling). And [[alan-frindell|afrind]] disclosed he is now **part-time at Meta and consulting for [[openmoq|OpenMOQ]]** to build the `moqx` relay. Interop's runner cut expanded **+19 to 338** (all new draft-18 cells failing → pass flat 134, fail +19 to 204, at-target +19 to 190). No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues.**
 
