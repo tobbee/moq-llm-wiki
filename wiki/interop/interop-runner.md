@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-07-22
+last_updated: 2026-07-23
 status: current
 ---
 
@@ -71,6 +71,8 @@ The IETF-126 Hackathon (Vienna, week of July 20) began generating **live, human-
 - **afrind asked for a canonical list of available draft-18 relays** and pointed testers at **moxygen's data-plane conformance suite** for relays (requires prefix-based routing).
 
 Per the [ad-hoc interop wiki](https://github.com/moq-wg/moq-transport/wiki/ad-hoc-interop-reports#2026-07-ietf-126-vienna) (Kota's July-20 edit), the Moqtopus draft-18 matrix now shows **Nokia, Meetecho, Moxygen, and Cloudflare all PASS** PUB_NS/SUBSCRIBE (subgroup + datagram); only `moq.pro` fails (peer shutdown after SETUP). [[mike-english|Mike English]] is gathering these ad-hoc reports for **Friday's (July 24) interop report**.
+
+**July 22 (between sessions) — afrind's data-plane conformance suite becomes the de-facto draft-18 relay benchmark.** [[alan-frindell|afrind]] ran his **41-test draft-18 data-plane conformance suite** (moxygen's suite, `moq-test`-based, requires prefix-based routing) against the live relays and reported that **[[yu-you|Nokia]]'s relay passed all 41 tests over *both* raw QUIC and WebTransport** — the first relay to clear the full suite — and challenged others to match it. [[zafer-gurel|Zafer Gürel]] said [[moqtail]] is "working on it, a few issues left" (and shipped a matching second relay batch the same day — FETCH range/joining-fetch semantics, reserved-namespace rejection, PUBLISH_BLOCKED on stream exhaustion). [[lorenzo-miniero|Miniero]]'s [[imquic]] needs a prefix-routing fix before it can be tested against the `moq-test`-based suite. afrind still could not get subscriptions running through `cdn.moq.pro` and was unsure of the current Cloudflare relay status. This 41-test suite (distinct from Yu You's earlier 7-test client check) is emerging as the concrete relay-readiness bar ahead of Friday's interop report.
 
 The full day-by-day score history lives in [[log|the wiki log]] (Interop bullet in each daily entry).
 

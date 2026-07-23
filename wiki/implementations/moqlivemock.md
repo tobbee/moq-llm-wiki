@@ -2,7 +2,7 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-07-22
+last_updated: 2026-07-23
 status: current
 ---
 
@@ -38,7 +38,7 @@ Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each `
 
 # Media Support
 
-- **Video**: H.264, HEVC, **AV1** (AV1 in the CMSF/CMAF + LOCMAF path only — gracefully excluded from LOC/moq-mi; warp-player AV1 playback still to come)
+- **Video**: H.264, HEVC, **AV1** (AV1 in the CMSF/CMAF + LOCMAF path only — gracefully excluded from LOC/moq-mi; **warp-player AV1 playback landed July 22** via the WebCodecs/LOC pipeline)
 - **Audio**: AAC, Opus, AC-3
 - **Subtitles**: wvtt, stpp (dynamically generated with timestamps and group numbers)
 - **Sync**: Wall-clock synchronized — group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
@@ -75,7 +75,7 @@ The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.c
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **AV1 as a first-class CMSF codec** (Jul 21, [PR #102](https://github.com/Eyevinn/moqlivemock/pull/102)): AV1 (`av01`) joins AVC and HEVC in the CMSF/CMAF + LOCMAF path — SVT-AV1 low-delay CBR test content, appearing in every CMSF catalog as CMAF + LOCMAF renditions, with a new `Codec:` overlay line on all generated video. AV1 is **gracefully excluded from LOC/moq-mi** (those paths keep AVC/HEVC), and warp-player AV1 playback is out of scope for now. moqlivemock's first AV1-over-MoQ media path.
+- **AV1 as a first-class CMSF codec** (Jul 21, [PR #102](https://github.com/Eyevinn/moqlivemock/pull/102)): AV1 (`av01`) joins AVC and HEVC in the CMSF/CMAF + LOCMAF path — SVT-AV1 low-delay CBR test content, appearing in every CMSF catalog as CMAF + LOCMAF renditions, with a new `Codec:` overlay line on all generated video. AV1 is **gracefully excluded from LOC/moq-mi** (those paths keep AVC/HEVC). moqlivemock's first AV1-over-MoQ media path. **warp-player AV1 playback landed the next day** (Jul 22, [warp-player PR #155](https://github.com/Eyevinn/warp-player/pull/155), +440/−9) — AV1 (`av01`) video decode via the WebCodecs/LOC pipeline — completing the AV1 capture→publish→play round trip. Separately, a **"Add TS support" request** ([issue #103](https://github.com/Eyevinn/moqlivemock/issues/103)) was filed by Álvaro Velad Galván (Shaka Player).
 - **v0.12.0 ships LOCMAF v0.3, codec extracted to a standalone module** (Jul 6): the LOCMAF implementation was pulled out of moqlivemock into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module (shared with the [[moq-locmaf|LOCMAF]] draft).
 - **Joining-FETCH catalog retrieval** (Jul 4) landed across all three repos: a subscriber retrieves the current catalog object via a relative joining FETCH instead of SUBSCRIBE-and-wait. moqtransport **v0.9.0** ([PR #14](https://github.com/Eyevinn/moqtransport/pull/14)) added publisher-side joining-FETCH resolution (draft-16); moqlivemock ([PR #95](https://github.com/Eyevinn/moqlivemock/pull/95)) added a `-catalog-mode` flag; warp-player ([PR #149](https://github.com/Eyevinn/warp-player/pull/149)) mirrored it in the TS/MSE player.
 - **Interop-robustness hardening** (Jun, moqlivemock v0.11.1): bound interop SETUP by the per-test deadline and refuse a silent WebTransport draft-14 downgrade, so one hung peer can't stall the sequential interop matrix. The fix was pushed down into moqtransport itself so any consumer benefits.

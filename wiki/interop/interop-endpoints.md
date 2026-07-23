@@ -2,7 +2,7 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
-last_updated: 2026-07-21
+last_updated: 2026-07-23
 status: current
 ---
 
@@ -74,7 +74,7 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
-| `moqt.nokiaresearch.com:4443/moq` | 17, **18** | QUIC + WebTransport | Nokia Research relay; pre-announced June 2, live for the June 9-10 hackathon. Registered with the [[interop-runner]] as `moqt-nr` at draft-18 (June 11). **Actively re-tested at the July-19/20 Vienna Hackathon** with fixes for redundant request_ids and force-forwarding changes by subscribers; both **PUB_NS + SUBSCRIBE** and **PUBLISH + SUBSCRIBE_TRACKS** flows verified working (afrind, Kota Yatagai). Note: by default the relay only issues upstream subscriptions when there is an active publisher for a track (a `RENDEZVOUS_TIMEOUT`=0 behavior) — a rendezvous-semantics interpretation Yu You patched mid-Hackathon so PUB_NS-then-SUBSCRIBE routes without a timeout. **July 20:** Yu You fixed the `SUBSCRIBE_TRACKS` / `SUBSCRIBE_NAMESPACE` split and a lingering deprecated `STREAM_HEADER_TRACK (0x50)` stream opener (surfaced by Luke Curley), redeploying twice |
+| `moqt.nokiaresearch.com:4443/moq` | 17, **18** | QUIC + WebTransport | Nokia Research relay; pre-announced June 2, live for the June 9-10 hackathon. Registered with the [[interop-runner]] as `moqt-nr` at draft-18 (June 11). **Actively re-tested at the July-19/20 Vienna Hackathon** with fixes for redundant request_ids and force-forwarding changes by subscribers; both **PUB_NS + SUBSCRIBE** and **PUBLISH + SUBSCRIBE_TRACKS** flows verified working (afrind, Kota Yatagai). Note: by default the relay only issues upstream subscriptions when there is an active publisher for a track (a `RENDEZVOUS_TIMEOUT`=0 behavior) — a rendezvous-semantics interpretation Yu You patched mid-Hackathon so PUB_NS-then-SUBSCRIBE routes without a timeout. **July 20:** Yu You fixed the `SUBSCRIBE_TRACKS` / `SUBSCRIBE_NAMESPACE` split and a lingering deprecated `STREAM_HEADER_TRACK (0x50)` stream opener (surfaced by Luke Curley), redeploying twice. **July 22: passed all 41 of afrind's draft-18 data-plane conformance tests over *both* raw QUIC and WebTransport** — the first relay to clear the full suite |
 
 # Related
 
