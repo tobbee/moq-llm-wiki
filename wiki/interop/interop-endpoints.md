@@ -2,7 +2,7 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
-last_updated: 2026-07-23
+last_updated: 2026-07-24
 status: current
 ---
 
@@ -16,7 +16,7 @@ Public relay endpoints available for MOQ interop testing.
 | `draft-07.cloudflare.mediaoverquic.com:443` | 07 | QUIC + WebTransport | Deprecated |
 | `interop-relay.cloudflare.mediaoverquic.com:443` | 14 | QUIC + WebTransport | Single instance, mlog enabled |
 | `draft-16-manish.cloudflare.mediaoverquic.com:443` | 16 | QUIC + WebTransport | WIP, mlog enabled |
-| `draft-18-interop.cloudflare.mediaoverquic.com:443` | **18** | QUIC + WebTransport | Auto-deployed from `draft-18-dev` ([PR #176](https://github.com/cloudflare/moq-rs/pull/176)); registered as `moq-rs-draft-18`. Since June 11-12 interim. |
+| `draft-18-interop.cloudflare.mediaoverquic.com:443` | **18** | QUIC + WebTransport | Auto-deployed from `draft-18-dev` ([PR #176](https://github.com/cloudflare/moq-rs/pull/176)); registered as `moq-rs-draft-18`. Since June 11-12 interim. **July 19–23 Hackathon:** [[mike-english\|Mike English]] rebased/fixed it back to draft-18 + PUBLISH + SUBSCRIBE_NAMESPACE, but it **fails on SUBSCRIBE** in Jordi Cenzano's matrix (closes the QUIC stream). **Root cause (Kota Yatagai, July 23):** the relay **retains a namespace/track-name after a session ends**, so a same-name re-publish is treated as a request *after* `PUBLISH_DONE`; objects never flow. moq-rs also merged a draft-18 byte-valued-parameter encoding fix ([#192](https://github.com/cloudflare/moq-rs/pull/192)) July 23 |
 
 Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connection-id>` over HTTPS.
 
@@ -33,7 +33,7 @@ Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connect
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
 | `cdn.moq.dev/anon` | 14-17 | QUIC + WebTransport | Browser pub/sub testing; hop-routed across 14 edge nodes |
-| `cdn.moq.pro/anon` | **14-19** | QUIC + WebTransport | Hang CDN relay; announced at the July-18 Vienna Hackathon as supporting the full draft-14…19 range. Also fronts RTMP (`rtmps://cdn.moq.pro:1935`), SRT (`srt://cdn.moq.pro:877`), and WHEP (`https://cdn.moq.pro/whep/…`) converters into/out of Hang broadcasts. **Caveats (July-19/20 Hackathon):** the IETF path is *"nowhere near as tested"* as Hang's own clients (Luke Curley) — SUBSCRIBE against a foreign publisher was hitting *"Track does not exist"* / *"publisher not found"* for Miniero, Jordi Cenzano, and afrind; the relay sends **unsolicited `PUBLISH_NAMESPACE`** (a legacy holdover for clients that don't implement `SUBSCRIBE_NAMESPACE`). **Native-QUIC auth is broken (July 20):** `/anon` returns `401` and QUIC `PATH` is not wired through for the IETF path (works for moq-lite / qmux only) — Luke's workarounds are the authenticated `?jwt=<token>` URL or qmux (TCP/TLS/WebSocket); afrind still could not connect over native QUIC by end of July 20. A design debate surfaced (Luke ↔ afrind): make `SUBSCRIBE_NAMESPACE` mandatory and `PUBLISH_NAMESPACE` an optional RTT optimization, vs. keeping them as **distinct authorization models**. **Filters are not implemented and Luke says he likely never will** — they *"complicate billing"* |
+| `cdn.moq.pro/anon` | **14-19** | QUIC + WebTransport | Hang CDN relay; announced at the July-18 Vienna Hackathon as supporting the full draft-14…19 range. Also fronts RTMP (`rtmps://cdn.moq.pro:1935`), SRT (`srt://cdn.moq.pro:877`), and WHEP (`https://cdn.moq.pro/whep/…`) converters into/out of Hang broadcasts. **Caveats (July-19/20 Hackathon):** the IETF path is *"nowhere near as tested"* as Hang's own clients (Luke Curley) — SUBSCRIBE against a foreign publisher was hitting *"Track does not exist"* / *"publisher not found"* for Miniero, Jordi Cenzano, and afrind; the relay sends **unsolicited `PUBLISH_NAMESPACE`** (a legacy holdover for clients that don't implement `SUBSCRIBE_NAMESPACE`). **Native-QUIC auth is broken (July 20):** `/anon` returns `401` and QUIC `PATH` is not wired through for the IETF path (works for moq-lite / qmux only) — Luke's workarounds are the authenticated `?jwt=<token>` URL or qmux (TCP/TLS/WebSocket); afrind still could not connect over native QUIC by end of July 20. A design debate surfaced (Luke ↔ afrind): make `SUBSCRIBE_NAMESPACE` mandatory and `PUBLISH_NAMESPACE` an optional RTT optimization, vs. keeping them as **distinct authorization models**. **Filters are not implemented and Luke says he likely never will** — they *"complicate billing"*. **July 23:** still **fails on SUBSCRIBE** (closes the QUIC stream) in Jordi Cenzano's `moq-encoder-player` matrix |
 
 **Clients (Luke Curley):** the JS player/publisher at `moq.pub?relay=<host>` and `moq.watch?relay=<host>` and the Rust `moq-cli` (`cargo install moq-cli`) both support draft-14…19 against any relay (demoed at the July-18 Hackathon).
 
@@ -55,7 +55,8 @@ Interop docs: [doc.moq.dev/concept/standard/interop.html](https://doc.moq.dev/co
 
 | Endpoint | Draft | Transport | Notes |
 |----------|-------|-----------|-------|
-| `relay.moqtail.dev` | 14 | WebTransport | Zafer Gurel's relay |
+| `relay.moqtail.dev` | 14 | WebTransport | Zafer Gurel's original relay |
+| `relay18.moqtail.dev` | **18** | WebTransport (+ raw QUIC WIP) | [[zafer-gurel\|Zafer Gürel]]'s **draft-18 relay, brought online July 23** for IETF-126 conformance testing; public [Grafana dashboard](https://grafana.moqtail.dev/). **July 23:** in Jordi Cenzano's `moq-encoder-player` matrix it carries **full video+audio**. Raw-QUIC ALPN=`moqt-18` negotiation failed for Moqtopus + afrind (relay also advertises `h3`) though imquic's client connects over raw QUIC; a `PUBLISH_NAMESPACE`+SUBSCRIBE flow hit *"no publisher found"* under debugging |
 
 # Akamai
 
