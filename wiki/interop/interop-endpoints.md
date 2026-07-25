@@ -2,7 +2,7 @@
 title: "Public Interop Endpoints"
 tags: [interop, testing, infrastructure]
 date: 2026-04-10
-last_updated: 2026-07-24
+last_updated: 2026-07-25
 status: current
 ---
 
@@ -16,7 +16,7 @@ Public relay endpoints available for MOQ interop testing.
 | `draft-07.cloudflare.mediaoverquic.com:443` | 07 | QUIC + WebTransport | Deprecated |
 | `interop-relay.cloudflare.mediaoverquic.com:443` | 14 | QUIC + WebTransport | Single instance, mlog enabled |
 | `draft-16-manish.cloudflare.mediaoverquic.com:443` | 16 | QUIC + WebTransport | WIP, mlog enabled |
-| `draft-18-interop.cloudflare.mediaoverquic.com:443` | **18** | QUIC + WebTransport | Auto-deployed from `draft-18-dev` ([PR #176](https://github.com/cloudflare/moq-rs/pull/176)); registered as `moq-rs-draft-18`. Since June 11-12 interim. **July 19–23 Hackathon:** [[mike-english\|Mike English]] rebased/fixed it back to draft-18 + PUBLISH + SUBSCRIBE_NAMESPACE, but it **fails on SUBSCRIBE** in Jordi Cenzano's matrix (closes the QUIC stream). **Root cause (Kota Yatagai, July 23):** the relay **retains a namespace/track-name after a session ends**, so a same-name re-publish is treated as a request *after* `PUBLISH_DONE`; objects never flow. moq-rs also merged a draft-18 byte-valued-parameter encoding fix ([#192](https://github.com/cloudflare/moq-rs/pull/192)) July 23 |
+| `draft-18-interop.cloudflare.mediaoverquic.com:443` | **18** | QUIC + WebTransport | Auto-deployed from `draft-18-dev` ([PR #176](https://github.com/cloudflare/moq-rs/pull/176)); registered as `moq-rs-draft-18`. Since June 11-12 interim. **July 19–23 Hackathon:** [[mike-english\|Mike English]] rebased/fixed it back to draft-18 + PUBLISH + SUBSCRIBE_NAMESPACE, but it **fails on SUBSCRIBE** in Jordi Cenzano's matrix (closes the QUIC stream). **Root cause (Kota Yatagai, July 23):** the relay **retains a namespace/track-name after a session ends**, so a same-name re-publish is treated as a request *after* `PUBLISH_DONE`; objects never flow. **July 24:** [[alan-frindell|afrind]] **independently reproduced** the SUBSCRIBE failure (the relay sends him a `STOP_SENDING`, same as Jordi); Mike English confirmed *"a couple parts to what's broken here"* and is working it with Kota's diagnosis. moq-rs merged a draft-18 byte-valued-parameter encoding fix ([#192](https://github.com/cloudflare/moq-rs/pull/192), July 23) and a **SUBSCRIBE_NAMESPACE message-type wire fix (0x11 → 0x50)** ([#193](https://github.com/cloudflare/moq-rs/pull/193), July 24) |
 
 Interop relays support `--mlog-serve`: grab relay-side traces at `/mlog/<connection-id>` over HTTPS.
 
