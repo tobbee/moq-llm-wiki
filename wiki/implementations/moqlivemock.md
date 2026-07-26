@@ -2,7 +2,7 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-07-25
+last_updated: 2026-07-26
 status: current
 ---
 
@@ -41,7 +41,7 @@ Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each `
 - **Video**: H.264, HEVC, **AV1** (AV1 in the CMSF/CMAF + LOCMAF path only — gracefully excluded from LOC/moq-mi; **warp-player AV1 playback landed July 22** via the WebCodecs/LOC pipeline)
 - **Audio**: AAC, Opus, AC-3
 - **Subtitles**: wvtt, stpp (dynamically generated with timestamps and group numbers)
-- **Closed captions**: **CTA-608** — auto-generated in-band caption SEI messages injected by `mlmpub` across the CMAF/LOCMAF/LOC/moq-mi serve paths (July 2026; catalog accessibility descriptor + decode round-trip in progress)
+- **Closed captions**: **CTA-608** — auto-generated in-band caption SEI messages injected by `mlmpub` across the CMAF/LOCMAF/LOC/moq-mi serve paths, advertised in the catalog as an accessibility descriptor with cross-packaging decode round-trip verified (July 2026)
 - **Sync**: Wall-clock synchronized — group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
 - **Format**: [[moq-cmsf|CMSF]] (CMAF chunks over MOQT)
 
@@ -76,7 +76,7 @@ The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.c
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **CTA-608 in-band closed captions** (Jul 24): `mlmpub` gained an internal `cc608` package that generates CTA-608 caption data as H.264/HEVC SEI messages ([PR #114](https://github.com/Eyevinn/moqlivemock/pull/114)), injected across all four serve paths — CMAF/LOCMAF/LOC/moq-mi ([PR #115](https://github.com/Eyevinn/moqlivemock/pull/115)). A catalog CTA-608 accessibility descriptor + cross-packaging decode-round-trip verification ([PR #117](https://github.com/Eyevinn/moqlivemock/pull/117)) and warp-player rendering ([warp-player #156](https://github.com/Eyevinn/warp-player/issues/156)) are in progress. Makes moqlivemock an accessibility-signaling testbed on top of its AVC/HEVC/AV1 codec coverage.
+- **CTA-608 in-band closed captions** (Jul 24–25): `mlmpub` gained an internal `cc608` package that generates CTA-608 caption data as H.264/HEVC SEI messages ([PR #114](https://github.com/Eyevinn/moqlivemock/pull/114)), injected across all four serve paths — CMAF/LOCMAF/LOC/moq-mi ([PR #115](https://github.com/Eyevinn/moqlivemock/pull/115)), then **advertised in the catalog as an accessibility descriptor with cross-packaging decode-round-trip verification** ([PR #117](https://github.com/Eyevinn/moqlivemock/pull/117), merged Jul 25, +278/−5) — completing the caption epic. warp-player rendering ([warp-player #156](https://github.com/Eyevinn/warp-player/issues/156)) remains in progress. Makes moqlivemock an accessibility-signaling testbed on top of its AVC/HEVC/AV1 codec coverage.
 - **AV1 as a first-class CMSF codec** (Jul 21, [PR #102](https://github.com/Eyevinn/moqlivemock/pull/102)): AV1 (`av01`) joins AVC and HEVC in the CMSF/CMAF + LOCMAF path — SVT-AV1 low-delay CBR test content, appearing in every CMSF catalog as CMAF + LOCMAF renditions, with a new `Codec:` overlay line on all generated video. AV1 is **gracefully excluded from LOC/moq-mi** (those paths keep AVC/HEVC). moqlivemock's first AV1-over-MoQ media path. **warp-player AV1 playback landed the next day** (Jul 22, [warp-player PR #155](https://github.com/Eyevinn/warp-player/pull/155), +440/−9) — AV1 (`av01`) video decode via the WebCodecs/LOC pipeline — completing the AV1 capture→publish→play round trip. Separately, a **"Add TS support" request** ([issue #103](https://github.com/Eyevinn/moqlivemock/issues/103)) was filed by Álvaro Velad Galván (Shaka Player).
 - **v0.12.0 ships LOCMAF v0.3, codec extracted to a standalone module** (Jul 6): the LOCMAF implementation was pulled out of moqlivemock into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module (shared with the [[moq-locmaf|LOCMAF]] draft).
 - **Joining-FETCH catalog retrieval** (Jul 4) landed across all three repos: a subscriber retrieves the current catalog object via a relative joining FETCH instead of SUBSCRIBE-and-wait. moqtransport **v0.9.0** ([PR #14](https://github.com/Eyevinn/moqtransport/pull/14)) added publisher-side joining-FETCH resolution (draft-16); moqlivemock ([PR #95](https://github.com/Eyevinn/moqlivemock/pull/95)) added a `-catalog-mode` flag; warp-player ([PR #149](https://github.com/Eyevinn/warp-player/pull/149)) mirrored it in the TS/MSE player.
