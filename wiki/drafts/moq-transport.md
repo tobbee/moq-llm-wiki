@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-07-27
+last_updated: 2026-07-28
 status: current
 draft_version: 19
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -90,6 +90,7 @@ Substantive topics still being worked as this page is written:
 - **Fill-fetch vs Joining FETCH**: whether to replace Joining FETCH with unidirectional fill-fetch streams (PR #1673, revising Subscription-Fill #1642) — Cullen Jennings would keep Joining FETCH pending operational experience, and flags error-delivery, duplicate-object, and nested-`FILL_PARAMETERS` concerns. See [[joining-fetch]].
 - **SSTS (Sender-Side Track Switching)**: the "Algorithm Zero + IANA registry" extension design (PR #1638), meant to be validated by more than one algorithm before draft-19. **At IETF 126 (July 20) the chairs called consensus to move SSTS into a *separate draft*, out of core transport** (contested by Cullen Jennings; AD affirmed the chairs) — so it is now slated to leave the transport document. See [[switch-abr]].
 - **Range filters**: re-adding location-based subscription filters ([[mo-zanaty|Mo Zanaty]]'s PR #1765). **Also slated to move into a separate draft** per the same contested IETF-126 consensus call — the least-wanted part of the draft-18→19 delta (Luke Curley won't implement them; imquic ignores the property filters). Suhas's [#1825](https://github.com/moq-wg/moq-transport/pull/1825) (July 22) even proposes replacing the FORWARD parameter with Range-Filter-based pausing.
+- **Top Tracks Filter × SSTS/ABR interaction**: how the Top-Tracks-Filter ([PR #1830](https://github.com/moq-wg/moq-transport/pull/1830)) actually combines with SSTS (or any ABR algorithm) is unresolved. [[ian-swett|Ian Swett]]'s July-27 list thread *"Top Tracks and SSTS (or ABR in general)"* ([permalink](https://mailarchive.ietf.org/arch/msg/moq/2unKZrGYwvhNzPkqioijyv1DTpQ/)) argues ABR is essential for the video-conferencing use case and asks four concrete mechanism questions the current design doesn't answer: how to send the initial `SUBSCRIBE_TRACKS` (a Track-Property-Filter for the ideal resolution combined with Top Tracks?), how the focal viewport gets higher priority when deciding which feed to downswitch, how a client-pinned non-default feed is prioritized, and whether any demo (even simulated) shows the two working together. He notes Google Meet's production solution is *"sufficiently complex I can't summarize it"* and doubts MoQ will match it soon. No replies at time of writing.
 - **Subgroup-start signalling**: draft-18 shipped the FIRST_OBJECT bit (PR #1618), but the list debated alternatives (Subgroup ID == first Object ID; Luke Curley's per-subgroup counter for cache-gap detection).
 - **Compression layering**: whether compression belongs at the transport, [[moq-msf|MSF]]/streaming-format, or Full-Track-Name layer, and hop-by-hop vs end-to-end semantics. See [[moq-dev]].
 - **7-byte varint / non-minimal encodings**: allowed since draft-17 (PR #1595), but flagged as a footgun in the draft-19 read-through.

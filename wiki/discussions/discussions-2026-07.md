@@ -2,11 +2,48 @@
 title: "Discussions - July 2026"
 tags: [discussions, slack, github]
 date: 2026-07-01
-last_updated: 2026-07-27
+last_updated: 2026-07-28
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during July 2026.
+
+# Activity (July 27 → July 28) — **A quiet WG day carried by one substantive mailing-list design thread — [[ian-swett|Ian Swett]] asking how the Top Tracks Filter actually works with SSTS/ABR — plus a PUBLISH_DONE WGLC-hygiene cluster, and [[moq-dev|moq-dev/moq]]'s biggest post-Vienna implementation day (cache-pool rework lands, an audio-output push, a GOAWAY-API reshape; v0.14.4).**
+
+The July 27 → July 28 window keeps the post-Vienna shape: Slack `#moq` stayed **silent** (newest remains Ian Swett's July-25 note — no new July 26/27/28 traffic), the [datatracker](https://datatracker.ietf.org/group/moq/documents/) had **no revision bumps or new drafts** (transport-19, loc-04 newest; `draft-altanai-moq-relay-geocode-01` still the newest individual I-D; still no `draft-lcurley-moq-archive` submission), and — a **sixth straight update** — the IETF-126 **Thursday and Friday minutes remain unposted** (`minutes-126-moq-202607231430`, `...202607241400`, and the generic alias all still 404; only Monday's [`minutes-126-moq-202607201200`](https://datatracker.ietf.org/doc/minutes-126-moq-202607201200/) is up). But unlike the prior three days there was one genuinely new, substantive [mailing-list](https://mailarchive.ietf.org/arch/browse/moq/) thread (below), and the implementation side had a heavy day. No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues; the nightly runner produced a byte-for-byte-identical cut (see below).
+
+## The one substantive WG thread: how do Top Tracks and SSTS/ABR actually work together?
+
+The window's most material WG-adjacent item was **[[ian-swett|Ian Swett]] (Google) opening [*"Top Tracks and SSTS (or ABR in general)"*](https://mailarchive.ietf.org/arch/msg/moq/2unKZrGYwvhNzPkqioijyv1DTpQ/)** on the IETF list (July 27 20:10 UTC — verified real via raw-fetch + a 404 control test). Having reviewed the most recent Top-Tracks PR ([moq-transport #1830](https://github.com/moq-wg/moq-transport/pull/1830)), Swett says he *"continue[s] to wonder exactly how it will work with SSTS (or another ABR algorithm)"* — the mechanisms to achieve what one wants are unclear. He argues that while Top Tracks has use cases without ABR, **for the video-conferencing use case ABR seems essential**, and poses four concrete mechanism questions the current design doesn't answer:
+
+1. How do you send the correct initial `SUBSCRIBE_TRACKS` — a Track-Property-Filter for the ideal resolution combined with Top Tracks?
+2. How do you ensure the **focal viewport** gets higher priority when deciding which feed to downswitch?
+3. If a client pins a video feed other than the VC's default, how does prioritization work?
+4. Are there **any demos** — even a simulation, not the public internet — of Top Tracks and SSTS working together?
+
+He closes noting he asked the Meet team to describe their current approach: it *"may or may not be proprietary, but it doesn't matter because it's sufficiently complex that I can't summarize it anyway … it doesn't give me confidence we'll design a comparable solution in MoQ soon."* No replies yet at check time. The thread sharpens the open question the wiki already tracks on [[moq-transport]]: Top Tracks Filter is the one filter still being worked into core transport (as range filters + SSTS are split *out* into separate drafts per the contested IETF-126 consensus call), yet its integration with the ABR machinery a real conference needs is still undesigned.
+
+## WG repos: a PUBLISH_DONE WGLC-hygiene cluster; a LOC codec-string addition
+
+Beyond the list thread, the moq-wg repos saw a small **PUBLISH_DONE cleanup cluster** (July 27, the WGLC-prep editorial the Path-to-WGLC work keeps generating): [[mo-zanaty|Mo Zanaty]] opened [PR #1833](https://github.com/moq-wg/moq-transport/pull/1833) *"Remove PUBLISH_DONE reason SUBSCRIPTION_ENDED"* (+0/−4) and [issue #1832](https://github.com/moq-wg/moq-transport/issues/1832) *"Publish Done should not depend on subscriber location filter"*, while [[victor-vasiliev|Victor Vasiliev]] opened [PR #1831](https://github.com/moq-wg/moq-transport/pull/1831) *"Change the maximum Stream Count bound in PUBLISH_DONE to 2^64−1"* (+1/−1) — all OPEN. In [[moq-loc|loc]], [[jordi-cenzano|Jordi Cenzano]] opened [PR #29](https://github.com/moq-wg/loc/pull/29) *"Add Codecstring definition to draft-ietf-moq-loc"* (+8/−0, OPEN). msf, secure-objects, cmsf, catalog-format, and privacy-pass were quiet (only pre-window PRs touched by comments).
+
+## moq-dev: the cache-pool rework lands, an audio-output push, and a GOAWAY-API reshape (v0.14.4)
+
+[[moq-dev|moq-dev/moq]] had its **busiest day since Vienna** (July 27, ~14 merges + a large batch of new OPEN PRs, mostly [[luke-curley|Luke Curley]]'s codex batches), cut as **moq-relay v0.14.4 / moq-ffi v0.3.4 / moq-cli v0.9.4**. The durable moves:
+
+- **The cache-pool leak saga closed structurally**: [#2526](https://github.com/moq-dev/moq/pull/2526) *replace the global LRU cache pool with per-track write-time eviction* (+2069/−1020) — OPEN in the prior window — **MERGED July 27**, removing the global registry/heap/compaction machinery whose publish-path leak was symptom-patched July 26 (#2525).
+- **An audio-output push**: `moq-audio` gained **decoded-PCM playback out a speaker** ([#2529](https://github.com/moq-dev/moq/pull/2529), +2197/−9) and, still OPEN, **microphone echo cancellation** ([#2538](https://github.com/moq-dev/moq/pull/2538), +1304/−22) — the capture/playback half of the iroh-live native-media upstreaming that began July 24.
+- **GOAWAY hardened into a first-class API**: [#2542](https://github.com/moq-dev/moq/pull/2542) *reshape the GOAWAY API, move migration into Reconnect* (+3441/−143, OPEN) builds directly on AWS's Kyle Sletmoe GOAWAY graceful-drain/cluster-migration seed (#2490, July 24); [t0ms](https://github.com/moq-dev/moq/pull/2545) added a **two-relay 1+1 source-failover drill** ([#2545](https://github.com/moq-dev/moq/pull/2545), +467/−0).
+- **Hang media**: captions became **standalone text tracks** ([#2533](https://github.com/moq-dev/moq/pull/2533), +1655/−42, OPEN), the catalog now exposes **bitrate/jitter as a `catalog::Estimator`** ([#2530](https://github.com/moq-dev/moq/pull/2530), +834/−515, MERGED), and a timeline rework around **aligned segments** opened July 28 ([#2547](https://github.com/moq-dev/moq/pull/2547), +946/−317).
+- **Correctness plumbing**: a **loom model-check of concurrent handoffs** ([#2543](https://github.com/moq-dev/moq/pull/2543), +451/−21, MERGED), a poll-native `Deadline` adopted in moq-net ([#2536](https://github.com/moq-dev/moq/pull/2536)), Windows/macOS CI compile-checks ([#2531](https://github.com/moq-dev/moq/pull/2531)), jemalloc heap profiling ([#2539](https://github.com/moq-dev/moq/pull/2539)), and surfacing a peer's stream-reset code as a remote error ([#2510](https://github.com/moq-dev/moq/pull/2510), MERGED). fperex logged that **publishing video breaks when the publisher window is minimized** (MediaStreamTrackProcessor polyfill, [#2527](https://github.com/moq-dev/moq/issues/2527)).
+
+## Elsewhere: afrind turns up in moqx; Eyevinn dep bumps; other impls quiet
+
+A notable cross-project move: **[[alan-frindell|afrind]] (Meta) is now committing to [[openmoq|moqx]]** (OpenMOQ's moxygen fork) — July 27 he merged build-parallelism flags ([#523](https://github.com/openmoq/moqx/pull/523)) and per-scrape histogram-metrics windowing ([#520](https://github.com/openmoq/moqx/pull/520)) and opened two relay-forwarder-ownership refactors ([#522](https://github.com/openmoq/moqx/pull/522)/[#521](https://github.com/openmoq/moqx/pull/521), moving forwarder ownership off the registry onto the publisher exec) and closed his own July-19 `moq_decode.py` PUBLISH_DONE issue (#495); michalhosna opened a "de-bespoke build" draft ([#519](https://github.com/openmoq/moqx/pull/519)). On [[moxygen]] itself afrind's July-20 delivery-timeout test PR (#208) was closed unmerged. Eyevinn shipped a golang.org/x dependency bump on [[moqtransport|Eyevinn/moqtransport]] ([#15](https://github.com/Eyevinn/moqtransport/pull/15), tobbee) and a dependabot production-deps bump opened on [[warp-player]] (#168). [[moqlivemock|moqlivemock]], [[moq-rs|cloudflare/moq-rs]], [[moqtail]], [[quiche-moq|google/quiche]] (moqt, 0 commits), [[moq-js]], [[imquic]], [[kota-yatagai|Moqtopus]], [[aiomoqt]], and birneee/quiche_moq were quiet.
+
+## Interop runner: an identical cut
+
+The nightly runner's **[July-27 00:35 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-07-27_003546/report.html)** was **350 / 129 / 210 / 11** (~36.9% pass; at-target draft-18 220 · 0 ahead · 130 behind) — **byte-for-byte identical** to the July-26 cut (350/129/210/11): pass/fail/skip/matrix/at-target all unchanged, only the timestamp advanced. Fifth straight cut on the settled 350-cell / at-target-220 matrix; at-target has held at 220 for six straight cuts. Still targets draft-18; no July-28 cut at check time. See [[interop-runner]].
 
 # Activity (July 26 → July 27) — **Another quiet post-Vienna day whose most material fact is a *correction*: the "Consensus Call on Draft-18" thread the wiki twice dismissed as a fetch artifact is verifiably real. Implementations carry the rest — [[moq-dev|moq-dev/moq]] chases a publisher memory-leak in its new cache pool, [[moqlivemock|Eyevinn]] closes its CTA-608 epic and opens a caption-timing refinement, and the weekly GitHub digest returns.**
 
