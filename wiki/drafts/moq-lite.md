@@ -2,7 +2,7 @@
 title: "Media over QUIC - Lite (moq-lite)"
 tags: [draft, transport, individual]
 date: 2026-04-13
-last_updated: 2026-07-01
+last_updated: 2026-07-29
 status: current
 draft_version: "05"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/"
@@ -11,6 +11,8 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/"
 **draft-lcurley-moq-lite-05** | Expires 2027-01-01
 
 > **2026-07-01**: **`draft-lcurley-moq-lite-05` is now on the Datatracker (published June 30) — the `-05` revision the wiki flagged "presumably forthcoming" since May 5 finally lands, and [[moq-dev|moq-dev/moq]] ships the matching wire the same 48 hours.** Datatracker bumps **-04 → -05** (2026-06-30, Informational, expires 2027-01-01), catching the published spec up to the **Lite05 / DRAFT_05** wire version that has been in flight in moq-dev's code since [PR #1374](https://github.com/moq-dev/moq/pull/1374) (May 4). On the implementation side, moq-dev landed a **moq-lite-05 wire push** across June 29–July 1: **[PR #1954](https://github.com/moq-dev/moq/pull/1954) MERGED** *"moq-net: moq-lite-05 SETUP message + PATH parameter"* (+828/−116), **[PR #1963](https://github.com/moq-dev/moq/pull/1963) MERGED** *"moq-net: hook up rest of moq-lite-05 wire (TRACK_INFO, SUBSCRIBE_END, frame timestamps)"* (+854/−64), and — a notable design pivot — **[PR #1962](https://github.com/moq-dev/moq/pull/1962) MERGED** *"moq-net: drop per-frame compression, restore Publisher Max Latency to TRACK_INFO"* (+149/−614), walking back the per-frame DEFLATE experiment (the code side of Luke's June-26 [[discussions-2026-06|"MoQ + Compression" thread]]) and restoring the `max_latency` filter to `TRACK_INFO`. So the published draft and the reference implementation are re-converged on the -05 wire. See [[moq-dev]], [[discussions-2026-06]].
+>
+> **lite-06 wire work has begun in code (2026-07-28)** — still `-05` on the Datatracker (no `-06` submitted). [[moq-dev|moq-dev/moq]] merged [PR #2550](https://github.com/moq-dev/moq/pull/2550) *"drop Exclude Hop from ANNOUNCE_REQUEST in lite-06"* (+189/−98), the first in-code sign of a next moq-lite revision — the same in-code-before-Datatracker pattern the -05 wire followed. Watch the Datatracker for a `draft-lcurley-moq-lite-06` submission.
 >
 > **Lite05 origin** (historical): [[luke-curley]] opened [moq-dev/moq PR #1374](https://github.com/moq-dev/moq/pull/1374) on **May 4 2026 22:57 UTC** introducing wire version **Lite05 / DRAFT_05** (ALPN `moq-lite-05`, code `0xff0dad05`). Added an opt-in **DATAGRAMS control stream `0x6`** + QUIC datagram delivery (`subscribe_id | sequence | payload`, 1200B cap), 33ms publisher cache, per-subscriber `max_latency` filter. Spec text lives in the separate `moq-wg/moq-drafts` repo; the Datatracker `-05` (June 30) is the published counterpart.
 
