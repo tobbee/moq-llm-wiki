@@ -2,7 +2,7 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-07-21
+last_updated: 2026-08-01
 status: current
 draft_version: "04"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
@@ -65,7 +65,7 @@ LOC represents the "low overhead" approach optimized for interactive/real-time u
 
 - **[[moqtail]]** — full LOC encode/decode in `moqtail-rs` (sample app + draft-16 catalog plumbing).
 - **[[moqlivemock]] / warp-player (Eyevinn)** — LOC pipeline added in v0.8.0 (May 5, 2026), including HEVC LOC and a WebCodecs LOC pipeline.
-- **[[moq-dev]] (Luke Curley) — PR #1388 OPENED May 7 2026** (+799/−17, [link](https://github.com/moq-dev/moq/pull/1388)). New `moq-loc` Rust crate + `@moq/loc` JS package implementing encode/decode for the LOC wire format. Hang catalog gains `Container::Loc { timescale }` (default 1,000,000 µs); audio source selection prioritizes LOC after legacy, before CMAF. **First adoption of an IETF-spec media container format in moq-dev/moq alongside its native Hang stack.** Per-frame timescale (0x08 property) overrides catalog default.
+- **[[moq-dev]] (Luke Curley) — PR #1388 OPENED May 7 2026** (+799/−17, [link](https://github.com/moq-dev/moq/pull/1388)). New `moq-loc` Rust crate + `@moq/loc` JS package implementing encode/decode for the LOC wire format. Hang catalog gains `Container::Loc { timescale }` (default 1,000,000 µs); audio source selection prioritizes LOC after legacy, before CMAF. **First adoption of an IETF-spec media container format in moq-dev/moq alongside its native Hang stack.** Per-frame timescale (0x08 property) overrides catalog default. **On 2026-07-31 moq-dev began adopting the `draft-ietf-moq-loc-04` Timestamp code point** ([#2578](https://github.com/moq-dev/moq/pull/2578) merged + OPEN [#2581](https://github.com/moq-dev/moq/pull/2581)) — moving its LOC implementation off the interim transport-18 §15.8 property IDs onto the -04 registry that relocated TIMESTAMP off the 0x06 collision, the implementation now following the published -04 in code.
 
 # External Links
 - [GitHub repo](https://github.com/moq-wg/loc)

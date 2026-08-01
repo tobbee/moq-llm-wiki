@@ -2,11 +2,41 @@
 title: "Discussions - July 2026"
 tags: [discussions, slack, github]
 date: 2026-07-01
-last_updated: 2026-07-31
+last_updated: 2026-08-01
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during July 2026.
+
+# Activity (July 31 → Aug 1) — **The window inverts straight back to implementations: [[mike-english|Mike English]]'s [[moq-rs|moq-rs]] *ships* the relay upstream-retention fix (backport to draft-14 `main` + v0.7.25 release train + a companion SUBSCRIBE_OK-ordering fix), and [[moq-dev|moq-dev/moq]] posts its biggest single merge day yet — ~6,000 LOC whose durable thread is spec alignment: adopting the just-published LOC-04 timestamps and aligning relay-hops with moq-lite-06 in code — while the WG repos go nearly silent (one new transport issue, zero PRs).**
+
+The July 31 → Aug 1 window was **carried entirely by the two Rust codebases** — the exact reverse of the prior day, when the WG document repos moved in force. **Slack `#moq` stayed quiet** (newest is still [[suhas-nandakumar|Suhas]]'s July-29 20:14 EEST reply on the Miniero blog thread — no July 30/31 or Aug-1 traffic), the **[mailing list](https://mailarchive.ietf.org/arch/browse/moq/) had no genuinely new message** (raw-verified — [[magnus-westerlund|Magnus Westerlund]]'s July-29 IETF-126 draft-minutes email is still the newest; the weekly GitHub digest is next due ~Aug 2), and the [datatracker](https://datatracker.ietf.org/group/moq/documents/) shows **no revision bumps or new individual drafts** (transport-19, loc-04 newest; `draft-lcurley-moq-lite` still -05; still **no `draft-lcurley-moq-archive`** I-D). IETF-126 minutes remain the single Monday doc at rev -01 (in its ~2-week WG review). No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues; the nightly runner produced one new cut (+1 pass to a 350-cell-matrix high of 133, see below).
+
+## moq-rs: the relay upstream-retention fix ships (v0.7.25)
+
+On [[moq-rs|cloudflare/moq-rs]], [[mike-english|Mike English]] took the prior day's [PR #196](https://github.com/cloudflare/moq-rs/pull/196) relay upstream-retention fix from "merged" to "shipped on the branch operators run":
+
+- **[#198](https://github.com/cloudflare/moq-rs/pull/198)** *"release upstream subscriptions for idle cached tracks, and stop FIN-ing subgroup streams mid-object (draft-14)"* (+1986/−163, July 31 20:26 UTC) **backported the fix to the draft-14 `main` branch** — the production deployment. It closes the same [issue #191](https://github.com/cloudflare/moq-rs/issues/191) (dmorn) class of relay-lifecycle bug — an upstream subscription held after the last downstream subscriber leaves — that the wiki has tracked across implementations (the identical [[moqtail]] [issue #332](https://github.com/moqtail/moqtail/issues/332)).
+- **[#197](https://github.com/cloudflare/moq-rs/pull/197)** *"wait for upstream subscription before sending SUBSCRIBE_OK"* (+477/−55, July 31 02:08 UTC) added a companion ordering correction.
+- The repo then cut its **first release train since July 20 — `moq-relay-ietf` v0.7.25** (+ `moq-pub` v0.9.3 / `moq-sub` v0.4.14 / `moq-clock-ietf` v0.6.20 / `moq-api` v0.2.13 / `moq-test-client` v0.1.12, ~20:30 UTC), plus a docs refresh ([#199](https://github.com/cloudflare/moq-rs/pull/199)).
+
+Relay-resource lifecycle (upstream held after downstream teardown) has been the recurring post-Vienna correctness front; this closes the loop from "fix merged" to "fix shipped."
+
+## moq-dev: biggest merge day — LOC-04 + lite-06 alignment, two breaking refactors land
+
+[[moq-dev|moq-dev/moq]] ([[luke-curley|Luke Curley]]) posted its **biggest single-day merge burst yet — ~6,000 LOC across 11 merges** (relay v0.14.5 stands; no new release). The durable thread was *spec alignment*:
+
+- **LOC-04 + lite-06 alignment**: [#2578](https://github.com/moq-dev/moq/pull/2578) *"prune dormant drafts, align relay-hops with lite-06, adopt LOC-04 timestamps"* (+1/−996, **MERGED**) — the **first in-repo move onto the LOC-04 registry fix** (published July 20, which relocated the LOC Timestamp code point off the 0x06 collision) and continued moq-lite-06 wire work ahead of any datatracker `-06` — continued in OPEN [#2581](https://github.com/moq-dev/moq/pull/2581) (adopt the `draft-ietf-moq-loc-04` Timestamp code point). Same spec-follows-in-code pattern the wiki tracked when moq-dev first chose the transport-18 §15.8 property IDs, now updated to the -04 registry (see [[moq-loc]]).
+- **Two breaking (`!`) refactors** that had been open the prior day landed: [#2568](https://github.com/moq-dev/moq/pull/2568) *"leave audio group boundaries to the caller, group fMP4 by segment"* (+983/−99) and [#2569](https://github.com/moq-dev/moq/pull/2569) *"carry subscription bounds as positions"* (+415/−227).
+- **Relay/route hardening**: [#2575](https://github.com/moq-dev/moq/pull/2575) *"prune spliced segments, advertise drains, treat SUBSCRIBE_START as a drop signal"* (+1110/−69), [#2572](https://github.com/moq-dev/moq/pull/2572) *"send the request path and query in the SETUP on every URI-less transport"* (closing [issue #2570](https://github.com/moq-dev/moq/issues/2570)), a kio [WaiterCell/Queue](https://github.com/moq-dev/moq/pull/2560) primitive (+721/−27), capture-recovery ([#2559](https://github.com/moq-dev/moq/pull/2559)), and identity-less peer-origin ([#2577](https://github.com/moq-dev/moq/pull/2577), +625/−73). Still OPEN: [#2583](https://github.com/moq-dev/moq/pull/2583)/[#2582](https://github.com/moq-dev/moq/pull/2582) (kio follow-ups), #2581 (above), and koubaa's [#2580](https://github.com/moq-dev/moq/pull/2580).
+
+## WG repos + moqx: a quiet day, one transport issue, a low-key LOC-packaging thread
+
+After July 30's four-PR editorial/security cluster on [[moq-transport]], July 31 produced **no WG-document PRs at all**. The only new WG item was **[[mathis-engelbart|Mathis Engelbart]]'s [issue #1837](https://github.com/moq-wg/moq-transport/issues/1837) *"FETCH and REQUEST_ERROR encoding"*** (13:44 UTC) — a fresh WGLC-hygiene encoding question, no PR yet. A low-key cross-repo **LOC-packaging / naming thread** stayed alive: [[will-law|Will Law]]'s msf [issue #200](https://github.com/moq-wg/msf/issues/200) (map LOC packaging to MOQT streams, already logged) plus two OPEN [[alan-frindell|afrind]] PRs on [[openmoq|moqx]] — [#532](https://github.com/openmoq/moqx/pull/532) *render and parse names in the MoQT safe form* and [#533](https://github.com/openmoq/moqx/pull/533) *per-track counters at `/metrics/track`* — alongside a routine moxygen sync ([#531](https://github.com/openmoq/moqx/pull/531)). loc, secure-objects, cmsf, catalog-format, privacy-pass, [[quiche-moq|google/quiche]] (moqt), [[moqtail]], [[moq-js]], [[moxygen]], [[imquic]], [[moqlivemock|Eyevinn/moqlivemock]], [[warp-player]], [[moqtransport|Eyevinn/moqtransport]], [[kota-yatagai|Moqtopus]], [[aiomoqt]], and birneee/quiche_moq were quiet.
+
+## Interop runner: +1 pass to a 350-cell-matrix high
+
+The nightly runner's **[July-31 00:35 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-07-31_003511/report.html)** was **350 / 133 / 206 / 11** (~38.0% pass; at-target draft-18 220 · 0 ahead · 130 behind) — a marginal **+1 pass / −1 fail** versus the July-30 cut (350/132/207/11), matrix/skip/at-target flat. It's the ninth straight cut on the settled 350-cell matrix, and **pass 133 is a new high for that matrix** (prior band 126–132; the absolute-high 142 came on the smaller July-21/22 338-cell matrix). Still targets draft-18. See [[interop-runner]].
 
 # Activity (July 30 → July 31) — **The WG editor's copy moves in force for the first time since pre-Vienna: [[alan-frindell|afrind]] lands a four-PR editorial/security cluster on transport (REDIRECT ambiguity, untrusted-string logging, Timed-Out gap status, `moqt://` host resolution) plus [[mathis-engelbart|Mathis Engelbart]]'s CLIENT_SETUP→SETUP fix, and [[will-law|Will Law]] merges MSF catalog-references-catalog — while [[mike-english|Mike English]]'s [[moq-rs|moq-rs]] #196 fixes the recurring relay upstream-retention bug and [[moq-dev|moq-dev/moq]] serves DASH from moq-hls, reverts standalone captions back to dev, and proposes folding the moq-archive format into Hang (relay v0.14.5).**
 

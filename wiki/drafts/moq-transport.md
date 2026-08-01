@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-07-31
+last_updated: 2026-08-01
 status: current
 draft_version: 19
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -95,6 +95,7 @@ Substantive topics still being worked as this page is written:
 - **Compression layering**: whether compression belongs at the transport, [[moq-msf|MSF]]/streaming-format, or Full-Track-Name layer, and hop-by-hop vs end-to-end semantics. See [[moq-dev]].
 - **7-byte varint / non-minimal encodings**: allowed since draft-17 (PR #1595), but flagged as a footgun in the draft-19 read-through.
 - **SUBSCRIPTION_STATE_UPDATE**: [[alan-frindell|afrind]]'s proposal (July 21) for a new control message to update subscription state ([PR #1820](https://github.com/moq-wg/moq-transport/pull/1820), OPEN). Related: [issue #1821](https://github.com/moq-wg/moq-transport/issues/1821) (Otto Hermann) asks *what a subscriber is entitled to observe after an Object becomes unavailable* — both touch draft-19's clarified subscription-state destruction timing.
+- **FETCH and REQUEST_ERROR encoding**: [[mathis-engelbart|Mathis Engelbart]]'s [issue #1837](https://github.com/moq-wg/moq-transport/issues/1837) (July 31) raises an encoding question on FETCH and REQUEST_ERROR — a fresh WGLC-hygiene item on the editor's copy (no PR yet).
 
 # ALPN Negotiation
 
