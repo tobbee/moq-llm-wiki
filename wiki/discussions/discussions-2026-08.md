@@ -2,11 +2,43 @@
 title: "Discussions - August 2026"
 tags: [discussions, slack, github]
 date: 2026-08-02
-last_updated: 2026-08-02
+last_updated: 2026-08-03
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during August 2026.
+
+# Activity (Aug 2 → Aug 3) — **two implementations carry a quiet WG window: [[moq-dev|moq-dev/moq]] opens an auth-token-tooling + Happy-Eyeballs-DNS thread (moq-cli `token` subcommand [#2593](https://github.com/moq-dev/moq/pull/2593), owner-only key files [#2596](https://github.com/moq-dev/moq/pull/2596)), and [[moqlivemock|Eyevinn/warp-player]] lands a full CTA-608 closed-caption pipeline (~4,700 LOC), completing the caption round trip from mlmpub's publisher-side SEI injection to player-side extraction + overlay rendering — while every moq-wg repo stays quiet (no PRs, no issues) and the overdue weekly GitHub digest finally posts.**
+
+The Aug 2 → Aug 3 window was **implementation-carried**, this time by **two** actors rather than one: [[luke-curley|Luke Curley]] on [[moq-dev|moq-dev/moq]] and [[tobbe-einarsson|Tobbe]] on the Eyevinn repos. **Every moq-wg repo was quiet** — no PRs merged, no PRs opened, no new issues on transport / msf / loc / secure-objects / cmsf / catalog-format / privacy-pass. **Slack `#moq` stayed quiet** (newest is still [[suhas-nandakumar|Suhas]]'s July-29 20:14 EEST reply on the [[lorenzo-miniero|Miniero]] MoQ-over-MoQ blog thread — ~5 days silent). The one genuinely new [mailing-list](https://mailarchive.ietf.org/arch/browse/moq/) message was the **weekly GitHub digest** ([Aug 2 09:35 UTC](https://mailarchive.ietf.org/arch/msg/moq/WkqxlbxFscF5jbT4xDTU7Ltoi7c/), from the mnot.net *"Repository Activity Summary Bot"*, raw-verified) — the digest that was **due ~Aug 2 but had not posted** at the prior update's check time; it is a routine retrospective recap of the prior week's transport issues/PRs (#1837, #1835, #1829, #1819; PRs #1833/#1820/#1817), no new substance. The [datatracker](https://datatracker.ietf.org/group/moq/documents/) shows **no revision bumps or new individual drafts** (transport-19, loc-04 newest; `draft-lcurley-moq-lite` still -05; still **no `draft-lcurley-moq-archive`** I-D). IETF-126 minutes remain the single Monday doc at rev -01 (in WG review, corrections due ~Aug 12). No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues; the nightly runner produced one new cut, **byte-for-byte identical to Aug-1** (see below).
+
+## moq-dev: an auth-token-tooling thread and a Happy-Eyeballs DNS push
+
+[[moq-dev|moq-dev/moq]] (all [[luke-curley|Luke Curley]]) had ~10 merges plus 4 new PRs and 1 new issue; **relay v0.14.5 stands (no new release)**. The window's two durable threads:
+
+- **Auth-token tooling.** [#2593](https://github.com/moq-dev/moq/pull/2593) *"add a `token` subcommand to moq-cli"* (+497/−236, **MERGED**) gives the CLI a first-class verb for generating/managing `moq-token` auth tokens, and [#2596](https://github.com/moq-dev/moq/pull/2596) *"write private key files owner-only"* (+223/−10, **MERGED**) hardens key-file permissions (0600) for the token-signing keys. This is the first dedicated *tooling* push on `moq-token` since the July `--auth-api` transport-forwarding work — surfacing the auth path (the same one that produced the Vienna `cdn.moq.pro` PATH/401 debugging) as an operator-facing CLI.
+- **DNS / Happy-Eyeballs networking.** [#2592](https://github.com/moq-dev/moq/pull/2592) *"dial the resolver's first choice, not the first family match"* (+161/−63, **MERGED**) fixes `moq-native` address selection, and the follow-on is in flight: OPEN [#2594](https://github.com/moq-dev/moq/pull/2594) *"race resolved addresses Happy Eyeballs style when dialing"* (+661/−181) plus new [issue #2595](https://github.com/moq-dev/moq/issues/2595) *"DNS-phase Happy Eyeballs: parallel A/AAAA resolution via hickory-resolver"* — a full RFC-8305-style dual-stack connection-establishment story taking shape.
+
+Around those: [#2583](https://github.com/moq-dev/moq/pull/2583) *"rename WaiterCell to Park"* (+217/−138, **MERGED**) tidies the kio concurrency primitive introduced July 31, [#2597](https://github.com/moq-dev/moq/pull/2597) unbreaks the libmoq release + moq-relay fresh-resolve build, and OPEN [#2598](https://github.com/moq-dev/moq/pull/2598) (nested/encoded `moq-hls` routes) + [#2599](https://github.com/moq-dev/moq/pull/2599) (Discord CI-failure alerts) round out the day, alongside the usual dependabot/bot merges. The **Aug-1 mDNS local-network peer-mesh front** ([#2585](https://github.com/moq-dev/moq/pull/2585)) remains OPEN and grew (+1054/−6).
+
+## Eyevinn/warp-player: a full CTA-608 caption pipeline lands
+
+[[moqlivemock|Eyevinn/warp-player]] ([[tobbe-einarsson|Tobbe]]) landed the **player side of the CTA-608 closed-caption story** on Aug 2 — ~4,700 LOC across three feature PRs, resolving the "warp-player rendering in progress" note ([warp-player #156](https://github.com/Eyevinn/warp-player/issues/156)) the wiki has carried since moqlivemock's publisher-side caption epic (mlmpub SEI injection, [moqlivemock #114/#115/#117](https://github.com/Eyevinn/moqlivemock/pull/117), July 24–25):
+
+- **Extraction on the WebCodecs/LOC path**: [#169](https://github.com/Eyevinn/warp-player/pull/169) *"extract CTA-608 captions on the WebCodecs LOC path"* (+730/−0, **MERGED**).
+- **Extraction on the MSE/CMAF+LOCMAF path**: [#171](https://github.com/Eyevinn/warp-player/pull/171) *"extract CTA-608 from CMAF and LOCMAF fragments on the MSE path"* (+1587/−2, **MERGED**) — captions now come off **both** of warp-player's decode pipelines.
+- **Rendering**: [#170](https://github.com/Eyevinn/warp-player/pull/170) *"add the timed-text overlay seam and CTA-608 renderer"* (+2366/−1, **MERGED**) — a generic timed-text overlay seam plus the concrete CTA-608 renderer. The **CC toggle + caption-sink wiring** is the one remaining piece, OPEN in [#173](https://github.com/Eyevinn/warp-player/pull/173) (+431/−6).
+
+On the publisher side, [[moqlivemock|moqlivemock]] took a supporting **`go-608` v0.8.0 dependency bump** with a migration to `generate.Unit` ([#120](https://github.com/Eyevinn/moqlivemock/pull/120)) plus a CLAUDE.md trim ([#121](https://github.com/Eyevinn/moqlivemock/pull/121)). Together this completes the CTA-608 capture→publish→extract→render round trip across the Eyevinn LOC/WebCodecs and CMAF/LOCMAF/MSE paths.
+
+## Everything else: quiet
+
+- **[[openmoq|moqx]]** took a routine moxygen sync-bot PR ([#536](https://github.com/openmoq/moqx/pull/536), trivial); [[moqtail]] saw only a dependabot bump ([#333](https://github.com/moqtail/moqtail/pull/333)).
+- **[[moq-rs|cloudflare/moq-rs]]** (v0.7.25 stands), **[[quiche-moq|google/quiche]]** (moqt, 0 commits in-window), **[[moq-js]]**, **[[moxygen]]**, **[[imquic]]**, **[[moqtransport|Eyevinn/moqtransport]]**, **[[kota-yatagai|Moqtopus]]**, **[[aiomoqt]]**, and birneee/quiche_moq were all quiet.
+
+## Interop runner: byte-for-byte flat, second straight day at 130
+
+The nightly runner's **[Aug-2 00:35 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-08-02_003500/report.html)** was **350 / 130 / 209 / 11** (~37.1% pass; at-target draft-18 220 · 0 ahead · 130 behind) — **byte-for-byte identical to the Aug-1 cut** (0 pass change; matrix, skip, and at-target all flat). Pass 130 holds a second straight day inside the settled 350-cell band (126–133); it's the eleventh straight cut on that matrix, at-target holding 220. Still targets **draft-18**. See [[interop-runner]].
 
 # Activity (Aug 1 → Aug 2) — **[[moq-dev|moq-dev/moq]] carries a quieter window and follows through on the prior day's spec-alignment thread: it *completes* the LOC-04 Timestamp code-point adoption ([#2581](https://github.com/moq-dev/moq/pull/2581) merged), adds relay-lifecycle and native-video hardening, and opens a genuinely new front — local-network peer discovery/mesh via mDNS ([#2585](https://github.com/moq-dev/moq/pull/2585), OPEN) — while the WG repos stay near-silent (no PRs; one live encoding discussion on transport [issue #1837](https://github.com/moq-wg/moq-transport/issues/1837)).**
 
