@@ -2,15 +2,17 @@
 title: "MoQ Object Timestamp Extension"
 tags: [draft, transport, extension, timestamp, individual]
 date: 2026-06-13
-last_updated: 2026-06-13
+last_updated: 2026-08-05
 status: current
-draft_version: 0
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-timestamp/"
 ---
 
+> **2026-08-05**: **`draft-lcurley-moq-timestamp` bumped to -01 (2026-08-04, 6 pages)** by [[luke-curley|Luke Curley]], submitted in the same ~02:08 UTC batch as the new [[moq-cluster|`draft-lcurley-moq-cluster-00`]] and [[moq-hang|`draft-lcurley-moq-hang-02`]]. The -01 abstract **re-frames the extension around the [[moq-loc|LOC]]-registered properties**: it now specifies "the transport-level use of the **TIMESTAMP and TIMESCALE properties registered by [loc]**, independent of the LOC container itself" — a track-level **Timescale** establishing units and an object-level **Timestamp** carrying presentation time — rather than defining its own property IDs. That change follows the **LOC-04 registry fix** (published July 20, which relocated the LOC Timestamp code point) and moq-dev's in-code adoption of it ([PR #2581](https://github.com/moq-dev/moq/pull/2581)), so the draft and the moq-dev wire now cite the same LOC registration. The core goal is unchanged: exposing media time to the transport lets [[relays]] make consistent age-based drop/timeout decisions without parsing the container. Individual submission, not WG-adopted. See [[moq-loc]], [[moq-dev]], [[discussions-2026-08]].
+>
 > **2026-06-13**: **New individual I-D — `draft-lcurley-moq-timestamp-00` posted June 12 2026** by [[luke-curley|Luke Curley]] (expires Dec 14 2026), out of the formal London interim. It lifts the per-frame timestamp+duration carriage Luke merged on the moq-lite-05 wire ([[moq-dev|moq-dev/moq]] [PR #1681](https://github.com/moq-dev/moq/pull/1681), June 12) into a **portable, container-agnostic [[moq-transport]] extension**: a track-level **Timescale** property + an object-level **Timestamp** property + an optional **Duration** property, so that **relays can make consistent age-based drop/timeout decisions without parsing the media container**. It is the concrete spec behind [[martin-duke|Martin Duke]]'s June-12 mailing-list thread *"How timestamps totally solve delivery timeout"* — the same delivery-timeout question behind the June-11 close of moq-transport [Issue #1489](https://github.com/moq-wg/moq-transport/issues/1489) and the long-running `TIMESTAMP` / `SUBGROUP_DELIVERY_TIMEOUT` property work in draft-18 §15.8. Individual submission, not yet WG-adopted. See [[discussions-2026-06]], [[moq-transport]], [[moq-dev]].
 
-**draft-lcurley-moq-timestamp-00** | Individual submission | Posted 2026-06-12 | Expires 2026-12-14 | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-timestamp/)
+**draft-lcurley-moq-timestamp-01** | Individual submission | -00 posted 2026-06-12, **-01 posted 2026-08-04** | 6 pages | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-timestamp/)
 
 # Authors
 - [[luke-curley|Luke Curley]]

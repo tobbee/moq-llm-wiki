@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-08-04
+last_updated: 2026-08-05
 status: current
-updated: 2026-08-04
+updated: 2026-08-05
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -26,7 +26,9 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
 | [[moq-media-interop]] | draft-03 | Individual (expires **Apr 23**) | Media wire format over LOC for H.264/Opus/AAC |
 | [[moq-lite]] | draft-05 | Individual (**-05 2026-06-30**) | Simplified transport protocol by Luke Curley |
-| [[moq-timestamp]] | draft-00 | Individual (**NEW 2026-06-12**) | MoQ Object Timestamp Extension — Timescale/Timestamp/Duration for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
+| [[moq-cluster]] | draft-00 | Individual (**NEW 2026-08-04**) | MoQ Cluster Extension — relay-mesh Hop-ID path vector + accumulated route cost (loop detection, lowest-cost routing); implemented over moq-transport in moq-dev PR #2629 ([[luke-curley\|Luke Curley]]) |
+| [[moq-hang]] | draft-02 | Individual (**-02 2026-08-04**) | Media over QUIC - Hang — real-time conferencing profile on moq-lite (rooms/participants/tracks; intended home for recording/DVR) ([[luke-curley\|Luke Curley]]) |
+| [[moq-timestamp]] | draft-01 | Individual (**-01 2026-08-04**) | MoQ Object Timestamp Extension — transport-level Timescale/Timestamp (now framed on the LOC-registered properties) for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
 | [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
@@ -37,7 +39,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-overview]] | draft-00 | Individual (**NEW 2026-06-30**) | Media over QUIC Overview — Informational suite survey; co-chair Magnus Westerlund (Ericsson) + Zaheduzzaman Sarker (Nokia) |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
-For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-lcurley-moq-hang-01 (Hang media layer), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-01 (relay DoS considerations, **-01 2026-07-06**), draft-altanai-moq-relay-geocode-01 (geographic location for MoQ relays, **-01 2026-07-24**), draft-lcurley-moq-archive (chunked archival format for MoQ tracks, opened in moq-dev/moq July 2026), and the three [[moq-msf|MSF]] event-timeline spinout drafts by Will Law + Suhas Nandakumar (all **-00 2026-07-06**): draft-wilaw-moq-scte35-event-timeline-00, draft-wilaw-moq-webvtt-msf-00, and draft-law-moq-imsc1-msf-00.
+For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-01 (relay DoS considerations, **-01 2026-07-06**), draft-altanai-moq-relay-geocode-01 (geographic location for MoQ relays, **-01 2026-07-24**), and the three [[moq-msf|MSF]] event-timeline spinout drafts by Will Law + Suhas Nandakumar (all **-00 2026-07-06**): draft-wilaw-moq-scte35-event-timeline-00, draft-wilaw-moq-webvtt-msf-00, and draft-law-moq-imsc1-msf-00.
 
 # Protocol Concepts
 
