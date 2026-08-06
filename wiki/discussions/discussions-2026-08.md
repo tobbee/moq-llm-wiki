@@ -2,11 +2,66 @@
 title: "Discussions - August 2026"
 tags: [discussions, slack, github]
 date: 2026-08-02
-last_updated: 2026-08-05
+last_updated: 2026-08-06
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during August 2026.
+
+# Activity (Aug 5 → Aug 6) — **The WG process side moves for the first time in weeks: [[alan-frindell|afrind]] posts the draft agenda for the Aug-10 virtual interim, and it names **draft-20** as the target for the current in-flight filter/fetch/switch PR set ([[moq-transport]] #1809/#1820/#1673/#1674) — the first datable sign the WG is landing PRs past -19 toward -20. On the media side, [[jordi-cenzano|Jordi Cenzano]] (Meta) announces (on Slack *and* the list) that `moq-encoder-player` has **finally dropped its proprietary MOQ-MI packaging for standard LOCv4 + codec string** (draft-18), with public encoder/player demo URLs. [[moq-dev|moq-dev/moq]] **merges the MoQ Cluster extension over moq-transport** ([#2629](https://github.com/moq-dev/moq/pull/2629), +2662/−408) — the prior window's headline OPEN PR lands — then drains a **~22-merge moq-net/libmoq hardening pass** cut as relay v0.14.7, and [[alan-frindell|afrind]] runs a cross-repo local-forwarder / active-subscription-count cleanup across [[openmoq|moqx]] + [[moxygen]]. Two new transport items round it out (a CAT-token-renewal issue and sharmafb's "first byte of object" PR).**
+
+The Aug 5 → Aug 6 window tilted back toward the **working group** after a long implementation-carried run — the durable new facts are a **WG interim agenda** and an **interop-tooling milestone**, not code alone. **No datatracker changes** (transport-19, loc-04, secure-objects-01, msf-01, cmsf-01, c4m-01, warp-01, `draft-lcurley-moq-lite` -05, and the three Aug-4 lcurley drafts hang-02/cluster-00/timestamp-01 all stand). **Slack `#moq` broke its quiet** with Jordi Cenzano's Aug-5 `moq-encoder-player` post (below). IETF-126 minutes remain the single Monday doc at rev -01. No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues; the nightly runner produced one new cut (+1 pass, see below).
+
+## Mailing list: the Aug-10 interim draft agenda names draft-20
+
+[[alan-frindell|afrind]] (co-chair, with Ian Swett) posted the **[draft agenda for the 8/10 (Aug 10, Monday) virtual interim](https://mailarchive.ietf.org/arch/msg/moq/G4FiWzXBdRlm5GHw7YIZY_hVC3E/)** (Aug 5 21:26 UTC, DKIM-verified). It is the clearest process signal in weeks — and the **first time the wiki has seen `draft-20` named as the target** for the current in-flight PR set:
+
+- **In-flight PRs targeted for draft-20** (listed in intended landing order; one or more may merge before the meeting): **Location Filter rewrite [#1809](https://github.com/moq-wg/moq-transport/pull/1809)**, **PUBLISH_NOTIFY [#1820](https://github.com/moq-wg/moq-transport/pull/1820)**, **Fill Fetch [#1673](https://github.com/moq-wg/moq-transport/pull/1673)**, and **SWITCH_FROM (hard) [#1674](https://github.com/moq-wg/moq-transport/pull/1674)** — the latter two to be updated once the first two merge.
+- **Other PRs to review**: **PUBLISH contains subscription params [#1834](https://github.com/moq-wg/moq-transport/pull/1834)** ("reflects Vienna discussions") and **Publisher default priority update [#1770](https://github.com/moq-wg/moq-transport/pull/1770)** (Michal Hošna's PR from the London ask).
+- **"Needs Discussion" issues**: **[#1453](https://github.com/moq-wg/moq-transport/issues/1453) — Send Rate parameter** (*"Will has a short presentation for his proposal"* — i.e. [[will-law|Will Law]]'s **Pacing-for-FETCH / SCONE rate-signal** proposal from his Aug-4 list thread), **[#1352](https://github.com/moq-wg/moq-transport/issues/1352) — SUBSCRIBE does not need a forward parameter if we have filters** ([[suhas-nandakumar|Suhas]] wrote the PR the chairs asked for), and **[#1801](https://github.com/moq-wg/moq-transport/issues/1801) — reconsider "OR" functionality in range filters** ([[victor-vasiliev|Victor Vasiliev]], re draft-19).
+- **New** (the sharmafb/URI cluster already logged): [#1842](https://github.com/moq-wg/moq-transport/issues/1842) (subgroup timeout overrides not propagated by mid-join relays), [#1840](https://github.com/moq-wg/moq-transport/issues/1840) (INCLUDE_PROPERTIES=0 vs mandatory track properties), [#1835](https://github.com/moq-wg/moq-transport/issues/1835) (query-in-URI scoping).
+
+Note the interim's focus is the **core-transport filter/fetch/switch cleanup** (the Path-to-WGLC work Vienna flagged), *not* the newer individual drafts — SSTS and [[moq-feedback|Feedback]] are not on this agenda (candidates for the Aug-24 slot). This is the first time the target draft is called out as **-20** rather than -19.
+
+## Slack + list: moq-encoder-player finally drops MOQ-MI for LOCv4 + codec string
+
+[[jordi-cenzano|Jordi Cenzano]] (Meta) announced — on both Slack `#moq` (Aug 5 02:51 UTC, breaking the channel's quiet; 2 👍 / 2 🎉) and the list (*["moq-encoder-player finally in LOCv4+codecstring (no more MOQ-MI)"](https://mailarchive.ietf.org/arch/msg/moq/Hx8Z4VwdzmHF74iKbNQXIpBhbws/)*) — that **[`moq-encoder-player`](https://github.com/facebookexperimental/moq-encoder-player)** now targets **draft-18 + LOCv4 (LOC-04) + codec string** (per [loc PR #29](https://github.com/moq-wg/loc/pull/29)), **retiring its proprietary MOQ-MI (MoQ Media Interop) packaging** in favour of the standard [[moq-loc|LOC]] container. Public demo endpoints are live — encoder `moq-madrid.jordicenzano.name/demo/encoder` and player `.../demo/player` — offered to [[lorenzo-miniero|Miniero]] and [[suhas-nandakumar|Suhas]] for media interop. This is a genuine interop-tooling milestone: `moq-encoder-player` was the Meta reference tool at the centre of the Vienna interop matrix (previously carrying "MOQ-MIv3"), and moving it onto standard LOC v4 removes a bespoke packaging layer from the media-interop story.
+
+## moq-dev: the MoQ Cluster extension merges, then a moq-net hardening pass (v0.14.7)
+
+[[moq-dev|moq-dev/moq]] (all [[luke-curley|Luke Curley]]) **landed the prior window's headline OPEN PR**: [#2629](https://github.com/moq-dev/moq/pull/2629) *"implement the MoQ Cluster extension over moq-transport"* (**merged Aug 5 01:30 UTC**, +2662/−408) carries the just-submitted [[moq-cluster|`draft-lcurley-moq-cluster-00`]] onto the **IETF moq-transport** wire (not just moq-lite). The rest of the ~22-merge day was **moq-net/libmoq hardening** on top of the merged cluster code, cut as a fresh release train **moq-relay v0.14.7 / moq-cli v0.9.7 / libmoq v0.5.4** (Aug 5 06:03–06:51 UTC):
+
+- **Mesh/routing correctness**: origin resume/route serving hardened ([#2666](https://github.com/moq-dev/moq/pull/2666), +678/−118), a **reflected announce no longer evicts the source we publish** ([#2684](https://github.com/moq-dev/moq/pull/2684), +292/−45), publisher group order moved **out of message parameters** ([#2677](https://github.com/moq-dev/moq/pull/2677), +614/−157), and the v14/v15 namespace lookup **keyed by direction** ([#2664](https://github.com/moq-dev/moq/pull/2664), +428/−419).
+- **IETF wire correctness**: subscribe/fetch rejections **sent without resetting the stream** ([#2673](https://github.com/moq-dev/moq/pull/2673)), a malformed-NAMESPACE session close ([#2667](https://github.com/moq-dev/moq/pull/2667)), and synthesized-fMP4-init playability on strict players ([#2679](https://github.com/moq-dev/moq/pull/2679)); the accepting side may now pick the retention window when the wire carries none ([#2657](https://github.com/moq-dev/moq/pull/2657)).
+- **libmoq**: stop holding the global locks across a video encode ([#2663](https://github.com/moq-dev/moq/pull/2663), +319/−79) and an HEVC codec-string fix ([#2668](https://github.com/moq-dev/moq/pull/2668)).
+- **OPEN capability PRs**: classify/pace/publish `accept(2)` failures ([#2687](https://github.com/moq-dev/moq/pull/2687), +948/−75), tell OBS when a session gives up ([#2681](https://github.com/moq-dev/moq/pull/2681)), **per-frame fMP4 fragmenting + timescale control** ([#2680](https://github.com/moq-dev/moq/pull/2680), Zac Shenker's earlier #2623 evolved), and **honor `--latency-max` on RTMP/SRT/RTC gateway ingest** ([#2660](https://github.com/moq-dev/moq/pull/2660)) — the latter tying into the transport delivery-timeout theme. New issue [#2685](https://github.com/moq-dev/moq/issues/2685) (stamp requested path on broadcast consumers).
+
+## afrind cross-repo: local-forwarder cleanup (moqx) + active-subscription counting (moxygen)
+
+[[alan-frindell|afrind]] ran a coherent relay-plumbing cleanup across two repos:
+
+- **[[openmoq|moqx]]** — a **local-forwarder refactor cluster** (all OPEN): give `LocalForwarderRegistry` a three-state entry ([#542](https://github.com/openmoq/moqx/pull/542), +647/−67), fold registry replacement into `installPublisherForwarder` ([#544](https://github.com/openmoq/moqx/pull/544)), make subscribers wait for an in-flight local-forwarder setup ([#545](https://github.com/openmoq/moqx/pull/545), +246/−16), and install the forwarder chain on subscribe-created tracks ([#546](https://github.com/openmoq/moqx/pull/546), +252/−29). The routine moxygen sync-bot ([#547](https://github.com/openmoq/moqx/pull/547)) merged.
+- **[[moxygen]]** — [#211](https://github.com/facebookexperimental/moxygen/pull/211) *"Count active subscriptions only once they go active"* (+151/−13, OPEN) — the fix for the negative active-subscription counter, matching moqx issue #538 (`moqx_pubActiveSubscriptions` going negative after teardown) logged the prior window.
+
+## WG transport: a CAT-token-renewal issue and a "first byte of object" PR
+
+Two genuinely new `moq-transport` items beyond the sharmafb delivery-timeout cluster already logged:
+
+- **[issue #1843](https://github.com/moq-wg/moq-transport/issues/1843) *"Recommendations for CAT token expiration & renewal in control signaling"*** (Flynn / leonardovon-mcqueen, Aug 5 02:56 UTC) — how MoQT should handle expiry/renewal of [[moq-c4m|CTA Common Access Tokens]] carried in control signalling; the first token-lifecycle issue in the auth thread.
+- **[PR #1844](https://github.com/moq-wg/moq-transport/pull/1844) *"Change 'first byte of object' for objects that have no payload"*** (sharmafb, Aug 5 16:52 UTC, +5/−4, OPEN) — a concrete follow-up to sharmafb's own [#1841](https://github.com/moq-wg/moq-transport/issues/1841) ("first payload byte" for `OBJECT_DELIVERY_TIMEOUT`), defining the semantics for zero-payload objects.
+
+## Eyevinn: moqlivemock caption-mode work
+
+[[moqlivemock|Eyevinn/moqlivemock]] ([[tobbe-einarsson|Tobbe]]) opened two OPEN PRs continuing the CTA-608 caption thread: [#125](https://github.com/Eyevinn/moqlivemock/pull/125) *"add `-cc608mode` with paint-on as the default"* (+449/−107) — a selectable caption presentation mode (paint-on vs roll-up) — and a [`go-608` v0.9.0 dependency bump](https://github.com/Eyevinn/moqlivemock/pull/124) ([#124](https://github.com/Eyevinn/moqlivemock/pull/124)).
+
+## Everything else: quiet
+
+- **[[moq-rs|cloudflare/moq-rs]]** (v0.7.25 stands), **[[quiche-moq|google/quiche]]** (moqt, 0 commits in-window), **[[moq-js]]**, **[[moqtail]]**, **[[imquic]]**, **[[moqtransport|Eyevinn/moqtransport]]**, **[[moqlivemock|Eyevinn/warp-player]]**, **[[kota-yatagai|Moqtopus]]**, **[[aiomoqt]]**, and birneee/quiche_moq were all quiet.
+- **moq-wg repos** loc / msf / secure-objects / cmsf / catalog-format / privacy-pass merged nothing.
+
+## Interop runner: +1 pass, still in-band
+
+The nightly runner's **[Aug-5 00:32 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-08-05_003235/report.html)** was **350 / 130 / 209 / 11** (~37.1% pass; at-target draft-18 220 · 0 ahead · 130 behind) — a marginal **+1 pass / −1 fail** move versus the Aug-4 cut (matrix, skip, and at-target all flat). Pass 130 stays inside the settled 350-cell band (126–133); fourteenth straight cut on that matrix, at-target holding 220. Still targets **draft-18**. No Aug-6 cut at check time. See [[interop-runner]].
 
 # Activity (Aug 4 → Aug 5) — **A genuinely spec-heavy window after weeks of implementation-carried days: [[luke-curley|Luke Curley]] files a three-draft batch on the IETF Datatracker — the new [[moq-cluster|`draft-lcurley-moq-cluster-00`]] "MoQ Cluster Extension" (relay-mesh Hop-ID path vector + accumulated route cost) plus revisions [[moq-timestamp|`draft-lcurley-moq-timestamp-01`]] and [[moq-hang|`draft-lcurley-moq-hang-02`]] — giving datatracker homes to the moq-net cluster / timestamp / Hang work moq-dev has been building in-code for weeks, and [[will-law|Will Law]] posts two new WG-list threads prepping Internet-Drafts for the Aug-24 virtual interim: Sender-Side Track Switching (SSTS) and Pacing for FETCH. Meanwhile [[moq-dev|moq-dev/moq]] drains a ~26-merge burst into `main` (native raw-video encoder, Happy-Eyeballs dialing, and OPEN [#2629](https://github.com/moq-dev/moq/pull/2629) implementing the cluster extension over moq-transport), the [[moq-feedback|Feedback draft]] thread turns into a real multi-party discussion, and the WG repos merge one small MSF editorial PR plus three new transport delivery-timeout issues.**
 

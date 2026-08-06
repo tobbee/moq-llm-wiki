@@ -2,7 +2,7 @@
 title: "MoQ Cluster Extension"
 tags: [draft, transport, extension, relay, clustering, individual]
 date: 2026-08-05
-last_updated: 2026-08-05
+last_updated: 2026-08-06
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-cluster/"
@@ -10,7 +10,7 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-cluster/"
 
 **draft-lcurley-moq-cluster-00** | Individual submission | Submitted 2026-08-04 | 10 pages | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-cluster/)
 
-> **2026-08-05**: **New individual I-D — `draft-lcurley-moq-cluster-00` "MoQ Cluster Extension" posted 2026-08-04** by [[luke-curley|Luke Curley]], one of a **three-draft batch** he submitted the same ~02:08 UTC minute alongside [[moq-timestamp|`draft-lcurley-moq-timestamp-01`]] and `draft-lcurley-moq-hang-02`. It gives a **datatracker home to the relay-mesh / cost-based-routing work** that [[moq-dev|moq-dev/moq]] has been building in-code for weeks (Hop IDs, cumulative route cost, gossip peering) — and moq-dev is implementing this exact extension over IETF [[moq-transport]] in OPEN [PR #2629](https://github.com/moq-dev/moq/pull/2629) *"implement MoQ Cluster extension over moq-transport"* (+2418/−403). The in-repo draft-authoring pass that produced the text landed as [PR #2607](https://github.com/moq-dev/moq/pull/2607) *"drafts: render gate, Hop ID 0, cluster rename, and a simplification pass"* — the same in-code-before-Datatracker pattern the [[moq-lite]] -05/-06 wire followed. Individual submission, not WG-adopted; logged as a first-look. See [[moq-dev]], [[discussions-2026-08]].
+> **2026-08-05**: **New individual I-D — `draft-lcurley-moq-cluster-00` "MoQ Cluster Extension" posted 2026-08-04** by [[luke-curley|Luke Curley]], one of a **three-draft batch** he submitted the same ~02:08 UTC minute alongside [[moq-timestamp|`draft-lcurley-moq-timestamp-01`]] and `draft-lcurley-moq-hang-02`. It gives a **datatracker home to the relay-mesh / cost-based-routing work** that [[moq-dev|moq-dev/moq]] has been building in-code for weeks (Hop IDs, cumulative route cost, gossip peering) — and moq-dev **implemented this exact extension over IETF [[moq-transport]]** in [PR #2629](https://github.com/moq-dev/moq/pull/2629) *"implement MoQ Cluster extension over moq-transport"* (**merged 2026-08-05**, +2662/−408). The in-repo draft-authoring pass that produced the text landed as [PR #2607](https://github.com/moq-dev/moq/pull/2607) *"drafts: render gate, Hop ID 0, cluster rename, and a simplification pass"* — the same in-code-before-Datatracker pattern the [[moq-lite]] -05/-06 wire followed. Individual submission, not WG-adopted; logged as a first-look. See [[moq-dev]], [[discussions-2026-08]].
 
 # Author
 - [[luke-curley|Luke Curley]] (kixelated@gmail.com)
@@ -29,7 +29,7 @@ This document defines a **clustering extension for [[moq-transport|MoQ Transport
 
 # Relationship to other work
 
-- **moq-net implementation ([[moq-dev|moq-dev/moq]])**: the cluster extension is the standards form of the **cost-based cache-aware routing** moq-dev shipped July 20 ([PR #2424](https://github.com/moq-dev/moq/pull/2424) *route by cumulative cost on lite-06 announcements*) plus the earlier vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179)). OPEN [PR #2629](https://github.com/moq-dev/moq/pull/2629) now implements the extension over IETF moq-transport (not just moq-lite), extending the mesh beyond configured routes — complementing the Aug-1 **mDNS local-network peer-mesh** front ([PR #2585](https://github.com/moq-dev/moq/pull/2585)).
+- **moq-net implementation ([[moq-dev|moq-dev/moq]])**: the cluster extension is the standards form of the **cost-based cache-aware routing** moq-dev shipped July 20 ([PR #2424](https://github.com/moq-dev/moq/pull/2424) *route by cumulative cost on lite-06 announcements*) plus the earlier vendored route-cost Internet-Draft ([PR #2179](https://github.com/moq-dev/moq/pull/2179)). [PR #2629](https://github.com/moq-dev/moq/pull/2629) (**merged 2026-08-05**, +2662/−408) implements the extension over IETF moq-transport (not just moq-lite), extending the mesh beyond configured routes — complementing the Aug-1 **mDNS local-network peer-mesh** front ([PR #2585](https://github.com/moq-dev/moq/pull/2585)).
 - **moq-lite-06 relay-hops**: moq-dev has been aligning relay-hops with moq-lite-06 in code ([PR #2578](https://github.com/moq-dev/moq/pull/2578) / [PR #2581](https://github.com/moq-dev/moq/pull/2581)); the cluster draft is the transport-level, container-agnostic articulation of that hop/cost model.
 - **Sibling drafts**: submitted together with [[moq-timestamp|`draft-lcurley-moq-timestamp-01`]] (age-based relay decisions) and `draft-lcurley-moq-hang-02` (conferencing profile) — the same "prototype in `moq-dev/moq`, then surface as a portable transport extension" workflow as [[moq-lite]] and [[compressed-mp4]].
 
@@ -40,7 +40,7 @@ Individual submission by Luke Curley, not adopted by the MOQ working group. Post
 # Links
 
 - **Datatracker**: https://datatracker.ietf.org/doc/draft-lcurley-moq-cluster/
-- **Implementation**: [moq-dev/moq PR #2629](https://github.com/moq-dev/moq/pull/2629) (MoQ Cluster extension over moq-transport)
+- **Implementation**: [moq-dev/moq PR #2629](https://github.com/moq-dev/moq/pull/2629) (MoQ Cluster extension over moq-transport — merged 2026-08-05)
 
 # Related
 - [[moq-transport]] — the transport this extension clusters
