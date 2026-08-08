@@ -2,11 +2,62 @@
 title: "Discussions - August 2026"
 tags: [discussions, slack, github]
 date: 2026-08-02
-last_updated: 2026-08-07
+last_updated: 2026-08-08
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during August 2026.
+
+# Activity (Aug 7 → Aug 8) — **Another implementation-carried window, with the WG side in Aug-10-interim-prep mode. [[moq-dev|moq-dev/moq]] **lands its new `moq play` CLI player** ([#2697](https://github.com/moq-dev/moq/pull/2697), OPEN→MERGED) — the prior window's headline OPEN PR — alongside **stateful per-frame fMP4 fragmenting** ([#2680](https://github.com/moq-dev/moq/pull/2680), +1408/−264) and a fresh net-layer batch, cut as a **relay v0.14.9 / libmoq v0.5.6** release train ([#2703](https://github.com/moq-dev/moq/pull/2703)). [[alan-frindell|afrind]] opens a coherent **auth-token front on [[openmoq|moqx]]** — multiple `AUTHORIZATION_TOKEN` per message ([#552](https://github.com/openmoq/moqx/pull/552)) + anonymous-claim grants / per-message token cap ([#553](https://github.com/openmoq/moqx/pull/553)) + a **CAT4MOQ→draft-01** issue ([#551](https://github.com/openmoq/moqx/issues/551)) — the code side of the transport auth-token-semantics threads. On the WG repo, four tiny editorial [[moq-transport]] PRs merge and [[will-law|Will Law]] files [issue #1850](https://github.com/moq-wg/moq-transport/issues/1850) (define Track/Object properties to **signal payload compression**). Datatracker shows **no draft bumps** but the **Aug-10 virtual-interim materials go live** (agenda → rev 01, chair slides posted). Slack surfaces one interop observation: [[jordi-cenzano|Jordi Cenzano]] tests Tobbe's captioned stack from the USA and reports **frequent small audio glitches**, asking about its QUIC mapping.**
+
+The Aug 7 → Aug 8 window had **no new draft revisions and no new mailing-list messages** — the [datatracker](https://datatracker.ietf.org/group/moq/documents/) shows transport-19, loc-04, secure-objects-01, msf-01, cmsf-01, c4m-01, warp-01, catalogformat-01, privacy-pass-auth-03 all standing, plus `draft-lcurley-moq-lite` -05 and the three Aug-4 lcurley drafts (hang-02/cluster-00/timestamp-01) and `draft-liu-moq-feedback` -00. The only Datatracker-side movement was **prep for Monday's Aug-10 virtual interim** (below). The IETF list's newest message is still Aug-5 (afrind's agenda, the ITU-T liaison, Jordi's LOCv4 post — all logged); the **weekly GitHub digest** had not yet posted (expected ~Aug 9). IETF-126 minutes remain the single Monday doc at rev -01. No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues; the nightly runner produced one new cut (+3 pass, see below).
+
+## Slack: Jordi Cenzano tests the captioned Eyevinn stack — audio glitches from the USA
+
+The channel's only new traffic was a **thread reply** on [[tobbe-einarsson|Tobbe]]'s Aug-6 caption-announcement post (logged in the prior window). [[jordi-cenzano|Jordi Cenzano]] (Meta) replied (Aug 7 21:02 CEST): *"that is a very complete implementation!!!!"* and asked **what QUIC mapping the stack uses for video and audio** — *"GOP = QUICStream, audio = Datagram?"* — while reporting that, **testing from the USA, he hears quite frequent (small) audio glitches**. No answer had been posted at check time. It is a small but concrete cross-continent interop observation on the freshly-released [[moqlivemock|Eyevinn v0.13.0]] stack, and echoes the recurring audio-over-datagram vs. audio-over-stream question (cf. the Aug-3 DATAGRAM-fragmentation thread and Ian Swett's July-25 MoQ-over-MoQ audio-drop note).
+
+## WG process: Aug-10 virtual-interim materials go live
+
+Ahead of **Monday's Aug-10 virtual interim** (interim-2026-moq-21, 1630–1800 UTC), the Datatracker meeting materials moved on Aug 7 (~22:08 UTC) — no mailing-list message, just document activity:
+
+- **Agenda bumped to rev 01** (`agenda-interim-2026-moq-21-moq-01`) — a revision of the draft agenda [[alan-frindell|afrind]] circulated Aug 5 (which named **draft-20** as the target for the in-flight filter/fetch/switch PR set: [[moq-transport]] [#1809](https://github.com/moq-wg/moq-transport/pull/1809)/[#1820](https://github.com/moq-wg/moq-transport/pull/1820)/[#1673](https://github.com/moq-wg/moq-transport/pull/1673)/[#1674](https://github.com/moq-wg/moq-transport/pull/1674)).
+- **Chair slides posted at rev 00** (`slides-interim-2026-moq-21-sessa-chair-slides`).
+- (Context: [[will-law|Will Law]]'s **FETCH-pacing slides** — `slides-interim-2026-moq-21-sessa-fetch-pacing-for-moqt` — were posted Aug 6, matching his Aug-4 "Pacing for FETCH" thread and the "Needs Discussion" issue [#1453](https://github.com/moq-wg/moq-transport/issues/1453) on the agenda.)
+
+## moq-dev: `moq play` lands, per-frame fMP4 fragmenting, and a v0.14.9 release train
+
+[[moq-dev|moq-dev/moq]] (all [[luke-curley|Luke Curley]]) had another busy day:
+
+- **`moq play` CLI player lands.** [#2697](https://github.com/moq-dev/moq/pull/2697) *"feat(cli): add moq play"* (**MERGED** Aug 7, +2190/−128) — the native command-line **player** verb that was OPEN in the prior window — with the Windows-gate compile fix ([#2712](https://github.com/moq-dev/moq/pull/2712)) merged alongside. `moq-cli` now has a first-class playback command.
+- **Stateful per-frame fMP4 fragmenting.** [#2680](https://github.com/moq-dev/moq/pull/2680) *"feat(moq-mux): add stateful per-frame fMP4 fragmenting"* (**MERGED**, +1408/−264) — the muxing layer can now emit one fMP4 fragment per frame, building on the Aug-6 init-segment/timescale refactor.
+- **Net-layer batch** (MERGED): **expose JavaScript subscription options** ([#2716](https://github.com/moq-dev/moq/pull/2716), +464/−69), **keep UNKNOWN publishers announced across relay loops** ([#2718](https://github.com/moq-dev/moq/pull/2718), +395/−3), a web-transport dependency bump ([#2717](https://github.com/moq-dev/moq/pull/2717)), and dropping the Intel-macOS release targets ([#2715](https://github.com/moq-dev/moq/pull/2715)).
+- **Release train** prepared via release-plz [#2703](https://github.com/moq-dev/moq/pull/2703) (merged Aug 8 00:59): **moq-relay 0.14.8→0.14.9, libmoq 0.5.5→0.5.6, moq-cli 0.9.8→0.9.9, moq-ffi 0.3.8→0.3.9, moq-net 0.2.9→0.2.10, moq-mux 0.9.4→0.9.5** (+ moq-native/audio/video/transcode/gst/boy bumps); the git tags had not yet appeared at check time.
+- **OPEN net fixes**: **invert stream priority to match transport send-order semantics** ([#2720](https://github.com/moq-dev/moq/pull/2720), +96/−13), **tolerate incoming streams that die before their first byte** ([#2721](https://github.com/moq-dev/moq/pull/2721), +194/−3), generate protocol-version help ([#2719](https://github.com/moq-dev/moq/pull/2719)), a multi-track-failover test ([#2713](https://github.com/moq-dev/moq/pull/2713)), and a *"docs: welcome AI contributions"* PR ([#2722](https://github.com/moq-dev/moq/pull/2722)). New issue [#2714](https://github.com/moq-dev/moq/issues/2714) asks for a per-subscriber path predicate on OriginConsumer/AnnounceConsumer (postanteGames). The prior window's large Origins single-connection rework ([#2705](https://github.com/moq-dev/moq/pull/2705)) remains OPEN.
+
+## moqx: afrind opens an auth-token front
+
+[[alan-frindell|afrind]] opened a coherent **authorization-token** cluster on [[openmoq|moqx]] Aug 7 — the code side of the transport-layer auth-token discussions (Michal Hošna's [#1838](https://github.com/moq-wg/moq-transport/issues/1838) "Semantics of multiple AUTHORIZATION TOKEN parameters" and Flynn's [#1843](https://github.com/moq-wg/moq-transport/issues/1843) CAT-token renewal, both logged earlier this month):
+
+- **[#552](https://github.com/openmoq/moqx/pull/552)** *"auth: support multiple AUTHORIZATION_TOKEN in single message"* (OPEN, +545/−58) — directly implements the semantics of transport #1838.
+- **[#553](https://github.com/openmoq/moqx/pull/553)** *"auth: add anonymous_claim grants and per-message token cap"* (OPEN, +1290/−155).
+- **[issue #551](https://github.com/openmoq/moqx/issues/551)** *"auth: CAT4MOQ update to draft-01"* (michalhosna / Michal Hošna) — tracking the **CAT4MOQ (Common Access Token for MoQ)** draft-01 revision, the token format behind Flynn's transport [issue #1843](https://github.com/moq-wg/moq-transport/issues/1843) (CAT-token expiration/renewal).
+
+A routine moxygen sync ([#550](https://github.com/openmoq/moqx/pull/550)) merged; a rolling `snapshot-latest` build was published.
+
+## WG transport: four editorial merges + a payload-compression issue
+
+- **Four tiny editorial PRs merged** Aug 7 (all ~05:18–05:20 UTC): [#1846](https://github.com/moq-wg/moq-transport/pull/1846) *"Too much partying"* (−1), [#1847](https://github.com/moq-wg/moq-transport/pull/1847) add `INCLUDE_PROPERTIES` to the Message Params IANA table (+1) — both OPEN→MERGED — plus [#1848](https://github.com/moq-wg/moq-transport/pull/1848) (`AUIDO_CONFIG`→`AUDIO_CONFIG` typo) and [#1849](https://github.com/moq-wg/moq-transport/pull/1849) (one-byte wording fix). No wire change; transport-19 stands.
+- **[issue #1850](https://github.com/moq-wg/moq-transport/issues/1850)** *"MOQT should define Track and Object properties to signal payload compression"* ([[will-law|Will Law]], Aug 7) — a new proposal to add properties advertising per-payload compression, so a receiver knows whether/how object payloads are compressed. Adds to the running properties-semantics front (INCLUDE_PROPERTIES, delivery-timeout).
+
+## Everything else: quiet
+
+- **moq-wg repos** msf / loc / secure-objects / cmsf / catalog-format / privacy-pass merged nothing and opened nothing in-window.
+- **Implementations quiet**: [[moq-rs|cloudflare/moq-rs]] (v0.7.25 stands), [[moq-js]], [[quiche-moq|google/quiche]] (moqt, newest commit Aug-4), [[moqtail|moqtail]], [[moxygen]] ([#211](https://github.com/facebookexperimental/moxygen/pull/211) still OPEN), [[imquic]], [[moqlivemock|Eyevinn/moqlivemock, warp-player, moqtransport]] (post-v0.13.0), [[kota-yatagai|Moqtopus]], [[aiomoqt]], birneee/quiche_moq, and `moq-encoder-player` all had no in-window activity.
+- **Datatracker catch-up note**: the individual draft **`draft-altanai-moq-relay-geocode-02`** *"Geographic Location for Media over QUIC Relays"* (submitted Aug 4, 22:56 UTC) sits on the datatracker — individual, not WG-adopted, and not discussed on-list or referenced in implementations; noted here as a first-look (it predates this window and had escaped prior individual-draft scans).
+
+## Interop runner: +3 pass, still in-band
+
+The nightly runner's **[Aug-7 01:14 UTC cut](https://englishm.github.io/moq-interop-runner/results/2026-08-07_011434/report.html)** was **350 / 132 / 207 / 11** (~37.7% pass; at-target draft-18 220 · 0 ahead · 130 behind) — a **+3 pass / −3 fail** move versus the Aug-6 cut (matrix, skip, and at-target all flat). Pass 132 stays inside the settled 350-cell band (126–133, high 133 on July 31); sixteenth straight cut on that matrix, at-target holding 220. Still targets **draft-18**. No Aug-8 cut at check time. See [[interop-runner]].
 
 # Activity (Aug 6 → Aug 7) — **The Eyevinn stack cuts a coordinated **v0.13.0** release wave — [[moqlivemock|moqlivemock]] v0.13.0 + [[moqlivemock|warp-player]] v0.13.0 + [[moqtransport|moqtransport]] v0.10.0 — completing AV1 video + CTA-608 captions across all three video codecs, with a selectable `-cc608mode` (paint-on/pop-on/roll-up), announced by [[tobbe-einarsson|Tobbe]] on Slack (the caveat: the player renders AVC/HEVC captions but not AV1 yet, pending common-media-library support). An **ITU-T SG21 liaison statement** lands on the WG list — a new work item **H.CVR-MP** (functional requirements for cloud-VR systems with multi-path transmission) asking MOQ + QUIC to share relevant work. [[will-law|Will Law]] opens a **four-issue MSF media-timeline design review** ([[moq-msf|msf]] #202–#205), [[yu-you|Yu You]] files [[moq-transport]] issue #1845 (a "Prior Subgroup ID Gap" for range-filter omissions), and [[moq-dev|moq-dev/moq]] adds a **new `moq play` playback client** + a moq-mux fMP4 refactor, cut as relay v0.14.8. No moq-wg PR merged; no datatracker bumps.**
 
