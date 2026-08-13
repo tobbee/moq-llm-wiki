@@ -2,7 +2,7 @@
 title: "Google QUICHE MoQT (quiche-moq)"
 tags: [implementation, cpp, google]
 date: 2026-04-15
-last_updated: 2026-07-18
+last_updated: 2026-08-13
 status: current
 ---
 
@@ -31,6 +31,7 @@ A substantial C++ MoQT implementation inside Google's QUICHE library (part of Ch
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Wire-migration resumed** (Aug 11–12, 2026) — after being quiet in the module since Aug-4, four commits continue peeling control messages onto dedicated bidirectional streams: **TRACK_STATUS moved to a separate stream** (`c57a70d2`, Aug-11), a `MoqtResponseCallback` invocation-consistency fix (`8a147ac8`), **PUBLISH_NAMESPACE moved onto a bidi stream** (`4b2d81f4`, Aug-12), and an OSS-build fix (`d01a24d4`). Extends the July-17 SUBSCRIBE-to-bidi pattern; the PUBLISH_NAMESPACE move coincided (on the stream-carriage axis) with [[moq-dev]]'s Aug-12 unsolicited-announce work ([#2748](https://github.com/moq-dev/moq/pull/2748)) and [[moq-transport]] issue [#1854](https://github.com/moq-wg/moq-transport/issues/1854).
 - **draft-18 migration burst** (July 17, 2026) — after being quiet in the module since July 8, three substantial commits move the impl toward draft-18: **SUBSCRIBE moved to a dedicated bidirectional stream** (`78341592`; new `MoqtSubscribeRequestStream`/`ResponseStream`, SUBSCRIBE/SUBSCRIBE_OK/UNSUBSCRIBE removed from the control stream, `MoqtUnsubscribe` message type dropped, session no longer owns subscriptions), a **codebase-wide class rename** (`2f4ea0dd`; `SubscriptionPublisher`→`LivePublisher`, `SubscribeRemoteTrack`→`LiveSubscriber`, `RemoteTrack`→`ObjectSubscriber`), and the **SUBSCRIBE_NAMESPACE / SUBSCRIBE_TRACKS split** (`d106f181`). Makes quiche a fifth codebase converging on the runner's draft-18 target.
 - **PUBLISH moved to a bidirectional stream** (June 2026) — aligns Google's C++ impl with the draft direction of carrying PUBLISH on a bidi stream.
 - **Control-stream architecture refactor** (June 2026) — control-message handlers were folded into the session and the control stream split in two; a dedicated WebTransport-only client class was split out of `MoqtClient`.
