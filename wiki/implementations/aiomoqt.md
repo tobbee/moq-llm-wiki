@@ -2,7 +2,7 @@
 title: "aiomoqt (Python)"
 tags: [implementation, python, async]
 date: 2026-04-10
-last_updated: 2026-07-20
+last_updated: 2026-08-14
 status: current
 ---
 
@@ -20,6 +20,7 @@ Python async implementation of MOQ Transport, using aiopquic for the QUIC transp
 - **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16), since extended toward the current interop drafts
 - Latest release: **v0.10.6** (released ~July 8, 2026; PyPI [`aiomoqt`](https://pypi.org/project/aiomoqt/))
 - Interop tested against 6 relay implementations across both drafts
+- **Known draft-18 SUBSCRIBE_OK parse bug (found 2026-08-13, fix pending)**: v0.10.6 decodes the SUBSCRIBE_OK Track-Properties block with **RFC 9000 varints instead of the LOC-style `vi64`**, so it runs off the end of the message whenever a property value is ≥ 64 (e.g. `TIMESCALE=1000`, encoded `83 e8`) — surfacing as *"truncated trailing extensions block."* Root-caused by Giovanni Marzot after Steven Riedl (Pluto TV) hit it subscribing to a [[moq-dev]] relay (whose SUBSCRIBE_OK is spec-correct); fixed on Marzot's dev branch (next release). Workaround until then: `MOQTMessage._tolerate_trailing_extensions = True` completes the subscribe but skips the property.
 
 # Vienna Hackathon (IETF 126)
 
