@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-08-08
+last_updated: 2026-08-18
 status: current
 ---
 
@@ -41,7 +41,7 @@ The project diverged from strict IETF WG spec compliance when Luke pursued his o
 - `moq-lite` — core transport library
 - `moq-relay` — server/relay; exposes a Prometheus `/metrics` endpoint for node traffic ([PR #2172](https://github.com/moq-dev/moq/pull/2172), July 12)
 - `moq-token` — authentication; the connection transport is now forwarded to the `--auth-api` hook ([PR #2132](https://github.com/moq-dev/moq/pull/2132), July 12), private key files are written owner-only (0600) ([PR #2596](https://github.com/moq-dev/moq/pull/2596), Aug 2), and **`moq-cli` gained a `token` subcommand** for generating/managing tokens ([PR #2593](https://github.com/moq-dev/moq/pull/2593), Aug 2)
-- `moq-native` — QUIC helpers; the **default QUIC backend flipped to quinn** ([PR #2285](https://github.com/moq-dev/moq/pull/2285), July 15; previously moq-dev's own `noq` with quinn opt-in), with `quic::Client` / `quic::Server` transport config ([PR #2161](https://github.com/moq-dev/moq/pull/2161), July 11); the alternate **quiche backend was brought to parity with quinn** ([PR #2514](https://github.com/moq-dev/moq/pull/2514), July 25, breaking)
+- `moq-tokio` — QUIC helpers (**renamed from `moq-native`** in the breaking [PR #2896](https://github.com/moq-dev/moq/pull/2896), Aug 17, +1722/−1662); the **default QUIC backend flipped to quinn** ([PR #2285](https://github.com/moq-dev/moq/pull/2285), July 15; previously moq-dev's own `noq` with quinn opt-in), with `quic::Client` / `quic::Server` transport config ([PR #2161](https://github.com/moq-dev/moq/pull/2161), July 11); the alternate **quiche backend was brought to parity with quinn** ([PR #2514](https://github.com/moq-dev/moq/pull/2514), July 25, breaking)
 - `moq-mux` — media pipeline (per-codec splitters, container import/export)
 - `moq-transcode` — just-in-time transcoding of Hang broadcasts (NVENC-capable), so one ingested broadcast can be served in multiple codecs/renditions ([PR #2140](https://github.com/moq-dev/moq/pull/2140), July 10); a `moq transcode` CLI verb plus decode-once-per-source + GPU resize fanout followed ([PR #2158](https://github.com/moq-dev/moq/pull/2158), July 12)
 - `moq-json` — generic (non-media) JSON tracks, split into snapshot/stream modules and exposed through moq-ffi/libmoq ([PR #2196](https://github.com/moq-dev/moq/pull/2196), July 12) — reinforces the "generic for any live data" framing

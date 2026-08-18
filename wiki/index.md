@@ -2,9 +2,9 @@
 title: MOQ Wiki Index
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-08-17
+last_updated: 2026-08-18
 status: current
-updated: 2026-08-17
+updated: 2026-08-18
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
