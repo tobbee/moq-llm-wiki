@@ -4,6 +4,7 @@ tags: [implementation, rust, cloudflare, ietf]
 date: 2026-04-12
 last_updated: 2026-08-01
 status: current
+last_updated: 2026-08-19
 ---
 
 **Language**: Rust
@@ -40,7 +41,7 @@ The two projects are now considered **sibling implementations** — neither is u
 # Draft Support
 
 - **main branch**: draft-14 (IETF WG spec) — current production deployment
-- **draft-18**: `draft-18-dev` branch behind the runner-registered `moq-rs-draft-18` relay; the request-stream rework (PR #178, removes `MAX_REQUEST_ID`, moves requests to bidi streams) merged in the July-8 burst. **SUBSCRIBE_NAMESPACE support** ([PR #187](https://github.com/cloudflare/moq-rs/pull/187), itzmanish/Manish) merged to `main` July 19, and `draft-18-dev` was rebased onto `main` the same day to prep the Vienna Hackathon relay
+- **draft-18**: `draft-18-dev` branch behind the runner-registered `moq-rs-draft-18` relay; the request-stream rework (PR #178, removes `MAX_REQUEST_ID`, moves requests to bidi streams) merged in the July-8 burst. **SUBSCRIBE_NAMESPACE support** ([PR #187](https://github.com/cloudflare/moq-rs/pull/187), itzmanish/Manish) merged to `main` July 19, and `draft-18-dev` was rebased onto `main` the same day to prep the Vienna Hackathon relay. **Relay draft-18 restoration** — [PR #211](https://github.com/cloudflare/moq-rs/pull/211) (Jacob/@nnazo, *"Restore relay work for draft-18 and port missing session layer,"* **+12164/−778**) merged **Aug 18**, bringing the **relay** role — which had lagged on draft-14/16 while the client tracked draft-18 — back onto draft-18 and porting the missing session layer, with unit-test coverage from [PR #156](https://github.com/cloudflare/moq-rs/pull/156) (+950/−71); a `moq-transport` crate **v0.16.2** release-please round is queued in [PR #212](https://github.com/cloudflare/moq-rs/pull/212) (OPEN, not yet cut)
 - **draft-16**: the long-open community rewrite ([PR #170](https://github.com/cloudflare/moq-rs/pull/170), itzmanish) merged July 8; its follow-on PUBLISH message support ([PR #181](https://github.com/cloudflare/moq-rs/pull/181), +4049/−624) merged July 9
 - Latest release: `moq-relay-ietf` **v0.7.25** (July 31) — the batch that shipped the relay upstream-retention fix — with `moq-pub` v0.9.3 / `moq-sub` v0.4.14 / `moq-clock-ietf` v0.6.20 / `moq-api` v0.2.13 / `moq-test-client` v0.1.12, following the July-20 v0.7.24 (`moq-native-ietf` v0.10.0, [PR #190](https://github.com/cloudflare/moq-rs/pull/190)) and July-19 v0.7.23 SUBSCRIBE_NAMESPACE batches. Bug [issue #191](https://github.com/cloudflare/moq-rs/issues/191) (dmorn) — the relay retains an upstream track subscription after the last downstream subscriber leaves — was **fixed July 30 by [PR #196](https://github.com/cloudflare/moq-rs/pull/196)** (release upstream subscriptions for idle cached tracks) and **backported to the draft-14 `main` branch July 31 by [PR #198](https://github.com/cloudflare/moq-rs/pull/198)** (+1986/−163), with a companion ordering fix [PR #197](https://github.com/cloudflare/moq-rs/pull/197) (*wait for upstream subscription before sending SUBSCRIBE_OK*, +477/−55) — all cut in v0.7.25
 - Historical branches: draft-04, 05, 06, 07
