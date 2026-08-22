@@ -13,7 +13,7 @@ The core messaging pattern of [[moq-transport]].
 MOQT uses a publish/subscribe model where:
 - **Publishers** produce media data and announce availability via PUBLISH_NAMESPACE
 - **Subscribers** express interest via SUBSCRIBE (for live data) or FETCH (for historical data)
-- **[[Relays]]** sit between publishers and subscribers, forwarding data and aggregating subscriptions
+- **[[relays]]** sit between publishers and subscribers, forwarding data and aggregating subscriptions
 
 # Message Flow
 

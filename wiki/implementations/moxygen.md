@@ -2,7 +2,7 @@
 title: "Moxygen (Meta)"
 tags: [implementation, cpp, meta]
 date: 2026-04-10
-last_updated: 2026-07-17
+last_updated: 2026-08-22
 status: current
 ---
 
@@ -35,6 +35,9 @@ Meta's open-source C++ MOQ implementation built on their mvfst QUIC library. Inc
 
 # Recent Highlights
 
+- **Request-stream GOAWAY series (2026-08-21)**: @sandarsh landed a five-commit pass giving GOAWAY proper semantics on *request* streams — context-aware GOAWAY framing, admitting GOAWAY on established SUBSCRIBE/FETCH streams, a `MoQSession::requestStreamGoaway` API (+224/−0), surfacing migration to `TrackConsumer`/`FetchConsumer` (+231/−0), and resetting the stream with `GOING_AWAY` after a timeout. This is the relay-drain/migration path that [[moq-transport]]'s GOAWAY-restriction PR [#1852](https://github.com/moq-wg/moq-transport/pull/1852) is specifying.
+- **Interop-client ALPN gap (Aug 2026)**: the moxygen **relay** negotiates draft-18 correctly, but the interop **client** binary's `kInteropAlpns` lacked `moqt-18`, so draft-18-only relays failed the handshake — a configuration defect that showed up as protocol failures in the [[interop-runner]] matrix. Documented in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111); fixes tracked in [issue #219](https://github.com/facebookexperimental/moxygen/issues/219) — [[mike-english|englishm]]'s #221 adds `moqt-18`, afrind's #222 landed ALPN derivation, and [[giovanni-marzot|gmarzot]]'s #223 (derive ALPNs, `--versions`, report the negotiated draft) is still OPEN.
+- **MoQMediaServer** — a new server + binary with an `MoQMp4Receiver` test client and CMake/OSS build wiring (@sandarsh, Aug 18–19), plus [[alan-frindell|afrind]] fixes: routing SUBSCRIBE past publisher-less namespace nodes, emitting the subgroup **End of Group** bit, and resolving publisher priority from track property extensions.
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
 - **Meta lands moxygen via an internal-diff (Phabricator) workflow** — changes merge to `main` as direct commits, not GitHub PRs, so most GitHub PRs are mirrors that get closed *unmerged* even when the change actually ships. PR-based activity scans therefore understate real progress.

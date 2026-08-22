@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-19
+last_updated: 2026-08-22
 status: current
 ---
 
@@ -17,21 +17,33 @@ The interop runner automates testing between MOQ implementations, publishing res
 
 # Registered Implementations
 
-1. **moq-dev-js** - [[moq-dev|moq-dev/moq]] JavaScript/Hang player ([[luke-curley]])
-2. **moq-dev-rs** - [[moq-dev|moq-dev/moq]] Rust ([[luke-curley]])
-3. **moq-rs** - [[moq-rs|cloudflare/moq-rs]] (draft-14)
-4. **moq-rs-draft-16** - Cloudflare moq-rs (draft-16 branch)
-5. **moxygen** - [[moxygen|Meta's C++ relay]]
-6. **xquic** - [[xquic-moq|Alibaba's XQUIC]]
-7. **imquic** - [[lorenzo-miniero]]'s C library
-8. **libquicr** - [[libquicr|Cisco's C++ library]]
-9. **moqtail** - [[moqtail|Zafer Gurel's Rust/TS implementation]]
-10. **quiche-moq** - Google's C++ MoQT ([[martin-duke]], [[victor-vasiliev|Victor Vasiliev]])
-11. **moqx** - [[openmoq|OpenMOQ]]'s moxygen fork relay (PR #59 merged Apr 11)
-12. **mlmtest** - [[moqlivemock|Eyevinn moqlivemock]] interop client ([[tobbe-einarsson|Torbjörn Einarsson]], PR #63 merged **May 13 17:25 UTC**) — supports both draft-14 and draft-16 via `DRAFT` env var
-13. **moqx (client)** - OpenMOQ moqx client role ([[giovanni-marzot]], PR #66 merged **May 13 17:24 UTC**) — adds the client-side image to complement the existing moqx relay
-14. **aiomoqt** - Python asyncio MoQT client ([[giovanni-marzot]], PR #67 merged **May 13 17:23 UTC**)
-15. **Nokia v17 (via Docker RELAY_URL)** - yuyou (Nokia) Docker relay-URL configuration support (PR #65 merged **May 13 17:25 UTC**) — enables Nokia's in-house v17 implementation to slot into the matrix
+Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints × 16 relay endpoints**. Several projects register more than one endpoint (a draft-pinned variant, or separate client and relay roles), so endpoint names are not 1:1 with projects.
+
+**Client endpoints (15)** — `aiomoqt`, `imquic`, `moq-dev-js`, `moq-dev-rs`, `moq-go`, `moq-rs`, `moq-rs-draft-14`, `moq-rs-draft-18`, `moq5`, `moqlivemock`, `moqtopus`, `moqx`, `moxygen`, `xquic`, `xquic-draft-18`
+
+**Relay endpoints (16)** — `aiomoqt-relay`, `aiomoqt-relay-quic`, `imquic`, `libquicr`, `moq-dev-rs`, `moq-go`, `moq-rs`, `moq-rs-draft-14`, `moq-rs-draft-18`, `moqt-nr`, `moqtail`, `moqx`, `moxygen`, `quiche-moq`, `xquic`, `xquic-draft-18`
+
+| Endpoint | Project | Draft (Aug-22) | Notes |
+|---|---|---|---|
+| `aiomoqt`, `aiomoqt-relay`, `aiomoqt-relay-quic` | [[aiomoqt]] — Python asyncio ([[giovanni-marzot|gmarzot]]) | 18 | Client + two relay roles; **18/18 vs moqx, moxygen, moq-rs-draft-18** on the Aug-22 cut |
+| `imquic` | [[imquic]] — [[lorenzo-miniero]]'s C library | 18 | Client and relay |
+| `moq-dev-js`, `moq-dev-rs` | [[moq-dev|moq-dev/moq]] ([[luke-curley]]) | 18 | JS/Hang player + Rust client and relay |
+| `moq-go` | **Go implementation — not yet covered by a wiki page** | **19** | **Only endpoint ahead of target**; since Aug-19 pairs only with itself (6/6) |
+| `moq-rs`, `moq-rs-draft-14`, `moq-rs-draft-18` | [[moq-rs|cloudflare/moq-rs]] | 16 / 14 / 18 | Three draft-pinned endpoints; `moq-rs-draft-18` is [[mike-english]]'s single-instance relay |
+| `moq5` | **Client — not yet covered by a wiki page** | 18 | |
+| `moqlivemock` | [[moqlivemock|Eyevinn moqlivemock]] (`mlmtest`, [[tobbe-einarsson]]) | — | Client role |
+| `moqt-nr` | **Relay — not yet covered by a wiki page** | 18 | |
+| `moqtail` | [[moqtail]] (Zafer Gurel) | 16 | Relay |
+| `moqtopus` | Moqtopus — C++/MsQuic for Unreal Engine (Kota Yatagai) | 18 | Client |
+| `moqx` | [[openmoq|OpenMOQ moqx]] | 18 | Client + relay |
+| `moxygen` | [[moxygen|Meta's C++ relay]] | 18 | Client + relay; interop **client** ALPN gap tracked in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) |
+| `quiche-moq` | [[quiche-moq|google/quiche]] ([[martin-duke]], [[victor-vasiliev]]) | 16 | Relay |
+| `xquic`, `xquic-draft-18` | [[xquic-moq|Alibaba XQUIC]] | 14 / 18 | Client + relay; draft-18 relay image reported unavailable on the Aug-22 cut |
+| `libquicr` | [[libquicr|Cisco]] | 14 | Relay |
+
+> **Coverage gap**: `moq-go`, `moq5`, and `moqt-nr` are registered and running but have **no wiki page yet**. `moq-go` is the most significant of the three — it is the only implementation in the runner ahead of the draft-18 target.
+
+**Registration history** (PRs on [englishm/moq-interop-runner](https://github.com/englishm/moq-interop-runner)): `moqx` relay #59 (Apr 11); then a May-13 batch — `mlmtest`/moqlivemock #63, `moqx` client #66, `aiomoqt` #67, and Nokia Docker `RELAY_URL` support #65 enabling Nokia's in-house v17 relay. **Open now**: [#112](https://github.com/englishm/moq-interop-runner/pull/112) registering Pluto TV / Paramount's `stitcher-moq` public relay endpoints ahead of the Sep-2 hackathon, and [#111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN limitation.
 
 # Current Target
 
@@ -39,15 +51,76 @@ The interop runner targets **draft-18** for automated testing. The WG (per [[mik
 
 [[alan-frindell|Alan Frindell]] **reaffirmed on Slack (July 18) that the official interop target for moq-transport is still draft-18** — "since there's been some confusion" — while welcoming intrepid implementers to try draft-19 because filter feedback is valuable. This came as the Vienna Hackathon began generating the first draft-19 activity (see Live interop below).
 
+**A dedicated draft-18 interop push is now scheduled**: [[mike-english|Mike English]] announced a **Virtual Interop Hackathon on Wednesday 2026-09-02** (list, Aug-21, [permalink](https://mailarchive.ietf.org/arch/msg/moq/zB7VU82ER6YB0xQg8ndLzLF4cAA/)) — an all-day drop-in/drop-out session **targeting draft-18**, framed explicitly as hardening draft-18 interop *before* **draft-20** becomes the target at the **Oct 12–15 Seattle hybrid interim**. English flags two expected runner changes for it: **broader data-plane test coverage** and a possible **redesign of the results presentation**. Participants are asked to register implementations in the runner and refresh Docker images / relay endpoints in advance. See [[interim-meetings]].
+
 The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** name a **named successor**: after draft-20 (a purely-editorial cut) and draft-21 (the editorial-meeting output), *"Draft 22 will be published as the next official interop target."* So draft-18 holds as the automated target for now, with draft-22 slated to replace it once the editorial passes land.
 
 # Current standing
 
-The runner's most recent published cut is the **[2026-08-18 00:13:26 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-18_001326/report.html): 350 cells; 135 pass / 204 fail / 11 skip** (~38.6% pass; **at-target draft-18 220** · 0 ahead · 130 behind) — a **+2 pass / −2 fail** move versus the Aug-17 cut (matrix, skip, and at-target all flat), the **second consecutive +2 recovery** and **the second-best pass on the 350-cell matrix** (behind only Aug-12's 136, tying Aug-13's 135). Twenty-seventh straight cut on the settled 350-cell / at-target-220 matrix (16 relay implementations). Still targets **draft-18** — though the [[interim-meetings|interim-2026-moq-21]] minutes (posted Aug-14) name **draft-22** as the eventual next official interop target. No Aug-19 cut at check time.
+**Latest cut: [2026-08-22 00:13:58 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-22_001358/report.html) — 321 cells / 126 pass / 185 fail / 10 skip** (39.3% pass; **at-target draft-18 190 · ahead 1 · behind 130**), flat versus Aug-21.
 
-The prior cut was the **[2026-08-17 00:12:07 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-17_001207/report.html): 350 / 133 / 206 / 11** (at-target 220) — a **+2 pass / −2 fail** move recovering the Aug-16 −3 slip — versus the **[2026-08-16 00:12:41 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-16_001241/report.html): 350 / 131 / 208 / 11** (at-target 220) — a **−3 pass / +3 fail** move giving back most of the Aug-15 +5 recovery — versus the **[2026-08-15 00:12:56 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-15_001256/report.html): 350 / 134 / 205 / 11** (at-target 220) — a **+5 pass / −5 fail** move recovering most of the Aug-14 −6 dip — versus the **[2026-08-14 00:24:37 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-14_002437/report.html): 350 / 129 / 210 / 11** (at-target 220) — a **−6 pass / +6 fail** move erasing the Aug-12→13 spike — versus the **[2026-08-13 00:23:34 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-13_002334/report.html): 350 / 135 / 204 / 11** (at-target 220) — a **−1 pass / +1 fail** move (the **second-best on the 350-cell matrix**, behind Aug-12's 136), giving back one of the +9 that set the high — versus the **[2026-08-12 00:22:23 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-12_002223/report.html): 350 / 136 / 203 / 11** (at-target 220) — a **+9 pass / −9 fail** move to a **new 350-cell-matrix pass high of 136** (edging past the 133 first set July 31, tied Aug-10), the biggest single-cut swing since Vienna week, plausibly reflecting the [[moqtail]] relay-hardening and [[moq-dev]] delivery-ordering fixes converging — versus the **[2026-08-11 00:18:17 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-11_001817/report.html): 350 / 127 / 212 / 11** (at-target 220) — a **−6 pass / +6 fail** move — versus the **[2026-08-10 00:19:31 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-10_001931/report.html): 350 / 133 / 206 / 11** (at-target 220) — a **+2 pass / −2 fail** move (taken the morning of the Aug-10 virtual interim), **tying the then-350-cell-matrix pass high** last reached July 31 — versus the **[2026-08-09 00:18:24 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-09_001824/report.html): 350 / 131 / 208 / 11** (at-target 220) — a marginal **−1 pass / +1 fail** move versus the **[2026-08-08 00:18:10 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-08_001810/report.html): 350 / 132 / 207 / 11** (at-target 220) — **byte-for-byte identical to the Aug-7 cut** (0 pass change; matrix/skip/at-target flat) — itself the same as the **[2026-08-07 01:14:34 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-07_011434/report.html): 350 / 132 / 207 / 11** (at-target 220) — a **+3 pass / −3 fail** move versus the **[2026-08-06 00:29:02 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-06_002902/report.html): 350 / 129 / 210 / 11** (at-target 220) — a **−1 pass / +1 fail** move versus the **[2026-08-05 00:32:35 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-05_003235/report.html): 350 / 130 / 209 / 11** (at-target 220) — a **+1 pass / −1 fail** move versus the **[2026-08-04 00:34:04 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-04_003404/report.html): 350 / 129 / 210 / 11** (at-target 220) — a **−2 pass / +2 fail** move versus the **[2026-08-03 00:36:00 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-03_003600/report.html): 350 / 131 / 208 / 11** (at-target 220) — a **+1 pass / −1 fail** move versus the **[2026-08-02 00:35:00 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-02_003500/report.html): 350 / 130 / 209 / 11** (at-target 220) — **byte-for-byte identical to the Aug-1 cut** (0 pass change; matrix/skip/at-target flat) — itself the same as the **[2026-08-01 00:34:17 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-08-01_003417/report.html): 350 / 130 / 209 / 11** (at-target 220) — a **−3 pass / +3 fail** drift versus the **[2026-07-31 00:35:11 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-31_003511/report.html): 350 / 133 / 206 / 11** (at-target 220) — a **+1 pass / −1 fail** move to a **350-cell-matrix pass high of 133** versus the **[2026-07-30 00:31:32 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-30_003132/report.html): 350 / 132 / 207 / 11** (at-target 220) — a **+6 pass / −6 fail** recovery versus the **[2026-07-29 00:30:51 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-29_003051/report.html): 350 / 126 / 213 / 11** (at-target 220) — a marginal **−2 pass / +2 fail** versus the **[2026-07-28 00:33:50 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-28_003350/report.html): 350 / 128 / 211 / 11** (at-target 220) — a **−1 pass / +1 fail** drift from the **[2026-07-27 00:35:46 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-27_003546/report.html): 350 / 129 / 210 / 11** (at-target 220) — **byte-for-byte identical** to the **[2026-07-26 00:37:06 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-26_003706/report.html): 350 / 129 / 210 / 11** (at-target 220), itself a **+1 pass** recovery versus the **[2026-07-25 00:34:23 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-25_003423/report.html): 350 / 128 / 211 / 11** (at-target 220) — itself a slight **−3 pass** regression versus the **[2026-07-24 00:31:11 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-24_003111/report.html): 350 / 131 / 208 / 11** (at-target 220) — itself essentially flat (**+1 pass, −1 fail**) versus the **[2026-07-23 20:52:38 UTC report](https://englishm.github.io/moq-interop-runner/results/2026-07-23_205238/report.html): 350 / 130 / 209 / 11** (at-target 220), an **off-cadence second run** on July 23 distinct from that day's 00:33 UTC daily cut (330/136/184/10). Versus the July-22 baseline (338/142/196/0, at-target 190), the matrix grew **+12 to 350** and at-target jumped **+30 to 220** as fresh draft-18 endpoints registered during Hackathon week, but **pass fell −12 (142 → 130)**, fail rose +13, and **skips reappeared (0 → 11)** — the newly-wired cells failing or skipping on their first appearance, the same first-cut-regression pattern seen on the July-20 expansion.
+## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
-A July-7 structural expansion grew the matrix +25 cells to 319 and cleared all 34 skips to zero (every cell now runs); pass then climbed for three straight cuts as the newly-added cross-version cells converted green — +14 (93 → 107) July-8, +17 (107 → 124) July-9, +8 (124 → 132) July-10 — then **oscillated 130↔132** for a week on a byte-for-byte identical matrix: −2 (132 → 130) July-11, +2 (130 → 132) July-12, flat 132 July-13, −2 (132 → 130) July-14, flat 130 July-15 — before **breaking upward to 136** July-16 (+6), edging to **137** July-17 (+1), slipping back to **132** July-18 (−5), recovering **+2 to 134** July-19, holding **flat at 134** July-20 as a **second structural expansion (+19 to 338)** wired in fresh draft-18 endpoints that all failed on their first cut, then **climbing +8 to 142** July-21 as eight of those newly-added cells began converging green, holding **flat at 142** July-22, then **regressing −12 to 130** on the July-23 20:52 cut as a third structural expansion (+12 to 350) wired in fresh draft-18 endpoints — pushing at-target to 220 while pass fell and skips reappeared (0 → 11) — then edging **+1 to 131** on the July-24 cut, slipping **−3 to 128** on the July-25 cut, recovering **+1 to 129** on the July-26 cut, holding **flat at 129** on the July-27 cut, slipping **−1 to 128** on the July-28 cut, slipping **−2 to 126** on the July-29 cut, recovering **+6 to 132** on the July-30 cut, edging **+1 to 133** on the July-31 cut — a new high for the 350-cell matrix — slipping **−3 to 130** on the Aug-1 cut, holding **flat at 130** on the Aug-2 cut (byte-for-byte identical to Aug-1; matrix/skip/at-target flat throughout), edging **+1 to 131** on the Aug-3 cut, slipping **−2 to 129** on the Aug-4 cut, recovering **+1 to 130** on the Aug-5 cut, slipping **−1 to 129** on the Aug-6 cut, recovering **+3 to 132** on the Aug-7 cut, holding **flat at 132** on the Aug-8 cut (byte-for-byte identical to Aug-7), slipping **−1 to 131** on the Aug-9 cut, recovering **+2 to 133** on the Aug-10 cut — **tying the 350-cell-matrix pass high** first set July 31 — slipping **−6 to 127** on the Aug-11 cut, jumping **+9 to 136** on the Aug-12 cut — a **new 350-cell-matrix pass high** and the biggest single-cut swing since Vienna week — slipping **−1 to 135** on the Aug-13 cut, slipping **−6 to 129** on the Aug-14 cut (erasing the Aug-12→13 spike), recovering **+5 to 134** on the Aug-15 cut, slipping **−3 to 131** on the Aug-16 cut, recovering **+2 to 133** on the Aug-17 cut, then recovering **+2 to 135** on the Aug-18 cut — the second-best pass on the 350-cell matrix. Read across the run (107 → 124 → 132 → 130 → 132 → 132 → 130 → 130 → 136 → 137 → 132 → 134 → 134 → 142 → 142 → 130 → 131 → 128 → 129 → 129 → 128 → 126 → 132 → 133 → 130 → 130 → 131 → 129 → 130 → 129 → 132 → 132 → 131 → 133 → 127 → 136 → 135 → 129 → 134 → 131 → 133 → 135) the July-8–10 hardening phase gave way to a settled band, the July-16/17 uptick did not hold, and each structural expansion (July-20, July-23) drops pass on the first cut before the new cells converge; at-target rose 171 → 190 (July-20) → 220 (July-23) as new endpoints registered and has held at 220 for all twenty-seven cuts on the 350-cell matrix. This followed the July-2 expansion (matrix +28 to 294; at-target draft-18 78 → 152) and five straight cuts holding at-target 152 through the draft-18-only era (July 2–6). The runner still targets **draft-18** and has not advanced to draft-19.
+The headline number changed shape on **2026-08-19**, and the cause is specific rather than a generic "resize": **`moq-go` upgraded itself from draft-18 to draft-19**, and in doing so fell out of nearly every pairing in the runner.
+
+- On the **Aug-18** cut, `moq-go` ran at **draft-18** against ~13 relay endpoints (aiomoqt-relay ×2, imquic ×3 transports, moq-dev-rs ×3, moq-rs-draft-18 ×3, moqt-nr ×2, moqx ×3, moxygen ×3, xquic-draft-18) plus itself — around **30 at-target runs**, most of them failing 0/6.
+- On the **Aug-19 cut and since**, `moq-go` is labeled **draft-19** and appears in exactly **one** pairing: **`moq-go → moq-go`, draft-19, docker, 6/6 pass**. Every cross-implementation cell it had is gone, because the runner only pairs endpoints that version-match.
+- That accounts for the whole move: **at-target 220 → 190 (−30)**, **ahead 0 → 1 (+1)** — the self-pair reclassified — for a net **−29 cells (350 → 321)**. `behind` stayed frozen at **130** (the draft-14 / draft-16 endpoints).
+
+**Two readings follow, and both matter:**
+
+1. **The raw pass drop is not a regression.** Pass fell 135 → 126, but pass *rate* rose: **38.6% (135/350) on Aug-18 → 39.3% (126/321) on Aug-22**. The cells that vanished were disproportionately `moq-go` failures. The genuine signal is the small **−3 drift across Aug-19 → Aug-21** on a constant 321-cell matrix (129 → 128 → 126), then **flat on Aug-22**.
+2. **Running ahead of the target currently costs you all cross-implementation coverage.** `moq-go` is the first endpoint ever scored *ahead*, and its reward is a matrix row that only tests against itself. With the **[[interim-meetings|Sep-2 virtual interop hackathon]] explicitly targeting draft-18**, and draft-20 not becoming the target until the **Oct 12–15 Seattle interim**, an implementation that jumps to draft-19 early is invisible to the shared matrix in the meantime. Worth watching whether the runner grows cross-version pairing before draft-22 lands as the next official target.
+
+Aug-22 report detail: **`aiomoqt` scores a clean 18/18** against `moqx`, `moxygen`, and `moq-rs-draft-18`; **`xquic` over the docker transport fails broadly** across relays, while the **remote-quic transport outperforms docker** for several draft-18 pairings. One skip source is a missing relay image (`moq-interop-runner-xquic-moq-relay-draft-18:latest` reported unavailable).
+
+Day-over-day cell churn (per the gh-pages summaries):
+- **Aug 19→20 (−1)**: moq-rs→moqtail d16 WT and moq-rs-draft-14→moq-dev-rs d14 WT went pass→fail; moqlivemock→imquic d16 WT went **fail→pass**.
+- **Aug 20→21 (−2)**: moq-rs→moqtail d16 WT recovered; moq-rs-draft-14→moqx d14 (QUIC *and* WT) and →moxygen d14 WT went pass→fail.
+- **Aug 21→22 (flat, 4 up / 4 down)**: aiomoqt→moq-dev-rs d18 WT, imquic→moxygen d18 docker, moq-rs-draft-14→moxygen d14 WT, and moxygen→imquic d18 remote-QUIC all went **fail→pass**; imquic→moq-rs-draft-18 docker, moq-rs→moq-rs d16 docker, moq-rs-draft-14→moxygen d14 QUIC, and moxygen→aiomoqt-relay d18 docker went pass→fail.
+
+## Daily cuts
+
+| Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
+|---|---|---|---|---|---|---|---|---|
+| 2026-08-22 00:13:58 | 321 | 126 | 185 | 10 | 190 | 1 | 0 | flat |
+| 2026-08-21 00:13:55 | 321 | 126 | 185 | 10 | 190 | 1 | −2 | |
+| 2026-08-20 00:12:54 | 321 | 128 | 183 | 10 | 190 | 1 | −1 | |
+| 2026-08-19 00:12:57 | 321 | 129 | 182 | 10 | 190 | 1 | −6 | **`moq-go` → draft-19; its ~30 pairings leave the matrix (−29 cells); first-ever "ahead" cell** |
+| 2026-08-18 00:13:26 | 350 | 135 | 204 | 11 | 220 | 0 | +2 | 2nd-best on 350-cell matrix |
+| 2026-08-17 00:12:07 | 350 | 133 | 206 | 11 | 220 | 0 | +2 | |
+| 2026-08-16 00:12:41 | 350 | 131 | 208 | 11 | 220 | 0 | −3 | |
+| 2026-08-15 00:12:56 | 350 | 134 | 205 | 11 | 220 | 0 | +5 | |
+| 2026-08-14 00:24:37 | 350 | 129 | 210 | 11 | 220 | 0 | −6 | |
+| 2026-08-13 00:23:34 | 350 | 135 | 204 | 11 | 220 | 0 | −1 | |
+| 2026-08-12 00:22:23 | 350 | 136 | 203 | 11 | 220 | 0 | +9 | **350-cell-matrix pass high** |
+| 2026-08-11 00:18:17 | 350 | 127 | 212 | 11 | 220 | 0 | −6 | |
+| 2026-08-10 00:19:31 | 350 | 133 | 206 | 11 | 220 | 0 | +2 | morning of Aug-10 interim |
+| 2026-08-09 00:18:24 | 350 | 131 | 208 | 11 | 220 | 0 | −1 | |
+| 2026-08-08 00:18:10 | 350 | 132 | 207 | 11 | 220 | 0 | 0 | byte-identical to Aug-7 |
+| 2026-08-07 01:14:34 | 350 | 132 | 207 | 11 | 220 | 0 | +3 | |
+| 2026-08-06 00:29:02 | 350 | 129 | 210 | 11 | 220 | 0 | −1 | |
+| 2026-08-05 00:32:35 | 350 | 130 | 209 | 11 | 220 | 0 | +1 | |
+| 2026-08-04 00:34:04 | 350 | 129 | 210 | 11 | 220 | 0 | −2 | |
+| 2026-08-03 00:36:00 | 350 | 131 | 208 | 11 | 220 | 0 | +1 | |
+| 2026-08-02 00:35:00 | 350 | 130 | 209 | 11 | 220 | 0 | 0 | byte-identical to Aug-1 |
+| 2026-08-01 00:34:17 | 350 | 130 | 209 | 11 | 220 | 0 | −3 | |
+| 2026-07-31 00:35:11 | 350 | 133 | 206 | 11 | 220 | 0 | +1 | first 350-cell high |
+
+## Longer history
+
+The runner has gone through **three structural expansions and one contraction**, and each one moves the pass count more than any week of real implementation work does:
+
+- **July 2** — matrix +28 to 294; at-target draft-18 78 → 152, which then held for five cuts through the draft-18-only era (July 2–6).
+- **July 7** — matrix +25 to 319 and all 34 skips cleared to zero. Pass then climbed three straight cuts as new cross-version cells converted green: +14 (93→107) July-8, +17 (→124) July-9, +8 (→132) July-10. It then **oscillated 130↔132 for a week** on a byte-identical matrix, broke up to **136** July-16 and **137** July-17, slipped to 132 July-18, recovered to 134 July-19.
+- **July 20** — matrix +19 to 338; fresh draft-18 endpoints all failed on their first cut (pass flat at 134), then **+8 to 142** July-21 as they converged, flat 142 July-22.
+- **July 23** — matrix +12 to **350**, at-target to **220**; pass fell **−12 to 130** and skips reappeared (0 → 11). The 350-cell matrix then held for **27 consecutive cuts** (July 23 → Aug 18), pass wandering in a **126–136 band**.
+- **Aug 19** — the first **contraction**: −29 to **321**, at-target 220 → **190**, and the first-ever `ahead` cell — caused not by a runner change but by **`moq-go` moving to draft-19** and losing every version-matched pairing.
+
+The recurring pattern: **every structural change drops the raw pass count on its first cut** before the newly-wired cells converge — so cross-expansion comparisons of the absolute pass number are close to meaningless. Pass *rate* and the at-target/ahead/behind split are the durable readings.
+
+The runner still targets **draft-18** and has not advanced to draft-19 — though `moq-go` is now running draft-19 ahead of it, and the [[interim-meetings|interim-2026-moq-21]] minutes name **draft-22** as the eventual next official target.
+
 
 # Live interop (Vienna Hackathon)
 

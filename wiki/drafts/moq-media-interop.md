@@ -2,14 +2,14 @@
 title: "MoQ Media Interop"
 tags: [draft, media, interop, loc, individual]
 date: 2026-04-12
-last_updated: 2026-05-01
+last_updated: 2026-08-22
 status: outdated
 expires: 2026-04-23
 ---
 
 **Draft**: draft-cenzano-moq-media-interop-03
 **Status**: **EXPIRED** (Internet-Draft expired 2026-04-23 with no -04 published; individual submission, not WG-adopted)
-**Authors**: Jorge Cenzano-Ferret (Meta), [[alan-frindell]] (Meta)
+**Authors**: Jordi Cenzano (Meta), [[alan-frindell]] (Meta)
 **Published**: 2025-10-20
 **Expires**: 2026-04-23 — **EXPIRED 2026-04-23, no -04 published as of May 1**
 **Datatracker**: [draft-cenzano-moq-media-interop](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/)

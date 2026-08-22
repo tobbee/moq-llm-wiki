@@ -2,7 +2,7 @@
 title: "Alan Frindell"
 tags: [person, meta, editor]
 date: 2026-04-10
-last_updated: 2026-04-14
+last_updated: 2026-08-22
 status: current
 ---
 
@@ -15,7 +15,7 @@ status: current
 - Co-editor of draft-ietf-moq-transport (all versions)
 - Author of [Join Subscription Filters](https://afrind.github.io/draft-frindell-moq-join-filters/draft-frindell-moq-join-filters.html) proposal
 - Author of [[moq-moqpack]] - QPACK compression for MOQT control messages (draft-00, March 2026)
-- Co-author of [[moq-media-interop]] - Media wire format over LOC (with Jorge Cenzano-Ferret, draft-03, expires Apr 23 2026)
+- Co-author of [[moq-media-interop]] - Media wire format over LOC (with Jordi Cenzano, draft-03, expires Apr 23 2026)
 - Maintains the moxygen relay at `fb.mvfst.net`
 - Very active in Slack #moq, frequently clarifying protocol semantics
 - Created the #moq Slack channel (2022-10-17)

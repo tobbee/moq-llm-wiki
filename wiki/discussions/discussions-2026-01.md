@@ -37,7 +37,7 @@ Discussion about how DELIVERY_TIMEOUT works:
 [[mike-english|Mike English]] noticed confusion on datatracker: CMSF and CARP both showed as adopted documents, but MSF (the replacement for WARP) didn't appear correctly. 7-reply thread to sort it out.
 
 # Eyevinn Update (Jan 27)
-[[Torbjorn Einarsson|Torbjörn Einarsson]] announced updates to [[moqlivemock]]:
+[[tobbe-einarsson|Torbjörn Einarsson]] announced updates to [[moqlivemock]]:
 - moqlivemock and warp-player updated to MOQT draft-14 and CMSF draft-0
 - Added HEVC video, Opus and AC-3 audio, live subtitles (wvtt and stpp)
 - Wall-clock synchronized: group X starts at second X

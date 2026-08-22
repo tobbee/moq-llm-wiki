@@ -2,13 +2,13 @@
 title: "Martin Duke"
 tags: [person, google, contributor]
 date: 2026-04-12
-last_updated: 2026-04-14
+last_updated: 2026-08-22
 status: current
 ---
 
 **Organization**: Google
 **Slack**: @Martin Duke (U68H1R612)
-**Role**: Contributor, author of Subscribe Rewind proposal
+**Role**: **MOQ WG co-chair** (with [[magnus-westerlund]] and [[zaheduzzaman-sarker]]); author of the Subscribe Rewind proposal
 
 # Contributions
 

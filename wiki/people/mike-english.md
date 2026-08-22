@@ -2,7 +2,7 @@
 title: "Mike English"
 tags: [person, cloudflare, implementer]
 date: 2026-04-15
-last_updated: 2026-05-02
+last_updated: 2026-08-22
 status: current
 ---
 
@@ -17,8 +17,9 @@ status: current
 - Maintainer of video-dev/moq-js (IETF WG-aligned JS client, also forked Oct 2024)
 - Built and operates the [interop runner](https://englishm.github.io/moq-interop-runner/) — standardized cross-implementation test framework
 - Participated in "Joining fetch dissenters" meeting (2026-03-22)
-- Author of draft-englishm-moq-cdn-provisioning-00 (CDN provisioning) and draft-englishm-moq-relay-dos-00 (relay DoS considerations)
-- Publisher of the [MoQ Monthly](https://buttondown.com/moqmonthly) newsletter
+- Author of `draft-englishm-moq-cdn-provisioning-00` (CDN provisioning) and [[moq-relay-dos|`draft-englishm-moq-relay-dos-01`]] (relay DoS considerations, **-01** published 2026-07-06)
+- Publisher of the [[moq-monthly|MoQ Monthly]] newsletter (dormant since issue #2, 2026-05-31)
+- Announced and organises the **[[interim-meetings|2026-09-02 virtual interop hackathon]]** on draft-18
 
 # Recent Activity (March-April 2026)
 

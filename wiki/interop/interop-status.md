@@ -2,67 +2,57 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-05-09
+last_updated: 2026-08-22
 status: current
 ---
 
-Current state of cross-implementation interoperability testing.
+Orientation page for MOQ interoperability. **The live numbers are not kept here** — they live on the pages below, which are updated on every wiki refresh.
 
-# Latest Interop Results
+> **Where to look**
+> - **[[interop-runner]]** — the automated nightly matrix: current cut, daily deltas, registered endpoints, and the interop target draft. **This is the authoritative source for pass/fail counts.**
+> - **[[interop-endpoints]]** — public relay endpoints you can point a client at.
+> - **[[interim-meetings]]** — scheduled interop events, including the **2026-09-02 virtual interop hackathon** on draft-18.
+>
+> This page previously duplicated the runner's matrix and drifted badly out of date (it asserted a draft-16 target and a 105-cell matrix months after both had changed). The duplicated tables were removed on 2026-08-22; what remains is the durable, non-numeric material.
 
-## Draft-17
-- **[[moq-dev]] <-> [[lorenzo-miniero]]'s [[imquic]]**: First v17 interop working (2026-04-01). Rust publisher, JS subscriber. "Still a few things to iron out."
-- **Daiki Matsui's impl <-> [[moq-dev]] (`cdn.moq.dev`)**: Working (2026-03-23). Browser pub -> relay -> browser sub.
+# Interop target
 
-## Draft-16
-- **[[moq-rs]]**: PR #131 branch
-- **[[moxygen]]**: Supported
-- **[[libquicr]] / quicr-go**: Draft-16 compatible
-- **Cloudflare interop relay**: `draft-16-manish.cloudflare.mediaoverquic.com:443` (WIP)
+The interop target is a WG decision, distinct from the newest published draft:
 
-## Draft-14
-- Most mature interop, widest support
-- **[[xquic-moq]]**: Passed all interop runner tests
-- **[[moq-rs]]**: Main branch
-- **[[moxygen]]**: Supported
-- **[[moqlivemock]]**: Go transport + JS CMSF player (draft-14 and draft-16)
-- **Cloudflare edge relays**: Anycast at `draft-14.cloudflare.mediaoverquic.com:443`
+- **Current automated target: draft-18.** Reaffirmed by [[alan-frindell|Alan Frindell]] on Slack (July 18) — implementers are welcome to try draft-19, but draft-18 is the target.
+- **Named successor: draft-22.** The [[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14) state *"Draft 22 will be published as the next official interop target"*, after draft-20 (a purely-editorial cut) and draft-21 (the editorial-meeting output).
+- **draft-20 is the target for the Seattle hybrid interim (Oct 12–15)**, per [[mike-english|Mike English]]'s Aug-21 hackathon announcement.
 
-# Interop Runner Matrix
+Note that the newest *published* revision ([[moq-transport|transport-19]], 2026-07-06) runs ahead of the interop target — so an implementation on draft-19 is "ahead", not "current". See [[moq-go]] for what that currently costs an implementation in the runner.
 
-The [[interop-runner]] at [englishm.github.io/moq-interop-runner](https://englishm.github.io/moq-interop-runner/) runs automated tests. Latest report (2026-05-09 00:39 UTC): **20 passed / 71 failed / 14 skipped** out of 105 total — **+1 pass / −1 fail** vs May 8's 19/72/14. **Partial recovery back to the May 4–7 floor** (also the post-PR #145 floor since the May 4 wholesale draft-14→16 migration). moqtail PR #193 (sharmafb upstream FETCH on cache miss, +248/−132, OPEN since late May 6) is still **open Day +3**, so the bounce isn't a `moqtail-relay` rebuild effect; moq-dev/moq main is quiet (no commits since May 7 18:17 UTC). **Most plausible cause**: natural per-run variance / single image rebuild for one of the matrix entries (moq-rs, moq-rs-draft-16, moqx, quiche-moq, libquicr, xquic, imquic) flipping a single test back to pass. **Two-day net effect (May 7 20 → May 8 19 → May 9 20) is zero** — the May 8 reading was statistical noise, not a regression. moq-dev/moq PR #1388 (LOC frame format, OPEN +799/−17), PR #1389 (stats aggregation, OPEN +1168/−39), and PR #1374 (DATAGRAMS Lite05, OPEN +1615/−7) all remain unmerged Day +1/+1/+4. Walking arc since the Apr 17 floor: 18 → 18 → 18 → 20 → 22 → 22 → 23 → 24 → 22 → 23 → 22 → 23 → 23 → 23 → 24 → 25 → 24 → 24 → 20 → 20 → 20 → 20 → 19 → **20**.
+# Known interop issues
 
-Implementations in the matrix (11):
-1. moq-dev-js (client)
-2. moq-dev-rs (client + relay)
-3. moq-rs (client + relay, draft-14)
-4. moq-rs-draft-16 (client + relay)
-5. moxygen (client + relay)
-6. xquic (client + relay)
-7. imquic (relay, [[lorenzo-miniero]])
-8. libquicr (relay)
-9. moqtail (relay)
-10. quiche-moq (relay, Google QUICHE C++ — [[martin-duke]], Victor Vasiliev)
-11. **moqx** (relay, [[openmoq|OpenMOQ]]'s moxygen fork) — **new since Apr 10**
+- **Properties Type collision** ([#1550](https://github.com/moq-wg/moq-transport/issues/1550) in moq-transport, #10 in LOC) — property type IDs conflict between moq-transport-17 and loc-01.
+- **Track Properties parsing** — implementations handle the length prefix differently. See [[track-properties]].
+- **PUBLISH_NAMESPACE behavior** — relay behaviour around namespace announcements confuses some implementations (Daiki Matsui's report, 2026-03-23). Still live as a spec question: [issue #1800](https://github.com/moq-wg/moq-transport/issues/1800) is scheduled for the **Aug-24 interim** and [issue #1854](https://github.com/moq-wg/moq-transport/issues/1854) is labeled **BLOCKED**.
+- **Interop-client ALPN gaps** — [[moxygen]]'s interop *client* binary lacked `moqt-18` in `kInteropAlpns`, so draft-18-only relays failed the handshake even though the moxygen *relay* negotiates draft-18 correctly; [[openmoq|moqx]] likely shares the gap. Documented in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111), with fixes in flight ([moxygen #221/#222/#223](https://github.com/facebookexperimental/moxygen/issues/219)). A reminder that a matrix cell can fail for handshake-configuration reasons rather than protocol ones.
+- **Transport asymmetry** — on recent cuts the **remote-quic** transport outperforms **docker** for several draft-18 pairings, and `xquic` over docker fails broadly. Transport choice, not just draft version, moves results.
 
-Target version is draft-16. Version distribution: 48 tests at draft-16, 8 at draft-17, 49 at draft-14.
+# Media wire format interop
 
-Best results: moq-rs-draft-16 self-test (all pass), moq-dev-js <-> moqx (6/6), moq-rs-draft-16 <-> moqx (5-6/6), moq-rs-draft-16 <-> moxygen (5-6/6), moq-rs-draft-16 <-> imquic (5-6/6), moq-rs self-test (all pass), moq-rs <-> moqx (all pass).
+**[[moq-media-interop]]** (`draft-cenzano-moq-media-interop-03`, [[jordi-cenzano|Jordi Cenzano]]) defines the concrete media wire format for LOC-based media interop — how H.264 video, Opus/AAC-LC audio, and text are packaged into MOQT objects with extension headers. It is the format [[moxygen|Meta's moxygen]] relay uses.
 
-Individual run reports: `https://englishm.github.io/moq-interop-runner/results/<DATE>_<TIME>/report.html`
+**The draft expired 2026-04-23 with no -04 published.** LOC media-interop testing currently relies on what is already implemented rather than on a live specification. See [[moq-media-interop]].
 
-# Known Interop Issues
+# Live vs automated interop
 
-- **Properties Type collision** (#1550 in moq-transport, #10 in LOC) - Property type IDs conflict between moq-transport-17 and loc-01
-- **Track Properties parsing** - Different implementations handle the length prefix differently (see [[track-properties]])
-- **PUBLISH_NAMESPACE behavior** - Relay behavior around namespace announcements confuses some implementations (Daiki Matsui's report, 2026-03-23)
+The two are complementary and give different signals:
 
-# Media Wire Format Interop
+- **Automated** (the nightly [[interop-runner]]) — broad, repeatable, but short-clip based. It catches handshake and basic data-plane regressions.
+- **Live / human-run** (hackathons, ad-hoc sessions) — narrower but deeper. The Vienna Hackathon surfaced things the matrix could not, e.g. [[yu-you|Yu You]]'s conformance client scoring 4/7 against the Cloudflare draft-18 relay because it rejected the upstream `PUBLISH` flow.
+- Results from live sessions are gathered on the [ad-hoc interop reports wiki](https://github.com/moq-wg/moq-transport/wiki/ad-hoc-interop-reports).
 
-**[[moq-media-interop]]** (draft-cenzano-moq-media-interop-03) defines the concrete media wire format used for LOC-based media interop. It specifies how H.264 video, Opus/AAC-LC audio, and text are packaged into MOQT objects with extension headers. This is the format used by Meta's [[moxygen]] relay and is relevant for any LOC-based interop testing. **The draft expired 2026-04-23 with no -04 published** — check [datatracker](https://datatracker.ietf.org/doc/draft-cenzano-moq-media-interop/) for any renewal. LOC media-interop testing currently relies on what's already implemented.
+[[steven-riedl|Steven Riedl]] (Pluto TV) has argued for closing the gap between the two — continuously-running live channels with **mid-stream joiners** *"surface different behavior than short test clips"* — and [[mike-english|Mike English]] has signalled **broader data-plane test coverage** as a planned runner improvement for the Sep-2 hackathon.
 
 # Related
 
-- [[interop-endpoints]] - Public relay endpoints
-- [[interop-runner]] - Automated test framework
-- [[moq-media-interop]] - Media wire format specification for LOC interop
+- [[interop-runner]] — automated test framework and current results
+- [[interop-endpoints]] — public relay endpoints
+- [[interim-meetings]] — interop events and the WG interim schedule
+- [[moq-media-interop]] — media wire format for LOC interop
+- [[overview|Implementations Overview]] — who implements what

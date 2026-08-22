@@ -1,10 +1,10 @@
 ---
-title: MOQ Wiki Index
+title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-08-19
+last_updated: 2026-08-22
 status: current
-updated: 2026-08-19
+updated: 2026-08-22
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -18,13 +18,13 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 |-------|---------|--------|---------|
 | [[moq-transport]] | draft-19 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (-19 published 2026-07-06) |
 | [[moq-msf]] | draft-01 | Active | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
-| [[moq-loc]] | draft-03 | Active (**-03 2026-07-06**) | Low Overhead Media Container for interactive streaming (adds audio config) |
+| [[moq-loc]] | draft-04 | Active (**-04 2026-07-20**) | Low Overhead Media Container for interactive streaming (adds audio config; -04 fixes the shared IANA registry values) |
 | [[moq-secure-objects]] | draft-01 | Active (**-01 2026-07-06**) | End-to-end authenticated encryption for MOQT objects (adds test vectors) |
 | [[moq-privacy-pass]] | draft-03 | Active (**-03 2026-07-06**) | Privacy-preserving authentication via Privacy Pass tokens (major MoQT-integration rebuild) |
 | [[moq-c4m]] | draft-01 | Active (**-01 2026-06-18**) | Authorization via CTA WAVE Common Access Tokens (CAT/CWT) — scoped bearer-token auth for MOQT |
 | [[moq-cmsf]] | draft-01 | Active | CMAF-compliant extension of MSF (-01 published 2026-06-03) |
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
-| [[moq-media-interop]] | draft-03 | Individual (expires **Apr 23**) | Media wire format over LOC for H.264/Opus/AAC |
+| [[moq-media-interop]] | draft-03 | Individual — **EXPIRED 2026-04-23**, no -04 | Media wire format over LOC for H.264/Opus/AAC ([[jordi-cenzano\|Jordi Cenzano]]); LOC media interop now relies on what is already implemented |
 | [[moq-lite]] | draft-05 | Individual (**-05 2026-06-30**) | Simplified transport protocol by Luke Curley |
 | [[moq-cluster]] | draft-00 | Individual (**NEW 2026-08-04**) | MoQ Cluster Extension — relay-mesh Hop-ID path vector + accumulated route cost (loop detection, lowest-cost routing); implemented over moq-transport in moq-dev PR #2629 ([[luke-curley\|Luke Curley]]) |
 | [[moq-hang]] | draft-02 | Individual (**-02 2026-08-04**) | Media over QUIC - Hang — real-time conferencing profile on moq-lite (rooms/participants/tracks; intended home for recording/DVR) ([[luke-curley\|Luke Curley]]) |
@@ -77,13 +77,20 @@ See **[[overview|Implementations Overview]]** for the full comparison — langua
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
 - [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player (draft-14/16, DRM)
-- [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos (draft-14)
-- [[imquic]] - Meetecho's C library, also supports RoQ (draft-16/17)
-- [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16)
+- [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos ([[zafer-gurel\|Zafer Gürel]]; draft-16 + draft-18, `relay18.moqtail.dev` live since July 23)
+- [[imquic]] - Meetecho's C library, also supports RoQ ([[lorenzo-miniero]]; draft-16 through draft-19, -19 merged to `main` July 19)
+- [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16; draft-18 migration on `main` since July)
 - [[shaka-player]] - Google's media player with experimental MSF/CMSF support incl. DRM (draft-14)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 - [[moqintosh]] - Pure-Swift iOS client by gazzy / Toshiro Igarashi (draft-14, client-only)
-- **Moqtopus** - C++/MsQuic client for Unreal Engine by Kota Yatagai ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus), announced June 4 2026; targeting draft-18 for the London interop)
+- [[mediamtx|MediaMTX]] - Go multi-protocol media server with a native MoQ server; **drafts 16–19**, the widest range in the ecosystem (~19.9k stars, not yet in the interop runner)
+- [[moq-go]] - Go session library + relay by Vsevolod Strukchinsky; **draft-19** — the interop runner's only "ahead of target" endpoint
+- [[laps|LAPS]] - Cisco's MOQT relay with Edge/Via/Stub relay-mesh peering, on [[libquicr]]
+- [[moqtransport]] - The Go MoQ Transport library ([[mathis-engelbart|Mathis Engelbart]]) and Eyevinn's downstream fork
+- [[warp-player]] - Eyevinn's TypeScript CMSF player using MSE playback
+- **Moqtopus** - C++/MsQuic client for Unreal Engine by [[kota-yatagai|Kota Yatagai]] ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus), announced June 4 2026; draft-18, running at-target in the interop runner)
+- **MOQ5** - Red5 Pro's sans-I/O C protocol core (draft-16/18), interop-registered; see [[openmoq]]
+- **Playa** - Red5 Pro's TypeScript player suite, npm `@moqt/*` + `@playa/player` v0.5.7; see [[openmoq]]
 
 ## Draft Version Support Summary
 
@@ -99,7 +106,23 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 - [[will-law]] - Akamai, editor of MSF/CMSF
 - [[mike-english]] - Cloudflare, maintainer of moq-rs/moq-js, interop runner
 - [[lorenzo-miniero]] - Meetecho, Janus-based implementation
-- [[martin-duke]] - Google, rewind proposal, quiche-moq developer
+- [[martin-duke]] - **MOQ WG co-chair**; rewind proposal, quiche-moq developer
+- [[magnus-westerlund]] - Ericsson, **MOQ WG co-chair**, co-author of [[moq-overview]]
+- [[zaheduzzaman-sarker]] - Nokia, **MOQ WG co-chair**, co-author of [[moq-overview]] and [[moq-conditional-filtering]]
+- [[cullen-jennings]] - Cisco, author of [[moq-mocha|MOCHA]], [[moq-discovery]], [[moq-tempo|TEMPO]]
+- [[mo-zanaty]] - Cisco, filter design lead (Range/Location/Top Tracks)
+- [[yu-you]] - Nokia, relay implementer, corresponding author of [[moq-conditional-filtering]]
+- [[ali-begen]] - Networked Media, streaming researcher, [[moqtail]] contributor
+- [[mathis-engelbart]] - TUM, author of the Go [[moqtransport]] library
+- [[lucas-pardue]] - Cloudflare, author of the MoQ qlog/mlog event definitions
+- [[gwendal-simon]] - Synamedia, SWITCH/SSTS co-driver, [[moq-msfts|MSFTS]] author
+- [[zafer-gurel]] - Ozyegin/Networked Media, [[moqtail]] maintainer
+- [[giovanni-marzot]] - [[openmoq|OpenMOQ]], author of [[aiomoqt]]
+- [[jordi-cenzano]] - Meta, moq-encoder-player, [[moq-media-interop]]
+- [[mondain|Paul Gregoire (mondain)]] - Red5 Pro / OpenMOQ implementer
+- [[kota-yatagai]] - Keio University, author of Moqtopus (Unreal Engine)
+- [[steven-riedl]] - Pluto TV/Paramount, SSAI operator perspective on interop
+- [[martin-thomson]] - Mozilla, transport/security review
 - [[tobbe-einarsson|Torbjörn Einarsson]] - Eyevinn, co-author of LOCMAF, author of moqlivemock/warp-player, wiki maintainer
 
 # Active Discussions
@@ -120,13 +143,13 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 # Interop
 
 - [[interop-runner]] - Standardized cross-implementation test framework
-- [[interop-status]] - Current interop testing status across implementations
+- [[interop-status]] - Interop orientation: the target draft, known cross-impl issues, live-vs-automated testing
 - [[interop-endpoints]] - Public relay endpoints for testing
 
 # Community Resources
 
 - **[IETF Datatracker — MOQ WG](https://datatracker.ietf.org/group/moq/documents/)** — Canonical list of all WG and related individual drafts
-- **[MoQ Monthly](https://buttondown.com/moqmonthly)** — Periodic newsletter summarizing MoQ ecosystem activity, by Mike English
+- **[[moq-monthly|MoQ Monthly]]** ([buttondown](https://buttondown.com/moqmonthly)) — Periodic newsletter by [[mike-english|Mike English]]; **dormant since issue #2 (2026-05-31)**
 - **[Demuxed MoQ Talks](https://www.youtube.com/playlist?list=PLiF9acz7G1ppuCCYHjke1p-GSpWNJOdOl)** — Curated playlist of MoQ-related conference talks
 - **[Montevideo Tech Summer Camp](https://montevideotech.dev/summer-camp-2026-moq-project/)** — Annual open-source collaboration event with MoQ projects ([2025](https://montevideotech.dev/summercamp2025/), [2026](https://montevideotech.dev/summer-camp-2026-moq-project/))
 - **[moq.dev Discord](https://discord.gg/FCYF3p99mr)** — Community chat for MoQ developers, run by Luke Curley

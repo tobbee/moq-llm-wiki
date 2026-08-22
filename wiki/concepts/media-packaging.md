@@ -2,7 +2,7 @@
 title: "Media Packaging: LOC vs CMAF"
 tags: [concept, media, container]
 date: 2026-04-10
-last_updated: 2026-06-22
+last_updated: 2026-08-22
 status: current
 ---
 
@@ -55,7 +55,7 @@ Two proposals attempt to bridge LOC's low overhead with CMAF's compatibility —
 - Covers H.264 video (AVCC), Opus audio, AAC-LC audio, and UTF-8 text
 - Uses MOQT extension headers for metadata (PTS, DTS, timebase, wallclock)
 - Supports mid-stream encoding parameter changes
-- Authored by Jorge Cenzano-Ferret and [[alan-frindell]] at Meta
+- Authored by Jordi Cenzano and [[alan-frindell]] at Meta
 - Documents the wire format used by [[moxygen]]
 
 # Current State
