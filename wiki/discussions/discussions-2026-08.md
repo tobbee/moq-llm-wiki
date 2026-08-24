@@ -2,11 +2,38 @@
 title: "Discussions - August 2026"
 tags: [discussions, slack, github]
 date: 2026-08-02
-last_updated: 2026-08-23
+last_updated: 2026-08-24
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during August 2026.
+
+# Activity (Aug 23 → Aug 24) — **The interim comes back into view: an MSF event-timeline refactor lands and Swett posts the 8/24 agenda.** After a thin overnight window, the durable layer produced two things. (1) **[[moq-msf|msf]] merged its first PR since Aug-13** — [[will-law|Will Law]]'s [#206](https://github.com/moq-wg/msf/pull/206) *"Refactor event timeline attributes and requirements"* (+31/−17, Aug-23 14:15 UTC, closes [#76](https://github.com/moq-wg/msf/issues/76)/[#83](https://github.com/moq-wg/msf/issues/83)): it **removes the `mimeType` attribute from identified-objects and scte35 entries**, updates `name` attributes for tracking objects, and clarifies event-timeline track requirements and the updating process — an editorial cleanup of the same event-timeline surface that Will Law's `draft-wilaw-moq-cmcd-event-timeline-00` targets. It is a repo-level merge; **msf-01 on the datatracker still stands** (no revision bump). (2) On the list, **[[ian-swett|Ian Swett]] posted the draft agenda for today's [[interim-meetings|8/24 virtual interim]]** (interim-22, Aug-23 17:47 UTC) — see below. **[[moq-transport]] itself merged nothing** (transport-19 stands; [#1834](https://github.com/moq-wg/moq-transport/pull/1834) remains the last merge). Datatracker flat; the routine **weekly GitHub digest** finally posted (was due ~Aug-23). **Slack `#moq` silent** since the Aug-19 mlog thread (held at 4 replies) + Glenn Deen (Comcast) joining, both logged; `#moq-rs`/`#moq-js`/`#libquicr` all silent. No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues. The **8/24 interim runs 16:30–18:00 UTC today** (after check time), so its outcomes land in the next update; the **Sep-2 draft-18 hackathon** remains the ecosystem's next community milestone.
+
+## moq-wg: an MSF event-timeline cleanup, and the 8/24 interim agenda
+
+**[[moq-msf|msf]] [#206](https://github.com/moq-wg/msf/pull/206) *"Refactor event timeline attributes and requirements"*** ([[will-law|@wilaw]], **merged Aug-23 14:15 UTC**, +31/−17) is the window's one WG-repo merge. It removes the `mimeType` attribute from the **identified-objects** and **scte35** event-timeline entries (the media/track already carries the codec/container signalling, so `mimeType` on the timeline entry was redundant), renames the `name` attributes used for tracking objects, and tightens the normative language on what an event-timeline track must contain and how it is updated. It closes issues [#76](https://github.com/moq-wg/msf/issues/76) and [#83](https://github.com/moq-wg/msf/issues/83). A companion PR, [#199](https://github.com/moq-wg/msf/pull/199) *"Refactor initialization track and object properties"* (+22/−26), stayed **OPEN** with an Aug-23 revision. This is a GitHub-repo editorial pass toward a future **msf-02**; the published **msf-01** datatracker revision is unchanged, so the [[moq-msf]] draft page was not touched.
+
+**[[moq-transport]]**, **loc**, **secure-objects**, **cmsf**, **catalog-format**, **privacy-pass**, and **CAT-4-MOQT** had **no merges**. transport-19 stands; the open draft-20 PRs (#1856/#1855/#1853/#1852/#1851) are untouched since Aug-21.
+
+## Mailing list: Ian Swett's 8/24 interim draft agenda
+
+[[ian-swett|Ian Swett]] posted the **draft agenda for the 8/24 virtual interim** (interim-22) to the list on **Aug-23 17:47 UTC** ([permalink](https://mailarchive.ietf.org/arch/msg/moq/Bu2gGWrhisDqNontBvwphc8SE3c/)). Two blocks:
+
+- **In-flight PRs (draft-20-bound), for re-review not detailed discussion.** Location Filter rewrite [#1809](https://github.com/moq-wg/moq-transport/pull/1809) and PUBLISH_NOTIFY [#1820](https://github.com/moq-wg/moq-transport/pull/1820) are **already merged**; Fill-Fetch [#1673](https://github.com/moq-wg/moq-transport/pull/1673) and SWITCH_FROM (hard) [#1674](https://github.com/moq-wg/moq-transport/pull/1674) are under review — Swett asks the WG to re-review the updated PRs but does not plan to spend meeting time on them unless issues surface.
+- **Issues needing discussion (the bulk of the meeting).** [#1801](https://github.com/moq-wg/moq-transport/issues/1801) *"Reconsider 'OR' functionality in range filters"* and [#1800](https://github.com/moq-wg/moq-transport/issues/1800) *"NAMESPACE lacks Parameters support"* — the latter is the venue afrind and Swett agreed on in the prior window for the parked [[moq-transport|PUBLISH_NAMESPACE]] debate ([#1854](https://github.com/moq-wg/moq-transport/issues/1854), BLOCKED).
+
+The routine **weekly GitHub digest** (Repository Activity Summary Bot) also posted, its first since Aug-16; no WGLC/consensus/interop-report content. See [[interim-meetings]].
+
+## Implementations: moq-dev audio + opaque-data tracks; moqx release plumbing
+
+- **[[moq-dev|moq-dev/moq]]** posted two Aug-23 (early-UTC) merges ([[luke-curley|Curley]]): **[#3008](https://github.com/moq-dev/moq/pull/3008) *"drain Opus lookahead on finish"*** (+1261/−174) — flushes the encoder's lookahead samples so the tail of an Opus stream is not truncated on stream close — and **`feat(moq-gst): publish opaque application data tracks`** (`13abb8f`, +363/−28), letting the GStreamer element carry non-media application-data tracks. **No new release** — moq-relay **v0.14.12** stands.
+- **[[openmoq|moqx]]** merged release/CI plumbing on Aug-23: [#634](https://github.com/openmoq/moqx/pull/634) syncing moxygen to `02eaa88`, [#635](https://github.com/openmoq/moqx/pull/635) fixing the benchmark build and giving it PR coverage, and [#637](https://github.com/openmoq/moqx/pull/637) baking the release version into the release container — following the Aug-22 [[alan-frindell|afrind]] admin/relay refactor (#621–#625). Internal plumbing, no protocol-facing change.
+- **[[moxygen]]** posted a routine *"Updating hashes"* commit (`0ca32b1`). **Quiet**: [[moq-rs|cloudflare/moq-rs]], [[moq-js]], [[quiche-moq|google/quiche]] (an Aug-22 export commit touched **no** `quiche/quic/moqt` file), [[moqtail]], [[libquicr]], [[imquic]], [[moqlivemock|Eyevinn]] repos, [[warp-player]], [[moqtransport|Eyevinn/moqtransport]], birneee/quiche_moq.
+
+## Interop: a new cut, −3 pass
+
+The nightly runner published **[Aug-23 00:14:05](https://englishm.github.io/moq-interop-runner/results/2026-08-23_001405/report.html): 321 / 123 / 188 / 10** (at-target draft-18 **190** · ahead 1 · behind 130) — a **−3 pass / +3 fail** slip versus Aug-22 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged), the low end of the post-contraction 123–129 band. Still targets **draft-18**. See [[interop-runner]].
 
 # Activity (Aug 22 → Aug 23) — **A thin overnight window; the only motion is implementation churn.** No moq-wg merge, no datatracker revision, no new draft, no new mailing-list message, and Slack `#moq` silent since the Aug-19 mlog thread — the durable spec/WG/community layer produced nothing since the last update ran Aug-22 08:23 UTC. transport-19 stands; [[ian-swett|Swett]]'s [#1834](https://github.com/moq-wg/moq-transport/pull/1834) (Aug-21) remains the last transport merge, and open PRs [#1855](https://github.com/moq-wg/moq-transport/pull/1855)/[#1856](https://github.com/moq-wg/moq-transport/pull/1856) are untouched. The **Aug-21 Sep-2 draft-18 interop hackathon** ([[mike-english|English]]'s announce + [[steven-riedl|Riedl]]'s RSVP) remains the ecosystem's next scheduled milestone and the newest mailing-list item. No new [[moq-monthly|MoQ Monthly]] (#2, May 31); no open wiki issues.
 
