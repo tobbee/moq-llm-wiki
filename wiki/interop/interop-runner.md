@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-25
+last_updated: 2026-08-26
 status: current
 ---
 
@@ -57,7 +57,7 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-08-24 00:13:06 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-24_001306/report.html) — 321 cells / 124 pass / 187 fail / 10 skip** (38.6% pass; **at-target draft-18 190 · ahead 1 · behind 130**), a **+1 pass / −1 fail** move versus Aug-23 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged) — recovering one cell off the post-contraction low, back into the 123–129 band.
+**Latest cut: [2026-08-25 00:12:46 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-25_001246/report.html) — 321 cells / 125 pass / 186 fail / 10 skip** (38.9% pass; **at-target draft-18 190 · ahead 1 · behind 130**), a **+1 pass / −1 fail** move versus Aug-24 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged) — the **third straight +1/day** climb (123 → 124 → 125) off the post-contraction low, back to the top of the 123–129 band.
 
 ## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
@@ -83,6 +83,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-08-25 00:12:46 | 321 | 125 | 186 | 10 | 190 | 1 | +1 | third straight +1/day |
 | 2026-08-24 00:13:06 | 321 | 124 | 187 | 10 | 190 | 1 | +1 | |
 | 2026-08-23 00:14:05 | 321 | 123 | 188 | 10 | 190 | 1 | −3 | post-contraction low |
 | 2026-08-22 00:13:58 | 321 | 126 | 185 | 10 | 190 | 1 | 0 | flat |
