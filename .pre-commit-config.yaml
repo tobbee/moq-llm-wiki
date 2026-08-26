@@ -1,0 +1,27 @@
+# Guards the Quartz -> GitHub Pages deploy (.github/workflows/deploy.yml).
+#
+# `npx quartz build` aborts on the first page with malformed YAML frontmatter,
+# so a single bad block freezes the published site until someone notices the
+# red Actions run. These hooks catch that before it reaches main.
+#
+# Install both hook types with:  pre-commit install
+default_install_hook_types: [pre-commit, pre-push]
+
+repos:
+  - repo: local
+    hooks:
+      # Fast path: only the wiki pages touched by this commit.
+      - id: quartz-frontmatter
+        name: quartz frontmatter (YAML)
+        entry: node tools/check-frontmatter.mjs
+        language: system
+        files: ^wiki/.*\.md$
+
+      # Thorough path: the real build, mirroring CI. ~20s, so pre-push only.
+      - id: quartz-build
+        name: quartz build
+        entry: npx quartz build
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        files: ^(wiki/.*\.md|quartz/.*|quartz\.(config|layout)\.ts|package(-lock)?\.json)$

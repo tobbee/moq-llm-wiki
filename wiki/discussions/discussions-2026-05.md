@@ -110,7 +110,7 @@ On the orthogonal [Issue #1519](https://github.com/moq-wg/moq-transport/issues/1
 
 ### cloudflare/moq-rs — Manish restarts draft-16 migration
 
-[[moq-rs|itzmanish (Manish)]] May 29 07:09:11 UTC opens **[PR #170](https://github.com/cloudflare/moq-rs/pull/170)** *"[Rewrite] Draft-16 migration"* (+5289/−3115, 81 files) with note: *"please use this branch instead of older #131 because that is not compatible with base branch."* Simultaneously **closes [PR #131](https://github.com/cloudflare/moq-rs/pull/131)** (his own +4384/−2045 draft-16 migration attempt, **155 days old**) at 07:09:54 UTC.
+itzmanish (Manish) May 29 07:09:11 UTC opens **[PR #170](https://github.com/cloudflare/moq-rs/pull/170)** *"[Rewrite] Draft-16 migration"* (+5289/−3115, 81 files) with note: *"please use this branch instead of older #131 because that is not compatible with base branch."* Simultaneously **closes [PR #131](https://github.com/cloudflare/moq-rs/pull/131)** (his own +4384/−2045 draft-16 migration attempt, **155 days old**) at 07:09:54 UTC.
 
 **Manish writes off 155 days of his own work** to restart with a larger rewrite. Combined with [video-dev/moq-js PR #72](https://github.com/video-dev/moq-js/pull/72) (Manish's +11205/−22195 refactor still OPEN since May 26), **Manish is now driving both Cloudflare-stewarded TypeScript/Rust stacks as essentially "from-scratch" rewrites within the same week**.
 
