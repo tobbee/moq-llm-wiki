@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-26
+last_updated: 2026-08-27
 status: current
 ---
 
@@ -36,7 +36,7 @@ Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints
 | `moqtail` | [[moqtail]] (Zafer Gurel) | 16 | Relay |
 | `moqtopus` | Moqtopus — C++/MsQuic for Unreal Engine (Kota Yatagai) | 18 | Client |
 | `moqx` | [[openmoq|OpenMOQ moqx]] | 18 | Client + relay |
-| `moxygen` | [[moxygen|Meta's C++ relay]] | 18 | Client + relay; interop **client** ALPN gap tracked in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) |
+| `moxygen` | [[moxygen|Meta's C++ relay]] | 18 | Client + relay; interop **client** ALPN gap tracked in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111); **announce-subscribe case publishes the wrong namespace** (`moq-interop-test` vs the spec `moq-test/interop`), so it fails 5/6 as *unauthorized* on prefix-scoped relays (Steven Riedl/Pluto TV, Slack Aug-26; afrind: "will fix") |
 | `quiche-moq` | [[quiche-moq|google/quiche]] ([[martin-duke]], [[victor-vasiliev]]) | 16 | Relay |
 | `xquic`, `xquic-draft-18` | [[xquic-moq|Alibaba XQUIC]] | 14 / 18 | Client + relay; draft-18 relay image reported unavailable on the Aug-22 cut |
 | `libquicr` | [[libquicr|Cisco]] | 14 | Relay |
@@ -57,7 +57,7 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-08-25 00:12:46 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-25_001246/report.html) — 321 cells / 125 pass / 186 fail / 10 skip** (38.9% pass; **at-target draft-18 190 · ahead 1 · behind 130**), a **+1 pass / −1 fail** move versus Aug-24 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged) — the **third straight +1/day** climb (123 → 124 → 125) off the post-contraction low, back to the top of the 123–129 band.
+**Latest cut: [2026-08-26 00:13:53 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-26_001353/report.html) — 321 cells / 128 pass / 183 fail / 10 skip** (39.9% pass; **at-target draft-18 190 · ahead 1 · behind 130**), a **+3 pass / −3 fail** move versus Aug-25 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged) — the biggest single-day gain since the Aug-19 contraction, extending a four-day climb (123 → 124 → 125 → 128) back to the top of the post-contraction 123–129 band.
 
 ## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
@@ -83,6 +83,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-08-26 00:13:53 | 321 | 128 | 183 | 10 | 190 | 1 | +3 | biggest gain since the contraction |
 | 2026-08-25 00:12:46 | 321 | 125 | 186 | 10 | 190 | 1 | +1 | third straight +1/day |
 | 2026-08-24 00:13:06 | 321 | 124 | 187 | 10 | 190 | 1 | +1 | |
 | 2026-08-23 00:14:05 | 321 | 123 | 188 | 10 | 190 | 1 | −3 | post-contraction low |
