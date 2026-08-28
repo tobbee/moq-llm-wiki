@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-27
+last_updated: 2026-08-28
 status: current
 ---
 
@@ -17,7 +17,7 @@ The interop runner automates testing between MOQ implementations, publishing res
 
 # Registered Implementations
 
-Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints × 16 relay endpoints**. Several projects register more than one endpoint (a draft-pinned variant, or separate client and relay roles), so endpoint names are not 1:1 with projects.
+Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints × 16 relay endpoints**. Several projects register more than one endpoint (a draft-pinned variant, or separate client and relay roles), so endpoint names are not 1:1 with projects. The **2026-08-27 14:16 cut expanded to 351 cells (15 clients × 17 relays)** by enrolling the new **`stitcher-moq`** relay (Pluto TV / Paramount, runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112)) — see [Current standing](#current-standing).
 
 **Client endpoints (15)** — `aiomoqt`, `imquic`, `moq-dev-js`, `moq-dev-rs`, `moq-go`, `moq-rs`, `moq-rs-draft-14`, `moq-rs-draft-18`, `moq5`, `moqlivemock`, `moqtopus`, `moqx`, `moxygen`, `xquic`, `xquic-draft-18`
 
@@ -38,12 +38,13 @@ Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints
 | `moqx` | [[openmoq|OpenMOQ moqx]] | 18 | Client + relay |
 | `moxygen` | [[moxygen|Meta's C++ relay]] | 18 | Client + relay; interop **client** ALPN gap tracked in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111); **announce-subscribe case publishes the wrong namespace** (`moq-interop-test` vs the spec `moq-test/interop`), so it fails 5/6 as *unauthorized* on prefix-scoped relays (Steven Riedl/Pluto TV, Slack Aug-26; afrind: "will fix") |
 | `quiche-moq` | [[quiche-moq|google/quiche]] ([[martin-duke]], [[victor-vasiliev]]) | 16 | Relay |
+| `stitcher-moq` | **Pluto TV / Paramount relay — not yet covered by a wiki page** ([[steven-riedl|Steven Riedl]]) | 18 | Relay; **enrolled 2026-08-27** (runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112)), expanding the matrix to 351 cells |
 | `xquic`, `xquic-draft-18` | [[xquic-moq|Alibaba XQUIC]] | 14 / 18 | Client + relay; draft-18 relay image reported unavailable on the Aug-22 cut |
 | `libquicr` | [[libquicr|Cisco]] | 14 | Relay |
 
-> **Coverage gap**: `moq-go`, `moq5`, and `moqt-nr` are registered and running but have **no wiki page yet**. `moq-go` is the most significant of the three — it is the only implementation in the runner ahead of the draft-18 target.
+> **Coverage gap**: `moq-go`, `moq5`, `moqt-nr`, and (since Aug-27) `stitcher-moq` are registered and running but have **no wiki page yet**. `moq-go` is the most significant — it is the only implementation in the runner ahead of the draft-18 target; `stitcher-moq` is Pluto TV / Paramount's public relay, enrolled ahead of the Sep-2 hackathon.
 
-**Registration history** (PRs on [englishm/moq-interop-runner](https://github.com/englishm/moq-interop-runner)): `moqx` relay #59 (Apr 11); then a May-13 batch — `mlmtest`/moqlivemock #63, `moqx` client #66, `aiomoqt` #67, and Nokia Docker `RELAY_URL` support #65 enabling Nokia's in-house v17 relay. **Open now**: [#112](https://github.com/englishm/moq-interop-runner/pull/112) registering Pluto TV / Paramount's `stitcher-moq` public relay endpoints ahead of the Sep-2 hackathon, and [#111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN limitation.
+**Registration history** (PRs on [englishm/moq-interop-runner](https://github.com/englishm/moq-interop-runner)): `moqx` relay #59 (Apr 11); then a May-13 batch — `mlmtest`/moqlivemock #63, `moqx` client #66, `aiomoqt` #67, and Nokia Docker `RELAY_URL` support #65 enabling Nokia's in-house v17 relay. **Merged Aug-27**: [#112](https://github.com/englishm/moq-interop-runner/pull/112) registering Pluto TV / Paramount's `stitcher-moq` public relay endpoints (Steven Riedl, 14:01 UTC — this expanded the matrix to 351 cells on the 14:16 cut) and [#111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN limitation (14:02 UTC). **Open now**: [#110](https://github.com/englishm/moq-interop-runner/pull/110) registering the `kvick` relay (Mattias Bergström, since Aug-15).
 
 # Current Target
 
@@ -57,7 +58,9 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-08-26 00:13:53 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-26_001353/report.html) — 321 cells / 128 pass / 183 fail / 10 skip** (39.9% pass; **at-target draft-18 190 · ahead 1 · behind 130**), a **+3 pass / −3 fail** move versus Aug-25 on a byte-flat 321-cell matrix (at-target/ahead/behind all unchanged) — the biggest single-day gain since the Aug-19 contraction, extending a four-day climb (123 → 124 → 125 → 128) back to the top of the post-contraction 123–129 band.
+**Latest cut: [2026-08-27 14:16:15 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-27_141615/report.html) — 351 cells / 129 pass / 212 fail / 10 skip** (36.8% pass; **at-target draft-18 210 · ahead 3 · behind 138**). This is a **matrix expansion (+30 cells, 321 → 351)** — the runner's fourth structural expansion and its first *growth* since the Aug-19 contraction: the **`stitcher-moq` relay** (Pluto TV / Paramount) was enrolled when runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112) merged **14:01 UTC** (alongside [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN gap), and the matrix rebuilt minutes later. **at-target rose 190 → 210 (+20)**, **ahead 1 → 3 (+2)**, **behind 130 → 138 (+8)**; **pass ticked +1 to 129 but fail jumped +29 to 212** as the freshly-wired cells mostly fail on their first cut — the runner's recurring first-cut-of-an-expansion pattern (so the absolute pass number is not comparable across the expansion; pass *rate* fell 39.9% → 36.8%). This is the pre-Sep-2-hackathon broadening [[mike-english|Mike English]] flagged (more data-plane coverage, possible results-presentation redesign).
+
+Aug-27 had **two cuts**: the ~nightly [01:30:43](https://englishm.github.io/moq-interop-runner/results/2026-08-27_013043/report.html) run on the old 321-cell matrix — **321 / 122 / 189 / 10** (at-target 190 · ahead 1 · behind 130), a **−6 pass** slip that broke the four-day climb and set a new post-contraction low — then the 14:16 expansion re-run above once #112/#111 landed.
 
 ## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
@@ -83,6 +86,8 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-08-27 14:16:15 | 351 | 129 | 212 | 10 | 210 | 3 | +7 | **matrix +30 → 351: `stitcher-moq` relay enrolled (PR #112); at-target +20, first growth since the contraction (Δ vs the same-day 01:30 cut)** |
+| 2026-08-27 01:30:43 | 321 | 122 | 189 | 10 | 190 | 1 | −6 | nightly cut on the old matrix; post-contraction low |
 | 2026-08-26 00:13:53 | 321 | 128 | 183 | 10 | 190 | 1 | +3 | biggest gain since the contraction |
 | 2026-08-25 00:12:46 | 321 | 125 | 186 | 10 | 190 | 1 | +1 | third straight +1/day |
 | 2026-08-24 00:13:06 | 321 | 124 | 187 | 10 | 190 | 1 | +1 | |
@@ -120,6 +125,7 @@ The runner has gone through **three structural expansions and one contraction**,
 - **July 20** — matrix +19 to 338; fresh draft-18 endpoints all failed on their first cut (pass flat at 134), then **+8 to 142** July-21 as they converged, flat 142 July-22.
 - **July 23** — matrix +12 to **350**, at-target to **220**; pass fell **−12 to 130** and skips reappeared (0 → 11). The 350-cell matrix then held for **27 consecutive cuts** (July 23 → Aug 18), pass wandering in a **126–136 band**.
 - **Aug 19** — the first **contraction**: −29 to **321**, at-target 220 → **190**, and the first-ever `ahead` cell — caused not by a runner change but by **`moq-go` moving to draft-19** and losing every version-matched pairing.
+- **Aug 27** — the fourth **expansion** and first *growth* since the contraction: +30 to **351**, at-target 190 → **210**, ahead 1 → **3**, behind 130 → **138**, when the **`stitcher-moq` relay (Pluto TV / Paramount)** was enrolled (runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112), 14:01 UTC). Pass ticked +1 to 129 while fail jumped +29 to 212 — the freshly-wired cells failing on their first cut, exactly as prior expansions did. (The same day's earlier 01:30 nightly cut, still on the 321-cell matrix, had slipped −6 to a post-contraction-low 122.)
 
 The recurring pattern: **every structural change drops the raw pass count on its first cut** before the newly-wired cells converge — so cross-expansion comparisons of the absolute pass number are close to meaningless. Pass *rate* and the at-target/ahead/behind split are the durable readings.
 
