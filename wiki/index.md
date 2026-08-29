@@ -2,9 +2,9 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-08-28
+last_updated: 2026-08-29
 status: current
-updated: 2026-08-28
+updated: 2026-08-29
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -150,6 +150,7 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 
 - **[IETF Datatracker — MOQ WG](https://datatracker.ietf.org/group/moq/documents/)** — Canonical list of all WG and related individual drafts
 - **[[moq-monthly|MoQ Monthly]]** ([buttondown](https://buttondown.com/moqmonthly)) — Periodic newsletter by [[mike-english|Mike English]]; **dormant since issue #2 (2026-05-31)**
+- **[deMOQed 2026](https://moqalliance.org/demoqed-2026/)** — the first dedicated MoQ conference, **Oct 8 2026, 1–8pm at the Alamo Drafthouse, San Francisco** (SF Tech Week); hosted by the **MoQ Alliance** (implementer companies incl. Cloudflare, Mux, OpenMOQ), practical-applications focus, $99 entry (no sponsors). Announced by [[luke-curley|Luke Curley]] Aug-28 ([moq.dev/blog/demoqed](https://moq.dev/blog/demoqed/))
 - **[Demuxed MoQ Talks](https://www.youtube.com/playlist?list=PLiF9acz7G1ppuCCYHjke1p-GSpWNJOdOl)** — Curated playlist of MoQ-related conference talks
 - **[Montevideo Tech Summer Camp](https://montevideotech.dev/summer-camp-2026-moq-project/)** — Annual open-source collaboration event with MoQ projects ([2025](https://montevideotech.dev/summercamp2025/), [2026](https://montevideotech.dev/summer-camp-2026-moq-project/))
 - **[moq.dev Discord](https://discord.gg/FCYF3p99mr)** — Community chat for MoQ developers, run by Luke Curley
