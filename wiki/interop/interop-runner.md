@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-29
+last_updated: 2026-08-30
 status: current
 ---
 
@@ -58,9 +58,9 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-08-28 02:52:10 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-28_025210/report.html) — 351 cells / 121 pass / 220 fail / 10 skip** (34.5% pass; **at-target draft-18 210 · ahead 3 · behind 138**). This is the **first clean nightly on the expanded 351-cell matrix** (the Aug-27 14:16 cut was the expansion re-run itself): matrix flat at 351 and the version breakdown byte-identical (210 · 3 · 138), but **pass −8 (129 → 121), fail +8 (220)** — a small same-matrix regression as the freshly-wired `stitcher-moq` cells and some drift settle in. 121 is a new low on the 351-cell matrix (there is only one prior 351 cut).
+**Latest cut: [2026-08-29 00:23:47 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-29_002347/report.html) — 351 cells / 123 pass / 218 fail / 10 skip** (35.0% pass; **at-target draft-18 210 · ahead 3 · behind 138**). A **+2 pass / −2 fail** bounce off the Aug-28 low (121) on a byte-flat 351-cell matrix — the version breakdown has now held **210 · 3 · 138** for three straight cuts, so this is a genuine same-matrix uptick and the **first up-day since the matrix expanded to 351**, as the freshly-wired `stitcher-moq` cells begin to settle. Still targets **draft-18**.
 
-The **prior cut, [2026-08-27 14:16:15 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-27_141615/report.html) — 351 / 129 / 212 / 10**, was the **matrix expansion (+30 cells, 321 → 351)** — the runner's fourth structural expansion and its first *growth* since the Aug-19 contraction: the **`stitcher-moq` relay** (Pluto TV / Paramount) was enrolled when runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112) merged **14:01 UTC** (alongside [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN gap), and the matrix rebuilt minutes later. **at-target rose 190 → 210 (+20)**, **ahead 1 → 3 (+2)**, **behind 130 → 138 (+8)**; pass ticked +1 to 129 but fail jumped +29 to 212 as the freshly-wired cells mostly failed on their first cut — the runner's recurring first-cut-of-an-expansion pattern (so the absolute pass number is not comparable across the expansion). This is the pre-Sep-2-hackathon broadening [[mike-english|Mike English]] flagged (more data-plane coverage, possible results-presentation redesign). Aug-27 also had a ~nightly [01:30:43](https://englishm.github.io/moq-interop-runner/results/2026-08-27_013043/report.html) run on the old 321-cell matrix — **321 / 122 / 189 / 10** (at-target 190 · ahead 1 · behind 130), a **−6 pass** slip that broke the four-day climb and set a post-contraction low — before the 14:16 expansion re-run once #112/#111 landed.
+The **two prior 351-cell cuts**: [2026-08-28 02:52:10 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-28_025210/report.html) — **351 / 121 / 220 / 10** — the **first clean nightly on the expanded matrix** (pass −8 vs the expansion re-run, a new low on 351 as `stitcher-moq` and drift settled in); and [2026-08-27 14:16:15 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-27_141615/report.html) — **351 / 129 / 212 / 10** — the **matrix expansion (+30 cells, 321 → 351)** itself, the runner's fourth structural expansion and its first *growth* since the Aug-19 contraction: the **`stitcher-moq` relay** (Pluto TV / Paramount) was enrolled when runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112) merged **14:01 UTC** (alongside [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN gap). **at-target rose 190 → 210 (+20)**, **ahead 1 → 3 (+2)**, **behind 130 → 138 (+8)**; pass ticked +1 to 129 but fail jumped +29 to 212 as the freshly-wired cells mostly failed on their first cut — the runner's recurring first-cut-of-an-expansion pattern (so the absolute pass number is not comparable across the expansion). This is the pre-Sep-2-hackathon broadening [[mike-english|Mike English]] flagged (more data-plane coverage, possible results-presentation redesign). Aug-27 also had a ~nightly [01:30:43](https://englishm.github.io/moq-interop-runner/results/2026-08-27_013043/report.html) run on the old 321-cell matrix — **321 / 122 / 189 / 10** (at-target 190 · ahead 1 · behind 130), a **−6 pass** post-contraction low — before the 14:16 expansion re-run once #112/#111 landed.
 
 ## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
@@ -86,6 +86,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-08-29 00:23:47 | 351 | 123 | 218 | 10 | 210 | 3 | +2 | first up-day on the expanded matrix; bounce off the Aug-28 low |
 | 2026-08-28 02:52:10 | 351 | 121 | 220 | 10 | 210 | 3 | −8 | first clean nightly on the 351-cell matrix; new low on the expanded matrix |
 | 2026-08-27 14:16:15 | 351 | 129 | 212 | 10 | 210 | 3 | +7 | **matrix +30 → 351: `stitcher-moq` relay enrolled (PR #112); at-target +20, first growth since the contraction (Δ vs the same-day 01:30 cut)** |
 | 2026-08-27 01:30:43 | 321 | 122 | 189 | 10 | 190 | 1 | −6 | nightly cut on the old matrix; post-contraction low |
