@@ -2,7 +2,7 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-08-07
+last_updated: 2026-08-31
 status: current
 ---
 
@@ -11,7 +11,7 @@ status: current
 **Maintainer**: [[tobbe-einarsson|Torbjörn Einarsson]]
 **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport) · [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock) · [Eyevinn/warp-player](https://github.com/Eyevinn/warp-player)
 **Demo**: [moqlivemock.demo.osaas.io](https://moqlivemock.demo.osaas.io/)
-**Draft support**: draft-14 and draft-16 (ALPN-based version negotiation)
+**Draft support**: **draft-18** (migrated 2026-08-30, ALPN-based version negotiation) — the Go library [[moqtransport]] shipped a draft-18 rewrite as **v0.11.0** and **moqlivemock** migrated on `main` the same day ([#129](https://github.com/Eyevinn/moqlivemock/pull/129), not yet tagged; last release v0.13.0 is draft-14/16)
 **Packaging formats**: CMSF, LOC (HEVC + AVC + AAC + Opus), MSF, moq-mi (since v0.8.0), LOCMAF v0.1
 
 # Overview
@@ -21,11 +21,11 @@ Eyevinn's MoQ stack spans three repositories that together cover the full media 
 # Components
 
 ## moqtransport
-- **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport) — Go. Latest: **v0.10.0** (Aug 6, 2026).
-- Media over QUIC Transport library implementing [[moq-transport]] draft-14 and draft-16.
+- **GitHub**: [Eyevinn/moqtransport](https://github.com/Eyevinn/moqtransport) — Go. Latest: **v0.11.0 "draft-18 rewrite"** (Aug 30, 2026).
+- Media over QUIC Transport library implementing [[moq-transport]] **draft-18** (migrated from draft-14/16 in v0.11.0; see [[moqtransport]] for the fork/upstream split).
 
 ## moqlivemock
-- **GitHub**: [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock) — Go. Latest: **v0.13.0** (Aug 6, 2026).
+- **GitHub**: [Eyevinn/moqlivemock](https://github.com/Eyevinn/moqlivemock) — Go. Latest release: **v0.13.0** (Aug 6, 2026); **draft-18 migration merged to `main`** (Aug 30, 2026, [#129](https://github.com/Eyevinn/moqlivemock/pull/129)), not yet tagged.
 - Live MoQ publisher (`mlmpub`) and subscriber (`mlmsub`) test tools with CMSF, LOC, MSF, moq-mi, and LOCMAF media support, DRM, and interop testing — plus `mlmtest` for the [[interop-runner]] framework.
 
 ## warp-player
@@ -76,7 +76,8 @@ The CMSF ContentProtection signaling spec ([moq-wg/cmsf PR #18](https://github.c
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **Coordinated v0.13.0 release wave** (Aug 6): moqlivemock **v0.13.0**, warp-player **v0.13.0**, and moqtransport **v0.10.0** shipped together, consolidating the CTA-608 caption + AV1 work. moqlivemock gained a selectable **`-cc608mode`** (paint-on default / pop-on / roll-up, [#125](https://github.com/Eyevinn/moqlivemock/pull/125)), a **`go-608` v0.9.0** bump ([#124](https://github.com/Eyevinn/moqlivemock/pull/124)), and a **deterministic catalog codec ordering** (video AVC → HEVC → AV1, audio AAC → Opus → AC-3, [#126](https://github.com/Eyevinn/moqlivemock/pull/126)); warp-player added a **struck-through CC button when captions are impossible** ([#180](https://github.com/Eyevinn/warp-player/pull/180)) and completed its cc608 end-to-end verification ([#177](https://github.com/Eyevinn/warp-player/pull/177)). AV1 now carries CTA-608 like AVC/HEVC on both the WebCodecs and MSE/EME paths, though **warp-player does not yet render AV1 captions**. The stack remains on **draft-14 & draft-16**; a **draft-18 update is planned next**.
+- **Draft-18 migration** (Aug 30, 2026): the Eyevinn stack moved off draft-14/16 to **[[moq-transport]] draft-18** ahead of the **Sep-2 virtual interop hackathon**. The Go library [[moqtransport]] shipped a full **draft-18 rewrite as v0.11.0** ([PR #18](https://github.com/Eyevinn/moqtransport/pull/18), +16,989/−13,359, tagged Aug 30), and **moqlivemock** migrated in [PR #129](https://github.com/Eyevinn/moqlivemock/pull/129) (+977/−436, merged to `main` — not yet tagged). The migration surfaced a spec-clarity issue [[tobbe-einarsson|tobbee]] filed on the WG tracker, [moq-transport #1861](https://github.com/moq-wg/moq-transport/issues/1861) (§11.4.4.2 End-of-Range indicators: absolute IDs, no Object Payload Length).
+- **Coordinated v0.13.0 release wave** (Aug 6): moqlivemock **v0.13.0**, warp-player **v0.13.0**, and moqtransport **v0.10.0** shipped together, consolidating the CTA-608 caption + AV1 work. moqlivemock gained a selectable **`-cc608mode`** (paint-on default / pop-on / roll-up, [#125](https://github.com/Eyevinn/moqlivemock/pull/125)), a **`go-608` v0.9.0** bump ([#124](https://github.com/Eyevinn/moqlivemock/pull/124)), and a **deterministic catalog codec ordering** (video AVC → HEVC → AV1, audio AAC → Opus → AC-3, [#126](https://github.com/Eyevinn/moqlivemock/pull/126)); warp-player added a **struck-through CC button when captions are impossible** ([#180](https://github.com/Eyevinn/warp-player/pull/180)) and completed its cc608 end-to-end verification ([#177](https://github.com/Eyevinn/warp-player/pull/177)). AV1 now carries CTA-608 like AVC/HEVC on both the WebCodecs and MSE/EME paths, though **warp-player does not yet render AV1 captions**. This wave shipped on **draft-14 & draft-16**; the stack has since **migrated to draft-18** (Aug 30, 2026 — see the top highlight).
 - **CTA-608 in-band closed captions** (Jul 24–25): `mlmpub` gained an internal `cc608` package that generates CTA-608 caption data as H.264/HEVC SEI messages ([PR #114](https://github.com/Eyevinn/moqlivemock/pull/114)), injected across all four serve paths — CMAF/LOCMAF/LOC/moq-mi ([PR #115](https://github.com/Eyevinn/moqlivemock/pull/115)), then **advertised in the catalog as an accessibility descriptor with cross-packaging decode-round-trip verification** ([PR #117](https://github.com/Eyevinn/moqlivemock/pull/117), merged Jul 25, +278/−5) — completing the publisher side of the caption epic. **The warp-player player side landed Aug 2** (resolving [warp-player #156](https://github.com/Eyevinn/warp-player/issues/156)): CTA-608 *extraction* on both the WebCodecs/LOC path ([warp-player #169](https://github.com/Eyevinn/warp-player/pull/169)) and the MSE/CMAF+LOCMAF path ([#171](https://github.com/Eyevinn/warp-player/pull/171)), plus a timed-text overlay seam + CTA-608 *renderer* ([#170](https://github.com/Eyevinn/warp-player/pull/170), ~4,700 LOC total). The **CC on/off toggle + caption-sink wiring completed Aug 3** ([#173](https://github.com/Eyevinn/warp-player/pull/173) merged), closing the CTA-608 capture→publish→extract→render round trip end to end. An **encrypted-playback thread then opened**: a test proving **CTA-608 captions survive cbcs subsample encryption** ([#174](https://github.com/Eyevinn/warp-player/pull/174) merged Aug 3) landed alongside a new bug — **encrypted playback failing on the first audio packet** ([warp-player #175](https://github.com/Eyevinn/warp-player/issues/175), OPEN, blocking the encrypted interop rows). Makes the Eyevinn stack an accessibility-signaling testbed on top of its AVC/HEVC/AV1 codec coverage.
 - **AV1 as a first-class CMSF codec** (Jul 21, [PR #102](https://github.com/Eyevinn/moqlivemock/pull/102)): AV1 (`av01`) joins AVC and HEVC in the CMSF/CMAF + LOCMAF path — SVT-AV1 low-delay CBR test content, appearing in every CMSF catalog as CMAF + LOCMAF renditions, with a new `Codec:` overlay line on all generated video. AV1 is **gracefully excluded from LOC/moq-mi** (those paths keep AVC/HEVC). moqlivemock's first AV1-over-MoQ media path. **warp-player AV1 playback landed the next day** (Jul 22, [warp-player PR #155](https://github.com/Eyevinn/warp-player/pull/155), +440/−9) — AV1 (`av01`) video decode via the WebCodecs/LOC pipeline — completing the AV1 capture→publish→play round trip. Separately, a **"Add TS support" request** ([issue #103](https://github.com/Eyevinn/moqlivemock/issues/103)) was filed by Álvaro Velad Galván (Shaka Player).
 - **v0.12.0 ships LOCMAF v0.3, codec extracted to a standalone module** (Jul 6): the LOCMAF implementation was pulled out of moqlivemock into the standalone [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) module (shared with the [[moq-locmaf|LOCMAF]] draft).

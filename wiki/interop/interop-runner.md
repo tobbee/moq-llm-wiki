@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-08-30
+last_updated: 2026-08-31
 status: current
 ---
 
@@ -58,9 +58,23 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-08-29 00:23:47 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-29_002347/report.html) — 351 cells / 123 pass / 218 fail / 10 skip** (35.0% pass; **at-target draft-18 210 · ahead 3 · behind 138**). A **+2 pass / −2 fail** bounce off the Aug-28 low (121) on a byte-flat 351-cell matrix — the version breakdown has now held **210 · 3 · 138** for three straight cuts, so this is a genuine same-matrix uptick and the **first up-day since the matrix expanded to 351**, as the freshly-wired `stitcher-moq` cells begin to settle. Still targets **draft-18**.
+**Latest cut: [2026-08-30 00:28:30 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-30_002830/report.html) — 351 cells / 116 pass / 225 fail / 10 skip** (33.0% pass; **at-target draft-18 210 · ahead 3 · behind 138**). A **−7 pass / +7 fail** slip that gives back the Aug-29 bounce and sets a **new low on the expanded matrix** (previous low 121, Aug-28), on a byte-flat 351-cell matrix — the version breakdown has now held **210 · 3 · 138** for four straight cuts, so this is a genuine same-matrix reading as the freshly-wired `stitcher-moq` cells keep churning ahead of the **Sep-2 hackathon**. Still targets **draft-18**. (See [Conformance sweep](#conformance-sweep-live-relays-aug-30) below — afrind's Aug-30 draft-18 conformance run against the live relays independently found most of them failing at SUBSCRIBE, consistent with the low automated pass rate.)
 
-The **two prior 351-cell cuts**: [2026-08-28 02:52:10 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-28_025210/report.html) — **351 / 121 / 220 / 10** — the **first clean nightly on the expanded matrix** (pass −8 vs the expansion re-run, a new low on 351 as `stitcher-moq` and drift settled in); and [2026-08-27 14:16:15 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-27_141615/report.html) — **351 / 129 / 212 / 10** — the **matrix expansion (+30 cells, 321 → 351)** itself, the runner's fourth structural expansion and its first *growth* since the Aug-19 contraction: the **`stitcher-moq` relay** (Pluto TV / Paramount) was enrolled when runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112) merged **14:01 UTC** (alongside [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN gap). **at-target rose 190 → 210 (+20)**, **ahead 1 → 3 (+2)**, **behind 130 → 138 (+8)**; pass ticked +1 to 129 but fail jumped +29 to 212 as the freshly-wired cells mostly failed on their first cut — the runner's recurring first-cut-of-an-expansion pattern (so the absolute pass number is not comparable across the expansion). This is the pre-Sep-2-hackathon broadening [[mike-english|Mike English]] flagged (more data-plane coverage, possible results-presentation redesign). Aug-27 also had a ~nightly [01:30:43](https://englishm.github.io/moq-interop-runner/results/2026-08-27_013043/report.html) run on the old 321-cell matrix — **321 / 122 / 189 / 10** (at-target 190 · ahead 1 · behind 130), a **−6 pass** post-contraction low — before the 14:16 expansion re-run once #112/#111 landed.
+The **three prior 351-cell cuts**: [2026-08-29 00:23:47 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-29_002347/report.html) — **351 / 123 / 218 / 10** — the **+2 bounce** (first up-day on the expanded matrix) this slip now erases; [2026-08-28 02:52:10 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-28_025210/report.html) — **351 / 121 / 220 / 10** — the **first clean nightly on the expanded matrix** (pass −8 vs the expansion re-run, a new low on 351 as `stitcher-moq` and drift settled in); and [2026-08-27 14:16:15 UTC](https://englishm.github.io/moq-interop-runner/results/2026-08-27_141615/report.html) — **351 / 129 / 212 / 10** — the **matrix expansion (+30 cells, 321 → 351)** itself, the runner's fourth structural expansion and its first *growth* since the Aug-19 contraction: the **`stitcher-moq` relay** (Pluto TV / Paramount) was enrolled when runner [PR #112](https://github.com/englishm/moq-interop-runner/pull/112) merged **14:01 UTC** (alongside [PR #111](https://github.com/englishm/moq-interop-runner/pull/111) documenting the moxygen/moqx draft-18 client ALPN gap). **at-target rose 190 → 210 (+20)**, **ahead 1 → 3 (+2)**, **behind 130 → 138 (+8)**; pass ticked +1 to 129 but fail jumped +29 to 212 as the freshly-wired cells mostly failed on their first cut — the runner's recurring first-cut-of-an-expansion pattern (so the absolute pass number is not comparable across the expansion). This is the pre-Sep-2-hackathon broadening [[mike-english|Mike English]] flagged (more data-plane coverage, possible results-presentation redesign). Aug-27 also had a ~nightly [01:30:43](https://englishm.github.io/moq-interop-runner/results/2026-08-27_013043/report.html) run on the old 321-cell matrix — **321 / 122 / 189 / 10** (at-target 190 · ahead 1 · behind 130), a **−6 pass** post-contraction low — before the 14:16 expansion re-run once #112/#111 landed.
+
+## Conformance sweep: live relays (Aug 30)
+
+Separate from the nightly runner, **[[alan-frindell|afrind]] has been driving [[moxygen]]'s draft-18 conformance script against the live relay endpoints registered in the runner**, and expanding its coverage (PUBLISH tests landed; FETCH and joining-FETCH expected in place by the **Sep-2 hackathon**). The **Aug-30** run (posted to Slack `#moq`) found draft-18 interop in rough shape — of the eight relays probed, only **[[moxygen]] (Meta) and [[openmoq|moqx]] (OpenMOQ)** cleared **Section 1 (Basic Forwarding Preferences)** 4/4 over both QUIC and WebTransport; the rest failed before a subscribe could complete:
+
+| Relay | Where it breaks (afrind's Aug-30 probe) |
+|---|---|
+| [[moq-rs]] (draft-18) | SUBSCRIBE reaches the server and SubscribeOk is sent, the relay opens subgroup stream id=6 — then **resets it ~39 ms later, error=0**, so no objects flow |
+| [[moq-dev|moq-dev-rs]] | PUBLISH accepted, but the relay **never forwards the subscribe upstream** (0 received); client gets `onSubscribeOk`, then nothing |
+| [[imquic]] | H3 `connectSuccess`, then **total silence — no MoQ SETUP** on either side |
+| `moqt-nr` ([[yu-you|Nokia]]) | **Frame underflow → parse error**, conn error=3 parsing their SETUP (wire-format mismatch) |
+| `stitcher-moq` (Pluto TV / Paramount) | `PublishNamespaceError code=400 reason=unauthorized` on `moq-test-00` |
+
+afrind noted the failures **could equally be moxygen (the test client) bugs**. On the moqx column, [[luke-curley|Luke Curley]] diagnosed a concrete **spec-conformance bug in OpenMOQ** (commit `86bbc5e`): its `decode_subscribe_message` decodes **every even SUBSCRIBE parameter as a varint**, but draft-18 §10.2 defines `FORWARD` (0x10), `SUBSCRIBER_PRIORITY` (0x20) and `GROUP_ORDER` (0x22) as raw **`uint8`** values — so OpenMOQ rejects moq-dev's valid SUBSCRIBE (any priority > 63 trips the varint mis-parse) before the catalog can be published. The fix belongs in OpenMOQ's `src/transport/moqt_control_messages.cpp` (decode those three types as exactly one byte, with a regression vector carrying a priority above 63); *"changing moq's encoding would violate draft-18."* This is the concrete draft-18-readiness picture the [[interim-meetings|Sep-2 virtual interop hackathon]] is meant to harden.
 
 ## The Aug-19 contraction — one implementation moved ahead and left the matrix
 
@@ -86,6 +100,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-08-30 00:28:30 | 351 | 116 | 225 | 10 | 210 | 3 | −7 | new low on the expanded matrix; gives back the Aug-29 bounce |
 | 2026-08-29 00:23:47 | 351 | 123 | 218 | 10 | 210 | 3 | +2 | first up-day on the expanded matrix; bounce off the Aug-28 low |
 | 2026-08-28 02:52:10 | 351 | 121 | 220 | 10 | 210 | 3 | −8 | first clean nightly on the 351-cell matrix; new low on the expanded matrix |
 | 2026-08-27 14:16:15 | 351 | 129 | 212 | 10 | 210 | 3 | +7 | **matrix +30 → 351: `stitcher-moq` relay enrolled (PR #112); at-target +20, first growth since the contraction (Δ vs the same-day 01:30 cut)** |
