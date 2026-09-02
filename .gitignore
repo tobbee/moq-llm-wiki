@@ -8,6 +8,9 @@ wiki/.obsidian/
 *.canvas
 wiki/Untitled*
 
+# Python venv (pre-commit hooks: `.venv/bin/pre-commit install`)
+.venv/
+
 # Quartz build
 node_modules/
 public/
