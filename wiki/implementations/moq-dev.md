@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-08-22
+last_updated: 2026-09-02
 status: current
 ---
 
@@ -89,6 +89,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **Media-format breadth kept growing** (August 2026): **AAC-LC decode** ([#2968](https://github.com/moq-dev/moq/pull/2968)), MPEG-TS **PCR as a uniform grid** ([#2967](https://github.com/moq-dev/moq/pull/2967)), TS/DVB service information carried as opaque SI sections and proxied TDT/TOT, resampler timestamp correctness ([#2992](https://github.com/moq-dev/moq/pull/2992)), and containers mapped **one-to-one onto [[moq-msf|MSF]] packaging** ([#2987](https://github.com/moq-dev/moq/pull/2987), @arielmol). A **GStreamer** front (`moq-gst`) is under active third-party development.
 - **Packaging (breaking, 2026-08-21)**: the **Go wrapper is now published as `moq.dev/moq`** ([#2957](https://github.com/moq-dev/moq/pull/2957)) — a durable import-path change for Go consumers.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
+- **Tracks draft-20 on the IETF adapter path** (Sep 2026): within a day of [[moq-transport]] draft-20 publishing, the `js/net` stack began **honoring draft-20 Location Filters and serving fills** ([#3297](https://github.com/moq-dev/moq/pull/3297), +1619/−101), with draft-20 merge-regression repairs ([#3301](https://github.com/moq-dev/moq/pull/3301)) — cut in the **moq-relay 0.14.14** release train (Sep-2, [#3309](https://github.com/moq-dev/moq/pull/3309); libmoq 0.5.12 / moq-token-cli 0.5.46 / hang 0.20.9). moq-dev's usual rapid draft turnaround, this time on the IETF-filter surface.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
 
 # Interop
