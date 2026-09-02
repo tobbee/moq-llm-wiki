@@ -39,11 +39,21 @@ Defines conventions, workflows, and structure.
 ---
 title: Page Title
 tags: [moq, transport, draft]
-date: 2026-04-10
-last_updated: 2026-04-14
+date: 2026-04-10          # page creation date -- set once, never bumped
+last_updated: 2026-04-14  # last substantive edit -- bump on every update
 status: current | outdated | archived
 ---
 ```
+
+**`last_updated` is what the published site displays.** The Quartz site
+(`quartz.config.ts` sets `defaultDateType: "modified"`) renders `last_updated`
+as the page's "Updated" date in the header and on the OG social card; `date` is
+only the creation date and is not shown. Quartz's own alias list does not
+include `last_updated`, so `quartz/plugins/transformers/frontmatter.ts` adds it
+— without that patch every page silently displayed its creation date instead.
+So a page whose `last_updated` is not bumped will look stale on the site even
+after a real update. There is deliberately **no** reading-time estimate: it was
+removed from `ContentMeta` and the OG card because it drifts as pages grow.
 
 ### Cross-References
 - Link to drafts: `[[moq-transport]]`

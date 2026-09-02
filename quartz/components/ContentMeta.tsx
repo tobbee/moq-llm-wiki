@@ -12,11 +12,16 @@ interface ContentMetaOptions {
    */
   showReadingTime: boolean
   showComma: boolean
+  /**
+   * Optional prefix for the date, e.g. "Updated". Empty renders the bare date.
+   */
+  dateLabel: string
 }
 
 const defaultOptions: ContentMetaOptions = {
   showReadingTime: true,
   showComma: true,
+  dateLabel: "",
 }
 
 export default ((opts?: Partial<ContentMetaOptions>) => {
@@ -30,7 +35,16 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
       const segments: (string | JSX.Element)[] = []
 
       if (fileData.dates) {
-        segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
+        const date = <Date date={getDate(cfg, fileData)!} locale={cfg.locale} />
+        segments.push(
+          options.dateLabel ? (
+            <span>
+              {options.dateLabel} {date}
+            </span>
+          ) : (
+            date
+          ),
+        )
       }
 
       // Display reading time if enabled

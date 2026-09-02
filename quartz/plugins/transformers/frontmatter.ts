@@ -110,6 +110,11 @@ export const FrontMatter: QuartzTransformerPlugin<Partial<Options>> = (userOpts)
               "lastmod",
               "updated",
               "last-modified",
+              // This wiki's schema (see CLAUDE.md) spells it `last_updated`.
+              // Without these aliases `data.modified` falls back to `created`
+              // below, so every page rendered its creation date forever.
+              "last_updated",
+              "last-updated",
             ])
             if (modified) data.modified = modified
             data.modified ||= created // if modified is not set, use created
