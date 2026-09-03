@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-09-02
+last_updated: 2026-09-03
 status: current
 updated: 2026-09-02
 ---
@@ -122,6 +122,7 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 - [[mondain|Paul Gregoire (mondain)]] - Red5 Pro / OpenMOQ implementer
 - [[kota-yatagai]] - Keio University, author of Moqtopus (Unreal Engine)
 - [[steven-riedl]] - Pluto TV/Paramount, SSAI operator perspective on interop
+- [[aman-sharma]] - University of Michigan, [[moq-transport]] editor, [[moqtail]] contributor and interop bug-finder
 - [[martin-thomson]] - Mozilla, transport/security review
 - [[tobbe-einarsson|Torbjörn Einarsson]] - Eyevinn, co-author of LOCMAF, author of moqlivemock/warp-player, wiki maintainer
 

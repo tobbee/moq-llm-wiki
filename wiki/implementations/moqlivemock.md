@@ -2,7 +2,7 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-09-02
+last_updated: 2026-09-03
 status: current
 ---
 
@@ -93,7 +93,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 
 - [[shaka-player]] subscribing to moqlivemock publisher (including CMSF ContentProtection)
 - **`mlmtest` — registered draft-18 client** in the [[interop-runner]] (moved to draft-18 via [runner #114](https://github.com/englishm/moq-interop-runner/pull/114), Sep-1)
-- **`mlmrel` — relay role**, registration OPEN as [runner #120](https://github.com/englishm/moq-interop-runner/pull/120). Locally, mlmrel passes all six relay cases against `mlmtest`, and **8 of the 12 registered draft-18 clients** pass against it (aiomoqt, imquic, moq-dev-rs, moqlivemock, stitcher-moq, xquic-draft-18, moq5, moqtopus); the four failures are client-side — [[moq-js|moq-dev-js]] needs a WebTransport URL, [[moq-rs]] fails only its own two extra PUBLISH cases (unimplemented in [[moqtransport]]), and [[moxygen]]/[[openmoq|moqx]] send an undefined SUBSCRIPTION_FILTER type 250 (`LargestGroup`)
+- **`mlmrel` — relay role, now registered** in the [[interop-runner]] ([runner #120](https://github.com/englishm/moq-interop-runner/pull/120) merged Sep-2, at the draft-18 hackathon). Locally, mlmrel passes all six relay cases against `mlmtest`, and **8 of the 12 registered draft-18 clients** pass against it (aiomoqt, imquic, moq-dev-rs, moqlivemock, stitcher-moq, xquic-draft-18, moq5, moqtopus); the four failures are client-side — [[moq-js|moq-dev-js]] needs a WebTransport URL, [[moq-rs]] fails only its own two extra PUBLISH cases (unimplemented in [[moqtransport]]), and [[moxygen]]/[[openmoq|moqx]] send an undefined SUBSCRIPTION_FILTER type 250 (`LargestGroup`)
 - Draft-18 alignment (Aug-30) puts the stack on the current interop target shared with [[moq-rs]], [[moxygen]], [[libquicr]], [[imquic]] and the rest of the draft-18 roster
 
 # Related

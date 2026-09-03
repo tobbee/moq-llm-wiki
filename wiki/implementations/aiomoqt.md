@@ -2,7 +2,7 @@
 title: "aiomoqt (Python)"
 tags: [implementation, python, async]
 date: 2026-04-10
-last_updated: 2026-08-16
+last_updated: 2026-09-03
 status: current
 ---
 
@@ -17,8 +17,9 @@ Python async implementation of MOQ Transport, using aiopquic for the QUIC transp
 
 # Draft Support
 
-- **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16), since extended toward the current interop drafts
-- Latest release: **v0.10.6** (released ~July 8, 2026; PyPI [`aiomoqt`](https://pypi.org/project/aiomoqt/))
+- **Dual draft-14 and draft-16** with ALPN-based negotiation (`moq-00` for draft-14, `moqt-16` for draft-16), since extended toward the current interop drafts and now exercised on **draft-18** (ALPN `moqt-18`) at the Sep-2 hackathon
+- Latest release: **v0.11.0rc2** (pre-release to PyPI at the **Sep-2 2026 draft-18 interop hackathon** — `pip install --pre aiomoqt==0.11.0rc2`, "all 8 jobs green"); it finally ships the long-in-flight **SUBSCRIBE_OK `vi64` decode fix** (see below). Prior stable: **v0.10.6** (~July 8, 2026; PyPI [`aiomoqt`](https://pypi.org/project/aiomoqt/))
+- **Relay role added (Sep-2)**: aiomoqt grew a relay — self-described *"pseudo-relay … a vehicle for testing pub/sub flows as both client and server,"* registered in the [[interop-runner]] as `aiomoqt-relay` / `aiomoqt-relay-quic`. Its Sep-2 conformance run (moq-test from a **pinned [[moxygen]] build**) drove real relay fixes: *"relay dials upstream origins,"* *"forward the publisher's priority through the relay,"* *"relay serves the bare-PUBLISH flow,"* *"relay forwards objects upstream to downstream,"* *"relay matches announced namespaces by prefix,"* *"never send a control message the draft doesn't define,"* and *"d18 LARGEST_OBJECT carries its Length field."* [[giovanni-marzot|Marzot]]: *"next stop ersatz-relay."*
 - Interop tested against 6 relay implementations across both drafts
 - **draft-18 SUBSCRIBE_OK parse bug (found 2026-08-13; fix landing in v0.11.0)**: v0.10.6 decodes the SUBSCRIBE_OK Track-Properties block with **RFC 9000 varints instead of the LOC-style `vi64`**, so it runs off the end of the message whenever a property value is ≥ 64 (e.g. `TIMESCALE=1000`, encoded `83 e8`) — surfacing as *"truncated trailing extensions block."* Root-caused by Giovanni Marzot after Steven Riedl (Pluto TV) hit it subscribing to a [[moq-dev]] relay (whose SUBSCRIBE_OK is spec-correct); the encode/decode fix is bound for **aiomoqt v0.11.0** alongside **aiopquic v0.4.0** (both in-flight). As of **Aug-15** the fix is on Marzot's dev branch, and debugging it *"stimulated some additional bug finds in filter support"* — Marzot will validate against Pluto's public relay (among others) before cutting v0.11.0. Workaround on v0.10.6: `MOQTMessage._tolerate_trailing_extensions = True` completes the subscribe but skips the property.
 - **v0.10.6 is session-fatal against moq-relay ≥ 0.14.8 (Aug-15)**: moq-dev's relay got stricter at 0.14.8 ([PR #2667](https://github.com/moq-dev/moq/pull/2667): the session is closed on a malformed NAMESPACE), so aiomoqt v0.10.6's draft-18 subscribe flow now fails the whole session (`err=unexpected message`) where older relays warned and continued. Reported by Steven Riedl (Pluto TV), who is upgrading Pluto's public relay to 0.14.8 — another reason to validate v0.11.0 against a current relay before release.

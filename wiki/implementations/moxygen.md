@@ -2,7 +2,7 @@
 title: "Moxygen (Meta)"
 tags: [implementation, cpp, meta]
 date: 2026-04-10
-last_updated: 2026-08-22
+last_updated: 2026-09-03
 status: current
 ---
 
@@ -35,6 +35,8 @@ Meta's open-source C++ MOQ implementation built on their mvfst QUIC library. Inc
 
 # Recent Highlights
 
+- **Conformance harness for the Sep-2 draft-18 hackathon**: moxygen's `moq-test` conformance script is the de-facto draft-18 relay-conformance harness for the ecosystem — [[alan-frindell|afrind]] runs it against every live relay registered in the [[interop-runner]] and posts the per-section pass matrix to Slack `#moq`. By Sep-1 it covered **10 sections**, having gained **Section 9 (FETCH Ranges) and Section 10 (Joining FETCH)** ("new as of Monday"). At the Sep-2 hackathon it drove rapid fixes in [[moqtail]] (4/17 → 53/59) and [[moq-rs]] (Sections 1–7); moxygen's own relay scored **74/76 quic · 75/76 WT** — after afrind candidly reported it first **failed its own suite over a real cross-country network** (58/76 quic, 69/76 WT: *"How embarrassing"*), exposing network-timing bugs in the harness that local runs hid. The conformance tests are being folded into the runner itself ([runner #103](https://github.com/englishm/moq-interop-runner/pull/103), OPEN).
+- **Transparent MoQ proxy at the edge (2026-09-01)**: a new **`MoQProxyHandler`** ([`eed28e56`](https://github.com/facebookexperimental/moxygen/commit/eed28e56)) plus MoQ-proxy lifecycle management ([`94b0e93c`](https://github.com/facebookexperimental/moxygen/commit/94b0e93c)) — a transparent MoQ proxy component — alongside an OSS-buildability push (exported/BB runtime libraries, OSS tests + CI coverage).
 - **Request-stream GOAWAY series (2026-08-21)**: @sandarsh landed a five-commit pass giving GOAWAY proper semantics on *request* streams — context-aware GOAWAY framing, admitting GOAWAY on established SUBSCRIBE/FETCH streams, a `MoQSession::requestStreamGoaway` API (+224/−0), surfacing migration to `TrackConsumer`/`FetchConsumer` (+231/−0), and resetting the stream with `GOING_AWAY` after a timeout. This is the relay-drain/migration path that [[moq-transport]]'s GOAWAY-restriction PR [#1852](https://github.com/moq-wg/moq-transport/pull/1852) is specifying.
 - **Interop-client ALPN gap (Aug 2026)**: the moxygen **relay** negotiates draft-18 correctly, but the interop **client** binary's `kInteropAlpns` lacked `moqt-18`, so draft-18-only relays failed the handshake — a configuration defect that showed up as protocol failures in the [[interop-runner]] matrix. Documented in runner [PR #111](https://github.com/englishm/moq-interop-runner/pull/111); fixes tracked in [issue #219](https://github.com/facebookexperimental/moxygen/issues/219) — [[mike-english|englishm]]'s #221 adds `moqt-18`, afrind's #222 landed ALPN derivation, and [[giovanni-marzot|gmarzot]]'s #223 (derive ALPNs, `--versions`, report the negotiated draft) is still OPEN.
 - **MoQMediaServer** — a new server + binary with an `MoQMp4Receiver` test client and CMake/OSS build wiring (@sandarsh, Aug 18–19), plus [[alan-frindell|afrind]] fixes: routing SUBSCRIBE past publisher-less namespace nodes, emitting the subgroup **End of Group** bit, and resolving publisher priority from track property extensions.

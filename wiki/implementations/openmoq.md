@@ -2,7 +2,7 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-08-22
+last_updated: 2026-09-03
 status: current
 ---
 
@@ -68,6 +68,7 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - **Correction**: this wiki previously recorded moq-playa as *"planned / not yet publicly available (as of 2026-04-10)"*. It has been public and shipping since June 2026.
 - A full-stack TypeScript MoQT reference implementation published as **two npm scopes**, all at **v0.5.7 (2026-08-18)**: `@moqt/transport` (sans-I/O core), `@moqt/loc`, `@moqt/msf`, `@moqt/playback` (jitter buffer, A/V sync), `@moqt/webtransport`, `@moqt/browser`, `@moqt/player`, plus a batteries-included `@playa/player`
 - **WebCodecs** playback path with **MSE/CMAF fallback** and ABR
+- **Registered as a draft-18 interop client** in the [[interop-runner]] as `moq-playa` ([runner #119](https://github.com/englishm/moq-interop-runner/pull/119) merged Sep-2, at the draft-18 hackathon) — runs over WebTransport, negotiating draft-18 via the WT subprotocol; CI publishes `ghcr.io/openmoq/moq-playa-interop-client`
 
 ## mondain/moqzr
 - **GitHub**: [mondain/moqzr](https://github.com/mondain/moqzr) — Zig + Electrobun MoQ player (MIT), [[mondain|Paul Gregoire]]
