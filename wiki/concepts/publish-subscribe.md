@@ -2,7 +2,7 @@
 title: "Publish/Subscribe Model"
 tags: [concept, transport, core]
 date: 2026-04-10
-last_updated: 2026-06-22
+last_updated: 2026-09-02
 status: current
 ---
 
@@ -28,7 +28,7 @@ MOQT uses a publish/subscribe model where:
 3. Relay responds with `REQUEST_OK` (including [[track-properties]], since draft-17)
 4. Publisher begins sending objects on data streams
 
-In **draft-18**, **Required Request ID was removed** (#1615) — a Request ID is now carried only for Joining FETCH and GOAWAY; and **`PUBLISH_OK` is no longer a distinct message type** — it is a textual alias of `REQUEST_OK` (#1611), alongside new aliases `REQUEST_UPDATE_OK` / `TRACK_STATUS_OK` / `SUBSCRIBE_NAMESPACE_OK` / `PUBLISH_NAMESPACE_OK` (#1610).
+In **draft-18**, **Required Request ID was removed** (#1615) — a Request ID was then carried only for Joining FETCH and GOAWAY — **both of those uses are since gone**: draft-19 removed it from GOAWAY ([#1623](https://github.com/moq-wg/moq-transport/pull/1623)) and draft-20 removed Joining FETCH itself ([#1673](https://github.com/moq-wg/moq-transport/pull/1673)), whose replacement fill fetch stream instead carries the Request ID of the `SUBSCRIBE`/`REQUEST_UPDATE` that opened it; and **`PUBLISH_OK` is no longer a distinct message type** — it is a textual alias of `REQUEST_OK` (#1611), alongside new aliases `REQUEST_UPDATE_OK` / `TRACK_STATUS_OK` / `SUBSCRIBE_NAMESPACE_OK` / `PUBLISH_NAMESPACE_OK` (#1610).
 
 ## Namespace Discovery (draft-18)
 draft-17 had a single `SUBSCRIBE_NAMESPACE` (0x11) covering both discovery and subscription (with a BOTH mode + OPTIONS). **draft-18 split it** (PR #1542, merged May 1) into two distinct messages and dropped the BOTH mode / OPTIONS:

@@ -2,7 +2,7 @@
 title: "Relays"
 tags: [concept, transport, infrastructure]
 date: 2026-04-10
-last_updated: 2026-06-22
+last_updated: 2026-09-02
 status: current
 ---
 
@@ -28,7 +28,7 @@ Open question from [[alan-frindell]] (2026-03-31): When a relay receives PUBLISH
 Relays forward PUBLISH_NAMESPACE from connected publishers. In draft-18 (PR #1542) namespace discovery is the split `SUBSCRIBE_NAMESPACE` (0x50) whose response is a `NAMESPACE` message (#1619), separate from `SUBSCRIBE_TRACKS` (0x51) for subscriptions — see [[publish-subscribe#Namespace Discovery (draft-18)|publish-subscribe]]. Clients should handle these appropriately (see [[discussions-2026-03]] for Daiki Matsui's draft-17-era interop questions about this).
 
 ## Fill fetch
-The draft-18 **fill fetch** redesign ([PR #1673](https://github.com/moq-wg/moq-transport/pull/1673)) lets a relay satisfy a subscription's request for past groups by serving them on a dedicated unidirectional FETCH-format stream, rather than the separate Joining FETCH request the relay previously had to correlate. [[victor-vasiliev]] noted this removes Joining FETCH's correlation hazards for relays. See [[joining-fetch]].
+**Fill fetch shipped in draft-20** ([PR #1673](https://github.com/moq-wg/moq-transport/pull/1673), merged in the Aug-31 cut; proposed during the draft-18/19 cycle). A relay satisfies a subscription's request for past Groups on a dedicated unidirectional FETCH-format stream, rather than correlating the separate Joining FETCH request it previously had to track — [[victor-vasiliev]] noted this removes Joining FETCH's correlation hazards for relays. Per draft-20 §7, a relay receiving a `SUBSCRIBE` with `FILL_PARAMETERS` **serves the fill from cache where it can**, and otherwise goes upstream with either a `SUBSCRIBE` carrying `FILL_PARAMETERS` or a FETCH; draft-20 also adds that **a relay MUST send an upstream FETCH to at least one publisher** ([#1804](https://github.com/moq-wg/moq-transport/pull/1804)) and discusses the tradeoffs of **aggregating downstream filters onto one upstream subscription** ([#1735](https://github.com/moq-wg/moq-transport/pull/1735)). See [[joining-fetch]].
 
 # Public Relay Endpoints
 

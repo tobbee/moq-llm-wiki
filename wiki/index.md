@@ -49,7 +49,7 @@ For a complete list of all 24+ related individual Internet-Drafts, see the [IETF
 - [[relays]] - Relay architecture and CDN integration
 - [[subgroups-and-objects]] - Data model: tracks, groups, subgroups, objects (+ wire-format diff 14/16/17)
 - [[streams-and-framing]] - Stream classes and code points across drafts 14/16/17
-- [[joining-fetch]] - Mechanisms for joining a live stream mid-session
+- [[joining-fetch]] - Joining a live stream mid-session: **fill fetch** and `FILL_PARAMETERS` (shipped draft-20, replacing Joining FETCH)
 - [[qmux]] - QUIC multiplexing over TCP for fallback transport
 - [[track-properties]] - Object and track metadata system (Extensions → Properties rename)
 

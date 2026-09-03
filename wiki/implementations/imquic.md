@@ -2,7 +2,7 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-08-26
+last_updated: 2026-09-02
 status: current
 ---
 
@@ -25,7 +25,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 - **draft-19 (merged to `main`)** — [PR #32](https://github.com/meetecho/imquic/pull/32) *"Add support for MoQT v19"* (lminiero, opened July 8) **merged July 19 (+1124/−211)** — the first implementation PR explicitly targeting draft-19, so `main` now carries draft-19 (previously the running relay was ahead of the repo). A first draft-19 build had been deployed to the `lminiero.it:9000` POC relay for the July-18 Vienna Hackathon; the July-19 merge folded it into `main`, followed by relay fixes (*"Allow REQUEST_UPDATE to PUBLISH as a subscriber"*, FORWARD-related relay fixes, PUBLISH tweaks). The bulk of the draft-18 → -19 delta is the new **filters**: serialization/deserialization works and the basic filters function, but `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are currently ignored (open question on their intended semantics — echoed by ianswett's [moq-transport #1816](https://github.com/moq-wg/moq-transport/issues/1816) *"Range filters only filter integer Properties"* and Luke Curley's July-19 stance that Hang will likely never implement filters).
 - **draft-18 (since May 18, 2026)** — partial: most of the wire-format changes from the draft-17 → draft-18 changelog (SUBGROUP_HEADER FIRST_OBJECT bit, FETCH ID delta encoding, PADDING message, SUBSCRIBE_TRACKS split from SUBSCRIBE_NAMESPACE, REQUEST_UPDATE on both, redirect via REQUEST_ERROR, new error codes); initially missing `REQUEST_UPDATE` for `SUBSCRIBE_NAMESPACE` / `SUBSCRIBE_TRACKS`
-- **draft-16 and draft-17** (version range: `0xff000010` to `0xff000011`) — prior supported set
+- **draft-16 and draft-17** — prior supported set. (imquic tracks these internally as `0xff000010`/`0xff000011`, carrying forward the pre-draft-15 numbering; **the spec itself defines no numeric wire version from draft-15 onward** — negotiation is ALPN-only, `moqt-16`/`moqt-17`. See [[moq-transport]] § ALPN Negotiation.)
 - Supports version negotiation - can offer all supported versions or pin to a specific one
 - Previously supported draft-11 through draft-16; draft-14 was dropped when moving to v17
 - Not all features of all versions are fully implemented

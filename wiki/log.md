@@ -8,6 +8,37 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-09-02 (draft-audit) — drafts 18–20 ingested; version-history corrections
+
+**TL;DR**:
+- **The raw text of transport-18, -19 and -20 was finally ingested into `sources/`, and checking the wiki against the drafts' own Appendix A change logs turned up three material errors.** The biggest: **draft-20 was recorded as a "purely-editorial cut" with "no new wire mechanisms"** — it is not. Appendix A.1 runs ~40 items covering the whole Jul-6 → Aug-31 window, headed by the **removal of Joining FETCH** in favour of fill fetch streams (#1673), plus `PUBLISH_STATE_NOTIFY`, `INCLUDE_PROPERTIES`, the `Type Flags` bitfield respec of both data headers (#1774) and the `LOCATION_FILTER`-carried FETCH range. The wiki had been tracking the ~11 PRs that merged on cut day as if they were the whole revision delta. Two knock-ons: **#1673 and #1851 were listed as still OPEN** when both shipped in -20, and the **`0xff0000NN` wire-version codes were fabricated for drafts 15+** — `0xff0000` appears only in draft-14, and from -15 the ALPN is the sole version signal with no `Supported Versions` field in SETUP at all.
+- **The draft-19 section didn't match the spec either** — none of its seven bullets appear in Appendix A.2, and "no major new wire mechanisms" is wrong for the revision that landed **Range Filters** (#1765), `MAX_REQUEST_UPDATES` (#1613) and multiple concurrent subscriptions per Track (#1775). Spot-checked one suspect bullet against the text: the FIRST_OBJECT "first object *ever*" wording is byte-identical in -18 and -19, so -19 did not clarify it. Rewrote both sections from the change logs, expanded -18 with the majors it omitted (`moqt://` unification, the `SUBSCRIBE_NAMESPACE`/`SUBSCRIBE_TRACKS` split, REDIRECT, `PUBLISH_OK` demotion), and confirmed the **LOC property-type collision is now resolved** — MOQT 0x06 clashed with LOC `TIMESTAMP` 0x06 in the shared space through -18 and -19, and -20 moved LOC to 0x10. Separately verified that [[tobbe-einarsson|tobbee]]'s closed issue **#1861 stands on the merits**: §11.4.4.2 still never says whether End-of-Range Group/Object IDs are absolute or delta-encoded, nor anything about Object Payload Length, unchanged from -18 through -20.
+- **Implementations**: no repo activity checked in this window — a spec-audit pass, not a source sweep. One implementation-page correction: [[imquic]]'s `0xff000010`/`0xff000011` for drafts 16/17 relabelled as imquic's internal enum, since the spec defines no numeric version from -15.
+- **Interop**: no new runner cut since the Sep-2 00:26:02 report (**376 / 143 / 221 / 12**, at-target draft-18 250). Flagged on both interop pages that draft-20 is *not* the light retarget the interim minutes implied — implementations moving 18 → 20 for the Oct 12–15 Seattle interim should budget real wire work.
+
+**Operation**: Ingest (IETF drafts) + Update
+**Sources**:
+- `https://www.ietf.org/archive/id/draft-ietf-moq-transport-{18,19,20}.txt` → `sources/ietf-drafts/` (314,260 / 335,703 / 353,925 bytes; 140 / 149 / 158 pages; dated 12 May, 6 July, 31 August 2026). Closes a gap: `sources/` previously stopped at transport-17, so three revisions had been summarised from GitHub PRs and datatracker metadata alone.
+- Primary evidence: **Appendix A.1–A.3** of the -20 text (change logs since -19, -18, -17), plus direct section reads of §3.1 (ALPN/URI), §5.1.3 + §5.1.3.1 (fill semantics), §5.1.6 (joining an ongoing track), §11.4.1–11.4.4.2 (`Type Flags`, End of Range), §15.8 (property registries).
+
+**Pages updated**:
+- [[moq-transport]] — draft-20 and draft-19 version-history sections rewritten from the change logs; draft-18 expanded; ALPN section corrected (no numeric wire version from -15); `0xff0000NN` list removed; #1673/#1851 statuses fixed; fill-fetch open question marked RESOLVED; #1855 "scope" narrowed to the cache-key sense; #1861 status verified against the text.
+- [[joining-fetch]] — retitled *Fill Fetch (formerly Joining Fetch)*; dated blockquote replaced with the shipped draft-20 mechanism (fill range, inheritance, Forward-State rules, FIN-vs-reset failure signalling, the duplicate-delivery recipe, the four join patterns, `DYNAMIC_GROUPS`).
+- [[streams-and-framing]] — draft-19 and draft-20 framing deltas added; bidi table gains rows 19/20; fill fetch stream documented under `0x05`; datagram/subgroup `Type Flags` invalid-value rules recorded; "Pending" section replaced with where each item actually landed.
+- [[subgroups-and-objects]] — draft-19 and draft-20 sections added (per-Object record bytes unchanged; `Type Flags`; timeout start point; `0x20C` End of Timed-Out Range).
+- [[track-properties]] — property collision marked RESOLVED with the -20 renumbering; full §15.8 registry table added (MOQT + provisional LOC/secure-objects); datagram-vs-subgroup zero-length-Properties asymmetry noted.
+- [[relays]] — fill fetch corrected from draft-18 to draft-20 (shipped), with the §7 cache-then-upstream rule, #1804 and #1735.
+- [[publish-subscribe]] — Request-ID note marked stale (both its uses gone by -20).
+- [[interop-status]], [[interop-runner]] — "purely-editorial cut" claim corrected on both.
+- [[imquic]] — draft-16/17 hex codes relabelled as internal.
+- [[index]] — joining-fetch description updated.
+
+**Key findings**:
+- **A revision is not its cut-day PR list.** The failure mode here was tracking daily merges and then treating the last day's batch as the revision delta. Draft summaries should be written from the draft's own Appendix A, not accumulated from the log — the change log is the authoritative delta and is cheap to read once the text is in `sources/`.
+- **Numeric MOQT version codes are a pre-draft-15 concept.** Any `0xff0000NN` in this wiki attached to a draft ≥ 15 is either an implementation's internal constant or an error; the spec-level answer is always the ALPN token.
+- **Two of Cullen Jennings's three fill-fetch objections are answered in the shipped text** (error delivery via stream reset, duplicate delivery via the Next-Object + open-ended-fill recipe); only the nested-`FILL_PARAMETERS` depth question remains open.
+- Gap remaining: `sources/` still lacks the text of the sibling WG drafts at their current revisions, so [[moq-loc]], [[moq-msf]], [[moq-secure-objects]] and [[moq-cmsf]] pages carry the same "summarised from GitHub, never checked against the draft" risk that -18/-19/-20 just turned out to have.
+
 # 2026-09-02 (supplemental) — mlmrel runner-hardening; site date fix
 
 **TL;DR**:

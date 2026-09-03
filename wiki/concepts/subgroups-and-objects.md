@@ -2,13 +2,15 @@
 title: "Subgroups and Objects"
 tags: [concept, transport, data-model, wire-format]
 date: 2026-04-10
-last_updated: 2026-06-22
+last_updated: 2026-09-02
 status: current
 ---
 
-The data hierarchy in [[moq-transport]], with a focus on how the on-wire encoding evolved across **draft-14 → draft-16 → draft-17 → draft-18**.
+The data hierarchy in [[moq-transport]], with a focus on how the on-wire encoding evolved across **draft-14 → draft-16 → draft-17 → draft-18 → draft-19 → draft-20**.
 
 > **draft-18** (2026-05-12) touches this page's data plane in one place: a **`FIRST_OBJECT` bit (0x40)** was added to the SUBGROUP_HEADER Type (#1618), *replacing* the rejected "Subgroup ID == first Object ID" proposal (#1608, **closed unmerged**). The per-Object record encoding is otherwise unchanged from draft-17. FETCH delta encoding (#1586) and the reset-code generalization (#1606) landed as captured below.
+
+> **draft-19** (2026-07-06) and **draft-20** (2026-08-31) leave the per-Object record bytes alone; what changed sits around them. **draft-19**: the two delivery timeouts became **Object** as well as Track Properties ([#1476](https://github.com/moq-wg/moq-transport/pull/1476)), the Object Status payload rule became **IANA-extensible** ([#1760](https://github.com/moq-wg/moq-transport/pull/1760)), and **datagrams take precedence** in cross-forwarding-preference scheduling ties ([#1780](https://github.com/moq-wg/moq-transport/pull/1780)). **draft-20**: the `Type` field of both headers is renamed **`Type Flags`** and respecified as a bitfield ([#1774](https://github.com/moq-wg/moq-transport/pull/1774)), **`OBJECT_DELIVERY_TIMEOUT` now starts at the last header byte** rather than the first payload byte ([#1844](https://github.com/moq-wg/moq-transport/pull/1844)), and a third End-of-Range flavour **`0x20C` End of Timed-Out Range** joins `0x8C`/`0x10C` ([#1822](https://github.com/moq-wg/moq-transport/pull/1822)). See [[streams-and-framing]] for the full framing delta.
 
 # Hierarchy
 
@@ -109,6 +111,12 @@ Bytes-on-the-wire are **identical to draft-16**. Only differences:
 
 ### draft-18 (FIRST_OBJECT bit)
 Per-Object record bytes unchanged. The only header change: a **`FIRST_OBJECT` bit (0x40)** is added to the SUBGROUP_HEADER Type, signalling the Subgroup contains the publisher's first Object; the Type byte widens from `0b00X1XXXX` to `0b0XX1XXXX` (still a 1-byte varint) (PR #1618). This *replaced* the **rejected** PR #1608 ("Subgroup ID == first Object ID", closed unmerged May 1).
+
+### draft-19 (Object-scoped timeouts, extensible status)
+Per-Object record bytes unchanged. `OBJECT_DELIVERY_TIMEOUT` / `SUBGROUP_DELIVERY_TIMEOUT` gain **Object** scope alongside Track ([#1476](https://github.com/moq-wg/moq-transport/pull/1476)) — see [[track-properties]] — and the rule about which Object Statuses may carry a payload becomes an **IANA registry** rather than fixed prose ([#1760](https://github.com/moq-wg/moq-transport/pull/1760)).
+
+### draft-20 (`Type Flags`, timeout start point)
+Per-Object record bytes still unchanged. The header field is renamed `Type` → **`Type Flags`** and specified as a bitfield with explicit invalid-value rules ([#1774](https://github.com/moq-wg/moq-transport/pull/1774)): for SUBGROUP_HEADER, bit 4 MUST be **1**, `SUBGROUP_ID_MODE = 0b11` is reserved, and any value ≥ 128 is invalid; for OBJECT_DATAGRAM, bit 4 (`0x10`) MUST be **0** and any set bit with unspecified meaning is a `PROTOCOL_VIOLATION`. Bit assignments are otherwise as in 16/17/18. Separately, **`OBJECT_DELIVERY_TIMEOUT` now starts counting at the last header byte** instead of the first payload byte ([#1844](https://github.com/moq-wg/moq-transport/pull/1844), closing the payload-less-Object case in [issue #1841](https://github.com/moq-wg/moq-transport/issues/1841)).
 
 ## Datagram Object encoding
 

@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-08-22
+last_updated: 2026-09-02
 status: current
 ---
 
@@ -20,7 +20,7 @@ Orientation page for MOQ interoperability. **The live numbers are not kept here*
 The interop target is a WG decision, distinct from the newest published draft:
 
 - **Current automated target: draft-18.** Reaffirmed by [[alan-frindell|Alan Frindell]] on Slack (July 18) — implementers are welcome to try draft-19, but draft-18 is the target.
-- **Named successor: draft-22.** The [[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14) state *"Draft 22 will be published as the next official interop target"*, after draft-20 (a purely-editorial cut) and draft-21 (the editorial-meeting output).
+- **Named successor: draft-22.** The [[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14) state *"Draft 22 will be published as the next official interop target"*, after draft-20 and draft-21 (the editorial-meeting output). **Note**: the minutes billed draft-20 as "a purely-editorial cut", but the **published draft-20 is not** — it carries the fill-fetch replacement of Joining FETCH, `PUBLISH_STATE_NOTIFY`, the `Type Flags` bitfield respec and more (see [[moq-transport]]). Implementations retargeting 18 → 20 for Seattle should budget for real wire work.
 - **draft-20 is the target for the Seattle hybrid interim (Oct 12–15)**, per [[mike-english|Mike English]]'s Aug-21 hackathon announcement.
 
 Note that the newest *published* revision ([[moq-transport|transport-19]], 2026-07-06) runs ahead of the interop target — so an implementation on draft-19 is "ahead", not "current". See [[moq-go]] for what that currently costs an implementation in the runner.
