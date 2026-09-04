@@ -2,7 +2,7 @@
 title: "Yu You"
 tags: [person, nokia, implementer, author]
 date: 2026-08-22
-last_updated: 2026-08-22
+last_updated: 2026-09-04
 status: current
 ---
 
@@ -13,7 +13,8 @@ status: current
 # Contributions
 
 - **Corresponding author of `draft-yuyou-conditional-filtering-00`** (submitted 2026-08-17, announced 2026-08-18) — *"Conditional Range Filters for Media over QUIC Transport"*, **Nokia's first individual MoQ I-D**. Co-authored with Serhan Gül, [[ali-begen|Ali C. Begen]], and [[zaheduzzaman-sarker|ANM Zaheduzzaman Sarker]]. See [[moq-conditional-filtering]].
-- **Nokia relay implementation** — the source of most of Yu You's WG input. Ran a **basic v18 conformance client** against [[mike-english|Mike English]]'s draft-18 relay during the Vienna Hackathon: **4 / 7 tests pass**, with announce-subscribe, object-vectors, and subscribe-before-announce failing because the relay rejected `PUBLISH` (`errCode=0x0 reason="not supported"`).
+- **Nokia relay implementation (`moqt-nr`, `moqt.nokiaresearch.com:4443`)** — the source of most of Yu You's WG input. Ran a **basic v18 conformance client** against [[mike-english|Mike English]]'s draft-18 relay during the Vienna Hackathon: **4 / 7 tests pass**, with announce-subscribe, object-vectors, and subscribe-before-announce failing because the relay rejected `PUBLISH` (`errCode=0x0 reason="not supported"`).
+- **Sep-3 draft-18 hackathon relay hardening + draft-19 registration** — after missing the Sep-2 virtual interop, Yu You patched the Nokia relay overnight and reported **6 interop clients passing** (stitcher-moq, moq-dev-rs, moq-rs-draft-18, moq-dev-js, moqtopus, moq5); [[steven-riedl|Steven Riedl]]'s client scored **12/12 on both transports**. He then **registered `moqt-nr` for draft-19** in the [[interop-runner]] (the first draft-19 relay registration; `add moqt-19` commit + [runner #124](https://github.com/englishm/moq-interop-runner/pull/124) switching the WT endpoint to a `moqt://` URL). [[alan-frindell|afrind]]'s moxygen readiness probe still caught the relay **zeroing publisher-priority (200 → 0) and the contains-last-in-group flag** and delivering the object twice, plus (per [[aman-sharma|Aman Sharma]]) an undefined **Type-0 parameter** in `REQUEST_OK`, a **FIN-instead-of-reset** on a mid-subgroup upstream reset, and **never sending `NAMESPACE_DONE`**. See [[interop-runner]] and [[discussions-2026-09]].
 - **Aug-17 implementer feedback** on [[mo-zanaty|Mo Zanaty]]'s Top Tracks Filter [PR #1830](https://github.com/moq-wg/moq-transport/pull/1830), raised *"while implementing the Track Filter in our Relay"* — the request that directly seeded the conditional-filtering draft.
 - **Aug-3 DATAGRAM object-fragmentation** design thread on Slack.
 - **June 2026 SSTS demo** — the pre-recorded three-track (500/1500/3000 kbps) switching demo [[will-law|Will Law]] presented at `interim-17`, showing smooth relay-side forwarding-state switching and stable 1080p with switching disabled.

@@ -2,7 +2,7 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-09-02
+last_updated: 2026-09-04
 status: current
 ---
 
@@ -38,6 +38,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Prefix-based routing restored to the relay at the Sep-3 hackathon sweep.** During the draft-18 interop hackathon's Day-2 relay-conformance sweep (see [[interop-runner]]), [[alan-frindell|afrind]] asked [[lorenzo-miniero|Miniero]] to add **prefix-based announce routing** back to the `lminiero.it:9000` relay — the recurring relay-conformance gap, since [[moq-dev|moq-net]] clients register announce-interest with a root prefix — and Miniero landed it plus two fixes [[aman-sharma|Aman Sharma]] found: a **SUBSCRIBE for a published-then-released namespace hung forever** (the relay forwarded it upstream to a departed publisher with no timeout handler; now answers `REQUEST_ERROR` once the publisher is detected gone — reproduced by killing the publisher so no `CONNECTION_CLOSE` is sent), and **`TRACK_STATUS` was never answered**. Still open at day's end: the relay **drops publisher priority (200 → 0)** across the hop and **doesn't honour `AbsoluteRange` subscription ranges**.
 - **First draft-19 relay deployment in the ecosystem, then draft-19 merged to `main`** — Miniero stood up a draft-19 build of the `lminiero.it:9000` relay for the July-18 Vienna Hackathon and put out a call for draft-19 peers, then **merged [PR #32](https://github.com/meetecho/imquic/pull/32) to `main` July 19** (+1124/−211), making imquic the first tracked-repo implementation with draft-19 in `main`. Filter serialization/deserialization and the basic filters work; `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are ignored pending clarity on their semantics. The wiki's first tracked draft-19 *interop endpoint* (vs [[moq-dev|moq-dev]]'s draft-19 client/relay support), though the official interop target remains **draft-18** per [[alan-frindell|afrind]]. **On July 20 the relay achieved the ecosystem's first cross-implementation draft-19 interop** — [[luke-curley|Luke Curley]]'s `moq-cli` (moq-dev) published/subscribed against `lminiero.it:9000` in forced draft-19 (76,804 bytes, 5.23 s, `ffprobe`-validated H.264) as well as forced draft-18.
 - **Live-media LOC demos** — [PR #27](https://github.com/meetecho/imquic/pull/27) merged at the June 2026 London hackathon: `imquic-moq-loc-send` captures webcam + mic and publishes audio (Opus) + video (H.264) LOC tracks; `imquic-moq-loc-recv` subscribes, decodes, and renders via SDL2. Replaces the prior moq-clock-only demos and uses MSF for the catalog. See [[moq-loc]].
 - **Push-to-talk conversational demo** — [PR #31](https://github.com/meetecho/imquic/pull/31) merged June 19, with a live web demo at [lminiero.it/moqp2t/](https://lminiero.it/moqp2t/): every client subscribes to the `push2talk` namespace and holding spacebar publishes an audio track carried over QUIC datagrams. Client side built on [[moqtail|Moqtail]], plus a native demo in the repo — the first publicly-reachable real-time conversational-media app over MoQ the wiki has tracked, exercising the PUBLISH-driven (vs SUBSCRIBE-driven) delivery pattern.
