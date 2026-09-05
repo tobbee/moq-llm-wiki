@@ -1,8 +1,8 @@
 ---
 title: "Steven Riedl"
-tags: [person, pluto-tv, paramount, ssai]
+tags: [person, pluto-tv, paramount, ssai, author]
 date: 2026-08-22
-last_updated: 2026-08-22
+last_updated: 2026-09-05
 status: current
 ---
 
@@ -13,6 +13,7 @@ status: current
 
 # Contributions
 
+- **Corresponding author of `draft-riedl-moq-ad-creative-signaling-00`** (datatracker rev-00, posted 2026-09-03 18:21 UTC) — *"Ad Creative Signaling over the MSF Event Timeline,"* Riedl's **first individual MoQ I-D**. It carries the ad-supported-streaming / SSAI perspective onto the standards track: signalling ad-creative boundaries as entries on [[will-law|Will Law]]'s [[moq-msf|MSF]] event timeline so downstream players and stitchers can act on them — the first draft to build directly on the MSF event-timeline mechanism. Not yet WG-adopted or discussed on-list.
 - **First RSVP to the [[interim-meetings|2026-09-02 virtual interop hackathon]]** (list, Aug-21 18:36 UTC), committing 09:00–17:00 ET and offering:
   - a **public relay endpoint** running stock **moq-relay v0.14.8**, supporting **drafts 14–19**, on UDP 443 with a valid certificate;
   - **two live SSAI channels running continuously**;

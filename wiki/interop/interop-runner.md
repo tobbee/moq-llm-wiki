@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-04
+last_updated: 2026-09-05
 status: current
 ---
 
@@ -32,7 +32,7 @@ Roster as actually exercised by the **2026-08-22** cut — **15 client endpoints
 | `moq-rs`, `moq-rs-draft-14`, `moq-rs-draft-18` | [[moq-rs|cloudflare/moq-rs]] | 16 / 14 / 18 | Three draft-pinned endpoints; `moq-rs-draft-18` is [[mike-english]]'s single-instance relay |
 | `moq5` | **Client — not yet covered by a wiki page** | 18 | |
 | `moqlivemock` | [[moqlivemock|Eyevinn moqlivemock]] (`mlmtest`, [[tobbe-einarsson]]) | — | Client role |
-| `moqt-nr` | **Nokia relay ([[yu-you|Yu You]]) — not yet covered by a wiki page** | 18 → **18 / 19** | `moqt.nokiaresearch.com:4443`; **registered for draft-19 Sep-3** (runner `add moqt-19` commit + [#124](https://github.com/englishm/moq-interop-runner/pull/124) `moqt://` WT endpoint) — first draft-19 relay registration. Patched at the Sep-3 hackathon sweep (6 clients pass; 12/12 from stitcher-moq) but still zeroes publisher-priority in afrind's readiness probe |
+| `moqt-nr` | **Nokia relay ([[yu-you|Yu You]]) — not yet covered by a wiki page** | 18 → **18 / 19** | `moqt.nokiaresearch.com:4443`; **registered for draft-19 Sep-3** (runner `add moqt-19` commit + [#124](https://github.com/englishm/moq-interop-runner/pull/124) `moqt://` WT endpoint) — first draft-19 relay registration. Patched at the Sep-3–4 hackathon sweep (6 clients pass; 12/12 from stitcher-moq; duplicate-object + FETCH-inclusive bugs fixed Sep-4) but afrind's readiness probe still sees the wrong publisher-priority (0 → 128 after the Sep-4 fix, still not the expected 200) plus a new FORWARD=0-still-forwards bug |
 | `moqtail` | [[moqtail]] (Zafer Gurel) | 16 | Relay |
 | `moqtopus` | Moqtopus — C++/MsQuic for Unreal Engine (Kota Yatagai) | 18 | Client |
 | `moqx` | [[openmoq|OpenMOQ moqx]] | 18 | Client + relay |
@@ -58,7 +58,9 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-09-03 00:26:57 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-03_002657/report.html) — 434 cells / 167 pass / 254 fail / 13 skip** (38.5% pass; **at-target draft-18 302 · ahead 15 · behind 117**). A quiet nightly: **pass +2 / fail −2** off the Sep-2 21:38:48 hackathon cut, with the **at-target / ahead / behind split byte-flat (302 / 15 / 117)**. This cut ran at ~00:27 UTC, **before** the [Sep-3 daytime relay-conformance sweep](#conformance-sweep-live-relays) (Nokia `moqt-nr` patch, [[imquic]] prefix-routing restore, [[aiomoqt]] 0.11.0rc3 with d16+d18 12/12) — so those fixes won't reach the matrix until the next cut. Still targets **draft-18**.
+**Latest cut: [2026-09-04 00:24:41 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-04_002441/report.html) — 434 cells / 197 pass / 237 fail / 0 skip** (45.4% pass; **at-target draft-18 298 · ahead 19 · behind 117**). This is the cut where the [Sep-3 relay-conformance sweep](#conformance-sweep-live-relays) lands: **pass +30 (167 → 197, a new high), fail −17, and skip 13 → 0** off the Sep-3 00:26:57 cut. It ran *after* the Sep-3 daytime fixes (Nokia `moqt-nr` patch, [[imquic]] prefix-routing restore, [[aiomoqt]] rc3 with d16+d18 12/12), and the previously-skipped 13 cells all now execute. at-target ticked **302 → 298** (−4) while ahead rose **15 → 19** (+4), so the pass gains spread across both at-target and ahead cells rather than concentrating in the draft-18 group. Still targets **draft-18**.
+
+The prior **Sep-3 nightly: [2026-09-03 00:26:57 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-03_002657/report.html) — 434 cells / 167 pass / 254 fail / 13 skip** (38.5% pass; **at-target draft-18 302 · ahead 15 · behind 117**). A quiet nightly: **pass +2 / fail −2** off the Sep-2 21:38:48 hackathon cut, with the **at-target / ahead / behind split byte-flat (302 / 15 / 117)**. This cut ran at ~00:27 UTC, **before** the Sep-3 daytime relay sweep — so those fixes reached the matrix only on the Sep-4 cut above.
 
 The prior **Sep-2 hackathon cut: [2026-09-02 21:38:48 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-02_213848/report.html) — 434 cells / 165 pass / 256 fail / 13 skip** (38.0% pass; **at-target draft-18 302 · ahead 15 · behind 117**) — the **Sep-2 draft-18 hackathon** cut. The matrix grew **+58 cells** off the same-day [00:26:02 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-02_002602/report.html) cut (**376 / 143 / 221 / 12**, at-target 250) as the hackathon's new endpoints wired in — **[[moqtail]]'s live draft-18 relay** at `relay18.moqtail.dev` ([runner #121](https://github.com/englishm/moq-interop-runner/pull/121)), **[[moqlivemock|mlmrel]]** ([runner #120](https://github.com/englishm/moq-interop-runner/pull/120)), OpenMOQ's **`moq-playa`** `@moqt` TypeScript client ([runner #119](https://github.com/englishm/moq-interop-runner/pull/119)), and the embedded **moq.dev client bumped to 0.19** ([runner #122](https://github.com/englishm/moq-interop-runner/pull/122)). **Pass climbed 143 → 165 (+22)** and at-target draft-18 **250 → 302 (+52)** across the two Sep-2 cuts. The hackathon's manual conformance loop (see [Conformance sweep](#conformance-sweep-live-relays)) — moqtail 4/17 → 53/59, moq-rs Sections 1–7, moxygen 74/76 — is the fuller story; the nightly matrix is a lagging aggregate. Still targets **draft-18**.
 
@@ -102,6 +104,15 @@ afrind noted the failures **could equally be moxygen (the test client) bugs**.
 | [[aiomoqt]] "ersatz-relay" ([[giovanni-marzot|Marzot]]) | **0.11.0rc3** to PyPI; CI conformance's **first green run — d16+d18 12/12**; relay gained `SUBSCRIBE_TRACKS`→`PUBLISH` fan-out (§9.5) | Fixed the Aman batch (undefined `PUBLISH_NAMESPACE_DONE`, wrong-stream `REQUEST_ERROR`, equality-vs-prefix matching, delivery-semantics bug, missing `TRACK_STATUS`) |
 
 The recurring finding across all three (and the Sep-2 [[moqtail]] / [[moq-rs]] relays) is **prefix-based announce routing**: `moq-net` registers announce-interest with a root/empty prefix, so it *needs* prefix routing, and its clean 6/6 (Sep-2) and 12/12 (Sep-3) isolate the gap as relay-side. The sweep also diagnosed two [[moq-dev|moq-net]] / [[moq-rs]] wire bugs for upstream — a spurious "Number of Extensions" varint in every moq-rs `SUBSCRIBE_OK`, and an ALPN-vs-SETUP version-selection mismatch — recorded on [[discussions-2026-09]].
+
+**Sep-4 — Day-3, narrowed to Nokia and imquic.** The two relays with bugs still open ran another round:
+
+| Relay | Sep-4 movement | Where it still broke |
+|---|---|---|
+| `moqt-nr` ([[yu-you|Nokia]]) | **Duplicate-object fixed** (Yu You traced it + the priority-0 to one root cause — a uni-stream object delivered both from the pending buffer and live), **FETCH End-Location off-by-one fixed** (was inclusive; spec is "End Location, plus 1") | Publisher priority now **`Actual=128 Expected=200`** (partial fix from 0); new bug: subscriber B with **FORWARD=0 still receives the first group's objects** |
+| [[imquic]] (Miniero) | Priority issue reported fixed | **Object stream never FIN-closes** after PUBLISH_DONE (within 1 s); the `AbsoluteRange` bug reproduces **only when start group = 0** (relay uses `end_group == 0` as an "unbounded" sentinel); relay **sends duplicate `NAMESPACE_DONE`** — Miniero to retest "Monday" |
+
+The Sep-3 sweep's gains reached the nightly matrix on the **Sep-4 00:24:41 cut** (pass +30, skip 13 → 0 — see [Current standing](#current-standing)). afrind pointed Yu You at moxygen's [`CONFORMANCE_README.md`](https://github.com/facebookexperimental/moxygen/blob/main/moxygen/moqtest/CONFORMANCE_README.md) and PR [#227](https://github.com/facebookexperimental/moxygen/pull/227) (per-object/track-level deadline, OPEN) to run the conformance client, noting the openmoq/moxygen fork carries a not-yet-upstreamed client bug-fix (with pre-built Docker images/tarballs).
 
 > **Correction (Aug-31): the "OpenMOQ commit `86bbc5e` uint8-vs-varint" diagnosis was retracted.** A prior version of this page recorded [[luke-curley|Luke Curley]]'s Aug-30 claim that OpenMOQ's `decode_subscribe_message` mis-decoded raw-`uint8` SUBSCRIBE parameters (`FORWARD`/`SUBSCRIBER_PRIORITY`/`GROUP_ORDER`) as varints. On Aug-31 afrind pointed out the referenced code *"isn't OpenMOQ — this is facebookexperimental/moxygen. The paths you reference aren't moxygen code,"* and Luke withdrew it: *"ignore me i trusted AI."* The diagnosis was AI-hallucinated (it cited a commit/paths that don't correspond to real moxygen/OpenMOQ code) and is **void** — moxygen/moqx were the two relays that *passed* Section 1, not the ones failing. afrind added he is *"cracking down on ai generated issues in the repo"* (see [[discussions-2026-08]]).
 
