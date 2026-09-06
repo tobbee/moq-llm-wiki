@@ -2,7 +2,7 @@
 title: "Cullen Jennings"
 tags: [person, cisco, author, rtc]
 date: 2026-08-22
-last_updated: 2026-08-22
+last_updated: 2026-09-06
 status: current
 ---
 
@@ -14,7 +14,7 @@ status: current
 # Contributions
 
 - Lead author of the **[[moq-mocha|MOCHA]]** suite (`draft-jennings-moq-mocha-*`, 6 parts, filed 2026-07-06) — a full RTC architecture over MOQT: chat, meetings, identity, MLS keying, reactions, address book.
-- Co-author of **[[moq-discovery]]** (`draft-jennings-moq-discovery-00`, 2026-08-14) — DNS/mDNS discovery for the `moqt` URI scheme.
+- Co-author (with [[suhas-nandakumar]]) of **[[moq-discovery]]** (`draft-jennings-moq-discovery`, rev-00 2026-08-14 → **rev-02 2026-09-05**) — DNS/mDNS discovery for the `moqt` URI scheme, now positioned as the **separate spec for URI resolution + TLS cert matching** (his Sep-5 list thread + [transport PR #1909](https://github.com/moq-wg/moq-transport/pull/1909), resolving [issue #1839](https://github.com/moq-wg/moq-transport/issues/1839)).
 - Co-author of **[[moq-tempo|TEMPO]]** (with [[suhas-nandakumar]]) — synchronized media playout orchestration.
 - Active on **[[moq-secure-objects|secure-objects]]** and the WG's **Authorization Design Team**.
 - Drove the **~59-issue read-through of draft-18** (2026-06-15) that shaped the editorial pass leading to [[moq-transport|draft-19]].

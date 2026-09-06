@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-09-05
+last_updated: 2026-09-06
 status: current
 draft_version: 20
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -186,6 +186,7 @@ Substantive topics still being worked as this page is written:
 - **Object Status/Properties on Subgroup streams (issue #1908)**: [[martin-duke|Martin Duke]]'s [issue #1908](https://github.com/moq-wg/moq-transport/issues/1908) (Sep-4) asks whether **an Object carried on a Subgroup stream may have Status and Properties** — a wire-semantics clarification. New, no PR yet.
 - **Cache-availability / cache-status extension (issue #1907)**: [issue #1907](https://github.com/moq-wg/moq-transport/issues/1907) (sharmafb, Sep-4) gauges **interest in an extension for cache availability and cache status** — closely related to [[alan-frindell|afrind]]'s Aug-29 `CACHE_DISTANCE` Slack musing (conveying cache hit/miss depth across relay chains) above. New, request-for-interest.
 - **0-RTT session establishment (issue #1906)**: [[martin-duke|Martin Duke]]'s [issue #1906](https://github.com/moq-wg/moq-transport/issues/1906) (Sep-4) opens the question of **0-RTT** for MoQT session setup. New, no PR yet.
+- **URI resolution + TLS cert matching → a separate draft (issue #1839, Sep-5)**: the transport draft says how a `moqt://` session works once connected but leaves **DNS resolution of the URI and how the TLS certificate matches the URI** undefined. After discussion on [issue #1839](https://github.com/moq-wg/moq-transport/issues/1839), the WG's direction (per [[cullen-jennings|Cullen Jennings]]'s Sep-5 list thread *"URI Resolution for MOQT and TLS cert matching,"* [permalink](https://mailarchive.ietf.org/arch/msg/moq/UGHwMRV_4TFVhz329sfz13KLoao/)) is that **a separate spec is the best home** — it needs review from the DNS and certificate communities, which a standalone document eases. Jennings and [[suhas-nandakumar|Suhas Nandakumar]] offer **[[moq-discovery|`draft-jennings-moq-discovery`]]** (revised to **-02** on Sep-5) as that spec. Transport-side, OPEN **[PR #1909](https://github.com/moq-wg/moq-transport/pull/1909)** *"Move URI resolution to a separate draft"* (Jennings, Sep-5) and its precursor **[PR #1901](https://github.com/moq-wg/moq-transport/pull/1901)** *"start design questions for URI resolution and cert matching"* (Sep-3) track pulling this content out. Related to the URI-query-scope work ([#1855](https://github.com/moq-wg/moq-transport/pull/1855), [#1835](https://github.com/moq-wg/moq-transport/issues/1835)).
 
 # ALPN Negotiation
 
