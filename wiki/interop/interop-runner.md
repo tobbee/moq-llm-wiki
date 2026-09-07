@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-06
+last_updated: 2026-09-07
 status: current
 ---
 
@@ -58,7 +58,9 @@ The **[[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14)** nam
 
 # Current standing
 
-**Latest cut: [2026-09-05 00:25:46 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-05_002546/report.html) — 434 cells / 207 pass / 227 fail / 0 skip** (47.7% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass +10 (197 → 207, a new high), fail −10**, with the **at-target / ahead / behind split byte-flat (298 / 19 / 117)** off the Sep-4 cut — so all ten new passes are cells flipping fail→pass *within* their existing version band (largely the at-target draft-18 group), the tail of the Day-3 relay-sweep fixes (Nokia's duplicate-object gone + FETCH-inclusive fix, [[imquic]] priority fix) reaching the nightly. Still targets **draft-18**.
+**Latest cut: [2026-09-06 00:29:32 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-06_002932/report.html) — 434 cells / 211 pass / 223 fail / 0 skip** (48.6% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass +4 (207 → 211, a new high), fail −4**, with the **at-target / ahead / behind split byte-identical (298 / 19 / 117)** to the Sep-5 cut — so all four new passes are cells flipping fail→pass *within* their existing version band, more of the within-band tail of the Day-3 relay-sweep fixes reaching the nightly rather than any new endpoint or reclassification. Still targets **draft-18**.
+
+The prior **Sep-5 nightly: [2026-09-05 00:25:46 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-05_002546/report.html) — 434 cells / 207 pass / 227 fail / 0 skip** (47.7% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass +10 (197 → 207, a new high), fail −10**, with the **at-target / ahead / behind split byte-flat (298 / 19 / 117)** off the Sep-4 cut — so all ten new passes are cells flipping fail→pass *within* their existing version band (largely the at-target draft-18 group), the tail of the Day-3 relay-sweep fixes (Nokia's duplicate-object gone + FETCH-inclusive fix, [[imquic]] priority fix) reaching the nightly.
 
 The prior **Sep-4 nightly: [2026-09-04 00:24:41 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-04_002441/report.html) — 434 cells / 197 pass / 237 fail / 0 skip** (45.4% pass; **at-target draft-18 298 · ahead 19 · behind 117**). This is the cut where the [Sep-3 relay-conformance sweep](#conformance-sweep-live-relays) lands: **pass +30 (167 → 197, a new high), fail −17, and skip 13 → 0** off the Sep-3 00:26:57 cut. It ran *after* the Sep-3 daytime fixes (Nokia `moqt-nr` patch, [[imquic]] prefix-routing restore, [[aiomoqt]] rc3 with d16+d18 12/12), and the previously-skipped 13 cells all now execute. at-target ticked **302 → 298** (−4) while ahead rose **15 → 19** (+4), so the pass gains spread across both at-target and ahead cells rather than concentrating in the draft-18 group. Still targets **draft-18**.
 
