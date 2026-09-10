@@ -2,7 +2,7 @@
 title: "LOCMAF - Low Overhead CMAF for Media over QUIC"
 tags: [draft, media, cmaf, low-overhead, individual]
 date: 2026-06-03
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/"
@@ -11,7 +11,7 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/"
 **draft-einarsson-moq-locmaf-01** | Individual → **WG adoption intended** (announced [[interim-meetings|interim-2026-moq-23]], Sep-8) | published 2026-07-05 (41 pp) | [Datatracker](https://datatracker.ietf.org/doc/draft-einarsson-moq-locmaf/)
 **draft-einarsson-moq-locmaf-00** | Submitted 2 June 2026
 
-> **2026-09-08 — the WG intends to adopt LOCMAF, but gates the formal adoption call on MPEG.** At interim-2026-moq-23 the chairs and authors agreed to adopt LOCMAF as a WG document; [[magnus-westerlund|Magnus Westerlund]] (as chair) then announced on-list ([permalink](https://mailarchive.ietf.org/arch/msg/moq/7dDgNSp_Wo25loXP-djSm4e1Mq4/)) that the WG will **first send a Liaison Statement to MPEG Systems (ISO/IEC JTC1/SC29/WG3)** — informing them of the intent to define a compression technology for their CMAF media format and confirming no significant objection — and **hold the formal adoption call until MPEG replies**. [[victor-vasiliev|Victor Vasiliev]] had asked in the meeting whether a formal adoption call had been run; it has not. The chairs reaffirmed keeping LOCMAF **separate from [[moq-cmsf|CMSF]]** (independent draft + normative reference), not folded in. Objections invited "now, rather than later."
+> **2026-09-08 — the WG intends to adopt LOCMAF, but gates the formal adoption call on MPEG.** At interim-2026-moq-23 the chairs and authors agreed to adopt LOCMAF as a WG document; [[magnus-westerlund|Magnus Westerlund]] (as chair) then announced on-list ([permalink](https://mailarchive.ietf.org/arch/msg/moq/7dDgNSp_Wo25loXP-djSm4e1Mq4/)) that the WG will **first send a Liaison Statement to MPEG Systems (ISO/IEC JTC1/SC29/WG3)** — informing them of the intent to define a compression technology for their CMAF media format and confirming no significant objection — and **hold the formal adoption call until MPEG replies**. [[victor-vasiliev|Victor Vasiliev]] had asked in the meeting whether a formal adoption call had been run; it has not. The chairs reaffirmed keeping LOCMAF **separate from [[moq-cmsf|CMSF]]** (independent draft + normative reference), not folded in. Objections invited "now, rather than later." **The [interim-23 minutes](https://datatracker.ietf.org/doc/minutes-interim-2026-moq-23-202609081630/) (posted Sep-9) confirm this and record the rationale**: Vasiliev's skepticism was specifically about *"adopting a third normative container format,"* which Westerlund answered by framing **LOCMAF as an optimization for [[moq-cmsf|CMSF]] requirements — "not a new format but … behaving similarly to a transfer-encoding"**; [[will-law|Will Law]] noted CMAF has **no normative dependency on LOCMAF yet** (an open PR would introduce one), and [[tobbe-einarsson|Tobbe]] cited the concrete win — putting every audio frame in a MoQ object adds **>100 bytes** of repetitive overhead, which LOCMAF's delta-encoding cuts to **~2 bytes**. (The AI minutes repeatedly mislabel LOCMAF as `draft-ietf-moq-loc`; the draft is `draft-einarsson-moq-locmaf`.)
 
 # Authors
 - **[[tobbe-einarsson|Torbjörn Einarsson]]** (Eyevinn Technology) — wiki maintainer; author of [[moqlivemock]] + mlmtest interop client

@@ -2,7 +2,7 @@
 title: "MoQ Discovery (DNS and mDNS Discovery for MOQT)"
 tags: [draft, individual, discovery, dns, mdns, uri]
 date: 2026-08-16
-last_updated: 2026-09-06
+last_updated: 2026-09-10
 status: current
 draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-jennings-moq-discovery/"
@@ -37,6 +37,7 @@ Specifies how MOQT clients **locate server endpoints** through DNS and multicast
 
 - **Individual draft at -02** (rev-00 2026-08-14 → rev-02 2026-09-05) — not adopted, no WG call for adoption.
 - **Now the proposed home for URI resolution + TLS cert matching (Sep-5).** On **2026-09-05** [[cullen-jennings|Cullen Jennings]] posted **[Moq] *"URI Resolution for MOQT and TLS cert matching"*** to moq@ietf.org ([permalink](https://mailarchive.ietf.org/arch/msg/moq/UGHwMRV_4TFVhz329sfz13KLoao/), 16:22 UTC, verified real): the [[moq-transport]] draft is *"missing information on how to implement DNS resolution of URI and how the TLS certificate matches to the URI,"* and after discussion on **[transport issue #1839](https://github.com/moq-wg/moq-transport/issues/1839)** the WG's direction is that *"a separate spec is probably the best way to resolve this"* (it needs review from *"the DNS and Certificate people,"* which a standalone doc makes easier). Jennings and [[suhas-nandakumar|Suhas Nandakumar]] point to **this draft** as that spec. On the transport side the move is tracked by OPEN **[PR #1909](https://github.com/moq-wg/moq-transport/pull/1909)** *"Move URI resolution to a separate draft"* (Jennings, Sep-5) and its precursor **[PR #1901](https://github.com/moq-wg/moq-transport/pull/1901)** *"start design questions for URI resolution and cert matching"* (Sep-3). The **rev-02 abstract is still scoped to DNS/mDNS discovery** (SVCB/HTTPS, SRV, DNS-SD) — the URI-resolution/cert-matching content is the *proposed expansion* the list thread is organizing, not yet folded into the published text.
+- **interim-23 endorsed the relocation and sharpened the requirements (Sep-8; minutes posted Sep-9).** Cullen presented the DNS/TLS requirements (tracked by **[PR #1901](https://github.com/moq-wg/moq-transport/pull/1901)**): **mandatory client support for SVCB records** (server-side load balancing); **TLS certificate validation restricted to Subject Alternative Name (SAN) fields** — DNS names, URIs (for narrow-scoped CDN routing), and IP addresses — **ignoring the legacy Common Name (CN)**; and a **ban on wildcard certificates** (`*.example.com`) to align with modern security practice. [[victor-vasiliev|Vasiliev]] asked about browser/WebTransport compatibility; Cullen said raw QUIC fully supports it and browser limits would resolve over time. **[[alan-frindell|afrind]] proposed moving the `moqt` URI-scheme definition out of [[moq-transport]] into this draft, and Cullen agreed** — so this draft becomes the home for both discovery *and* the URI scheme itself. (The AI minutes call the draft `draft-jennings-moq-resolution-00`, which does not exist — the real doc is this `draft-jennings-moq-discovery`.) See [[interim-meetings]], [[discussions-2026-09]].
 - The wiki tracks individual drafts that are actively discussed or referenced; the draft has now graduated from **first-look** to **actively-discussed** — it is the WG's candidate answer to the URI-resolution gap moq-transport deliberately leaves open.
 
 # Related
