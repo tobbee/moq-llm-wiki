@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-11
+last_updated: 2026-09-12
 status: current
 ---
 
@@ -60,7 +60,9 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-09-10 00:24:34 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-10_002434/report.html) — 434 cells / 199 pass / 235 fail / 0 skip** (45.9% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass −8 (207 → 199), fail +8**, with the **at-target / ahead / behind split byte-identical (298 / 19 / 117)** to the Sep-9 cut — a bigger swing than the prior single-cell flips, but the same *kind* of event (cells flapping fail within their existing version band, no reclassification or roster change), so a **fourth straight** within-band flake rather than a real regression. **The nightly runner still targets draft-18**, even though [[interim-meetings|interim-2026-moq-23]] (Sep-8, minutes posted Sep-9) set the **Seattle Oct interop target to draft-20** (see [Current Target](#current-target)) — watch for the runner's automated target to move ahead of Seattle. No Sep-11 cut at check time.
+**Latest cut: [2026-09-11 00:26:18 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-11_002618/report.html) — 434 cells / 200 pass / 234 fail / 0 skip** (46.1% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass +1 (199 → 200), fail −1**, with the **at-target / ahead / behind split byte-identical (298 / 19 / 117)** to the Sep-10 cut — a small bounce back after the Sep-10 −8, and (as with the prior cuts) cells flapping within their existing version band, no reclassification or roster change. This is the **fifth straight** within-band flake. **The nightly runner still targets draft-18**, even though [[interim-meetings|interim-2026-moq-23]] (Sep-8, minutes posted Sep-9) set the **Seattle Oct interop target to draft-20** (see [Current Target](#current-target)) — watch for the runner's automated target to move ahead of Seattle. No Sep-12 cut at check time.
+
+The prior **Sep-10 nightly: [2026-09-10 00:24:34 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-10_002434/report.html) — 434 cells / 199 pass / 235 fail / 0 skip** (45.9% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass −8 (207 → 199), fail +8**, with the **at-target / ahead / behind split byte-identical (298 / 19 / 117)** to the Sep-9 cut — a bigger swing than the prior single-cell flips, but the same *kind* of event (cells flapping fail within their existing version band, no reclassification or roster change), so a **fourth straight** within-band flake rather than a real regression.
 
 The prior **Sep-9 nightly: [2026-09-09 00:26:42 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-09_002642/report.html) — 434 cells / 207 pass / 227 fail / 0 skip** (47.7% pass; **at-target draft-18 298 · ahead 19 · behind 117**). **Pass −1 (208 → 207), fail +1**, with the **at-target / ahead / behind split byte-identical (298 / 19 / 117)** to the Sep-8 cut — a third straight within-band single-cell fail flip, no reclassification or roster change.
 
