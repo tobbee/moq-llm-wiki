@@ -2,9 +2,9 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-09-12
+last_updated: 2026-09-13
 status: current
-updated: 2026-09-12
+updated: 2026-09-13
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -84,7 +84,7 @@ See **[[overview|Implementations Overview]]** for the full comparison — langua
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 - [[moqintosh]] - Pure-Swift iOS client by gazzy / Toshiro Igarashi (draft-14, client-only)
 - [[mediamtx|MediaMTX]] - Go multi-protocol media server with a native MoQ server; **drafts 16–19**, the widest range in the ecosystem (~19.9k stars, not yet in the interop runner)
-- [[moq-go]] - Go session library + relay by Vsevolod Strukchinsky; **draft-19** — the interop runner's only "ahead of target" endpoint
+- [[moq-go]] - Go session library + relay by Vsevolod Strukchinsky; **draft-19** — the interop runner's original "ahead of target" endpoint (Pluto TV / Paramount's `stitcher-moq` declared **draft-20** on Sep-11, the first draft-20 endpoint)
 - [[laps|LAPS]] - Cisco's MOQT relay with Edge/Via/Stub relay-mesh peering, on [[libquicr]]
 - [[moqtransport]] - The Go MoQ Transport library ([[mathis-engelbart|Mathis Engelbart]]) and Eyevinn's downstream fork
 - [[warp-player]] - Eyevinn's TypeScript CMSF player using MSE playback
