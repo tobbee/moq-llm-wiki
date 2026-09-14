@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-09-02
+last_updated: 2026-09-14
 status: current
 ---
 
@@ -90,6 +90,7 @@ Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps on
 - **Packaging (breaking, 2026-08-21)**: the **Go wrapper is now published as `moq.dev/moq`** ([#2957](https://github.com/moq-dev/moq/pull/2957)) — a durable import-path change for Go consumers.
 - **Compression experiment** (group-scoped DEFLATE, extracted into a `moq-flate` / `@moq/flate` crate) is being reconsidered rather than linearly shipped — the code side of Luke's June "MoQ + Compression" list thread.
 - **Tracks draft-20 on the IETF adapter path** (Sep 2026): within a day of [[moq-transport]] draft-20 publishing, the `js/net` stack began **honoring draft-20 Location Filters and serving fills** ([#3297](https://github.com/moq-dev/moq/pull/3297), +1619/−101), with draft-20 merge-regression repairs ([#3301](https://github.com/moq-dev/moq/pull/3301)) — cut in the **moq-relay 0.14.14** release train (Sep-2, [#3309](https://github.com/moq-dev/moq/pull/3309); libmoq 0.5.12 / moq-token-cli 0.5.46 / hang 0.20.9). moq-dev's usual rapid draft turnaround, this time on the IETF-filter surface.
+- **End-to-end encryption workstream** (Sep 2026): a new **`moq-e2ee-01` profile with *shared* test vectors** was drafted in-repo ([#3629](https://github.com/moq-dev/moq/pull/3629), merged Sep-12, +1726/−40), then implemented cross-language — the **Rust core** ([#3665](https://github.com/moq-dev/moq/pull/3665), merged Sep-14, +3381/−23) and a **TypeScript core** ([#3663](https://github.com/moq-dev/moq/pull/3663), in flight). The "shared vectors" framing signals cross-impl interop intent; a genuinely new security direction beyond transport/media, in the profile-plus-two-cores shape the repo uses for its own extensions.
 - **Corporate-contributor footprint** spans Cloudflare, Nokia, Eyevinn, OpenMOQ, and AWS. Most day-to-day churn is Luke Curley's "codex" AI-assisted bugfix/backport batches.
 
 # Interop
