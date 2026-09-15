@@ -2,15 +2,15 @@
 title: "Conditional Range Filters for MOQT"
 tags: [draft, individual, filters, congestion, nokia]
 date: 2026-08-19
-last_updated: 2026-08-22
+last_updated: 2026-09-15
 status: current
-draft_version: "00"
-ietf_url: "https://datatracker.ietf.org/doc/draft-yuyou-conditional-filtering/"
+draft_version: "01"
+ietf_url: "https://datatracker.ietf.org/doc/draft-yuyou-moq-conditional-filtering/"
 ---
 
 > **2026-08-19**: **First-look — a new individual I-D lets a relay switch media filters *on its own* in response to real-time network conditions, rather than waiting for the subscriber to re-signal.** **`draft-yuyou-conditional-filtering-00`** *"Conditional Range Filters for Media over QUIC Transport"* was submitted to the datatracker **2026-08-17** and announced on **moq@ietf.org Aug-18 07:40 UTC** ([permalink](https://mailarchive.ietf.org/arch/msg/moq/vHEvOh5TZNbj1CTai8HzfOWY66o/)) by **[[yu-you|Yu You]] (Nokia)**, with co-authors Serhan Gül (Nokia), Ali C. Begen (Networked Media) and **[[zaheduzzaman-sarker|ANM Zaheduzzaman Sarker]]** (Nokia, MOQ WG co-chair). Individual draft, not adopted. It is Nokia's first individual MoQ I-D and grows directly out of their relay-side filter-implementation work — the Aug-17 implementer-feedback comment on [[mo-zanaty|Mo Zanaty]]'s open [Top Tracks Filter PR #1830](https://github.com/moq-wg/moq-transport/pull/1830) and the Aug-3 [[discussions-2026-08|DATAGRAM-fragmentation]] design thread. See [[discussions-2026-08]].
 
-**draft-yuyou-conditional-filtering-00** | individual submission | submitted 2026-08-17, rev -00 | announced to moq@ietf.org 2026-08-18
+**draft-yuyou-moq-conditional-filtering-01** | individual submission | rev -01 posted **2026-09-14** (submitted Sep-13) · **renamed** from `draft-yuyou-conditional-filtering-00` (Aug-17, announced Aug-18) to adopt the WG `-moq-` naming convention — the `-moq-` name landed at rev-00 on Aug-26 and formally **replaces** the original
 
 # Authors
 - **Yu You** (Nokia) — corresponding author; raised the mechanism from Nokia's relay filter work
@@ -39,7 +39,7 @@ Proposes making [[moq-transport|MOQT]]'s range filters **conditional** so a rela
 
 # Status & Caveats
 
-- **Individual draft at -00** (submitted 2026-08-17, announced 2026-08-18) — not adopted, no WG call for adoption.
+- **Individual draft, now at -01** (rev-01 posted 2026-09-14, submitted Sep-13). The draft was **renamed** `draft-yuyou-conditional-filtering` → `draft-yuyou-moq-conditional-filtering` to adopt the WG `-moq-` convention; the new name **replaces** the Aug-17 -00. The mechanism (`RANGE_FILTER_CONDITION` + `PRIOR_SUBGROUP_ID_GAP`) is unchanged in substance. Not adopted, no WG call for adoption.
 - The wiki tracks individual drafts that are actively discussed or tied to WG work; this is logged as a **first-look** because it proposes a concrete new filter-signaling mechanism directly adjacent to the WG's live filter discussions. Watch for WG-list reaction, referencing implementations, or a relationship to the Top Tracks / Location filter PRs.
 
 # Related
@@ -50,5 +50,5 @@ Proposes making [[moq-transport|MOQT]]'s range filters **conditional** so a rela
 - [[discussions-2026-08]] — the August discussion digest where the announcement and the related filter-PR feedback are recorded
 
 # External Links
-- [Datatracker](https://datatracker.ietf.org/doc/draft-yuyou-conditional-filtering/)
+- [Datatracker](https://datatracker.ietf.org/doc/draft-yuyou-moq-conditional-filtering/)
 - [Announcement on moq@ietf.org (Aug-18)](https://mailarchive.ietf.org/arch/msg/moq/vHEvOh5TZNbj1CTai8HzfOWY66o/)
