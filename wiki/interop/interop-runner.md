@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-16
+last_updated: 2026-09-17
 status: current
 ---
 
@@ -60,7 +60,9 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-09-15 00:27:01 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-15_002701/report.html) — 437 cells / 194 pass / 240 fail / 3 skip** (44.4% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass −3 (197 → 194), fail +3**, with the **at-target / ahead / behind split byte-identical (298 / 22 / 117)** to the Sep-14 cut — no roster or reclassification change, just three cells flapping pass→fail within the existing draft-18 band (an **eighth straight** within-band flake since the Sep-12 matrix growth). **The nightly runner still targets draft-18**, and the `stitcher-moq` draft-20 cells stay **skipped** (still the only draft-20 endpoint, so its 3 "ahead" cells produce no pass/fail — see [Current Target](#current-target)).
+**Latest cut: [2026-09-16 00:25:16 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-16_002516/report.html) — 437 cells / 192 pass / 242 fail / 3 skip** (43.9% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass −2 (194 → 192), fail +2**, with the **at-target / ahead / behind split byte-identical (298 / 22 / 117)** to the Sep-15 cut — no roster or reclassification change, just two cells flapping pass→fail within the existing draft-18 band (a **ninth straight** within-band flake since the Sep-12 matrix growth). **The nightly runner still targets draft-18**, and the `stitcher-moq` draft-20 cells stay **skipped** (still the only draft-20 endpoint, so its 3 "ahead" cells produce no pass/fail — see [Current Target](#current-target)). No Sep-17 cut at check time. (Off-matrix, [[moqlivemock]] v0.15.0 tagged its `mlmrel` relay Sep-16 with *"all six moq-interop-runner relay test cases pass"* — see [[moqlivemock]].)
+
+The prior **Sep-15 nightly: [2026-09-15 00:27:01 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-15_002701/report.html) — 437 cells / 194 pass / 240 fail / 3 skip** (44.4% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass −3 (197 → 194), fail +3**, with the **at-target / ahead / behind split byte-identical (298 / 22 / 117)** to the Sep-14 cut — no roster or reclassification change, just three cells flapping pass→fail within the existing draft-18 band (an eighth straight within-band flake since the Sep-12 matrix growth).
 
 The prior **Sep-14 nightly: [2026-09-14 00:28:25 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-14_002825/report.html) — 437 cells / 197 pass / 237 fail / 3 skip** (45.1% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass +1 (196 → 197), fail −1**, with the **at-target / ahead / behind split byte-identical (298 / 22 / 117)** to the Sep-13 cut — one cell flipping fail→pass within the existing draft-18 band (a seventh straight within-band flake since the Sep-12 matrix growth).
 

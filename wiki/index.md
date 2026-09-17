@@ -2,9 +2,9 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-09-16
+last_updated: 2026-09-17
 status: current
-updated: 2026-09-16
+updated: 2026-09-17
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -41,7 +41,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-overview]] | draft-00 | Individual (**NEW 2026-06-30**) | Media over QUIC Overview — Informational suite survey; co-chair Magnus Westerlund (Ericsson) + Zaheduzzaman Sarker (Nokia) |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
-For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-01 (relay DoS considerations, **-01 2026-07-06**), draft-altanai-moq-relay-geocode-01 (geographic location for MoQ relays, **-01 2026-07-24**), the three [[moq-msf|MSF]] event-timeline spinout drafts by Will Law + Suhas Nandakumar (all **-00 2026-07-06**): draft-wilaw-moq-scte35-event-timeline-00, draft-wilaw-moq-webvtt-msf-00, and draft-law-moq-imsc1-msf-00, and draft-riedl-moq-ad-creative-signaling-00 (**NEW 2026-09-03**, "Ad Creative Signaling over the MSF Event Timeline", [[steven-riedl|Steven Riedl]]).
+For a complete list of all 24+ related individual Internet-Drafts, see the [IETF Datatracker MOQ documents page](https://datatracker.ietf.org/group/moq/documents/). Notable individual drafts not yet covered in the wiki include: draft-duke-moq-subscribe-rewind-02 (Rewind subscription filter), draft-pardue-moq-qlog-moq-events-06 (qlog event definitions), draft-englishm-moq-cdn-provisioning-00 (CDN provisioning), draft-englishm-moq-relay-dos-01 (relay DoS considerations, **-01 2026-07-06**), draft-altanai-moq-relay-geocode-01 (geographic location for MoQ relays, **-01 2026-07-24**), the three [[moq-msf|MSF]] event-timeline spinout drafts by Will Law + Suhas Nandakumar (all **-00 2026-07-06**): draft-wilaw-moq-scte35-event-timeline-00, draft-wilaw-moq-webvtt-msf-00, and draft-law-moq-imsc1-msf-00, draft-riedl-moq-ad-creative-signaling-00 (**NEW 2026-09-03**, "Ad Creative Signaling over the MSF Event Timeline", [[steven-riedl|Steven Riedl]]), and two individual drafts by [[aman-sharma|Aman Sharma]] (U. Michigan): draft-sharma-moq-atomic-subscription-bundles-00 (**NEW 2026-09-15**, "Atomic Subscription Bundles for MoQ Transport", formalizing moq-transport issue #1860) and draft-sharma-moq-cache-signaling-00 (**NEW 2026-09-15**, "Cache Signaling for MoQ Transport", formalizing issue #1907).
 
 # Protocol Concepts
 
@@ -76,7 +76,7 @@ See **[[overview|Implementations Overview]]** for the full comparison — langua
 - [[libquicr]] - Cisco's C++ library with Go bindings
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
-- [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player (draft-14/16, DRM)
+- [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player + `mlmrel` relay (draft-18, DRM; tuple namespaces + pull discovery since v0.15.0)
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos ([[zafer-gurel\|Zafer Gürel]]; draft-16 + draft-18, `relay18.moqtail.dev` live since July 23)
 - [[imquic]] - Meetecho's C library, also supports RoQ ([[lorenzo-miniero]]; draft-16 through draft-19, -19 merged to `main` July 19)
 - [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16; draft-18 migration on `main` since July)
