@@ -2,7 +2,7 @@
 title: "OpenMOQ Software Consortium"
 tags: [implementation, consortium, organization]
 date: 2026-04-12
-last_updated: 2026-09-03
+last_updated: 2026-09-18
 status: current
 ---
 
@@ -69,6 +69,7 @@ An industry consortium advancing MOQ-based technology through high-performance, 
 - A full-stack TypeScript MoQT reference implementation published as **two npm scopes**, all at **v0.5.7 (2026-08-18)**: `@moqt/transport` (sans-I/O core), `@moqt/loc`, `@moqt/msf`, `@moqt/playback` (jitter buffer, A/V sync), `@moqt/webtransport`, `@moqt/browser`, `@moqt/player`, plus a batteries-included `@playa/player`
 - **WebCodecs** playback path with **MSE/CMAF fallback** and ABR
 - **Registered as a draft-18 interop client** in the [[interop-runner]] as `moq-playa` ([runner #119](https://github.com/englishm/moq-interop-runner/pull/119) merged Sep-2, at the draft-18 hackathon) — runs over WebTransport, negotiating draft-18 via the WT subprotocol; CI publishes `ghcr.io/openmoq/moq-playa-interop-client`
+- **[[moq-locmaf|LOCMAF]] playback in flight** — [PR #15](https://github.com/openmoq/moq-playa/pull/15) *"play LOCMAF tracks (draft-einarsson-moq-locmaf-01)"* ([[mondain|Paul Gregoire]], opened 2026-09-14, second revision Sep-17, **+9,237/−63 across 240 files, still open**) adds a standalone **`@moqt/locmaf`** package — codec, deserializer **and encoder**, canonical CMAF-chunk reconstruction incl. `saiz`/`saio`/`senc` — and routes LOCMAF tracks down **either** the existing MSE/CMAF path or a WebCodecs **frame** path (`locmafDecoding: 'mse' | 'frame'`). It is the first implementation anywhere to exercise the draft's **§16 frame interface** and **§14 event-only tracks** (`emsg` v0/v1), and it validates against [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf)'s golden vectors vendored and pinned by SHA-256 (all 38 objects reconstruct and re-encode byte-exact). **CENC/EME playback is the declared gap.** Red5's own relay was exercised end-to-end in TRANSPARENT and FULL modes (the latter reconstructing and validating every object). This makes moq-playa the **second non-Eyevinn LOCMAF implementation** after [[shaka-player]], and the most complete reading of the draft so far.
 
 ## mondain/moqzr
 - **GitHub**: [mondain/moqzr](https://github.com/mondain/moqzr) — Zig + Electrobun MoQ player (MIT), [[mondain|Paul Gregoire]]

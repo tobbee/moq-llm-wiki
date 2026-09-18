@@ -80,7 +80,7 @@ See **[[overview|Implementations Overview]]** for the full comparison — langua
 - [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos ([[zafer-gurel\|Zafer Gürel]]; draft-16 + draft-18, `relay18.moqtail.dev` live since July 23)
 - [[imquic]] - Meetecho's C library, also supports RoQ ([[lorenzo-miniero]]; draft-16 through draft-19, -19 merged to `main` July 19)
 - [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16; draft-18 migration on `main` since July)
-- [[shaka-player]] - Google's media player with experimental MSF/CMSF support incl. DRM (draft-14)
+- [[shaka-player]] - Google's production browser player on MoQ; **drafts 18 · 20 · 21 on `main`**, CMSF + LOC + **LOCMAF** + m2ts packagings, multi-DRM (experimental build only; released builds still at draft-16)
 - [[openmoq]] - Industry consortium (Akamai, Cisco, RED5, YouTube, etc.) with moxygen fork and relay testing
 - [[moqintosh]] - Pure-Swift iOS client by gazzy / Toshiro Igarashi (draft-14, client-only)
 - [[mediamtx|MediaMTX]] - Go multi-protocol media server with a native MoQ server; **drafts 16–19**, the widest range in the ecosystem (~19.9k stars, not yet in the interop runner)

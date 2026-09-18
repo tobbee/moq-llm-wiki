@@ -2,7 +2,7 @@
 title: "CMSF - CMAF Compliant MOQT Streaming Format"
 tags: [draft, media, cmaf, streaming-format]
 date: 2026-04-10
-last_updated: 2026-07-08
+last_updated: 2026-09-18
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-cmsf/"
@@ -57,7 +57,7 @@ Key rotation is not yet defined — future work can build on this for live catal
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
-- **LOCMAF adopted as a `locmaf` packaging — by reference**: CMSF PR #27 registers a third `locmaf` packaging mode (between `cmaf` full-chunk passthrough and `loc` codec-elementary frames) by *normative reference* to the standalone [[moq-locmaf|LOCMAF]] draft rather than folding the format text in — so CMSF now spans `cmaf` / `locmaf` / `loc` while LOCMAF stays a sovereign individual draft. The `locmaf` mode carries tagged fields plus unmodified samples so the receiver reconstructs the same CMAF chunk while dropping steady-state overhead to a couple of bytes.
+- **LOCMAF adopted as a `locmaf` packaging — by reference**: CMSF PR #27 registers a third `locmaf` packaging mode (between `cmaf` full-chunk passthrough and `loc` codec-elementary frames) by *normative reference* to the standalone [[moq-locmaf|LOCMAF]] draft rather than folding the format text in — so CMSF now spans `cmaf` / `locmaf` / `loc` while LOCMAF stays a sovereign individual draft. The `locmaf` mode carries tagged fields plus unmodified samples so the receiver reconstructs the same CMAF chunk while dropping steady-state overhead to a couple of bytes. The mode picked up its **second implementation** on 2026-09-17, when [[shaka-player]] merged `locmaf` alongside its existing `cmaf` packaging ([PR #10538](https://github.com/shaka-project/shaka-player/pull/10538)) — so a CMSF catalog can now offer both encodings to the same player.
 - **Dual Track+Object initData**: [[will-law|Will Law]]'s design carries init data via both a stable Track property (steady-state init) and an Object property for synchronized mid-track changes such as DASH-period switches and DRM key rotation.
 - **First working CMSF muxer/demuxer** in a tracked open-source MoQ implementation landed in [[moq-dev|moq-dev/moq]], under the principle *"CMSF is CMAF with a different catalog format"* — a `hang::Catalog` intermediate representation serializes to MSF or Hang catalog formats.
 - **emsg signaling** design: catalog signaling of EMSG presence so players know to parse ISO boxes, a per-track `scheme_id_uri` indicating the payload, and multiple emsg tags per track.
