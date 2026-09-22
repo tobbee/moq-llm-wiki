@@ -2,7 +2,7 @@
 title: "Interop Status"
 tags: [interop, testing, status]
 date: 2026-04-14
-last_updated: 2026-09-02
+last_updated: 2026-09-22
 status: current
 ---
 
@@ -19,11 +19,12 @@ Orientation page for MOQ interoperability. **The live numbers are not kept here*
 
 The interop target is a WG decision, distinct from the newest published draft:
 
-- **Current automated target: draft-18.** Reaffirmed by [[alan-frindell|Alan Frindell]] on Slack (July 18) — implementers are welcome to try draft-19, but draft-18 is the target.
+- **Current automated target: draft-18.** Reaffirmed by [[alan-frindell|Alan Frindell]] on Slack (July 18) — implementers are welcome to try draft-19, but draft-18 is the target. Still true of the nightly [[interop-runner]] as of the 2026-09-22 cut.
+- **Seattle interim (Oct 12–15) target: draft-18 + draft-22** — decided at [[interim-meetings|interim-2026-moq-24]] (2026-09-21), superseding the draft-20 target set at interim-23 on Sep-8. [[martin-duke|Martin Duke]] announced it on Slack the same hour: *"we declared draft-22 (along with -18) to be the Interop target. -22 is functionally identical to -20 except the ALPN, so there should be no practical difference."* Because -21 and -22 are structural/editorial revisions of draft-20's wire, the interim-23 **wire-freeze** is unaffected; what changed is the ALPN and the fact that draft-18 stays a first-class target rather than a best-effort one. **draft-22 was not yet published when this was recorded** (newest [[moq-transport]] revision: **-21**, 2026-09-08), and interim-24's minutes were not yet posted.
 - **Named successor: draft-22.** The [[interim-meetings|interim-2026-moq-21]] minutes (posted 2026-08-14) state *"Draft 22 will be published as the next official interop target"*, after draft-20 and draft-21 (the editorial-meeting output). **Note**: the minutes billed draft-20 as "a purely-editorial cut", but the **published draft-20 is not** — it carries the fill-fetch replacement of Joining FETCH, `PUBLISH_STATE_NOTIFY`, the `Type Flags` bitfield respec and more (see [[moq-transport]]). Implementations retargeting 18 → 20 for Seattle should budget for real wire work.
-- **draft-20 is the target for the Seattle hybrid interim (Oct 12–15)**, per [[mike-english|Mike English]]'s Aug-21 hackathon announcement.
+- ~~**draft-20 is the target for the Seattle hybrid interim (Oct 12–15)**, per [[mike-english|Mike English]]'s Aug-21 hackathon announcement.~~ **Superseded twice**: interim-23 (Sep-8) confirmed draft-20, then interim-24 (Sep-21) replaced it with draft-18 + draft-22.
 
-Note that the newest *published* revision ([[moq-transport|transport-19]], 2026-07-06) runs ahead of the interop target — so an implementation on draft-19 is "ahead", not "current". See [[moq-go]] for what that currently costs an implementation in the runner.
+Note that the newest *published* revision ([[moq-transport|transport-21]], 2026-09-08) runs ahead of the automated interop target — so an implementation on draft-19 is "ahead", not "current". See [[moq-go]] for what that currently costs an implementation in the runner.
 
 # Known interop issues
 

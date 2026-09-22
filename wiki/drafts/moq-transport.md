@@ -2,12 +2,13 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-09-12
+last_updated: 2026-09-22
 status: current
 draft_version: 21
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 ---
 
+**draft-22** | **not yet published** | **named an interop target (with draft-18) at [[interim-meetings|interim-2026-moq-24]], 2026-09-21** — [[martin-duke|Duke]]: *"-22 is functionally identical to -20 except the ALPN,"* so the draft-20 wire-freeze carries through -21 and -22. As of 2026-09-22 the datatracker's newest revision is still -21, and the nightly [[interop-runner]] still runs draft-18.
 **draft-ietf-moq-transport-21** | published 2026-09-08 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/21/) — the current published revision (159 pages; a pure **restructuring** cut the day of interim-2026-moq-23, **"100% wire and semantically equivalent to draft-20"** per the editors — 15 sentences removed, 31 added, 20 modified, almost all navigational)
 **draft-ietf-moq-transport-20** | published 2026-08-31 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/20/) — 158 pages; carries the full July 6 → Aug 31 delta, incl. the Joining-FETCH removal (not purely editorial)
 **draft-ietf-moq-transport-19** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/19/)
@@ -34,6 +35,10 @@ MOQT is a publish/subscribe protocol that runs over QUIC and WebTransport. It le
 - **URI Scheme**: `moqt://` URI scheme with fragment identifier support (PR #1571)
 
 # Version history
+
+## draft-22 (unpublished) — the named interop target
+
+**interim-24 (2026-09-21) declared draft-22 an interop target alongside draft-18**, superseding the draft-20 target that interim-23 had set on Sep-8 and restoring the interim-21 plan in which -22 is *"the next official interop target"*. The substance is small by design: per [[martin-duke|Martin Duke]] on Slack, **-22 is functionally identical to -20 except the ALPN**, since -21 was a pure structural move and -22 is the editorial cleanup on top of it. Consequences worth tracking: the draft has **not been submitted** (newest datatracker revision: -21, Sep-8), so the target currently names an editors' copy; the automated [[interop-runner]] **still targets draft-18**; and [[moq-dev|moq-dev/moq]] already shipped a `moqt-22` ALPN in moq-net ([#3858](https://github.com/moq-dev/moq/pull/3858)) on the day of the decision. interim-24's minutes were not posted as of 2026-09-22 — see [[interim-meetings]] for the chatlog-based record.
 
 ## draft-21 (published 2026-09-08) — editorial restructuring
 

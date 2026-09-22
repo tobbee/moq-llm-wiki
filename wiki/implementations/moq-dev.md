@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-09-18
+last_updated: 2026-09-22
 status: current
 ---
 
@@ -78,6 +78,8 @@ Bidirectional ingest **and** egress bridges between MoQ broadcasts and legacy me
 # Recent Highlights
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
+
+- **First implementation of the new interop target: `moqt-22` in moq-net** ([#3858](https://github.com/moq-dev/moq/pull/3858), 2026-09-21) — shipped the same day [[interim-meetings|interim-24]] named **draft-22** an interop target alongside draft-18, continuing the pattern set with draft-18 in May. In the same window the QUIC layer was consolidated onto a single backend and then onto **`moq-noq`**, moq.dev's own fork of noq ([#3811](https://github.com/moq-dev/moq/pull/3811), [#3866](https://github.com/moq-dev/moq/pull/3866)), and **`moq-e2ee-00` was implemented with epoch-scoped generations** ([#3863](https://github.com/moq-dev/moq/pull/3863)).
 
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.
 - **moq-lite-05 wire** landed late June and was finalized in early July: SETUP + PATH parameter, TRACK_INFO, SUBSCRIBE_END, mandatory per-frame timestamps + per-track timescale, and QUIC datagram delivery.
