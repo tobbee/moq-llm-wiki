@@ -2,7 +2,7 @@
 title: "LibQuicR (Cisco)"
 tags: [implementation, cpp, go, cisco]
 date: 2026-04-10
-last_updated: 2026-08-22
+last_updated: 2026-09-27
 status: current
 ---
 
@@ -29,6 +29,8 @@ Cisco's C++ MOQ Transport implementation with recently open-sourced Go bindings.
 - Basic clock example included
 
 # Recent Highlights
+
+- **Cross-platform build support** (Sep 22–24, 2026) — four commits adding **Windows compatibility** ([#933](https://github.com/Quicr/libquicr/pull/933)) and macOS/Windows coverage, parallelising the test run, and a repo cleanup ([#952](https://github.com/Quicr/libquicr/pull/952)). No protocol or draft-version work in the window — this is portability, broadening the library past its Linux-first footing.
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 

@@ -2,7 +2,7 @@
 title: "moq-dev/moq (Luke Curley)"
 tags: [implementation, rust, typescript, moq-lite, hang]
 date: 2026-04-12
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 status: current
 ---
 
@@ -79,6 +79,8 @@ Bidirectional ingest **and** egress bridges between MoQ broadcasts and legacy me
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Four new individual drafts published from the moq-dev design surface** (2026-09-24) — [[luke-curley|Luke Curley]] submitted **[`draft-lcurley-moq-e2ee-00`](https://datatracker.ietf.org/doc/draft-lcurley-moq-e2ee/)** (end-to-end encryption profile: a shared 32-byte broadcast secret, publisher-minted epochs, HKDF-SHA-256-derived opaque track names and per-track AES-128-GCM keys, separate key domains for grouped frames and datagrams), **[`draft-lcurley-moq-solicit-00`](https://datatracker.ietf.org/doc/draft-lcurley-moq-solicit/)** (a `SOLICIT` setup option so an endpoint can refuse unsolicited `PUBLISH_NAMESPACE`), **[`draft-lcurley-moq-flate-00`](https://datatracker.ietf.org/doc/draft-lcurley-moq-flate/)** (DEFLATE per subgroup, sync-flushed at each object boundary), and **[`draft-lcurley-moq-mpegts-00`](https://datatracker.ietf.org/doc/draft-lcurley-moq-mpegts/)** (an `mpegts` catalog section preserving PIDs, PMT descriptors and SI tables through demux), alongside revisions of [[moq-hang|hang-03]] and [[moq-lite|lite-06]]. **The e2ee profile had been implemented in-tree for roughly ten days before the draft appeared** — the code preceded the spec, as with `moqt-22`.
+- **Release wave and auth plumbing** (2026-09-26) — five tags in one day: **moq-relay v0.15.7**, **moq-gst v0.4.7**, and **obs-moq v0.6.5 / v0.6.6 / v0.6.7**. The substantive change underneath is that the **SETUP `AUTHORIZATION TOKEN` option now reaches the verifier** ([#4278](https://github.com/moq-dev/moq/pull/4278)), completing the moq-auth path started mid-September; alongside it, `close()`/`end()` to end a broadcast in **every language binding** ([#4031](https://github.com/moq-dev/moq/pull/4031), [#4259](https://github.com/moq-dev/moq/pull/4259)), encoder-advertised **catalog delay** ([#4260](https://github.com/moq-dev/moq/pull/4260)), delay/jitter detection on JSON and binary tracks ([#4270](https://github.com/moq-dev/moq/pull/4270)), and Opus pre-skip/gain carried through `dOps` ([#4294](https://github.com/moq-dev/moq/pull/4294)). Commits already reference **`lite-07`** ([#4224](https://github.com/moq-dev/moq/pull/4224)) three days after lite-06 was published.
 - **First implementation of the new interop target: `moqt-22` in moq-net** ([#3858](https://github.com/moq-dev/moq/pull/3858), 2026-09-21) — shipped the same day [[interim-meetings|interim-24]] named **draft-22** an interop target alongside draft-18, continuing the pattern set with draft-18 in May. In the same window the QUIC layer was consolidated onto a single backend and then onto **`moq-noq`**, moq.dev's own fork of noq ([#3811](https://github.com/moq-dev/moq/pull/3811), [#3866](https://github.com/moq-dev/moq/pull/3866)), and **`moq-e2ee-00` was implemented with epoch-scoped generations** ([#3863](https://github.com/moq-dev/moq/pull/3863)).
 
 - **First open-source impl to ship IETF draft-18** ([PR #1418](https://github.com/moq-dev/moq/pull/1418), May 18) — 6 days after publication, the fastest draft-revision turnaround the wiki has tracked. Wire `0xff000012` / ALPN `moqt-18`. Version matching switched to "newest defaults forward" so future drafts inherit unless opted out.

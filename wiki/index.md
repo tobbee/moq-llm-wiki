@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 status: current
 updated: 2026-09-22
 ---
@@ -25,12 +25,16 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-cmsf]] | draft-01 | Active | CMAF-compliant extension of MSF (-01 published 2026-06-03) |
 | [[moq-moqpack]] | draft-00 | Individual | QPACK compression for MOQT control messages |
 | [[moq-media-interop]] | draft-03 | Individual — **EXPIRED 2026-04-23**, no -04 | Media wire format over LOC for H.264/Opus/AAC ([[jordi-cenzano\|Jordi Cenzano]]); LOC media interop now relies on what is already implemented |
-| [[moq-lite]] | draft-05 | Individual (**-05 2026-06-30**) | Simplified transport protocol by Luke Curley |
-| [[moq-cluster]] | draft-00 | Individual (**NEW 2026-08-04**) | MoQ Cluster Extension — relay-mesh Hop-ID path vector + accumulated route cost (loop detection, lowest-cost routing); implemented over moq-transport in moq-dev PR #2629 ([[luke-curley\|Luke Curley]]) |
-| [[moq-hang]] | draft-02 | Individual (**-02 2026-08-04**) | Media over QUIC - Hang — real-time conferencing profile on moq-lite (rooms/participants/tracks; intended home for recording/DVR) ([[luke-curley\|Luke Curley]]) |
+| [[moq-e2ee]] | draft-00 | Individual (**NEW 2026-09-24**) | MoQ End-to-End Encryption Profile — shared 32-byte broadcast secret + publisher-minted epochs; HKDF-SHA-256 derives opaque track names and per-track AES-128-GCM keys; deliberately diverges from [[moq-secure-objects]] ([[luke-curley\|Luke Curley]]) |
+| [[moq-solicit]] | draft-00 | Individual (**NEW 2026-09-24**) | MoQ Solicit Extension — a `SOLICIT` setup option letting an endpoint refuse unsolicited `PUBLISH_NAMESPACE` and ask via `SUBSCRIBE_NAMESPACE` instead ([[luke-curley\|Luke Curley]]) |
+| [[moq-flate]] | draft-00 | Individual (**NEW 2026-09-24**) | DEFLATE Compressed Tracks for MoQ — one raw DEFLATE stream per subgroup, sync-flushed at each object boundary ([[luke-curley\|Luke Curley]]) |
+| [[moq-mpegts]] | draft-00 | Individual (**NEW 2026-09-24**) | MoQ MPEG-TS Catalog Extension — `mpegts` catalog section preserving PIDs, PMT descriptors, program identity and SI tables through demux ([[luke-curley\|Luke Curley]]) |
+| [[moq-lite]] | draft-06 | Individual (**-06 2026-09-24**) | Simplified transport protocol by Luke Curley; moq-dev code already references `lite-07` |
+| [[moq-cluster]] | draft-01 | Individual (**-01 2026-09-21**) | MoQ Cluster Extension — relay-mesh Hop-ID path vector + accumulated route cost (loop detection, lowest-cost routing); implemented over moq-transport in moq-dev PR #2629 ([[luke-curley\|Luke Curley]]) |
+| [[moq-hang]] | draft-03 | Individual (**-03 2026-09-24**) | Media over QUIC - Hang — real-time conferencing profile on moq-lite (rooms/participants/tracks; intended home for recording/DVR) ([[luke-curley\|Luke Curley]]) |
 | [[moq-timestamp]] | draft-01 | Individual (**-01 2026-08-04**) | MoQ Object Timestamp Extension — transport-level Timescale/Timestamp (now framed on the LOC-registered properties) for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
-| [[moq-msfts]] | draft-00 | Individual | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) |
+| [[moq-msfts]] | draft-01 | Individual (**-01 2026-09-24**) | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) — first revision since -00; note the adjacent new [[moq-mpegts]] |
 | [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
 | [[moq-live-agent-interaction]] | draft-01 | Individual (**-01 2026-07-03**) | Live Agent Interaction over MoQ — real-time AI-agent/voice profile (turns→Groups, tokens→Objects); Yanmei Liu + Dapeng Liu (Alibaba) |
 | [[moq-feedback]] | draft-00 | Individual (**NEW 2026-07-31**) | MoQ Feedback — receiver→sender delivery-quality reports via a per-Object "Feedback Track" (Multimodal Feedback/MMF); Yanmei Liu + Minghui Jiang (Alibaba) + Ronghua Wu (Ant Group) |

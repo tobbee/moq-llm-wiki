@@ -2,13 +2,16 @@
 title: "Media over QUIC - Hang"
 tags: [draft, conferencing, media, moq-lite, individual]
 date: 2026-08-05
-last_updated: 2026-08-05
+last_updated: 2026-09-27
 status: current
-draft_version: "02"
+draft_version: "03"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-hang/"
 ---
 
-**draft-lcurley-moq-hang-02** | Individual submission | -02 submitted 2026-08-04 | 11 pages | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-hang/)
+**draft-lcurley-moq-hang-03** | Individual submission | **-03 submitted 2026-09-24** | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-hang/)
+**draft-lcurley-moq-hang-02** | -02 submitted 2026-08-04 | 11 pages
+
+**-03 landed in [[luke-curley|Luke Curley]]'s eight-document Sep-24 batch** at the IETF-127 submission cutoff, alongside [[moq-lite|lite-06]] and four brand-new drafts ([[moq-e2ee]], [[moq-solicit]], [[moq-flate]], [[moq-mpegts]]). Revision contents not yet reviewed here.
 
 > **2026-08-05**: **`draft-lcurley-moq-hang` bumped to -02 (2026-08-04)** by [[luke-curley|Luke Curley]] — submitted in the same ~02:08 UTC batch as the new [[moq-cluster|`draft-lcurley-moq-cluster-00`]] and [[moq-timestamp|`draft-lcurley-moq-timestamp-01`]]. Hang is the **media/conferencing layer** of the moq-dev stack (the `hang` Rust crate and `js/hang` TypeScript package), long referenced in the wiki but not previously given its own page. This is its **first wiki page**, created as the -02 revision lands. Individual submission, not WG-adopted. See [[moq-dev]], [[moq-lite]].
 

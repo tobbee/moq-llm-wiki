@@ -2,7 +2,7 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 status: current
 ---
 
@@ -84,6 +84,8 @@ status: current
 **Seattle interim registration deadline: Friday 2026-09-26** — co-chair [[martin-duke|Martin Duke]]'s **[Moq] *"Register to attend the Seattle interim"*** (list, Sep-5 20:27 PT = Sep-6 03:27 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/7ky0oNT5vxeQltkzrZ-b_0YFyDE/), verified real via raw archive fetch) asks attendees of the **Oct 12–15 hybrid interim** (F5 Tower) to add their name and rough schedule to the WG GitHub wiki attendance page by that date. (Not a consensus call — a logistics notice.)
 
 **Seattle agenda-item deadline: Tuesday 2026-09-29** — [[martin-duke|Duke]]'s *"Call for agenda items: Seattle In-person meeting"* thread. Two substantive requests are in as of Sep-22: [[cullen-jennings|Cullen Jennings]] (Sep-20) asks **30–60 min on MoQT URI** — moving URI/DNS-resolution/TLS-certificate-matching into a separate draft (cf. [PR #1909](https://github.com/moq-wg/moq-transport/pull/1909)), raw-QUIC and WebTransport problems, fragment handling, and **mDNS local relay discovery** (Google Cast / AirPlay as use cases); [[will-law|Will Law]] (Sep-21) asks **10 min + 30 min on Sender-Side Track Switching**, and asks the chairs to run **the second poll promised in Vienna** — SSTS in MOQT core vs. as an extension point — *before* the meeting so materials can be prepared.
+
+**Update 2026-09-25** ([[martin-duke|Duke]] to the list, 12:30 PDT, [archive](https://mailarchive.ietf.org/arch/msg/moq/QHEhAVmZqGAx12IdZe1O1mPt4Uw/)): *"The agenda requests for Seattle are still open till 9/29."* The chairs must file session requests and are deciding between **two or three sessions** — *"if we have three sessions, one is virtually guaranteed to be the last one on Friday."* Duke asks for requests **"preferably by Monday"** (Sep-28) so he and [[magnus-westerlund|Magnus]] can size the ask. **No new agenda requests had arrived between Sep-21 and Sep-27**, so the Jennings (MoQT URI) and Law (SSTS) items above remain the only two on the table.
 
 **Post-Seattle virtual interim proposed for 2026-10-26** — [[martin-duke|Martin Duke]]'s **[Moq] *"Future Virtual Interims"*** (list, Sep-16 14:21 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/OMTCwOcHdkPHLJzO8nZ4T4Tz0S8/), verified HTTP 200 + DKIM): *"The chairs propose 26 October as the sole virtual interim date between the Seattle and San Francisco meetings. If you have concerns, please tell the chairs no later than 30 September."* So after the biweekly Vienna→Seattle cadence (interim-21..24) and the Oct 12–15 Seattle hybrid, the chairs plan **one** virtual session (Oct 26) before IETF 127 / San Francisco. A logistics proposal, not a consensus call; concerns due **Sep-30**. See [[discussions-2026-09]].
 

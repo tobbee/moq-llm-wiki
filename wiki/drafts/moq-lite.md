@@ -2,13 +2,16 @@
 title: "Media over QUIC - Lite (moq-lite)"
 tags: [draft, transport, individual]
 date: 2026-04-13
-last_updated: 2026-07-29
+last_updated: 2026-09-27
 status: current
-draft_version: "05"
+draft_version: "06"
 ietf_url: "https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/"
 ---
 
+**draft-lcurley-moq-lite-06** | **submitted 2026-09-24** | [Datatracker](https://datatracker.ietf.org/doc/draft-lcurley-moq-lite/)
 **draft-lcurley-moq-lite-05** | Expires 2027-01-01
+
+**-06 landed in the Sep-24 IETF-127 cutoff batch.** Note the usual code-before-draft lead: [[moq-dev|moq-dev/moq]] commits already reference **`lite-07`** ([#4224](https://github.com/moq-dev/moq/pull/4224), Sep-27) three days after -06 published. Revision contents not yet reviewed here.
 
 > **2026-07-01**: **`draft-lcurley-moq-lite-05` is now on the Datatracker (published June 30) — the `-05` revision the wiki flagged "presumably forthcoming" since May 5 finally lands, and [[moq-dev|moq-dev/moq]] ships the matching wire the same 48 hours.** Datatracker bumps **-04 → -05** (2026-06-30, Informational, expires 2027-01-01), catching the published spec up to the **Lite05 / DRAFT_05** wire version that has been in flight in moq-dev's code since [PR #1374](https://github.com/moq-dev/moq/pull/1374) (May 4). On the implementation side, moq-dev landed a **moq-lite-05 wire push** across June 29–July 1: **[PR #1954](https://github.com/moq-dev/moq/pull/1954) MERGED** *"moq-net: moq-lite-05 SETUP message + PATH parameter"* (+828/−116), **[PR #1963](https://github.com/moq-dev/moq/pull/1963) MERGED** *"moq-net: hook up rest of moq-lite-05 wire (TRACK_INFO, SUBSCRIBE_END, frame timestamps)"* (+854/−64), and — a notable design pivot — **[PR #1962](https://github.com/moq-dev/moq/pull/1962) MERGED** *"moq-net: drop per-frame compression, restore Publisher Max Latency to TRACK_INFO"* (+149/−614), walking back the per-frame DEFLATE experiment (the code side of Luke's June-26 [[discussions-2026-06|"MoQ + Compression" thread]]) and restoring the `max_latency` filter to `TRACK_INFO`. So the published draft and the reference implementation are re-converged on the -05 wire. See [[moq-dev]], [[discussions-2026-06]].
 >

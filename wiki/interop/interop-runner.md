@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 status: current
 ---
 
@@ -60,7 +60,15 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-09-22 00:26:27 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-22_002627/report.html) — 437 cells / 201 pass / 233 fail / 3 skip** (46.0% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass +1 (200 → 201), fail −1**, split byte-identical (298 / 22 / 117) yet again. Note the timing on [[aiomoqt]] **v0.11.1**: it published at **00:50 UTC on Sep-22**, *after* this cut started, so its relay-FETCH and namespace-discovery work cannot appear before the **Sep-23** nightly. **The runner still targets draft-18** — interim-24's draft-22 decision (Sep-21) has not reached the nightly configuration — and `quiche-moq` still passes zero cells.
+**Latest cut: [2026-09-27 00:30:44 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-27_003044/report.html) — 475 cells / 230 pass / 243 fail / 2 skip** (48.4% pass; **at-target draft-18 336 · ahead 22 · behind 117**). **230 pass is an all-time high in absolute terms** (previous: 204 on Sep-19), on a matrix that grew **+38 cells** mid-window.
+
+**The growth is one new implementation: `quic-zig`**, registered via [runner #127](https://github.com/englishm/moq-interop-runner/pull/127) (`endel`, merged Sep-22 21:41 UTC). It enrolled **at the target**, which is why **at-target rose by exactly the matrix growth (298 → 336)** while ahead (22) and behind (117) stayed byte-identical. The roster is now nineteen: aiomoqt, imquic, moq-dev-js, moq-dev-rs, moq-go, moq-playa, moq-rs, moq-rs-draft-14, moq-rs-draft-18, moq5, moqlivemock, moqtopus, moqx, moxygen, **quic-zig**, stitcher-moq, xquic, xquic-draft-18.
+
+**The five cuts Sep-23 → Sep-27** all ran on the 475-cell matrix: [Sep-23](https://englishm.github.io/moq-interop-runner/results/2026-09-23_002604/report.html) **216**, [Sep-24](https://englishm.github.io/moq-interop-runner/results/2026-09-24_002507/report.html) **208** (−8), [Sep-25](https://englishm.github.io/moq-interop-runner/results/2026-09-25_002619/report.html) **219** (+11), [Sep-26](https://englishm.github.io/moq-interop-runner/results/2026-09-26_002554/report.html) **222** (+3), [Sep-27](https://englishm.github.io/moq-interop-runner/results/2026-09-27_003044/report.html) **230** (+8). The Sep-24 dip and the recovery since look like ordinary within-band flake on a newly-widened matrix rather than a regression.
+
+**The runner still targets draft-18** — now six days after [[interim-meetings|interim-24]] named draft-18 **+ draft-22** (Sep-21), and draft-22 still is not published. Two preparatory changes did land: a Sep-22 docs commit *"reference interop target draft rather than pinning draft 18"* (decoupling the documentation from the hard-coded 18), and [runner #129](https://github.com/englishm/moq-interop-runner/pull/129) (`spec/data-plane-foundation`) merged Sep-25, the data-plane test scaffolding [[mike-english|English]] had flagged in August.
+
+**The prior cut: [2026-09-22 00:26:27 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-22_002627/report.html) — 437 cells / 201 pass / 233 fail / 3 skip** (46.0% pass; **at-target draft-18 298 · ahead 22 · behind 117**). **Pass +1 (200 → 201), fail −1**, split byte-identical (298 / 22 / 117) yet again. Note the timing on [[aiomoqt]] **v0.11.1**: it published at **00:50 UTC on Sep-22**, *after* this cut started, so its relay-FETCH and namespace-discovery work cannot appear before the **Sep-23** nightly. **The runner still targets draft-18** — interim-24's draft-22 decision (Sep-21) has not reached the nightly configuration — and `quiche-moq` still passes zero cells.
 
 **The three preceding cuts (Sep-19 → Sep-21)** ran on the same 437-cell matrix with the same 3 skips and the same byte-identical 298 / 22 / 117 split: [Sep-19 00:25:07](https://englishm.github.io/moq-interop-runner/results/2026-09-19_002507/report.html) — **204 pass / 230 fail**, **+1 and a new high for the 437-cell matrix**; [Sep-20 00:28:21](https://englishm.github.io/moq-interop-runner/results/2026-09-20_002821/report.html) — **201 / 233** (−3); [Sep-21 00:29:04](https://englishm.github.io/moq-interop-runner/results/2026-09-21_002904/report.html) — **200 / 234** (−1). Read together with the Sep-18 step below, the picture is that **the aiomoqt v0.11.0 gain is real and has held**: the matrix settled at 200–204 rather than falling back to the 192–195 band it occupied before v0.11.0, and the ±1–3 movement since is the usual within-band flake.
 
@@ -172,6 +180,11 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-09-27 00:30:44 | 475 | 230 | 243 | 2 | 336 | 22 | +8 | **all-time pass high (230)**; within-band recovery continues |
+| 2026-09-26 00:25:54 | 475 | 222 | 251 | 2 | 336 | 22 | +3 | within-band flake |
+| 2026-09-25 00:26:19 | 475 | 219 | 254 | 2 | 336 | 22 | +11 | recovery off the Sep-24 dip |
+| 2026-09-24 00:25:07 | 475 | 208 | 265 | 2 | 336 | 22 | −8 | dip on the newly widened matrix |
+| 2026-09-23 00:26:04 | 475 | 216 | 258 | 2 | 336 | 22 | +15 | **matrix +38 → 475; `quic-zig` enrolls at target (runner #127), at-target 298 → 336** |
 | 2026-09-03 00:26:57 | 434 | 167 | 254 | 13 | 302 | 15 | +2 | quiet nightly; at-target/ahead/behind split byte-flat; ran before the Sep-3 daytime relay sweep |
 | 2026-09-02 21:38:48 | 434 | 165 | 256 | 13 | 302 | 15 | +22 | **hackathon cut; matrix +58 (moqtail `relay18`, mlmrel, moq-playa, moq.dev-0.19 wired in)** |
 | 2026-09-02 00:26:02 | 376 | 143 | 221 | 12 | 250 | 3 | +17 | morning cut; matrix +29 vs Sep-1 (pre-hackathon roster) |
