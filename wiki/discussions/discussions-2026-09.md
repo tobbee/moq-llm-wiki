@@ -2,11 +2,81 @@
 title: "Discussions - September 2026"
 tags: [discussions, slack, github]
 date: 2026-09-02
-last_updated: 2026-09-27
+last_updated: 2026-09-30
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during September 2026.
+
+# Activity (Sep 27 → Sep 30) — **One Monday afternoon settles most of the pre-Seattle logistics: the LOCMAF liaison to MPEG goes out, the Seattle agenda posts, IETF 127 gets three sessions, interim-24 gets minutes, and the chairs open a core-vs-expansion debate on top-N and SSTS. Draft-22 still does not exist.**
+
+Nearly everything spec-side happened on **Mon Sep-28 between 15:03 and 17:18 UTC**. The tracker kept busy without merging, a Quint model found the window's most interesting protocol bug, and the implementation side moved toward draft-21: OpenMOQ's moqxr tagged it, while moq-playa and imquic opened PRs. Slack carried no new top-level posts at all, only late replies on two older threads.
+
+## The LOCMAF liaison goes to MPEG, and adoption now waits until at least Oct-30
+
+[Liaison statement 2285](https://datatracker.ietf.org/liaison/2285/), *"IETF MOQ WG intention to adopt work on a low-overhead packaging (LOCMAF) for CMAF media carried over Media Over QUIC Transport"*, was **posted Sep-28 15:04 UTC** ([list copy](https://mailarchive.ietf.org/arch/msg/moq/qNz0afPSOJOCVg5xZOrXe-A0neg/)). [[magnus-westerlund|Westerlund]] submitted it on Sep-17 and AD Mike Bishop approved it eleven days later. It is from MOQ to **ISO/IEC JTC1/SC29/WG3**, purpose *For action*, **deadline 2026-10-30**. The chairs are the response contacts and [[tobbe-einarsson|Torbjörn Einarsson]] is the technical contact. The body is the WG's own framing of [[moq-locmaf|LOCMAF]]:
+- The target case: *"CMAF chunk headers (~100 bytes and up) can be as large as or larger than the coded frame itself, which is common for low-bitrate, low-latency audio."*
+- The key assurance: *"Critically, LOCMAF does not alter or redefine CMAF."* Reconstruction is decode-equivalent including CENC per-sample metadata, with a canonical byte-identical form for conformance testing.
+- LOCMAF is a packaging layer referenced normatively from [[moq-cmsf|CMSF]] (a `locmaf` packaging value), and it relies on CMAF, ISOBMFF and CENC.
+- *"We plan to await your response before proceeding to a formal WG adoption call."*
+
+This is the step interim-23 promised on Sep-8. The adoption call it gates **cannot open before Oct-30**, after Seattle. Meanwhile the implementation evidence keeps accumulating: [[openmoq|moq-playa]] merged generic EME in its MSE adapter on Sep-28 ([#18](https://github.com/openmoq/moq-playa/pull/18)), the declared gap in its LOCMAF support, and [[moqlivemock]] v0.16.0 / [[warp-player]] v0.16.0 added **LOCMAF subtitle tracks**.
+
+## "Draftification": the chairs reopen where top-N and SSTS live
+
+[[martin-duke|Duke]] and [[magnus-westerlund|Westerlund]], Sep-28 16:26 UTC ([permalink](https://mailarchive.ietf.org/arch/msg/moq/BVY-T4lgJtYUFSmH1QyHJwSD5ow/)): *"The chairs are going to initiate a consensus call about the status of various proposed MOQT features – should they be in a separate expansion draft, or should they be in the core MOQT draft?"* The two features are **top-N** ([PR #1830](https://github.com/moq-wg/moq-transport/pull/1830)) and **SSTS** ([wilaw/moqt-ssts](https://github.com/wilaw/moqt-ssts)). The message takes two things as given: the WG *"already has rough consensus that it will complete the work in some form,"* and both features are optional because each is behind a Setup option that can be zero. It asks participants to set aside process and timelines and think about *"these standards far into the future. Would this be better as one RFC or as multiple RFCs?"* The considerations it lists are whether being in core raises the odds of implementation, whether splitting helps or hurts comprehension (*"people have asserted both viewpoints"*), and whether a smaller RFC is easier to revise if its assumptions prove false. **The message does not start the call.** Discussion is wanted on-list by **Oct-13**, the Tuesday of Seattle (*"interop time would be a lovely time to have high-bandwidth discussions"*), so that meeting time is not spent on it, and the call follows *"soon afterwards."*
+
+This is effectively the second poll [[will-law|Law]] asked for on Sep-21, and it formally reopens the contested IETF-126 call that moved SSTS out of core. Top-N has not been touched on GitHub since Aug-27, and the SSTS draft has never been submitted to the datatracker.
+
+## Seattle agenda, IETF 127 sessions, interim-24 minutes
+
+- **Seattle agenda posted** (Sep-28 16:33 UTC, [`agenda-interim-2026-moq-25-moq-01`](https://datatracker.ietf.org/meeting/interim-2026-moq-25/materials/agenda-interim-2026-moq-25-moq-01)), with no list announcement. **Wed Oct-14**: URIs ([[cullen-jennings|Cullen]]) · SSTS (Will) · Demo (Yu) · MOQT Issues ([[alan-frindell|Alan]]/[[ian-swett|Ian]]) through the afternoon. **Thu Oct-15**: Interop Discussion (Mike) · Auth Design Team (Mike) · MOQT Issues including a working lunch · Next Interim Planning · Parking Lot. That is about **7¾ hours of MOQT issues** across two days, and **no slot for MSF, CMSF, LOC, LOCMAF or catalog**. Both agenda requests the wiki had recorded (Jennings' URIs, Law's SSTS) got 45 minutes each.
+- **IETF 127: three sessions** (2h + 2h + 1h), filed by Duke Sep-28 16:32 UTC; AD Mike Bishop approved the third at 17:18. This answers Duke's Sep-25 two-or-three question.
+- **interim-24 minutes posted** (Sep-28 15:03 UTC, [`minutes-interim-2026-moq-24-202609211630`](https://datatracker.ietf.org/doc/minutes-interim-2026-moq-24-202609211630/)), a week after the meeting. They confirm the chatlog-derived record: draft-22 + draft-18 as the Seattle target, pause orthogonal to filter state, and SWITCH_FROM's unaligned threshold `==` → `>=`. They add one new item: a **February 2027 hybrid interim aligned with Mile High Video** in Denver/Boulder, which [[cullen-jennings|Jennings]] said Cisco might host.
+- **Late registration** (Sep-28 15:30 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/EjrZKP_P2_QWU8mRZ0SeeSkGDc0/)): *"You are well past deadline to register … But if you do it right away, you can slip in there."* The **Oct-26 virtual interim** reached its Sep-30 deadline for concerns with none raised on-list.
+- **Still no draft-22**: the datatracker has none and the repo's newest tag is `draft-ietf-moq-transport-21`. Twelve days before interop opens, the named target is an editor's copy.
+
+## WG tracker: no merges, one formal-methods bug, and review traffic on #1946
+
+[[moq-transport]] merged nothing Sep-27 → Sep-30, and neither did any other `moq-wg` repo. The issues and reviews were substantive, though:
+- **[#1958](https://github.com/moq-wg/moq-transport/issues/1958)**: a relay can report a **stale Largest Object** to a new subscriber when its upstream subscription is paused, so the subscriber never learns it must FETCH. **kidq330 found it by generating a Quint model of draft-21**, the first formal-methods finding the wiki has seen against MOQT, and reproduced it in a moxygen relay unit test. [[alan-frindell|afrind]] and [[ian-swett|Swett]] agree the text must forbid a possibly-stale value. afrind notes that a relay able to *"subscribe upstream to metadata only"* would help, which is the `INCLUDE_PAYLOAD` idea in [#1955](https://github.com/moq-wg/moq-transport/pull/1955).
+- **[#1959](https://github.com/moq-wg/moq-transport/issues/1959) → [PR #1960](https://github.com/moq-wg/moq-transport/pull/1960)**: a standalone FETCH cannot take a relative Location filter (*"what does it even mean to say FETCH -4?"*), so it becomes `REQUEST_ERROR` / `INVALID_RANGE`.
+- **[#1946](https://github.com/moq-wg/moq-transport/pull/1946)** (namespace-discovery restructure): [[suhas-nandakumar|Suhas]] reviewed it, afrind revised, and Swett re-approved it on Sep-29. One loose end became **[#1961](https://github.com/moq-wg/moq-transport/issues/1961)** on the `PUBLISH_SKIPPED` reconnect wording.
+- **[#1953](https://github.com/moq-wg/moq-transport/pull/1953)** (Location Filter → enum) and **[#1954](https://github.com/moq-wg/moq-transport/pull/1954)** (Track Name length > 0) each have two approvals. #1954 also has an open objection from Suhas (*"why to force that to implementors"*). On **#1955** afrind prefers keeping the Payload Length and signalling omission in the data plane, *"more clearly matches HEAD."*
+- **[#1857](https://github.com/moq-wg/moq-transport/issues/1857)** (group/subgroup-scoped metadata) got an operator use case from [[steven-riedl|Riedl]] (Pluto TV): ad-break state that a mid-group joiner needs before its first frame, which today goes in a side track *"because object 0 is the only other place for it."*
+- **[[moq-msf|msf]]**: no merges. On [#211](https://github.com/moq-wg/msf/pull/211) (LOC→MOQT stream mapping), [[luke-curley|Curley]] pushed back that *"moq-transport defines that sub-group == stream"* and warned against a subgroup per frame. [#212](https://github.com/moq-wg/msf/pull/212) (required track fields per packaging/role) is uncommented.
+- **CAT-4-MOQT**: new [PR #52](https://github.com/moq-wg/CAT-4-MOQT/pull/52) (Suhas) defines connection-scoped replay for non-DPoP tokens, so a `catreplay=1` token presented at SETUP can be reused for later actions on the same connection.
+
+## Datatracker: one individual revision
+
+**`draft-liu-moq-live-agent-interaction-02`** (Alibaba; submitted Sep-27, posted Sep-28) is the only MoQ submission of the window. It adds a **Tool Action Authorization** section with `AUTH_REQUIRED` (0x08) and `AUTH_RECEIPT` (0x09) control signals, so an AI agent asks for per-action user authorization for consequential tool calls (payments, permission changes, bookings). See [[moq-live-agent-interaction]]. **No WG-document revision**: transport-21, loc-04, msf-01, cmsf-01, secure-objects-01, privacy-pass-auth-03 and c4m-01 are all flat. Two tracked individual drafts expire soon: **`draft-duke-moq-subscribe-rewind-02` on Oct-4** and **`draft-herz-moq-nmsf-01` on Oct-9**.
+
+## Slack: two late threads, one of them written by an agent
+
+No new top-level message in `#moq`, `#moq-rs`, `#moq-interop-runner` or anywhere else in the window. Two older threads got replies:
+- **afrind's PUBLISH_DONE question is answered — the text already existed.** [[steven-riedl|Steven Riedl]] (Sep-28): draft-21 §3.4 already defines Stream Count as including *"any fill fetch streams,"* and moq-dev's `moq-relay` counts that way too. afrind: *"lol I wrote that text and didn't remember that I did and I guess my agent didn't find it either."* Riedl then said the reply was his agent's (*"BTW, this is my agent talking"*) and gave the first **operator view of fill fetch**, noting the fill code in moq-relay is Curley's: *"folding the joining fetch into the SUBSCRIBE means one request, one authorization and one Stream Count, and the fill and the subscription are cut from the same snapshot, so there's no gap or overlap to reconcile"*; for linear channels a current-group fill *"is also exactly the join we want."*
+- **[[mike-english|English]] in `#moq-interop-runner`** (Sep-29), answering Curley's Sep-25 request for published conformance results: the data-plane tests he is adding are *"meant to be pretty similar to"* afrind's moxygen suite, *"but included in the nightly automated test runs."*
+
+## Interop: three flat-ish cuts, and draft-14 starts leaving the matrix
+
+| Cut | Cells | Pass | Fail | Skip |
+|-----|-------|------|------|------|
+| [Sep-28](https://englishm.github.io/moq-interop-runner/results/2026-09-28_003112/report.html) | 475 | 227 | 246 | 2 |
+| [Sep-29](https://englishm.github.io/moq-interop-runner/results/2026-09-29_002754/report.html) | 475 | 219 | 254 | 2 |
+| [**Sep-30**](https://englishm.github.io/moq-interop-runner/results/2026-09-30_002821/report.html) | **475** | **224** | **249** | **2** |
+
+That is net **−6** vs Sep-27's 230 high, with the roster, split (336 · 22 · 117) and target (draft-18) unchanged. Most flips reverse the next night. The one structural change: **moqx dropped draft-14** (its image now defaults to [16, 18]; [moqx #770](https://github.com/openmoq/moqx/pull/770)), so moq-rs-draft-14 → moqx fails on h3 CONNECT 400 from Sep-29. The registration fix [runner #131](https://github.com/englishm/moq-interop-runner/pull/131) and a moxygen equivalent [#132](https://github.com/englishm/moq-interop-runner/pull/132) are open and approved. No runner commits since Sep-25; **no draft-22 or draft-20 configuration** twelve days before Seattle.
+
+## Implementations: draft-21 spreads, moq-rs wakes, the Eyevinn stack ships v0.16
+
+- **Draft-21**: **openmoq/moqxr v0.4.0** (Sep-28; [#45](https://github.com/openmoq/moqxr/pull/45), +11,954/−231) makes draft-21 selectable. [[openmoq|moq-playa]] [#20](https://github.com/openmoq/moq-playa/pull/20) (draft-21 subscriber/player/publisher, +2,603/−265) and [[imquic]] [#38](https://github.com/meetecho/imquic/pull/38) (v20/v21, +1,704/−455) are open. [[moq-dev]] tests span drafts 14–22.
+- **[[moq-rs]]** had its first merge in a month: **passthrough FETCH** ([#236](https://github.com/cloudflare/moq-rs/pull/236), itzmanish, +2,946/−61). A cache-free relay now proxies a standalone FETCH upstream, which is the rule Will Law stated on Sep-18.
+- **Eyevinn**: **[[moqlivemock]] v0.16.0/v0.16.1**, **[[warp-player]] v0.16.0** and **[[moqtransport]] v0.14.0** (Sep-29/30). moqtransport applies draft-18 §7.2 stream tiering over quic-go v0.62.0, and moqlivemock schedules catalog 0 / audio+subtitles 64 / video 128. Experimental paint-model subtitles (`stpc`/`wvtc`) and LOCMAF subtitle tracks arrive, played by warp-player, and v0.16.1 fixes Safari WebTransport.
+- **[[shaka-player]]**: [#10665](https://github.com/shaka-project/shaka-player/pull/10665) moves its moqlivemock demo assets to `mlm/…` **tuples**. That resolves the open question the wiki raised on Sep-18: the v0.15.0 tuple change *had* broken them, with `DOES_NOT_EXIST`. The same PR fixes the draft-18 `REQUEST_ERROR` field order. [#10663](https://github.com/shaka-project/shaka-player/pull/10663) adds **`MSF_COMPRESSION`** (GZIP, property 0x78). v5.3.0 is still unreleased.
+- **[[libquicr]]**: draft-18 SUBSCRIBE_NAMESPACE on `main` ([#959](https://github.com/Quicr/libquicr/pull/959)) plus a picoquic performance pass ([#944](https://github.com/Quicr/libquicr/pull/944)). `main` now uses ALPN `moqt-18`.
+- **[[quiche-moq|google/quiche]]**: one commit, the draft-18 GOAWAY format (parser/framer only). **[[moxygen]]**: 16 commits of relay/session robustness (use-after-free, subgroup reset on cancel, moqtest cadence), no draft changes. **[[moqtail]]**: three fixes (PUBLISH forward state, objects before FETCH_OK, duplicate subgroup headers found with moqtopus point-cloud streaming).
+- **[[moq-dev]]**: ~220 commits. It released **moq-relay v0.15.8** et al. on Sep-28, with a **breaking** auth-parity change ([#4319](https://github.com/moq-dev/moq/pull/4319)) queued for relay 0.16.0. Also: an in-repo **`draft-lcurley-moq-active-count`** extension on `dev` ([#4268](https://github.com/moq-dev/moq/pull/4268)), a lite-07 redesign (64-bit leading-ones varints; SUBSCRIBE ranges replacing FETCH), MPEG-TS multi-program import, and quest plans aimed explicitly at *"Seattle interop, Oct 12."* Its moxygen-conformance line (a midpoint default priority, OBJECT_DATAGRAM, IETF FETCH of whole groups) is still on a quest branch, not `main`.
+- **Branch-only**: [[aiomoqt]] 0.12.0 (draft-20 + publisher priority, PR [#40](https://github.com/gmarzot/aiomoqt/pull/40)); aiopquic 0.5.0 WT-teardown fixes. **Silent**: [[moq-js]], birneee/quiche_moq, Eyevinn/locmaf.
 
 # Activity (Sep 22 → Sep 27) — **[[luke-curley|Luke Curley]] drops four brand-new individual drafts in one day at the IETF-127 cutoff, the draft-19 consensus call closes without controversy, and the moq-transport merge drought finally breaks after fifteen days — while Slack goes almost completely silent.**
 

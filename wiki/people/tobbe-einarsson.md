@@ -2,7 +2,7 @@
 title: "Torbjörn Einarsson"
 tags: [person, eyevinn, author, maintainer]
 date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-09-30
 status: current
 ---
 
@@ -13,7 +13,7 @@ status: current
 
 # Contributions
 
-- Co-author of **[[moq-locmaf|LOCMAF]]** — *Low Overhead CMAF for Media over QUIC* (`draft-einarsson-moq-locmaf-00`, submitted 2 June 2026), with Hugo Björs (KTH). First IETF MoQ artifact from the wiki maintainer.
+- Co-author of **[[moq-locmaf|LOCMAF]]** — *Low Overhead CMAF for Media over QUIC* (`draft-einarsson-moq-locmaf-00`, submitted 2 June 2026), with Hugo Björs (KTH). First IETF MoQ artifact from the wiki maintainer. Revised to **-01** on 2026-07-05. The WG announced its intent to adopt it at interim-23 (Sep-8), and Tobbe is the **technical contact** on the resulting [liaison statement 2285](https://datatracker.ietf.org/liaison/2285/) to ISO/IEC JTC1/SC29/WG3 (MPEG Systems), sent 2026-09-28 with a 2026-10-30 reply deadline.
 - Author of **[[moqlivemock]]** — Go test app simulating a live MoQ video+audio publisher with a bundled subscriber; also the `mlmtest` interop client.
 - Author of **[[warp-player|Eyevinn/warp-player]]** — TypeScript MSE/EME player for CMSF media over MoQ.
 - Author of **Eyevinn/moqtransport** — Go MoQ Transport implementation.

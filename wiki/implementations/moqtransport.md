@@ -2,7 +2,7 @@
 title: "moqtransport (Go) — mengelbart + Eyevinn fork"
 tags: [implementation, go, library]
 date: 2026-08-22
-last_updated: 2026-09-02
+last_updated: 2026-09-30
 status: current
 ---
 
@@ -29,6 +29,7 @@ The upstream is the registry-registered one and roughly 17× larger by stars; th
 
 # Recent activity
 
+- **v0.14.0 "§7.2 stream tiering"** (tagged 2026-09-29): [PR #26](https://github.com/Eyevinn/moqtransport/pull/26) ([[tobbe-einarsson|tobbee]], +177/−57, merged Sep-21) bumps quic-go to **v0.62.0**, whose RFC 9218-style stream priorities make the library's priority mapping live for the first time. It applies **draft-18 §7.2's tiering** as QUIC urgency: control streams 0, bidi request streams 1, Objects 2–5 (by the top two bits of the priority number), 6 spare, 7 padding. It also fixes a real inversion: the control stream had kept quic-go's default urgency 3, so any subscription with priority below 96 overtook it. The practical consequence is that **two priorities must now differ by at least 64** to be separated. Go 1.26 is now required. [[moqlivemock]] v0.16.0 consumes it to schedule catalog/audio/subtitles ahead of video.
 - **v0.13.0 "RENDEZVOUS_TIMEOUT on SUBSCRIBE"** (tagged 2026-09-02) — [PR #25](https://github.com/Eyevinn/moqtransport/pull/25) (+83/−0) exposes the **draft-18 §10.2.6 RENDEZVOUS_TIMEOUT** parameter (wire codepoint `0x04`, a varint of milliseconds) that the wire layer already knew but nothing surfaced: `Parameters.RendezvousTimeout()` / `SubscribeRequest.RendezvousTimeout()` return the wait plus **whether it was present** (absent and zero get different answers from a relay — DOES_NOT_EXIST vs. an expired hold), and `WithRendezvousTimeout(d)` sets it on a SUBSCRIBE. Driven by [[moqlivemock]]'s `mlmrel`, whose blanket hold on every SUBSCRIBE contradicted the section's MUST ([moqlivemock #139](https://github.com/Eyevinn/moqlivemock/pull/139)); also needed by any client wanting the runner's proposed `publish-to-pending-subscription` test ([interop-runner #103](https://github.com/englishm/moq-interop-runner/pull/103), which sends 5000 ms).
 - **v0.12.0 "receive-side fixes for relays"** (tagged 2026-09-01) — [PR #23](https://github.com/Eyevinn/moqtransport/pull/23) *"receive side: complete delivery, surface subgroup ends"* (+488/−59) plus [PR #24](https://github.com/Eyevinn/moqtransport/pull/24) running the session suite under Go's `testing/synctest`. Hardens the library's relay/receive path — the same day [[moqlivemock|Eyevinn/moqlivemock]] added its own `mlmrel` relay component built on this library.
 - **v0.11.1 "qlog payload cap"** (tagged 2026-08-31) — a small follow-up to the draft-18 rewrite, capping qlog payload sizes; consumed the same day by [[moqlivemock]] ([#133](https://github.com/Eyevinn/moqlivemock/pull/133)) as it cut its v0.14.0 tag.

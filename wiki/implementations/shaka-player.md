@@ -2,7 +2,7 @@
 title: "Shaka Player (Google)"
 tags: [implementation, javascript, player, google, msf, cmsf, locmaf]
 date: 2026-04-10
-last_updated: 2026-09-18
+last_updated: 2026-09-30
 status: current
 ---
 
@@ -65,12 +65,13 @@ What the implementation does and assumes:
 - **Version-exact**: it supports `locmafVersion` **`0.3`** and *skips* a track declaring anything else rather than guessing, because an unknown version would reinterpret wire syntax as plausible nonsense that the bytes give no way to detect.
 - **Init is mandatory and catalog-referenced**: the `moof` is reconstructed from tagged fields ahead of the sample data, and a chunk carrying only what changed since the previous one cannot be read without the initialization segment — so a `locmaf` track with no init data is skipped. This is the [[moq-msf|MSF]]-01 `initData` / `initRef` mechanism that lets a `cmaf` and a `locmaf` rendition share one init entry.
 - **Duplicate-variant caveat**: because a publisher may offer the same rendition twice — once as `cmaf`, once as `locmaf`, sharing one init entry — registering the packaging **doubles the variant list** for such a catalog, and nothing in the catalog marks either as preferred. Choosing is the application's job via `manifest.msf.catalogPreprocessor`; the demo ships `shakaAssets.preferLocmafTracks` as the worked example.
-- **Demo assets**: *"moqlivemock LOCMAF"* and *"moqlivemock LOCMAF Multi-DRM"* both point at Eyevinn's public [[moqlivemock]] endpoint `https://moqlivemock.demo.osaas.io/moq` (namespaces `cmsf/clear` and `cmsf/drm-cbcs`), so the LOCMAF path is exercised against an independent publisher — and, in the Multi-DRM case, **through EME**.
+- **Demo assets**: *"moqlivemock LOCMAF"* and *"moqlivemock LOCMAF Multi-DRM"* both point at Eyevinn's public [[moqlivemock]] endpoint `https://moqlivemock.demo.osaas.io/moq` (since [#10665](https://github.com/shaka-project/shaka-player/pull/10665), Sep-29, the tuples `("mlm","cmsf","clear")` and `("mlm","cmsf","drm-cbcs")`), so the LOCMAF path is exercised against an independent publisher — and, in the Multi-DRM case, **through EME**.
 
 # Catalog and session features
 
 - **[[moq-msf|MSF]]-01 / [[moq-cmsf|CMSF]]-01 catalogs** ([#10176](https://github.com/shaka-project/shaka-player/pull/10176), Jun-4), including accessibility descriptors for **CEA-608/708** ([#10040](https://github.com/shaka-project/shaka-player/pull/10040), May-12).
-- **Namespace discovery**: either an explicit `manifest.msf.namespaces`, or passive discovery from a server `PUBLISH_NAMESPACE` announcement when left empty.
+- **Namespace discovery**: either an explicit `manifest.msf.namespaces`, or passive discovery from a server `PUBLISH_NAMESPACE` announcement when left empty. Since [#10665](https://github.com/shaka-project/shaka-player/pull/10665) (Sep-29, +213/−35), slash-joined catalog track namespaces are **split into tuple fields** instead of being sent as one field; the session tuple is reused when the string names it, so publishers announcing a single field that contains `/` still work. The same PR fixed the draft-18 `REQUEST_ERROR` field order (Retry Interval before Reason, which had left every reason empty) and made a refused media SUBSCRIBE fail the load with **`MSF_SUBSCRIBE_FAILED` (4066)** instead of buffering forever.
+- **`MSF_COMPRESSION` (property 0x78)** ([#10663](https://github.com/shaka-project/shaka-player/pull/10663), Sep-29, +1,292/−170): GZIP-compressed catalog and media-timeline payloads, signalled per track (Track Property in `SUBSCRIBE_OK`/`FETCH_OK`) or per object, are decompressed with `DecompressionStream` in arrival order. The draft-18/20/21 session now exposes Track Properties to consumers (`MsfObject.trackProperties`) and holds fetched objects that arrive before `FETCH_OK`. An unsupported algorithm fails with `MSF_UNSUPPORTED_COMPRESSION` (**4067** on `main`). Open follow-ons: SCTE-35 via event-timeline tracks ([#10668](https://github.com/shaka-project/shaka-player/pull/10668)) and draft-16 control-message fixes ([#10658](https://github.com/shaka-project/shaka-player/pull/10658)).
 - **Catalog retrieval by SUBSCRIBE or FETCH** (`useFetchCatalog`), the former picking up catalog updates mid-session.
 - **`authorizationToken`** sent in the MoQT client setup with alias type `USE_VALUE` (`0x03`).
 - **Subscribe filter** configurable between `LARGEST_OBJECT` and `NEXT_GROUP_START`.
@@ -84,14 +85,14 @@ DRM is configured exactly as for DASH or HLS. **[[moq-cmsf|CMSF]] `contentProtec
 
 # Releases
 
-MoQ ships only in the **experimental** build, and there is a **large gap between `main` and the newest release**. The latest tag is **v5.2.10** (2026-09-11), but that is a patch on the 5.2 line: *every* MoQ feature merged since v5.2.0 — draft-18, draft-20, draft-21, `m2ts`, LOCMAF and AV1 on the LOC path — is unreleased, queued in the open release PR [#10385](https://github.com/shaka-project/shaka-player/pull/10385) for **v5.3.0**. **A released Shaka Player therefore still tops out at draft-16**; anything newer means building from `main`.
+MoQ ships only in the **experimental** build, and there is a **large gap between `main` and the newest release**. The latest tag is **v5.2.12** (2026-09-25; v5.2.10 on Sep-11 before it), but that is a patch on the 5.2 line: *every* MoQ feature merged since v5.2.0 — draft-18, draft-20, draft-21, `m2ts`, LOCMAF and AV1 on the LOC path — is unreleased, queued in the open release PR [#10385](https://github.com/shaka-project/shaka-player/pull/10385) for **v5.3.0**. **A released Shaka Player therefore still tops out at draft-16**; anything newer means building from `main`.
 
 | Capability | Release |
 |---|---|
 | draft-14 + the MSF parser (experimental) | v5.0.5 (2026-03-09) |
 | draft-16; CMSF `contentProtections` / multi-DRM | v5.1.0 (2026-04-15) |
 | LOC packaging; MSF-01 / CMSF-01 catalogs; CEA-608/708; `catalogPreprocessor`; ABR bandwidth | v5.2.0 (2026-07-10) |
-| **draft-18 · draft-20 · draft-21; `m2ts`; LOCMAF; AV1 on the LOC path** | **pending v5.3.0** |
+| **draft-18 · draft-20 · draft-21; `m2ts`; LOCMAF; AV1 on the LOC path; `MSF_COMPRESSION`; tuple namespaces** | **pending v5.3.0** (release PR [#10385](https://github.com/shaka-project/shaka-player/pull/10385) still open as of 2026-09-30; newest tags v5.2.12 / v5.1.25, Sep-25) |
 
 # Recent Highlights
 
@@ -112,7 +113,7 @@ Shaka Player is **not registered in the [[interop-runner]]** — the matrix runs
 
 | Endpoint | Owner | Namespaces exercised |
 |---|---|---|
-| `https://moqlivemock.demo.osaas.io/moq` | Eyevinn ([[moqlivemock]]) | `cmsf/clear`, `cmsf/drm-cbcs`, `cmsf/eccp-cbcs`, `msf/clear` (LOC), plus the two LOCMAF variants |
+| `https://moqlivemock.demo.osaas.io/moq` | Eyevinn ([[moqlivemock]]) | `mlm/cmsf/clear`, `mlm/cmsf/drm-cbcs`, `mlm/cmsf/eccp-cbcs`, `mlm/msf/clear` (LOC), plus the two LOCMAF variants. Real tuples since [#10665](https://github.com/shaka-project/shaka-player/pull/10665) (Sep-29): moqlivemock v0.15.0's move to `mlm`-prefixed tuples had left the old single-field `cmsf/clear` assets failing with `DOES_NOT_EXIST` |
 | `https://relay.moqtail.dev` | [[moqtail]] | `moqtail/testsrc`, `moqtail/ch00`–`ch02` |
 
 Cross-implementation feedback runs both ways: `avelad` files issues on the publisher side (e.g. [[moqlivemock]] [#103](https://github.com/Eyevinn/moqlivemock/issues/103) *"Add TS support"*, [#140](https://github.com/Eyevinn/moqlivemock/issues/140) *"Add LOCMAF subtitles"*) and reviews [[moq-msf|MSF]] spec PRs in `moq-wg/msf`.

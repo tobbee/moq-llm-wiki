@@ -2,7 +2,7 @@
 title: "Implementations Overview"
 tags: [implementation, overview, comparison]
 date: 2026-07-09
-last_updated: 2026-09-18
+last_updated: 2026-09-30
 status: current
 ---
 
@@ -18,7 +18,7 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | [[moq-rs]] | Rust | Cloudflare | 14 (prod) · 16 · 18 | Pub · Sub · Relay | Strict IETF WG compliance; very active |
 | [[moq-js]] | JS / TS | video-dev | 14 | Pub · Sub · Player | Browser client over WebTransport; `<video-moq>` component; needs a relay |
 | [[moxygen]] | C++ (mvfst) | Meta | 14 · 16 (neg. 15) | Pub · Sub · Relay | Reference relay; [[qmux]]; [[openmoq\|OpenMOQ]] fork |
-| [[libquicr]] | C++ + Go | Cisco (QuicR) | 16 (runner: 14) | Pub · Sub · Relay | Go bindings; `moq-web` client (18); new session-callback API + logger abstraction Aug 2026; see also [[laps\|LAPS]] |
+| [[libquicr]] | C++ + Go | Cisco (QuicR) | 18 on `main` (runner: 14) | Pub · Sub · Relay | Go bindings; `moq-web` client (18); new session-callback API + logger abstraction Aug 2026; see also [[laps\|LAPS]] |
 | [[aiomoqt]] | Python (asyncio) | [[giovanni-marzot\|Giovanni Marzot]] | 14 · 16 · 18 | Pub · Sub · Relay | aioquic-based; **18/18** vs moqx/moxygen/moq-rs-draft-18 on the Aug-22 cut |
 | [[xquic-moq]] | C (XQUIC) | Alibaba | 14 | Relay | Merged into the interop matrix |
 | [[moqlivemock]] | Go + TS | Eyevinn | **18** | Pub · Sub · Relay · Player | CMSF/LOC/MSF/LOCMAF; DRM; `mlmtest` interop tool |
@@ -27,7 +27,7 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | [[quiche-moq]] | C++ | Google (QUICHE / Chromium) | 16 · 18 (on `main`) | Pub · Sub · Relay | 41/41 conformance; relay/server/chat/simulator tools; object-ACK work Aug 2026 |
 | [[shaka-player]] | JS | Google (shaka-project) | **18 · 20 · 21** (14 · 16 deprecated) | Sub · Player | Production browser player on MoQ; CMSF + LOC + **LOCMAF** + m2ts; multi-DRM; experimental build only ² |
 | [[moqintosh]] | Swift | T. Igarashi (t-gazzy) | 14 | Sub (client-only) | First pure-Swift / Apple-native client |
-| [[openmoq]] | C++ (moxygen fork) | Consortium (Akamai, Cisco, RED5, YouTube…) | 14/16 floor · 18 (moqx) | Relay | Consortium; `moqx` server; CAT-token auth; relay testing |
+| [[openmoq]] | C++ (moxygen fork) | Consortium (Akamai, Cisco, RED5, YouTube…) | 16 · 18 (moqx; d14 dropped Sep-28) · 21 (moqxr v0.4.0) | Relay · Pub | Consortium; `moqx` server; CAT-token auth; relay testing; `moqxr` publisher |
 | **Moqtopus** (no page yet) | C++ / MsQuic | [[kota-yatagai\|Kota Yatagai]] | 18 | Client | Unreal Engine client ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus)); at-target in the runner |
 | [[mediamtx\|MediaMTX]] | Go | bluenviron | **16 · 17 · 18 · 19** | Pub · Sub | Multi-protocol production media server; MSF + LOC; not in the runner |
 | [[moq-go]] | Go | V. Strukchinsky (floatdrop) | **19** | Pub · Sub · Relay | Session library + reference relay; the runner's only **ahead-of-target** endpoint |
@@ -49,7 +49,7 @@ For the media-oriented implementations:
 - **[[moq-dev]]**: Hang media layer; H.264/H.265 (native hardware encode + decode), Opus/AAC/FLAC/MP3; CMSF; [[moq-msf|MSF]]-01; RTMP/SRT/WebRTC/HLS/MPEG-TS gateways
 - **[[moqtail]]**: [[moq-loc|LOC]] + [[moq-cmsf|CMSF]] demos (real-time / live / on-demand)
 - **[[shaka-player]]**: [[moq-cmsf|CMSF]] (`cmaf` / `chunk-per-object`), [[moq-loc|LOC]]-04 (avc1/hvc1/av01/mp4a/Opus via transmuxer), [[moq-locmaf|LOCMAF]] v0.3, [[moq-msfts|MSFTS]] (`m2ts`, 188/192-octet); [[moq-msf|MSF]]-01 catalogs with CEA-608/708 accessibility; multi-DRM through CMSF `contentProtections` (Widevine, PlayReady, FairPlay, ClearKey)
-- **Playa** (see [[openmoq]]): [[moq-loc|LOC]] + [[moq-cmsf|CMSF]] via `@moqt/loc` / `@moqt/msf`, WebCodecs with MSE/CMAF fallback; **[[moq-locmaf|LOCMAF]] in flight** ([PR #15](https://github.com/openmoq/moq-playa/pull/15)) with both MSE and WebCodecs frame paths, §14 event tracks and a LOCMAF *encoder*
+- **Playa** (see [[openmoq]]): [[moq-loc|LOC]] + [[moq-cmsf|CMSF]] via `@moqt/loc` / `@moqt/msf`, WebCodecs with MSE/CMAF fallback; **[[moq-locmaf|LOCMAF]] merged** ([PR #15](https://github.com/openmoq/moq-playa/pull/15), Sep-19) with both MSE and WebCodecs frame paths, §14 event tracks and a LOCMAF *encoder*
 - **[[imquic]]**: RTP-over-QUIC (RoQ) alongside MoQT
 
 # Related

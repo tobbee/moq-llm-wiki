@@ -2,9 +2,9 @@
 title: "Live Agent Interaction over MoQ"
 tags: [draft, individual, ai-agent, application-profile]
 date: 2026-06-30
-last_updated: 2026-07-04
+last_updated: 2026-09-30
 status: current
-draft_version: "01"
+draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-liu-moq-live-agent-interaction/"
 ---
 
@@ -12,7 +12,7 @@ ietf_url: "https://datatracker.ietf.org/doc/draft-liu-moq-live-agent-interaction
 >
 > **2026-06-30**: **First-look — a new individual I-D applies MoQ to real-time AI-agent (voice) interaction, the first MoQ + AI-agent draft the wiki has tracked.** **`draft-liu-moq-live-agent-interaction-00`** *"Live Agent Interaction over MoQ"* was submitted **June 29 2026** by **Yanmei Liu (Alibaba Inc.)** and **Dapeng Liu (Alibaba Cloud)** — the second Alibaba MoQ artifact alongside the [[xquic-moq|XQUIC]] implementation. It is a **pure application profile**: it adds no transport-layer mechanism, instead defining **semantic conventions** for mapping a live conversational AI session onto [[moq-transport|MOQT]]'s object hierarchy. Brand new and not yet discussed on the WG list; logged here as a first-look pending any uptake.
 
-**draft-liu-moq-live-agent-interaction-01** | individual submission | -00 submitted 2026-06-29, -01 posted 2026-07-03
+**draft-liu-moq-live-agent-interaction-02** | individual submission | -00 submitted 2026-06-29, -01 posted 2026-07-03, **-02 posted 2026-09-28** (34 pp; expires 2027-03-31)
 
 # Authors
 - Yanmei Liu (Alibaba Inc.)
@@ -30,6 +30,7 @@ Defines an application-layer protocol for **real-time interactive communication 
   - **token batches → Objects**
 - **Leverages MOQT primitives directly**: publish/subscribe, prioritized delivery, group-based organization, and the relay infrastructure.
 - **Turn-taking + barge-in**: turn-control mechanisms with interruption support, the latency-critical requirement for natural voice conversation.
+- **Tool Action Authorization (new in -02, §2.5.2)**: for consequential agent actions (the draft's examples are payments, permission changes and bookings), the agent publishes an **`AUTH_REQUIRED` (0x08)** control signal on `control/agent`, and the user answers with **`AUTH_RECEIPT` (0x09)** on `control/user`. Both carry `tool_id`, `call_id` and an opaque artifact (*"an offline-verifiable receipt, a challenge reference, or another application-defined authorization artifact"*), and both MUST be delivered reliably. The Tool Output Object's `flags` field becomes `status`, plus `metadata_flags` (authorization-required / authorization-ref-present) and a JSON `metadata` blob. The agent *"MUST keep the authorization artifact transport-agnostic"*, so no separate authorization track is needed. The control-signal registry's free range is now 0x0A–0xFF.
 - **Relay-transparent**: because the structure is expressed in MOQT's native Group/Subgroup/Object hierarchy, relays can route AI-agent traffic correctly **without payload inspection** — no new relay behavior required.
 
 # Why it matters
@@ -40,7 +41,7 @@ Defines an application-layer protocol for **real-time interactive communication 
 
 # Status & Caveats
 
-- **Individual draft, now at -01 (posted July 3 2026; -00 June 29 2026)** — not adopted, not yet discussed on the moq@ietf.org list as of this writing; no explicit -00→-01 changelog on the Datatracker.
+- **Individual draft, now at -02 (posted Sep-28 2026; -01 July 3; -00 June 29)**. Not adopted, and not discussed on the moq@ietf.org list as of this writing. The only substantive -01→-02 change is the Tool Action Authorization section above; the references were refreshed to transport-21, loc-04 and secure-objects-01, and the abstract is unchanged.
 - The wiki tracks individual drafts that are actively discussed or referenced; this one is logged as a **first-look** because it opens a new application category for MoQ. Watch for any WG-list reaction or follow-on revision.
 
 # Related

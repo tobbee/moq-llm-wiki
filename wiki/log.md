@@ -2,11 +2,91 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-09-27
+last_updated: 2026-09-30
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-09-30 — LOCMAF liaison to MPEG; Seattle agenda; top-N/SSTS call
+
+**TL;DR**:
+- **The pre-Seattle logistics all landed on Sep-28, and draft-22 did not.** Between 15:03 and 17:18 UTC:
+  - The [[moq-locmaf|LOCMAF]] **liaison to MPEG WG3** went out ([2285](https://datatracker.ietf.org/liaison/2285/), reply due **Oct-30**, [[tobbe-einarsson|Tobbe]] technical contact).
+  - The **Seattle agenda** posted: URIs · SSTS · demo · ~7¾ h of MOQT issues, and **no slot for MSF/CMSF/LOC/LOCMAF**.
+  - **Three IETF-127 sessions** were requested (2h + 2h + 1h).
+  - The [[interim-meetings|interim-24]] **minutes** posted, confirming the draft-18 + draft-22 target and adding a **Feb 2027 hybrid interim** at Mile High Video (Denver/Boulder).
+  - The chairs pre-announced a **"Draftification" consensus call**: should **top-N and SSTS** go in core MOQT or a separate expansion RFC? List discussion by Oct-13.
+  - **No `draft-ietf-moq-transport-22` yet**, twelve days before interop opens.
+- **WG tracker: no merges, but a formal-methods find.**
+  - [#1958](https://github.com/moq-wg/moq-transport/issues/1958): a Quint model of draft-21 shows a relay can hand new subscribers a **stale Largest Object** when upstream is paused.
+  - New PR [#1960](https://github.com/moq-wg/moq-transport/pull/1960) bans relative Location filters on standalone FETCH.
+  - [#1946](https://github.com/moq-wg/moq-transport/pull/1946) re-approved; #1953/#1954 at two approvals each.
+  - Individual drafts: only [[moq-live-agent-interaction|live-agent-interaction-02]] (adds per-action tool authorization).
+  - Slack: no new top-level posts. Riedl (via his agent) closed afrind's `PUBLISH_DONE` question: draft-21 §3.4 already counts fill streams.
+- **Implementations**:
+  - **Draft-21 spreads**: moqxr v0.4.0 tagged it ([#45](https://github.com/openmoq/moqxr/pull/45), +11,954/−231); [[openmoq|moq-playa]] [#20](https://github.com/openmoq/moq-playa/pull/20) and [[imquic]] [#38](https://github.com/meetecho/imquic/pull/38) are open.
+  - [[moq-rs]] passthrough FETCH ([#236](https://github.com/cloudflare/moq-rs/pull/236), +2,946/−61).
+  - Eyevinn: [[moqlivemock]] v0.16.0/.1, [[warp-player]] v0.16.0, [[moqtransport]] v0.14.0 (priority tiering, paint-model/LOCMAF subtitles, Safari fix).
+  - [[shaka-player]] fixes its moqlivemock tuple namespaces ([#10665](https://github.com/shaka-project/shaka-player/pull/10665)) and adds `MSF_COMPRESSION` ([#10663](https://github.com/shaka-project/shaka-player/pull/10663)).
+  - [[libquicr]] draft-18 SUBSCRIBE_NAMESPACE ([#959](https://github.com/Quicr/libquicr/pull/959)); [[moq-dev]] relay v0.15.8, with breaking 0.16.0 auth queued.
+  - Quiet: [[moq-js]], birneee, Eyevinn/locmaf.
+- **Interop**: three cuts, **227 / 219 / 224** pass of 475 cells (**−6 vs the Sep-27 high**). The split is byte-flat (336·22·117) and the runner still targets draft-18. **moqx dropped draft-14**: moq-rs-draft-14→moqx fails nightly since Sep-29, and runner #131/#132 are open.
+
+**Operation**: Update (manual; covers Sep-27 → Sep-30)
+**Sources**:
+- IETF mailing list: three new messages, all Sep-28, all verified 200 against a 404 control.
+  - *"New Liaison Statement, 'IETF MOQ WG intention to adopt work on a low-overhead packaging (LOCMAF)…'"* (15:04 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/qNz0afPSOJOCVg5xZOrXe-A0neg/)).
+  - *"Register for Seattle"* (Duke, 15:30 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/EjrZKP_P2_QWU8mRZ0SeeSkGDc0/)).
+  - *"Draftification"* (Duke for the chairs, 16:26 UTC, [permalink](https://mailarchive.ietf.org/arch/msg/moq/BVY-T4lgJtYUFSmH1QyHJwSD5ow/)); body read in full.
+  - No weekly GitHub digest since Sep-13 (the bot has missed two weeks). No replies to *"Future Virtual Interims"* before its Sep-30 deadline for concerns.
+- IETF Datatracker:
+  - Liaison [2285](https://datatracker.ietf.org/liaison/2285/), read in full (from/to/contacts/deadline/body; submitted Sep-17, approved Sep-28).
+  - `minutes-interim-2026-moq-24-202609211630` rev-00 (Sep-28 15:03 UTC); ietfminutes.org now has the Sep-21 page.
+  - Seattle agenda docs for interim-25/26/28/29 (Sep-28 16:33–16:34 UTC; interim-27 "TBD"); IETF-127 session requests 35969/35970/35971.
+  - Submissions Sep-25 → Sep-29 (229 in total): the only MoQ one is `draft-liu-moq-live-agent-interaction-02`.
+  - WG docs flat: transport-21, loc-04, msf-01, cmsf-01, secure-objects-01, privacy-pass-auth-03, c4m-01. `draft-ietf-moq-transport-22` → 404. einarsson-locmaf-01 and cenzano-media-interop-03 (expired) unchanged.
+  - Upcoming expiries: duke-moq-subscribe-rewind-02 (**Oct-4**), herz-moq-nmsf-01 (**Oct-9**).
+- GitHub `moq-wg`:
+  - moq-transport: **0 merges**. New PR #1960; new issues #1958 (kidq330, Quint), #1959, #1961. Reviews on #1946 / #1953 / #1954 / #1955 / #1957; #1857 comment (riedlse). No `-22` tag.
+  - msf: #211 comment (kixelated), 0 merges.
+  - CAT-4-MOQT: new PR #52, #48 updated.
+  - loc / secure-objects / privacy-pass / cmsf / catalog-format: silent.
+- GitHub implementations:
+  - moq-dev/moq: 220 commits, 248 merged PRs across main / dev / quest branches; releases Sep-28 (relay v0.15.8, cli v0.12.8, ffi v0.4.8, gst v0.4.8, obs v0.6.8, libmoq v0.6.8); release PR #4320 open.
+  - cloudflare/moq-rs #236; openmoq/moqxr v0.4.0 (#45); openmoq/moq-playa #18/#19 merged, #20 open; openmoq/moqx #770 / #765 / #775 + moxygen syncs; meetecho/imquic #38 open.
+  - Eyevinn: moqlivemock v0.16.0 / v0.16.1 (#148–#153), warp-player v0.16.0 (#198), moqtransport v0.14.0 (#26 / #27).
+  - shaka-player #10665 / #10663 merged (#10668 / #10658 open, v5.3.0 still pending); Quicr/libquicr #959 / #944 merged; google/quiche `54534998b2`; moxygen 16 commits; moqtail #389 / #392 / #393; gmarzot/aiomoqt #40 (branch) + aiopquic `gmarzot-0.5.0` (branch).
+  - Zero: video-dev/moq-js, birneee/quiche_moq, Eyevinn/locmaf.
+- Slack (quicdev): 0 top-level messages in any channel. New replies only on afrind's Sep-26 PUBLISH_DONE thread (Riedl ×2, afrind ×2, Sep-28) and Curley's Sep-25 `#moq-interop-runner` thread (English ×2, Sep-29).
+- Interop runner: cuts Sep-28 00:31 / Sep-29 00:27 / Sep-30 00:28 (summary.json + report.html diffed per pair); runner PRs #131 / #132 opened (approved). MoQ Monthly: none since #2. tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-09]]: **new Sep 27 → Sep 30 section**, seven subsections.
+- [[interim-meetings]]:
+  - New 2026-09-30 note: Seattle agenda, IETF-127 sessions, interim-24 minutes, Draftification, liaison, late registration, Oct-26.
+  - interim-24 row marked minutes-posted; Seattle row carries the agenda; three new table rows (Oct-26 virtual, IETF 127, Feb 2027 Denver/Boulder); Seattle agenda-request block closed out.
+- [[moq-locmaf]]: liaison 2285 in the header, the interim-23 blockquote, Status and Recent Highlights. The moq-playa bullet's stale "still open" diffstat corrected; EME follow-up noted.
+- [[moq-transport]]:
+  - draft-22 status re-checked (still unpublished; minutes quote).
+  - SSTS and Top-Tracks entries note the Draftification call; #1857 gains Riedl's use case; the `PUBLISH_DONE` entry marked **RESOLVED** (text already in -21 §3.4).
+  - #1953 / #1954 / #1955 status updated; three new entries: #1958 stale Largest Object, #1959/#1960 relative FETCH filter, #1946/#1961 PUBLISH_SKIPPED.
+- [[moq-live-agent-interaction]] (**-02**: Tool Action Authorization), [[interop-runner]] (Sep-30 as current standing, moqx draft-14 drop, English's nightly data-plane note, three daily-cut rows, Current Target cites the minutes), [[interop-status]] (minutes confirm; draft-22 still unpublished).
+- Implementation pages:
+  - [[moq-rs]] (passthrough FETCH; two draft-18 bullets merged to stay near 8); [[moqlivemock]] (v0.16 wave; version lines, subtitle media support; interop-robustness bullet moved to the Interop section); [[warp-player]] (v0.16.0); [[moqtransport]] (v0.14.0).
+  - [[shaka-player]] (tuple namespaces + `MSF_COMPRESSION` in catalog features, demo namespaces now `mlm/…`, release table + stale v5.2.10 tag corrected); [[openmoq]] (moqx now 16+18 with d14 dropped, moqxr repo moved to `openmoq/` + v0.4.0 draft-21, moq-playa EME + draft-21 PR).
+  - [[libquicr]] (**draft support corrected: `main` is on `moqt-18`**, not draft-16; new highlight; a misplaced bullet moved under the section pointer); [[quiche-moq]] (GOAWAY folded into the sprint bullet); [[imquic]] (v20/v21 PR in Draft Support); [[moq-dev]] (IETF shim range 14–19 → **14–22**; v0.15.8 + queued breaking 0.16.0 folded into the release bullet).
+  - [[overview|Implementations Overview]] (libquicr → 18, OpenMOQ row → 16·18·21, moq-playa LOCMAF "in flight" → merged).
+- [[tobbe-einarsson]] (liaison technical contact), [[index]] (LOCMAF + live-agent rows), [[log]] (this entry). `last_updated` bumped on every edited page.
+
+**Key findings**:
+*The LOCMAF adoption clock is now external and fixed.* Interim-23 (Sep-8) said "liaise first"; the statement then sat eleven days awaiting AD approval before posting Sep-28. With a stated Oct-30 reply deadline and the WG committing to *"await your response before proceeding"*, the earliest adoption call is November, after Seattle and around IETF 127. The liaison text is also the most compact statement of the WG's position the wiki has: *"LOCMAF does not alter or redefine CMAF"*. Framing it as a CMSF packaging mode rather than a new container answers Vasiliev's interim-23 "third normative container" objection. It is also why a Seattle agenda without LOCMAF, MSF or CMSF slots costs nothing in practice: the document can't move until MPEG answers.
+*"Draftification" reopens a question the WG had formally answered.* The contested IETF-126 call moved SSTS out of core. The chairs now pose "one RFC or several?" from first principles, add top-N, and deliberately keep it off the meeting floor. The consensus-call sequence (Sep-4 → Sep-23 for draft-19, then this one after Oct-13) confirms that consensus work now runs on the list, in parallel with meetings, rather than gating document cuts.
+*The Seattle interop target still names a document that doesn't exist, but the implementations aren't waiting.* With draft-22 unsubmitted twelve days out and the runner still on draft-18, the "-22 = -20 + ALPN" understanding is the only thing keeping the target coherent. Implementations are taking it at its word and targeting 20/21 directly: moqxr v0.4.0 is tagged with draft-21, moq-playa and imquic have PRs open, aiomoqt 0.12.0 targets draft-20, and moq-dev tests span 14–22. Expect draft-20/21/22 cells to appear via self-reported ALPNs before the runner's configuration moves.
+*Draft-14 is starting to leave the matrix on purpose.* moqx's switch to [16, 18] is the first deliberate drop of the oldest band by a relay, and moxygen upstream says it is next "real soon now." Once runner #131/#132 land, the 117-cell "behind" band should shrink for the first time since the Aug-19 contraction. In other words, the matrix's shape will change for a reason other than flake or enrolment.
+*Formal methods reach MOQT.* #1958 is found by a Quint model of draft-21, confirmed by a moxygen unit test and accepted by both editors within two days. The class of bug it exposes (relay-derived metadata going stale when upstream is paused) also shows up in range/property filters and delivery timeouts, per afrind. That makes it a better candidate for systematic spec text than for point fixes.
+*Two log questions closed from the outside.* The Sep-18 entry flagged, unverified, that Shaka's moqlivemock demo assets had probably been broken by moqlivemock v0.15.0's tuple namespaces. Shaka's #10665 confirms it (they failed with `DOES_NOT_EXIST`) and fixes it. The Sep-26 `PUBLISH_DONE`/fill-stream "gap" turned out not to be a gap: the draft-21 text afrind wrote already answers it, as an agent-assisted reply pointed out.
+*Operational*: this sweep ran interactively from a checkout whose local `scripts/update.log` has not been written by the nightly job since April. So Sep-28 → Sep-30 nightly status, and the Sep-27 entry's refresh-token prediction, **could not be checked from here**. No nightly-authored log entries exist for those days.
 
 # 2026-09-27 — Curley's eight-draft cutoff batch; the merge drought breaks
 
