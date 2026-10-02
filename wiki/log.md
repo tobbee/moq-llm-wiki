@@ -8,6 +8,30 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-10-02 (supplemental) — overnight moq-dev wave; sources otherwise quiet
+
+**TL;DR**:
+- A short follow-on sweep ~6½ h after the morning commit, covering 01:48 → 08:20 UTC. No new spec/WG/mailing-list/datatracker/interop activity; the only movement was moq-dev/moq's pre-Seattle net/mux merge wave running through the small hours.
+- **Implementations**: moq-dev/moq +5 merges 02:08–03:41 UTC (RUSTSEC-2026-0185 dep bump #4702; per-request `SUBSCRIBE_TRACKS`→`NOT_SUPPORTED` #4685 +268/−328; abandoned-FETCH/spliced-group net fixes #4689/#4691) + 8 fresh open PRs; moqx open PR #782 (gmarzot, CI/stats). All else quiet.
+- **Interop**: no new run — last cut still **Oct-2 00:28 = 227/235/1 of 463** (49.0%, targets draft-18); next nightly Oct-3.
+
+**Operation**: Update (manual follow-on to this morning's commit; covers 2026-10-02 01:48 → 08:20 UTC)
+**Sources**:
+- GitHub implementations: moq-dev/moq's wave continued past the morning cutoff — #4689 (02:08, a truncated spliced group fails instead of ending cleanly, +112/−108), #4691 (02:44, cancel an abandoned lite FETCH upstream, +491/−66), #4696 (03:12, FETCH-abandonment planning doc), #4702 (03:34, bump moq-noq 1.3.3 for RUSTSEC-2026-0185), #4685 (03:41, refuse per-request `SUBSCRIBE_TRACKS` with `NOT_SUPPORTED`, +268/−328); plus 8 open PRs 04:30–05:46 (net/mux refactors, shared publisher epochs #4706, more FETCH-abandonment). No new release (still the Sep-30 batch). openmoq/moqx #782 (gmarzot, +142/−260, open); afrind's #783 was already logged.
+- Quiet (no post-01:48 activity): all `moq-wg` repos, cloudflare/moq-rs, moqtail, imquic, Quicr/libquicr, openmoq/moq-playa & moqxr, all Eyevinn repos, video-dev/moq-js, birneee. shaka-player's overnight PRs (#10672–#10679) are DASH/WebVTT/ABR, not MoQ.
+- IETF mailing list: no message newer than Swett's Oct-2 01:48 UTC reply — the archive's six newest rows are the already-logged set; newest permalink curl-verified 200, a fabricated-id control returned 404. Datatracker: no MoQ submission dated Oct-2 (transport-22 remains newest). MoQ Monthly: still #2.
+- Interop runner: no new cut since the Oct-2 00:28 UTC run (already logged).
+- Slack: MCP not connected this session (no Slack tools registered) — `#moq` not probed this sweep.
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: Implementations section — moq-dev bullet notes the overnight continuation and the RUSTSEC-2026-0185 bump; moqx bullet cites #782.
+- [[log]]: this entry.
+
+**Key findings**:
+- *Nothing durable changed.* The morning's draft-22 / Seattle-agenda picture stands. moq-dev's overnight work is incremental net/mux conformance churn ahead of the Seattle interop, not a new capability — so it stays in the log, not on the [[moq-dev]] entity page.
+- *One item worth flagging:* #4702 pulls in moq-noq 1.3.3 for **RUSTSEC-2026-0185** — a dependency security-advisory fix rather than a MoQ-protocol change.
+
 # 2026-10-02 — draft-22 published; Seattle agenda revised
 
 **TL;DR**:
