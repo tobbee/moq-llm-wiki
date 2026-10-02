@@ -2,7 +2,7 @@
 title: "imquic (Meetecho)"
 tags: [implementation, c, meetecho]
 date: 2026-04-10
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 ---
 
@@ -10,7 +10,7 @@ status: current
 **Organization**: Meetecho
 **Maintainer**: [[lorenzo-miniero]]
 **GitHub**: [meetecho/imquic](https://github.com/meetecho/imquic)
-**POC relay**: lminiero.it port 9000 (raw QUIC + WebTransport; draft-18 since May 18, 2026, **draft-19 deployed July 18 and merged to `main` July 19, 2026** for the Vienna Hackathon)
+**POC relay**: lminiero.it port 9000 (raw QUIC + WebTransport; **draft-20/21 since Oct 1, 2026**; earlier draft-18 from May 18 and draft-19 from July 18)
 
 # Overview
 
@@ -23,7 +23,7 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 # Draft Support
 
-- **draft-20 / draft-21 (in review)**: [PR #38](https://github.com/meetecho/imquic/pull/38) *"Add support for MoQT v20/v21"* ([[lorenzo-miniero|lminiero]], opened 2026-09-28, +1,704/−455, 14 commits on branch `moq-20`). It adds `LOCATION_FILTER`, `FILL_PARAMETERS` in SUBSCRIBE (which replaces Joining FETCH, now gone), filters on FETCH and a FETCH serialization flag. The PR treats v21 as v20 plus editorial changes. Not yet merged.
+- **draft-20 / draft-21 (merged to `main` 2026-10-01)**: [PR #38](https://github.com/meetecho/imquic/pull/38) *"Add support for MoQT v20/v21"* ([[lorenzo-miniero|lminiero]], opened Sep-28, **merged Oct-1, +2,110/−704**). `moq.h` now covers v16–v21 (`IMQUIC_MOQ_VERSION_MAX = 21`, demo default v21). It adds `LOCATION_FILTER`, `FILL_PARAMETERS` in SUBSCRIBE (which replaces Joining FETCH, now gone), filters on FETCH and a FETCH serialization flag, treating v21 as v20 plus editorial changes. Known limits per Miniero: more than one FETCH per subscription (in SUBSCRIBE and again in REQUEST_UPDATE) is probably broken. Two same-day fixes (`f749ea7`, `550a4dd`) corrected FETCH object ordering after [[aman-sharma|Aman Sharma]]'s testing; descending order was still reported broken on Oct-1. Not yet updated for [[moq-transport|draft-22]]'s Location Filter Type encoding.
 - **draft-19 (merged to `main`)** — [PR #32](https://github.com/meetecho/imquic/pull/32) *"Add support for MoQT v19"* (lminiero, opened July 8) **merged July 19 (+1124/−211)** — the first implementation PR explicitly targeting draft-19, so `main` now carries draft-19 (previously the running relay was ahead of the repo). A first draft-19 build had been deployed to the `lminiero.it:9000` POC relay for the July-18 Vienna Hackathon; the July-19 merge folded it into `main`, followed by relay fixes (*"Allow REQUEST_UPDATE to PUBLISH as a subscriber"*, FORWARD-related relay fixes, PUBLISH tweaks). The bulk of the draft-18 → -19 delta is the new **filters**: serialization/deserialization works and the basic filters function, but `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are currently ignored (open question on their intended semantics — echoed by ianswett's [moq-transport #1816](https://github.com/moq-wg/moq-transport/issues/1816) *"Range filters only filter integer Properties"* and Luke Curley's July-19 stance that Hang will likely never implement filters).
 - **draft-18 (since May 18, 2026)** — partial: most of the wire-format changes from the draft-17 → draft-18 changelog (SUBGROUP_HEADER FIRST_OBJECT bit, FETCH ID delta encoding, PADDING message, SUBSCRIBE_TRACKS split from SUBSCRIBE_NAMESPACE, REQUEST_UPDATE on both, redirect via REQUEST_ERROR, new error codes); initially missing `REQUEST_UPDATE` for `SUBSCRIBE_NAMESPACE` / `SUBSCRIBE_TRACKS`
 - **draft-16 and draft-17** — prior supported set. (imquic tracks these internally as `0xff000010`/`0xff000011`, carrying forward the pre-draft-15 numbering; **the spec itself defines no numeric wire version from draft-15 onward** — negotiation is ALPN-only, `moqt-16`/`moqt-17`. See [[moq-transport]] § ALPN Negotiation.)
@@ -33,12 +33,13 @@ A C library for QUIC that includes MOQ Transport support alongside RTP over QUIC
 
 # Public Infrastructure
 
-- Relay at `lminiero.it:9000` (raw QUIC and WebTransport), tracking draft-18 `main`; **running a first draft-19 build as of July 18, 2026** (partial filter support — see Draft Support)
+- Relay at `lminiero.it:9000` (raw QUIC and WebTransport), tracking `main`; **running draft-20/21 since Oct 1, 2026** (see Draft Support)
 
 # Recent Highlights
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Draft-20/21 on `main` and on the public relay (Oct 1, 2026).** Miniero merged v20/v21 support ([#38](https://github.com/meetecho/imquic/pull/38)) and moved the `lminiero.it:9000` relay to it, inviting testers in `#moq` ahead of the Seattle interop. The new filters and fill-FETCH path got immediate external testing, and the FETCH ordering bugs it found were fixed or under work within hours. Its interop-runner client also implements the new `rendezvous-timeout` case.
 - **Prefix-based routing restored to the relay at the Sep-3 hackathon sweep.** During the draft-18 interop hackathon's Day-2 relay-conformance sweep (see [[interop-runner]]), [[alan-frindell|afrind]] asked [[lorenzo-miniero|Miniero]] to add **prefix-based announce routing** back to the `lminiero.it:9000` relay — the recurring relay-conformance gap, since [[moq-dev|moq-net]] clients register announce-interest with a root prefix — and Miniero landed it plus two fixes [[aman-sharma|Aman Sharma]] found: a **SUBSCRIBE for a published-then-released namespace hung forever** (the relay forwarded it upstream to a departed publisher with no timeout handler; now answers `REQUEST_ERROR` once the publisher is detected gone — reproduced by killing the publisher so no `CONNECTION_CLOSE` is sent), and **`TRACK_STATUS` was never answered**. On **Sep-4** Miniero reported the **publisher-priority drop fixed**, and the sweep surfaced three more relay bugs (mostly deferred to "Monday"): an **object stream that never FIN-closes** after PUBLISH_DONE; the **`AbsoluteRange` gap pinned down** — it reproduces only when the start group is 0, because the relay uses **`end_group == 0` as an "unbounded" sentinel**; and **duplicate `NAMESPACE_DONE`** messages.
 - **First draft-19 relay deployment in the ecosystem, then draft-19 merged to `main`** — Miniero stood up a draft-19 build of the `lminiero.it:9000` relay for the July-18 Vienna Hackathon and put out a call for draft-19 peers, then **merged [PR #32](https://github.com/meetecho/imquic/pull/32) to `main` July 19** (+1124/−211), making imquic the first tracked-repo implementation with draft-19 in `main`. Filter serialization/deserialization and the basic filters work; `OBJECT_PROPERTY_FILTER` / `TRACK_PROPERTY_FILTER` are ignored pending clarity on their semantics. The wiki's first tracked draft-19 *interop endpoint* (vs [[moq-dev|moq-dev]]'s draft-19 client/relay support), though the official interop target remains **draft-18** per [[alan-frindell|afrind]]. **On July 20 the relay achieved the ecosystem's first cross-implementation draft-19 interop** — [[luke-curley|Luke Curley]]'s `moq-cli` (moq-dev) published/subscribed against `lminiero.it:9000` in forced draft-19 (76,804 bytes, 5.23 s, `ffprobe`-validated H.264) as well as forced draft-18.
 - **Live-media LOC demos** — [PR #27](https://github.com/meetecho/imquic/pull/27) merged at the June 2026 London hackathon: `imquic-moq-loc-send` captures webcam + mic and publishes audio (Opus) + video (H.264) LOC tracks; `imquic-moq-loc-recv` subscribes, decodes, and renders via SDL2. Replaces the prior moq-clock-only demos and uses MSF for the catalog. See [[moq-loc]].

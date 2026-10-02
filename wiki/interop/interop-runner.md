@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 ---
 
@@ -60,13 +60,26 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-09-30 00:28:21 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-30_002821/report.html) — 475 cells / 224 pass / 249 fail / 2 skip** (47.2% pass; **at-target draft-18 336 · ahead 22 · behind 117**, pass 187 · 12 · 25). The matrix, roster (18 clients × 19 relays), version mix and the two timeouts (moq-rs-draft-18 → moqtail WT, moq-rs-draft-18 → xquic-draft-18) are all unchanged from Sep-27. The three cuts since the Sep-27 high ran [Sep-28](https://englishm.github.io/moq-interop-runner/results/2026-09-28_003112/report.html) **227** (−3), [Sep-29](https://englishm.github.io/moq-interop-runner/results/2026-09-29_002754/report.html) **219** (−8) and Sep-30 **224** (+5), a net **−6** vs Sep-27's 230. Most of the day-to-day flips reverse the next night, which is flake: moq-playa → moq-dev-rs, quic-zig → moqt-nr and moq-dev-js → moqx (WT) all failed on Sep-29 and recovered on Sep-30.
+**Latest cut: [2026-10-02 00:28:39 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-02_002839/report.html) — 463 cells / 227 pass / 235 fail / 1 skip** (49.0% pass; **at-target draft-18 336 · ahead 22 · behind 105**, pass 188 · 14 · 25). **49.0% is the best pass rate of any cut with 50+ cells** in the runner's index (next: Sep-6 48.6%, Sep-27 48.4%). The absolute pass count is 3 below the Sep-27 high of 230, but on a matrix 12 cells smaller. Counting only the 463 cells both cuts share, Sep-27 had 228 passes, so the difference is −1.
 
-**One loss is not flake: moq-rs-draft-14 → moqx (docker + WT) now fails every night.** Since Sep-29 the h3 CONNECT is rejected (*"expected 200, got: Some(400)"*) because the **moqx image now defaults to drafts [16, 18] and rejects `moqt_versions: 14`** (openmoq/moqx #770 makes its interop client offer 18 and 16 only). The roster change that matches it is open as [runner #131](https://github.com/englishm/moq-interop-runner/pull/131) *"moqx: drop draft-14 support"* (gmarzot, Sep-28, approved by afrind), which removes the moqx pairings with libquicr, moq-rs-draft-14 and xquic. A companion, [#132](https://github.com/englishm/moq-interop-runner/pull/132) *"moxygen: drop draft-14 support"*, waits on upstream moxygen removing d14 from `kSupportedVersions`, which afrind says will happen *"real soon now."* **Draft-14 is starting to leave the matrix.** When both land, the "behind" band (117 cells) should shrink for the first time since the Aug-19 contraction.
+**Draft-14 starts leaving the matrix (Oct-1, −12 cells).** [Runner #131](https://github.com/englishm/moq-interop-runner/pull/131) *"moqx: drop draft-14 support"* (gmarzot) merged Sep-30 15:27 UTC. The [Oct-1 00:32 cut](https://englishm.github.io/moq-interop-runner/results/2026-10-01_003206/report.html) then dropped the 12 moqx draft-14 pairings with moq-rs-draft-14, libquicr and xquic. All 12 were failing, because moqx itself had dropped d14, so no passes were lost and Oct-1 scored **223** (−1 on flake). The **behind band went 117 → 105**, its first change since the Sep-2 hackathon cut. The companion [#132](https://github.com/englishm/moq-interop-runner/pull/132) (moxygen drops d14) is still a draft PR waiting on upstream moxygen.
 
-**Still draft-18, and no runner commits since Sep-25.** Twelve days before Seattle, neither draft-22 (still unpublished) nor draft-20 has reached the nightly configuration. [[mike-english|English]] said in `#moq-interop-runner` (Sep-29) that the data-plane tests he is adding are *"meant to be pretty similar to"* afrind's moxygen conformance suite, *"but included in the nightly automated test runs."* That answers [[luke-curley|Curley]]'s Sep-25 request for a published, automated conformance report. The first pieces were [#129](https://github.com/englishm/moq-interop-runner/pull/129) (`spec/data-plane-foundation`, merged Sep-25) and a Sep-22 docs commit, *"reference interop target draft rather than pinning draft 18"*, which decoupled the docs from the hard-coded 18.
+**Oct-2 (+4) is mostly the moqtail relay recovering.** It had sat at 4 pass / 9 fail / 1 timeout every night from Sep-24 to Oct-1. On Oct-2 it scored 7 / 7: announce-subscribe and subscribe-before-announce went from timeout to `ok`, with no moqtail commits between the two cuts. quic-zig → imquic also passed for the first time since quic-zig enrolled. Three of Oct-1's flips (aiomoqt and stitcher-moq ↔ moq-dev-rs) reversed, which is flake.
 
-**The prior cut: [2026-09-27 00:30:44 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-27_003044/report.html) — 475 cells / 230 pass / 243 fail / 2 skip** (48.4% pass; **at-target draft-18 336 · ahead 22 · behind 117**). **230 pass is an all-time high in absolute terms** (previous: 204 on Sep-19), on a matrix that grew **+38 cells** mid-window.
+**A persistent failure: the moq-dev-rs relay in docker.** All 18 docker cells against the `moq-dev-rs` relay have failed every night since Sep-24. The relay exits at startup because [[moq-dev|moq-relay 0.15]] renamed `--server-bind` / `MOQ_SERVER_BIND` to `--listen` / `MOQ_LISTEN`. The adapter fix is in [#134](https://github.com/englishm/moq-interop-runner/pull/134), still open.
+
+**Draft-22 is published, but the runner is still on draft-18.** No endpoint on `main` declares draft-21 or -22. Draft-20 is declared only by moq-go, moq-dev-rs and stitcher-moq. Three PRs are pending:
+- [#134](https://github.com/englishm/moq-interop-runner/pull/134) ([[steven-riedl|riedlse]], Oct-1, +774/−442) is the first to declare -21/-22. It moves the `stitcher-moq` client to moq-tokio 0.19.20, which offers MoQT 14–22 and no moq-lite (with the old client every moq-dev relay negotiated moq-lite-05). The Paramount relay (moq-relay 0.15.8) negotiates moqt-22/-20/-18. The PR also tightens tests 5 and 6 to require evidence that the relay actually routed the SUBSCRIBE; locally, stitcher-moq goes from 13 to 18 of 31 passing.
+- [#133](https://github.com/englishm/moq-interop-runner/pull/133) bumps [[libquicr]] from draft-14 to draft-18 (RichLogan, Sep-30).
+- [#135](https://github.com/englishm/moq-interop-runner/pull/135) adds a namespace-lifecycle test (sharmafb, Oct-1).
+
+[[lorenzo-miniero|Miniero]] said on Slack (Oct-1) that his runner client now implements the new `rendezvous-timeout` case.
+
+**Conformance (Slack, Sep-30).** [[yu-you|Yu You]] ran moxygen's conformance Section 8 (PUBLISH) against the Nokia relay and all tests passed. That is better than afrind's Sep-25 matrix showed. afrind said results differ over longer RTTs (*"adding some delay via qdisc"*) and that the tool has known bugs to be fixed soon. Mike English's nightly data-plane tests are meant to cover the same ground automatically.
+
+**Sep-28 → Sep-30**: [Sep-28](https://englishm.github.io/moq-interop-runner/results/2026-09-28_003112/report.html) **227**, [Sep-29](https://englishm.github.io/moq-interop-runner/results/2026-09-29_002754/report.html) **219**, [Sep-30](https://englishm.github.io/moq-interop-runner/results/2026-09-30_002821/report.html) **224** (475 cells), net −6 vs Sep-27 and mostly flake. The one real loss, moq-rs-draft-14 → moqx (moqx stopped accepting `moqt_versions: 14`), is what #131 then removed.
+
+**The Sep-27 high: [2026-09-27 00:30:44 UTC](https://englishm.github.io/moq-interop-runner/results/2026-09-27_003044/report.html) — 475 cells / 230 pass / 243 fail / 2 skip** (48.4% pass; **at-target draft-18 336 · ahead 22 · behind 117**). **230 pass is an all-time high in absolute terms** (previous: 204 on Sep-19), on a matrix that grew **+38 cells** mid-window.
 
 **The growth is one new implementation: `quic-zig`**, registered via [runner #127](https://github.com/englishm/moq-interop-runner/pull/127) (`endel`, merged Sep-22 21:41 UTC). It enrolled **at the target**, which is why **at-target rose by exactly the matrix growth (298 → 336)** while ahead (22) and behind (117) stayed byte-identical. The roster is now nineteen: aiomoqt, imquic, moq-dev-js, moq-dev-rs, moq-go, moq-playa, moq-rs, moq-rs-draft-14, moq-rs-draft-18, moq5, moqlivemock, moqtopus, moqx, moxygen, **quic-zig**, stitcher-moq, xquic, xquic-draft-18.
 
@@ -184,6 +197,8 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-10-02 00:28:39 | 463 | 227 | 235 | 1 | 336 | 22 | +4 | **49.0%, best rate on a 50+-cell matrix**; moqtail relay recovers (4 → 7 pass); quic-zig → imquic first pass |
+| 2026-10-01 00:32:06 | 463 | 223 | 238 | 2 | 336 | 22 | −1 | **matrix −12 → 463: runner #131 drops moqx d14 pairings; behind 117 → 105** (all 12 were failing) |
 | 2026-09-30 00:28:21 | 475 | 224 | 249 | 2 | 336 | 22 | +5 | within-band recovery; moq-rs-draft-14 → moqx now a persistent fail (moqx dropped d14) |
 | 2026-09-29 00:27:54 | 475 | 219 | 254 | 2 | 336 | 22 | −8 | flake cluster (moq-playa/quic-zig/moq-dev-js pairs) + first moqx d14 rejections |
 | 2026-09-28 00:31:12 | 475 | 227 | 246 | 2 | 336 | 22 | −3 | within-band flake |

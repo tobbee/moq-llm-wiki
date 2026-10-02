@@ -2,11 +2,69 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-02 — draft-22 published; Seattle agenda revised
+
+**TL;DR**:
+- **draft-ietf-moq-transport-22 published Oct-1 21:36 UTC**, the Seattle interop target with -18. One wire change: Location Filter Type (#1953).
+- Seattle agenda rev-04 (slides due Oct-8; auth 60 min); Oct-26 virtual = interim-30. New `#moq-auth-design-team` channel; DPoP folds into C4M (#53).
+- **Implementations**: imquic v20/v21 on `main` (#38, +2,110/−704); moq-relay 0.16.0 (breaking auth); shaka SCTE-35 (#10668); Eyevinn quiet.
+- **Interop**: 223 → **227/235/1** of 463 (−12 d14 cells via runner #131). 49.0%, best rate on a 50+-cell matrix; still targets draft-18.
+
+**Operation**: Update (manual; covers Sep-30 → Oct-2. The scheduled daily run did not fire Oct-1/Oct-2.)
+**Sources**:
+- IETF mailing list: six new messages, all Oct-1/Oct-2, all verified 200 against a 404 control.
+  - Duke *"Seattle Agenda"* (17:30 UTC) and afrind's reply asking for more auth time (19:23 UTC).
+  - Duke *"Re: Future Virtual Interims"* (20:23 UTC) and the IESG announcement of the Oct-26 interim (21:11 UTC).
+  - *"I-D Action: draft-ietf-moq-transport-22.txt"* (21:36 UTC) and Swett's reply explaining the Location Filter change (Oct-2 01:48 UTC).
+  - No replies to *"Draftification"*. No weekly GitHub digest (last Sep-13).
+- IETF Datatracker:
+  - transport-22 (165 pp, expires 2027-04-04), the only MoQ submission of 140 since Sep-29. Text downloaded to `sources/ietf-drafts/draft-ietf-moq-transport-22.txt` and diffed against -21.
+  - Seattle agenda revs -02 to -04 (Oct-1 17:22–17:39 UTC); interim-2026-moq-30 created (session 36001).
+  - Other WG docs flat. subscribe-rewind-02 (expires Oct-4) and nmsf-01 (expires Oct-9) not renewed. No new liaisons or minutes.
+- GitHub `moq-wg`:
+  - moq-transport: 3 merges (#1946, #1953, #1965), tag `draft-ietf-moq-transport-22` (21:33 UTC). New issues #1962–#1964; #841 and #1937 closed. afrind's pre-Seattle triage touched #1948/#1889/#1850 (BLOCKED), #1958, #1959, #1952, #1703, #1704 and #899.
+  - CAT-4-MOQT: new PR #53. msf: new issue #213, #205 comments. wg-materials: Seattle attendee wiki edit. Everything else silent.
+- GitHub implementations:
+  - Merges and releases: meetecho/imquic #38 + two FETCH-order fixes; moq-dev/moq ~104 merged PRs and Sep-30 releases (relay 0.16.0 tag/crates.io, cli 0.13.0, libmoq 0.6.9, gst 0.4.9, obs 0.6.9, ffi 0.4.9; next release PR #4596 open); shaka-player #10668 merged (#10670 open; v5.3.0 pending); openmoq moq-playa #21 merged and #20 closed (→ `feature/draft-21`), moqx #705/#780/#781, moq2ts #4; Quicr/libquicr 11 merges; google/quiche 2 moqt commits; moxygen 7 commits.
+  - Open PRs only: cloudflare/moq-rs #237/#239 and issues #238/#240–#245; moqtail #394 and a #374 review; aiomoqt and aiopquic on branches.
+  - Quiet: video-dev/moq-js, birneee/quiche_moq, all Eyevinn repos.
+- Slack (quicdev):
+  - `#moq`: Miniero's v20/v21 relay announcement plus a 10-reply FETCH-ordering thread with Aman Sharma.
+  - `#moq-auth-design-team`: new channel, created Sep-30 by English; English, Sharma and Suhas posted, Cullen joined.
+  - `#moq-interop-runner`: Yu You and afrind replies on the conformance thread (Sep-30).
+  - `#moq-rs` / `#moq-js` / `#libquicr`: silent.
+- Interop runner:
+  - Cuts Oct-1 00:32 and Oct-2 00:28; summary.json diffed per cell.
+  - Runner #131 merged Sep-30. #133/#134/#135 opened; #130 and #132 still open.
+- MoQ Monthly: none since #2. tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: **new page**, first section *Sep 30 → Oct 2*.
+- [[moq-transport]]:
+  - Header and `draft_version` → 22. The draft-22 section is rewritten: wire change table, editorial list, what's not in -22, and Swett's rationale.
+  - Issue entries updated: #1857, #1953 (resolved), #1954, #1958, #1959/#1960, #1946/#1961. New entries for #1962, #1963/#1964 and the pre-Seattle triage.
+- [[interim-meetings]]: 2026-10-02 note (agenda rev-04, slides Oct-8, auth time request, interim-30). Seattle and Oct-26 table rows updated.
+- [[interop-runner]]: Current standing rewritten for Oct-2: d14 cell removal, moqtail recovery, moq-dev-rs docker failure, #133–#135, conformance thread. Two daily-cut rows added.
+- [[interop-status]]: draft-22 published, not quite wire-identical to -20.
+- [[moq-c4m]]: DPoP fold (#53) and the auth design-team channel.
+- Implementation pages:
+  - [[imquic]]: draft-20/21 merged; relay on v20/v21; new highlight.
+  - [[moq-dev]]: release bullet rewritten in place for 0.15.7 → 0.16.0 → queued 0.17.0, plus the conformance push.
+  - [[openmoq]]: moq-playa draft-21 branch and npm scope migration.
+  - [[shaka-player]]: SCTE-35 event timelines, #10670.
+  - [[overview|Implementations Overview]]: moq-dev 14–22; imquic 16–21; Playa row (LOCMAF merged, d21 branch, `@openmoq`).
+- [[index]] (moq-transport row, October digest), [[log]] (this entry). `last_updated` bumped on every edited page.
+
+**Key findings**:
+- **draft-22 is not purely editorial.** `LOCATION_FILTER` now carries a Location Filter Type (0x00–0x05) instead of a Length. Duke's Sep-21 *"functionally identical to -20 except the ALPN"* holds everywhere else. Per Swett, the editors made the change now because few implementations had built the new filters yet.
+- **The runner lags the target.** The nightly still runs draft-18, and no endpoint on `main` declares -21/-22; runner #134 (stitcher-moq) is the first. Ten days remain before Seattle interop.
+- **A hidden red block**: all 18 docker cells against the moq-dev-rs relay have failed since Sep-24 because of moq-relay 0.15's `--server-bind` → `--listen` rename. #134 fixes it.
 
 # 2026-09-30 — LOCMAF liaison to MPEG; Seattle agenda; top-N/SSTS call
 

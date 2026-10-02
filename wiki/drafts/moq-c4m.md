@@ -2,7 +2,7 @@
 title: "Authorization scheme for MOQT using Common Access Tokens (C4M)"
 tags: [draft, security, authentication, wg-document]
 date: 2026-06-19
-last_updated: 2026-06-19
+last_updated: 2026-10-02
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-c4m/"
@@ -42,6 +42,7 @@ Introduction · Token Format · DPoP Integration with CAT for MOQT · Adding a T
 - **[[moq-privacy-pass|Privacy Pass]]** — the other adopted MOQT auth scheme. Privacy Pass optimizes for **subscriber privacy** (relays learn minimal information); C4M optimizes for **scoped, signed, server-issued authorization** (the token names exactly what its bearer may do). The two are tracked together by the **AUTH design team**.
 - **[[moq-transport]]** — the transport whose operations (PUBLISH_NAMESPACE / SUBSCRIBE / PUBLISH / FETCH) the C4M scopes authorize. The transport draft's own auth-token-lifecycle and challenge-carriage questions (e.g. EXPIRES, REQUEST_ERROR challenge payloads) feed the same workstream.
 - **[[moq-secure-objects]]** — complementary E2E object encryption (confidentiality), orthogonal to C4M's access control.
+- **DPoP is being folded in (editors' copy, Oct 2026).** [[suhas-nandakumar|Suhas]]'s [CAT-4-MOQT PR #53](https://github.com/moq-wg/CAT-4-MOQT/pull/53) (opened 2026-10-01, +224/−251, not yet reviewed) *"folds generic-dpop-proof into this draft per Security AD guidance, scoping DPoP to MoQ-specific usage."* That would absorb the separate individual draft `draft-nandakumar-moq-generic-dpop-proof` into C4M. Separately, the AUTH design team moved to a dedicated Slack channel (`#moq-auth-design-team`, created 2026-09-30) to draft an **AUTH message** section for MOQT, starting in [[mike-english|Mike English]]'s `englishm/moq-transport` fork. "Chris", presumably co-author Chris Lemmons, offered a matching C4M PR to show how AUTH would be used. The design team has a slot on the Seattle agenda (Oct-15).
 
 # Related
 - [[moq-privacy-pass]] - Privacy-preserving authentication via Privacy Pass tokens

@@ -2,7 +2,7 @@
 title: "Shaka Player (Google)"
 tags: [implementation, javascript, player, google, msf, cmsf, locmaf]
 date: 2026-04-10
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 ---
 
@@ -72,7 +72,8 @@ What the implementation does and assumes:
 - **[[moq-msf|MSF]]-01 / [[moq-cmsf|CMSF]]-01 catalogs** ([#10176](https://github.com/shaka-project/shaka-player/pull/10176), Jun-4), including accessibility descriptors for **CEA-608/708** ([#10040](https://github.com/shaka-project/shaka-player/pull/10040), May-12).
 - **Namespace discovery**: either an explicit `manifest.msf.namespaces`, or passive discovery from a server `PUBLISH_NAMESPACE` announcement when left empty. Since [#10665](https://github.com/shaka-project/shaka-player/pull/10665) (Sep-29, +213/−35), slash-joined catalog track namespaces are **split into tuple fields** instead of being sent as one field; the session tuple is reused when the string names it, so publishers announcing a single field that contains `/` still work. The same PR fixed the draft-18 `REQUEST_ERROR` field order (Retry Interval before Reason, which had left every reason empty) and made a refused media SUBSCRIBE fail the load with **`MSF_SUBSCRIBE_FAILED` (4066)** instead of buffering forever.
 - **`MSF_COMPRESSION` (property 0x78)** ([#10663](https://github.com/shaka-project/shaka-player/pull/10663), Sep-29, +1,292/−170): GZIP-compressed catalog and media-timeline payloads, signalled per track (Track Property in `SUBSCRIBE_OK`/`FETCH_OK`) or per object, are decompressed with `DecompressionStream` in arrival order. The draft-18/20/21 session now exposes Track Properties to consumers (`MsfObject.trackProperties`) and holds fetched objects that arrive before `FETCH_OK`. An unsupported algorithm fails with `MSF_UNSUPPORTED_COMPRESSION` (**4067** on `main`). Open follow-ons: SCTE-35 via event-timeline tracks ([#10668](https://github.com/shaka-project/shaka-player/pull/10668)) and draft-16 control-message fixes ([#10658](https://github.com/shaka-project/shaka-player/pull/10658)).
-- **Catalog retrieval by SUBSCRIBE or FETCH** (`useFetchCatalog`), the former picking up catalog updates mid-session.
+- **SCTE-35 from MSF event timeline tracks** ([#10668](https://github.com/shaka-project/shaka-player/pull/10668), avelad, merged Sep-30, +1,428/−34): ad-signalling cues carried per MSF §8 and `draft-wilaw-moq-scte35-event-timeline` are surfaced to the player.
+- **Catalog retrieval by SUBSCRIBE or FETCH** (`useFetchCatalog`), the former picking up catalog updates mid-session. An open PR ([#10670](https://github.com/shaka-project/shaka-player/pull/10670), +1,611/−164) makes the catalog SUBSCRIBE join the current group: Relative Joining FETCH on draft-18, `FILL_PARAMETERS` on draft-20/21. It also fixes FETCH object parsing that ignored the Serialization Flags, and adds a `CatalogStore` for catalog delta updates.
 - **`authorizationToken`** sent in the MoQT client setup with alias type `USE_VALUE` (`0x03`).
 - **Subscribe filter** configurable between `LARGEST_OBJECT` and `NEXT_GROUP_START`.
 - **`fingerprintUri`** for pinning a self-signed relay certificate — the local-relay testing path.
@@ -92,7 +93,7 @@ MoQ ships only in the **experimental** build, and there is a **large gap between
 | draft-14 + the MSF parser (experimental) | v5.0.5 (2026-03-09) |
 | draft-16; CMSF `contentProtections` / multi-DRM | v5.1.0 (2026-04-15) |
 | LOC packaging; MSF-01 / CMSF-01 catalogs; CEA-608/708; `catalogPreprocessor`; ABR bandwidth | v5.2.0 (2026-07-10) |
-| **draft-18 · draft-20 · draft-21; `m2ts`; LOCMAF; AV1 on the LOC path; `MSF_COMPRESSION`; tuple namespaces** | **pending v5.3.0** (release PR [#10385](https://github.com/shaka-project/shaka-player/pull/10385) still open as of 2026-09-30; newest tags v5.2.12 / v5.1.25, Sep-25) |
+| **draft-18 · draft-20 · draft-21; `m2ts`; LOCMAF; AV1 on the LOC path; `MSF_COMPRESSION`; tuple namespaces; SCTE-35 event timelines** | **pending v5.3.0** (release PR [#10385](https://github.com/shaka-project/shaka-player/pull/10385) still open as of 2026-10-02; newest tags v5.2.12 / v5.1.25, Sep-25) |
 
 # Recent Highlights
 

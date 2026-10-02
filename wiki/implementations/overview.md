@@ -2,7 +2,7 @@
 title: "Implementations Overview"
 tags: [implementation, overview, comparison]
 date: 2026-07-09
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 ---
 
@@ -14,7 +14,7 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 
 | Implementation | Language | Org / Maintainer | Draft(s) | Roles | Focus / notable |
 |---|---|---|---|---|---|
-| [[moq-dev]] | Rust + TS | [[luke-curley\|Luke Curley]] | moq-lite + IETF 14–21 ¹ | Pub · Sub · Relay · Player | moq-lite + Hang; media gateways (RTMP/SRT/WebRTC/HLS/TS); native HW codecs |
+| [[moq-dev]] | Rust + TS | [[luke-curley\|Luke Curley]] | moq-lite + IETF 14–22 ¹ | Pub · Sub · Relay · Player | moq-lite + Hang; media gateways (RTMP/SRT/WebRTC/HLS/TS); native HW codecs |
 | [[moq-rs]] | Rust | Cloudflare | 14 (prod) · 16 · 18 | Pub · Sub · Relay | Strict IETF WG compliance; very active |
 | [[moq-js]] | JS / TS | video-dev | 14 | Pub · Sub · Player | Browser client over WebTransport; `<video-moq>` component; needs a relay |
 | [[moxygen]] | C++ (mvfst) | Meta | 14 · 16 (neg. 15) | Pub · Sub · Relay | Reference relay; [[qmux]]; [[openmoq\|OpenMOQ]] fork |
@@ -23,7 +23,7 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | [[xquic-moq]] | C (XQUIC) | Alibaba | 14 | Relay | Merged into the interop matrix |
 | [[moqlivemock]] | Go + TS | Eyevinn | **18** | Pub · Sub · Relay · Player | CMSF/LOC/MSF/LOCMAF; DRM; `mlmtest` interop tool |
 | [[moqtail]] | Rust + TS | [[zafer-gurel\|Z. Gürel]] / [[ali-begen\|A. C. Begen]] | 16 · 18 | Pub · Sub · Relay · Player | LOC + CMSF demos; `relay18.moqtail.dev` live since Jul 23; `moqt://` URI scheme |
-| [[imquic]] | C | Meetecho ([[lorenzo-miniero]]) | 16 · 17 · 18 · 19 | Pub · Sub · Relay | draft-19 merged to `main` Jul 19; also RTP-over-QUIC (RoQ); Janus ecosystem |
+| [[imquic]] | C | Meetecho ([[lorenzo-miniero]]) | 16 · 17 · 18 · 19 · 20 · 21 | Pub · Sub · Relay | draft-20/21 merged to `main` Oct 1 (public relay too); also RTP-over-QUIC (RoQ); Janus ecosystem |
 | [[quiche-moq]] | C++ | Google (QUICHE / Chromium) | 16 · 18 (on `main`) | Pub · Sub · Relay | 41/41 conformance; relay/server/chat/simulator tools; object-ACK work Aug 2026 |
 | [[shaka-player]] | JS | Google (shaka-project) | **18 · 20 · 21** (14 · 16 deprecated) | Sub · Player | Production browser player on MoQ; CMSF + LOC + **LOCMAF** + m2ts; multi-DRM; experimental build only ² |
 | [[moqintosh]] | Swift | T. Igarashi (t-gazzy) | 14 | Sub (client-only) | First pure-Swift / Apple-native client |
@@ -35,9 +35,9 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | [[laps\|LAPS]] | C++ | Cisco (QuicR) | via [[libquicr]] | Relay | Relay-**mesh** with Edge/Via/Stub roles; public "MOQT Developer Playground" endpoint |
 | [[warp-player]] | TS | Eyevinn | **18** | Sub · Player | CMSF playback via MSE; companion to [[moqlivemock]] |
 | **MOQ5** (see [[openmoq]]) | C | Red5 Pro | 16 · 18 | Client | Sans-I/O zero-dependency protocol core; simulation-tested; interop-registered |
-| **Playa** (see [[openmoq]]) | TS | Red5 Pro | 18 | Sub · Player | `@moqt/*` + `@playa/player` v0.5.7; WebCodecs with MSE/CMAF fallback; **LOCMAF playback in flight** (PR #15) |
+| **Playa** (see [[openmoq]]) | TS | Red5 Pro | 18 (21 on `feature/draft-21`) | Sub · Player | npm scope moving to `@openmoq/*` (`@openmoq/playa`, Oct 1; not yet published); WebCodecs with MSE/CMAF fallback; **LOCMAF playback merged** (PR #15) |
 
-¹ [[moq-dev]] implements Luke Curley's own [[moq-lite]] protocol plus IETF adapter shims (draft-14 through draft-21); it was the first open-source implementation to ship draft-18, and added `moqt-21` the day after that revision was cut (Sep-10).
+¹ [[moq-dev]] implements Luke Curley's own [[moq-lite]] protocol plus IETF adapter shims (draft-14 through draft-22); it was the first open-source implementation to ship draft-18, added `moqt-21` the day after that revision was cut (Sep-10), and added `moqt-22` the day interim-24 named it a target (Sep-21).
 
 ² MoQ is excluded from Shaka Player's standard builds — it ships in `shaka-player.experimental.js` only. The drafts listed are what `main` carries; **the newest *released* build (v5.2.10) still tops out at draft-16**, because draft-18/20/21, `m2ts` and LOCMAF are all queued for the unreleased v5.3.0.
 

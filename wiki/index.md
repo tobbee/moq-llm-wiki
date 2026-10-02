@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-09-30
+last_updated: 2026-10-02
 status: current
 updated: 2026-09-30
 ---
@@ -16,7 +16,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
-| [[moq-transport]] | draft-21 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (-21 published 2026-09-08 — a restructuring cut, wire/semantically equal to -20) |
+| [[moq-transport]] | draft-22 | Active | Core publish/subscribe transport protocol over QUIC/WebTransport (-22 published 2026-10-01 — the Seattle interop target with -18; one wire change vs -20/21: Location Filter Type) |
 | [[moq-msf]] | draft-01 | Active | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
 | [[moq-loc]] | draft-04 | Active (**-04 2026-07-20**) | Low Overhead Media Container for interactive streaming (adds audio config; -04 fixes the shared IANA registry values) |
 | [[moq-secure-objects]] | draft-01 | Active (**-01 2026-07-06**) | End-to-end authenticated encryption for MOQT objects (adds test vectors) |
@@ -132,6 +132,7 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 
 # Active Discussions
 
+- [[discussions-2026-10]] - October 2026 discussions (draft-22; Seattle interim run-up)
 - [[discussions-2026-09]] - September 2026 discussions
 - [[discussions-2026-08]] - August 2026 discussions
 - [[discussions-2026-07]] - July 2026 discussions
