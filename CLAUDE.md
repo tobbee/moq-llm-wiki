@@ -113,7 +113,9 @@ Rules:
 
 ### Ingest Slack Discussion
 1. Read recent messages from `#moq` channel in quicdev Slack (channel ID: C046V0QF3CK)
-2. Also check `#moq-rs` (C09CG9V7A2Y), `#moq-js` (C09BZ7KH0BZ), `#libquicr` (C08ER7J16BF)
+2. Also check `#moq-rs` (C09CG9V7A2Y), `#moq-js` (C09BZ7KH0BZ), `#libquicr` (C08ER7J16BF), `#moq-interop-runner` (C0B2KQLJGN7), `#moq-auth-design-team` (C0C58SLLA6B), including new replies on older threads
+   - **Read from the last log entry that actually checked Slack**, not just the last log entry. The nightly job on mbp1 has no Slack access and writes `Slack: not checked (no Slack access in this run)` in its Sources. Skip such entries so the days they missed are backfilled.
+   - If Slack tools are unavailable in a run, write that same `Slack: not checked` line; never describe Slack as quiet when it was not read.
 3. Summarize key discussions in `wiki/discussions/`
 4. Update relevant entity/concept/interop pages
 5. Append to `wiki/log.md`
