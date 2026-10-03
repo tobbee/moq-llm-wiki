@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-10-02
+last_updated: 2026-10-03
 status: current
 ---
 
@@ -66,12 +66,12 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 **Oct-2 (+4) is mostly the moqtail relay recovering.** It had sat at 4 pass / 9 fail / 1 timeout every night from Sep-24 to Oct-1. On Oct-2 it scored 7 / 7: announce-subscribe and subscribe-before-announce went from timeout to `ok`, with no moqtail commits between the two cuts. quic-zig → imquic also passed for the first time since quic-zig enrolled. Three of Oct-1's flips (aiomoqt and stitcher-moq ↔ moq-dev-rs) reversed, which is flake.
 
-**A persistent failure: the moq-dev-rs relay in docker.** All 18 docker cells against the `moq-dev-rs` relay have failed every night since Sep-24. The relay exits at startup because [[moq-dev|moq-relay 0.15]] renamed `--server-bind` / `MOQ_SERVER_BIND` to `--listen` / `MOQ_LISTEN`. The adapter fix is in [#134](https://github.com/englishm/moq-interop-runner/pull/134), still open.
+**A persistent failure: the moq-dev-rs relay in docker — fix merged Oct-2.** All 18 docker cells against the `moq-dev-rs` relay had failed every night since Sep-24: the relay exits at startup because [[moq-dev|moq-relay 0.15]] renamed `--server-bind` / `MOQ_SERVER_BIND` to `--listen` / `MOQ_LISTEN`. The adapter fix in [#134](https://github.com/englishm/moq-interop-runner/pull/134) **merged Oct-2 17:13 UTC**, so the first cut that could clear those 18 cells is the Oct-3 nightly (not yet published at the time of writing).
 
-**Draft-22 is published, but the runner is still on draft-18.** No endpoint on `main` declares draft-21 or -22. Draft-20 is declared only by moq-go, moq-dev-rs and stitcher-moq. Three PRs are pending:
-- [#134](https://github.com/englishm/moq-interop-runner/pull/134) ([[steven-riedl|riedlse]], Oct-1, +774/−442) is the first to declare -21/-22. It moves the `stitcher-moq` client to moq-tokio 0.19.20, which offers MoQT 14–22 and no moq-lite (with the old client every moq-dev relay negotiated moq-lite-05). The Paramount relay (moq-relay 0.15.8) negotiates moqt-22/-20/-18. The PR also tightens tests 5 and 6 to require evidence that the relay actually routed the SUBSCRIBE; locally, stitcher-moq goes from 13 to 18 of 31 passing.
-- [#133](https://github.com/englishm/moq-interop-runner/pull/133) bumps [[libquicr]] from draft-14 to draft-18 (RichLogan, Sep-30).
-- [#135](https://github.com/englishm/moq-interop-runner/pull/135) adds a namespace-lifecycle test (sharmafb, Oct-1).
+**Draft-22 reaches the runner (Oct-2), but the nightly still targets draft-18.** Two of the three pending PRs merged Oct-2 afternoon, so the next cut is the first where an endpoint declares -22:
+- [#134](https://github.com/englishm/moq-interop-runner/pull/134) ([[steven-riedl|riedlse]], +774/−442) **merged Oct-2 17:13 UTC** — the first PR to declare -21/-22. It moves the `stitcher-moq` client to moq-tokio 0.19.20 (MoQT 14–22, no moq-lite; with the old client every moq-dev relay negotiated moq-lite-05), refreshes the registry, and folds in the moq-dev-rs adapter fix above. The Paramount relay (moq-relay 0.15.8) negotiates moqt-22/-20/-18. The PR also tightens tests 5 and 6 to require evidence that the relay actually routed the SUBSCRIBE; locally, stitcher-moq goes from 13 to 18 of 31 passing.
+- [#133](https://github.com/englishm/moq-interop-runner/pull/133) bumps [[libquicr]] from draft-14 to draft-18 (RichLogan) — **merged Oct-2 17:10 UTC**.
+- Still open: [#135](https://github.com/englishm/moq-interop-runner/pull/135) namespace-lifecycle test (sharmafb, Oct-1); [#136](https://github.com/englishm/moq-interop-runner/pull/136) switching Nokia's remote relay WT URL back to https (Oct-2); [#137](https://github.com/englishm/moq-interop-runner/pull/137) pinning [[aiomoqt]] 0.12.0a1 with a single dual-transport relay adapter and newest-first draft ordering (Oct-3).
 
 [[lorenzo-miniero|Miniero]] said on Slack (Oct-1) that his runner client now implements the new `rendezvous-timeout` case.
 

@@ -2,11 +2,40 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-02
+last_updated: 2026-10-03
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 2 evening → Oct 3) — **The MOQT editors post the Seattle issue triage, the interop runner finally gets its moq-dev-rs adapter fix and a moqt-22 endpoint, and moq-dev reworks its branch model.**
+
+A quiet day on the spec text itself (draft-22 stands), but two things firmed up the pre-Seattle picture: the editors turned Duke's Oct-1 request into a concrete **23-issue priority list**, and the interop runner merged the two PRs that had been blocking a draft-22 endpoint and the moq-dev-rs relay. Slack was not checked this run.
+
+## The editors' Seattle issue triage: 23 priority issues
+
+[[alan-frindell|afrind]] posted *"List of issues to discuss at the hybrid interim"* (list, Oct-2, [permalink](https://mailarchive.ietf.org/arch/msg/moq/npO6unCi6tX2QsCmXDR47DQ4Gqg/)) — the detailed issue/PR breakdown [[martin-duke|Duke]] asked the MOQT editors for when he announced the agenda. It names **23 priority issues** for the Wed/Thu MOQT-issues blocks, roughly a third of the open backlog, and asks the WG to read and discuss them asynchronously beforehand.
+
+- The 23: [#869](https://github.com/moq-wg/moq-transport/issues/869) (limiting subscription resource consumption), [#899](https://github.com/moq-wg/moq-transport/issues/899) (multi-range FETCH), [#1316](https://github.com/moq-wg/moq-transport/issues/1316) (VOD support), [#1352](https://github.com/moq-wg/moq-transport/issues/1352) (SUBSCRIBE forward parameter), [#1354](https://github.com/moq-wg/moq-transport/issues/1354) (dedicated SWITCH message), [#1582](https://github.com/moq-wg/moq-transport/issues/1582), [#1678](https://github.com/moq-wg/moq-transport/issues/1678), [#1704](https://github.com/moq-wg/moq-transport/issues/1704), [#1720](https://github.com/moq-wg/moq-transport/issues/1720), [#1743](https://github.com/moq-wg/moq-transport/issues/1743), [#1792](https://github.com/moq-wg/moq-transport/issues/1792), [#1828](https://github.com/moq-wg/moq-transport/issues/1828), [#1857](https://github.com/moq-wg/moq-transport/issues/1857) (metadata scope), [#1875](https://github.com/moq-wg/moq-transport/issues/1875), [#1897](https://github.com/moq-wg/moq-transport/issues/1897), [#1933](https://github.com/moq-wg/moq-transport/issues/1933), [#1934](https://github.com/moq-wg/moq-transport/issues/1934), [#1941](https://github.com/moq-wg/moq-transport/issues/1941), [#1947](https://github.com/moq-wg/moq-transport/issues/1947), [#1951](https://github.com/moq-wg/moq-transport/issues/1951), [#1958](https://github.com/moq-wg/moq-transport/issues/1958) (stale Largest Object), [#1959](https://github.com/moq-wg/moq-transport/issues/1959) (standalone-FETCH relative filters) and [#1962](https://github.com/moq-wg/moq-transport/issues/1962) (FILL_PARAMETERS).
+- The rest of the backlog: **~34 editorial/design issues awaiting a PR, 11 with an open PR under review, and ~20 non-transport / parked / blocked.** Several of the 23 are already on the [[moq-transport]] tracker from the Sep-30→Oct-1 pre-Seattle labelling pass.
+- Duke also circulated a *"Food Allergies"* note (Oct-2) for in-person Seattle attendees — logistics only. See [[interim-meetings]].
+- **Datatracker** had no new MoQ submission (transport-22 remains newest); **[[moq-monthly|MoQ Monthly]]** is still at #2; no new liaisons or minutes.
+
+## Interop runner: the two blocking PRs merge
+
+Both PRs that the [[interop-runner]] page had been tracking as pending merged on **Oct-2 afternoon**, so the next nightly cut is the first to carry a draft-22 endpoint *and* a working moq-dev-rs relay:
+
+- [#134](https://github.com/englishm/moq-interop-runner/pull/134) ([[steven-riedl|riedlse]], merged 17:13 UTC) moves the `stitcher-moq` client to **moq-tokio 0.19.20** (MoQT 14–22, no moq-lite), refreshes the registry, and — crucially — folds in the **moq-dev-rs adapter fix** for the `--server-bind` → `--listen` rename that had failed all 18 docker cells against that relay since Sep-24.
+- [#133](https://github.com/englishm/moq-interop-runner/pull/133) (RichLogan, merged 17:10 UTC) bumps [[libquicr]] from draft-14 to **draft-18**.
+- Still open: [#135](https://github.com/englishm/moq-interop-runner/pull/135) (namespace-lifecycle test), [#136](https://github.com/englishm/moq-interop-runner/pull/136) (Nokia relay WT URL back to https), and [#137](https://github.com/englishm/moq-interop-runner/pull/137) (Oct-3, pin [[aiomoqt]] 0.12.0a1, one dual-transport relay adapter, newest-first drafts).
+- **No new cut yet**: the Oct-3 nightly had not published by ~01:00 UTC; the last cut is still Oct-2 00:28 (463 / 227 / 235 / 1, 49.0%).
+
+## Implementations: moq-dev reworks its branch model; libquicr and openmoq churn
+
+- **[[moq-dev|moq-dev/moq]]** executed a planned **branch flip** on Oct-2 — *"trunk is main, releases ship from release"* ([#4737](https://github.com/moq-dev/moq/pull/4737), [#4727](https://github.com/moq-dev/moq/pull/4727), [#4730](https://github.com/moq-dev/moq/pull/4730), plus CI follow-ups [#4738](https://github.com/moq-dev/moq/pull/4738)/[#4740](https://github.com/moq-dev/moq/pull/4740)/[#4742](https://github.com/moq-dev/moq/pull/4742)/[#4743](https://github.com/moq-dev/moq/pull/4743)). This is a repo-workflow change (dev→main, main→release), not a protocol change, and there is no new release (still the Sep-30 batch). Alongside it, conformance/net churn continued: [#4726](https://github.com/moq-dev/moq/pull/4726) validates monotonic `hang` group starts, [#4698](https://github.com/moq-dev/moq/pull/4698) hands a subscriber's cursors to a park's cache, plus ~20 fresh open PRs including [#4731](https://github.com/moq-dev/moq/pull/4731) (edge/core cluster roles over TLS qmux), [#4729](https://github.com/moq-dev/moq/pull/4729) (rate-limit catalog estimate updates) and [#4712](https://github.com/moq-dev/moq/pull/4712) (untimed-frames planning).
+- **[[libquicr]]** merged [#978](https://github.com/Quicr/libquicr/pull/978) (always fire `OnNewConnection` first) and [#948](https://github.com/Quicr/libquicr/pull/948) (stream-threading fixup); [#979](https://github.com/Quicr/libquicr/pull/979)/[#981](https://github.com/Quicr/libquicr/pull/981)/[#982](https://github.com/Quicr/libquicr/pull/982) are open docs/threading PRs.
+- **[[openmoq|OpenMOQ]]**: moqx [#785](https://github.com/openmoq/moqx/pull/785) syncs moxygen (changelog PR #784 open); moqxr merged [#46](https://github.com/openmoq/moqxr/pull/46) *"Add DATAGRAM advertisement"* (+534/−3).
+- **Quiet**: [[moq-rs]], [[moq-js]], [[moqtail]], [[imquic]], birneee, [[shaka-player]], all Eyevinn repos. [[quiche-moq|google/quiche]]'s only moqt commit (STOP_SENDING on `Reset()`) was already captured above.
 
 # Activity (Sep 30 → Oct 2) — **draft-22 lands eleven days before Seattle interop, carrying one wire change that the "identical to -20" framing left out. Draft-14 starts leaving the interop matrix, and the auth design team gets its own channel.**
 

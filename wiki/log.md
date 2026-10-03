@@ -2,11 +2,44 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-02
+last_updated: 2026-10-03
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-03 — editors' Seattle issue triage; runner unblocks moqt-22
+
+**TL;DR**:
+- The MOQT editors turned Duke's agenda request into a concrete **23-issue priority list** for the Seattle hybrid interim (afrind, list, Oct-2) — about a third of the open backlog, rest = ~34 awaiting-PR / 11 in-review / ~20 parked-blocked. No new draft; datatracker, MoQ Monthly (#2) and the WG repos otherwise quiet.
+- **Implementations**: moq-dev/moq ran a **branch flip** (trunk→main, releases→release; #4737/#4727/#4730 + CI) plus net/`hang` conformance churn (#4726, #4698) and ~20 open PRs (cluster roles #4731); libquicr +2 merges (#978/#948); openmoq moqxr #46 DATAGRAM advert (+534/−3), moqx #785 sync. moq-rs/js/moqtail/imquic/Eyevinn quiet.
+- **Interop**: no new cut — last still **Oct-2 00:28 = 227/235/1 of 463** (49.0%). Runner #134 (moq-dev-rs adapter fix + stitcher-moq moqt-22) and #133 (libquicr→d18) **merged Oct-2 17:10–17:13**; first visible in the Oct-3 nightly (not yet published).
+
+**Operation**: Update (manual; covers 2026-10-02 08:20 → 2026-10-03 01:04 UTC)
+**Sources**:
+- IETF mailing list: two new messages since the last sweep, both Oct-2, both via the archive browse list. afrind *"List of issues to discuss at the hybrid interim"* ([permalink](https://mailarchive.ietf.org/arch/msg/moq/npO6unCi6tX2QsCmXDR47DQ4Gqg/)) — the editors' detailed issue/PR breakdown Duke requested Oct-1; and Duke *"Food Allergies"* (Seattle in-person logistics). No new weekly GitHub digest (last Sep-13); no replies to *"Draftification"* (deadline Oct-13).
+- IETF Datatracker: no MoQ submission since transport-22 (Oct-1); all WG docs flat.
+- GitHub `moq-wg`: no merges. moq-transport issue #1963 (parameter restrictions in REQUEST_UPDATE/SUBSCRIBE_TRACKS) saw comment activity (16:06 UTC). Other repos (msf, loc, secure-objects, cmsf, catalog-format, CAT-4-MOQT, wg-materials) silent.
+- GitHub implementations:
+  - moq-dev/moq: 13 merges 14:42–22:08 UTC — the branch-flip set (#4737, #4727, #4730, #4743, #4738, #4740, #4742 + the +27,334/−6,196 main→dev merge commit #4720) plus #4726 (monotonic `hang` group starts), #4698 (subscriber cursor handoff to park cache), #4717/#4714/#4713 (quest/docs). Plus ~20 open PRs 10:46–22:04 (#4731 edge/core cluster roles over TLS qmux, #4732 ffi request origins, #4729 catalog-estimate rate-limit, #4712 untimed frames, net/mux/test). No new release (Sep-30 batch stands).
+  - Quicr/libquicr: #978 (OnNewConnection first), #948 (stream threading) merged; #979/#981/#982 open.
+  - openmoq: moqx #785 (sync moxygen) merged, #784 (changelog) open; moqxr #46 (DATAGRAM advertisement, +534/−3) merged.
+  - google/quiche moqt: newest commit is the Oct-1 STOP_SENDING-on-Reset change already logged Oct-2; nothing newer.
+  - Quiet: cloudflare/moq-rs, video-dev/moq-js, moqtail, meetecho/imquic, birneee/quiche_moq, openmoq/moq-playa, shaka-player, all Eyevinn repos.
+- Interop runner: no cut newer than Oct-2 00:28 (gh-pages `results/` has no 2026-10-03 dir at 01:04 UTC). Runner #134 and #133 merged Oct-2 17:10–17:13 (first cut that can show them is Oct-3); #135/#136/#137 open.
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: **new section** *Activity (Oct 2 evening → Oct 3)* — the 23-issue editors' triage, the runner #133/#134 merges, moq-dev's branch flip, libquicr/openmoq churn.
+- [[interim-meetings]]: 2026-10-03 note listing the 23 priority issues and the backlog breakdown (plus the Food Allergies logistics note).
+- [[interop-runner]]: moq-dev-rs adapter-fix and draft-22 sections rewritten in place — #133/#134 moved from "pending" to "merged Oct-2", #136/#137 added to the open list.
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *Nothing durable changed in the spec.* The headline is procedural: the editors' 23-issue list is the pre-read for Seattle's MOQT-issues blocks, and it tracks the Sep-30→Oct-1 labelling already on [[moq-transport]].
+- *The runner's two-week moq-dev-rs blind spot is fixed in source but not yet in a cut.* #134 both clears the 18 docker cells failing since Sep-24 and brings the first moqt-22-declaring endpoint (stitcher-moq); watch the Oct-3 nightly for the delta.
+- *moq-dev's branch flip is infra, not protocol* — it stays in the log/[[discussions-2026-10]], not on the [[moq-dev]] entity page.
 
 # 2026-10-02 (supplemental) — overnight moq-dev wave; sources otherwise quiet
 
