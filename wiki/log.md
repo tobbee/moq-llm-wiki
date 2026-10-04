@@ -2,11 +2,44 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-03
+last_updated: 2026-10-04
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-04 — moq-dev ships 0.17.0; runner confirms moq-dev-rs recovery
+
+**TL;DR**:
+- Quiet spec day: no WG merges since draft-22, just two editorial moq-transport PRs — afrind's #1966 restricting GOAWAY on a request stream to the request receiver (fixes #1655) and thexeos's #1967 recasting "zero-length Location Filter" as Type 0x00 (leftover from #1953). Mailing list, datatracker and MoQ Monthly (#2) all flat; no new weekly GitHub digest.
+- **Implementations**: moq-dev/moq cut the queued **0.17.0 relay train** (relay 0.17.0 + cli 0.14.0, libmoq/gst/obs/ffi; `#4596`/`#4601` cluster-gossip removal, `#4617` quinn hard-forked as moq-quic) plus ~25 Oct-3 media-pipeline merges (#4723 ffi namespaces +5,051/−4,525; #4750 TR 101 290 TS error count). moqtail #394 (reset FETCH on malformed upstream track, +30/−3) merged. moq-rs/js/imquic/libquicr/quiche/openmoq/Eyevinn quiet.
+- **Interop**: Oct-3 00:25 cut = **234/241/2 of 477** (49.1%). Matrix **+14** (runner #133 adds libquicr-d18 remote cells, −4 dead d14/xquic); **moq-dev-rs recovered +8 pass** via #134's `--listen` adapter fix — the recovery the Oct-3 entry predicted. New absolute pass high (234); still targets draft-18 (no moqt-22 cells).
+
+**Operation**: Update (manual; covers 2026-10-03 01:04 → 2026-10-04 UTC)
+**Sources**:
+- GitHub `moq-wg`: no merges. moq-transport opened #1966 (afrind, Oct-3 00:03, GOAWAY-on-request-stream → receiver only, PROTOCOL_VIOLATION otherwise; fixes #1655) and #1967 (thexeos, Oct-3 03:08, Fill Semantics "no Location Filter" = Type 0x00; editorial follow-up to #1953). msf, loc, secure-objects, cmsf, catalog-format, CAT-4-MOQT all silent since the last sweep (newest msf activity still Sep-30 #213/#205).
+- GitHub implementations:
+  - moq-dev/moq: the **0.17.0 release** (release PR #4596 merged 19:18 UTC; moq-relay v0.17.0 20:10, moq-cli v0.14.0, libmoq v0.6.10, moq-gst v0.4.10, obs-moq v0.6.10, moq-ffi v0.4.10). 0.17.0 removes cluster gossip (#4601) and hard-forks quinn in-tree as moq-quic (#4617); bundles #4610 (per-request NOT_SUPPORTED decode, drafts 14–22) and #4253 (moxygen compat). Plus ~25 Oct-3 merges, mostly TS/media pipeline: #4723 (catalog/media imports → media namespaces, +5,051/−4,525), #4750 (TR 101 290 error count at TS import, +1,169/−245), #4729 (rate-limit catalog estimate, +744/−60), #4733 (refuse damaged TS units, +630/−104), #4735 (RTMP interleaved chunk reassembly, +579/−80), #4749 (X11 shared-memory capture, +680/−153), #4739 (resume reclaimed tracks past cached group floor).
+  - moqtail: #394 (reset downstream FETCH on malformed upstream track, +30/−3) merged Oct-3 20:06, plus npm dep bumps #396/#384.
+  - google/quiche moqt: no new moqt-dir commit (newest is the Oct-1 STOP_SENDING-on-Reset change, already logged).
+  - Quiet: cloudflare/moq-rs, video-dev/moq-js, meetecho/imquic, Quicr/libquicr, birneee/quiche_moq, shaka-player, openmoq (moqx/moqxr/moq-playa), all Eyevinn repos.
+- Interop runner: **new cut 2026-10-03 00:25:32** = 477 / 234 / 241 / 2 (49.1%). Matrix +14 vs Oct-2 (runner #133 libquicr → draft-18 adds 18 remote-quic/webtransport cells, −4 dead moq-rs-d14/xquic→libquicr); moq-dev-rs relay 31→39 pass (#134 adapter fix). No Oct-4 cut yet. Runner PRs: #133/#134 merged Oct-2 (logged); #135/#136/#137 open; no new runner PR.
+- IETF mailing list: no message newer than Oct-2 (Duke "Food Allergies", afrind "List of issues…", Swett's -22 reply — all already logged). No new weekly GitHub digest (last Sep-13); still no "Draftification" replies (deadline Oct-13).
+- IETF Datatracker: no MoQ submission since transport-22 (Oct-1); all WG docs flat.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: **new top section** *Activity (Oct 3 → Oct 4)* — the 0.17.0 release train + merge wave, the two editorial moq-transport PRs, the Oct-3 interop cut and moq-dev-rs recovery.
+- [[interop-runner]]: Current standing rewritten for the Oct-3 cut (477/234/241/2, matrix +14, moq-dev-rs +8); moq-dev-rs fix paragraph and draft-22 note updated from "pending" to "landed"; Oct-3 row added to Daily cuts.
+- [[moq-dev]]: Recent Highlights release bullet rewritten in place — 0.17.0 shipped Oct-3 (was "queued"), cluster-gossip removal + quinn hard-fork; runner #134 note updated.
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *Nothing durable changed in the spec.* draft-22 stands; the two new PRs are editorial cleanup of the #1953 Location-Filter-Type change.
+- *moq-dev's 0.17.0 is the durable impl fact of the day* — the queued release shipped, removing cluster gossip and vendoring quinn as moq-quic; it goes on [[moq-dev]], while the ~25-merge pipeline churn stays in the log/[[discussions-2026-10]].
+- *The runner's two-week moq-dev-rs blind spot is now partly cleared in a published cut* (+8 pass), confirming the Oct-3 prediction; the nightly still runs draft-18, so the moqt-22-capable stitcher-moq client is in the roster but not yet exercised.
 
 # 2026-10-03 — editors' Seattle issue triage; runner unblocks moqt-22
 

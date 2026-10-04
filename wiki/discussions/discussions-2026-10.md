@@ -2,11 +2,38 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-03
+last_updated: 2026-10-04
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 3 → Oct 4) — **moq-dev ships the queued 0.17.0 relay train and a day-long media-pipeline merge wave; the interop runner's Oct-3 cut confirms the moq-dev-rs recovery predicted the day before. Spec text quiet.**
+
+A quiet day on the spec (draft-22 stands; no WG merges), but the two things the previous entry flagged as pending both resolved: **moq-dev/moq cut the 0.17.0 release train** it had queued, and the **Oct-3 interop nightly** — the first cut to carry runner #133/#134 — showed the moq-dev-rs relay recovering as expected. Slack was not checked this run.
+
+## Spec / WG: two editorial PRs, no merges
+
+No `moq-wg` merges since draft-22's `#1965` (Oct-1). Two new moq-transport PRs opened, both pre-Seattle cleanup:
+
+- [#1966](https://github.com/moq-wg/moq-transport/pull/1966) ([[alan-frindell|afrind]], Oct-3 00:03) *"Restrict GOAWAY on a request stream to the request receiver"* (Fixes [#1655](https://github.com/moq-wg/moq-transport/issues/1655)) — only the receiver of a request can usefully send a GOAWAY on its stream, so a GOAWAY received *by* the receiver becomes a `PROTOCOL_VIOLATION`, and the request sender is named as the endpoint that re-issues elsewhere.
+- [#1967](https://github.com/moq-wg/moq-transport/pull/1967) (thexeos, Oct-3 03:08) *"Fill Semantics: describe 'no Location Filter' as Type 0x00 instead of 'zero-length'"* — an editorial leftover from [#1953](https://github.com/moq-wg/moq-transport/pull/1953): a `LOCATION_FILTER` no longer has a length, so the old "zero-length filter" wording in Fill Semantics is restated as Type 0x00 (None). No wire change.
+- **Datatracker** had no new MoQ submission (transport-22 remains newest); the **mailing list** had no message newer than Oct-2 (no new weekly GitHub digest since Sep-13, still no *"Draftification"* replies ahead of the Oct-13 deadline); **[[moq-monthly|MoQ Monthly]]** is still at #2.
+
+## Implementations: moq-dev ships 0.17.0 and a media-pipeline merge wave
+
+- **[[moq-dev|moq-dev/moq]]** cut the **0.17.0 release train** on Oct-3 evening (release PR [#4596](https://github.com/moq-dev/moq/pull/4596) merged 19:18 UTC): **moq-relay v0.17.0** (20:10), **moq-cli v0.14.0**, **libmoq v0.6.10**, **moq-gst v0.4.10**, **obs-moq v0.6.10**, **moq-ffi v0.4.10**. 0.17.0 is API-breaking: it **removes cluster gossip discovery** ([#4601](https://github.com/moq-dev/moq/pull/4601), `--cluster-mesh` refused), **hard-forks quinn in-tree as `moq-quic`** ([#4617](https://github.com/moq-dev/moq/pull/4617)), and folds in the pre-Seattle conformance work already tracked on [[moq-dev]] — per-request `NOT_SUPPORTED` decode for drafts 14–22 ([#4610](https://github.com/moq-dev/moq/pull/4610)) and the moxygen-compatibility line ([#4253](https://github.com/moq-dev/moq/pull/4253)).
+  - Alongside the release, ~25 merges landed Oct-3, mostly in the TS/media pipeline: [#4723](https://github.com/moq-dev/moq/pull/4723) moves catalog/media imports into media namespaces (+5,051/−4,525), [#4750](https://github.com/moq-dev/moq/pull/4750) counts **TR 101 290** errors of a TS feed at import (+1,169/−245), [#4729](https://github.com/moq-dev/moq/pull/4729) rate-limits catalog-estimate updates (+744/−60), [#4733](https://github.com/moq-dev/moq/pull/4733) refuses damaged TS units without ending ingest (+630/−104), [#4735](https://github.com/moq-dev/moq/pull/4735) reassembles interleaved RTMP chunk streams independently (+579/−80), [#4749](https://github.com/moq-dev/moq/pull/4749) optimizes X11 capture with shared memory (+680/−153), and [#4739](https://github.com/moq-dev/moq/pull/4739) resumes reclaimed tracks past the cached group floor.
+- **[[moqtail]]** merged [#394](https://github.com/moqtail/moqtail/pull/394) *"reset downstream FETCH on malformed upstream track"* (+30/−3) — the robustness fix tracked as open in the prior entry — plus npm dependency bumps ([#396](https://github.com/moqtail/moqtail/pull/396), [#384](https://github.com/moqtail/moqtail/pull/384)).
+- **Quiet**: [[moq-rs]], [[moq-js]], [[imquic]], [[libquicr]], birneee, [[shaka-player]], [[openmoq|OpenMOQ]], all Eyevinn repos. [[quiche-moq|google/quiche]] had no new moqt-dir commit (newest is the Oct-1 STOP_SENDING-on-`Reset()` change already logged).
+
+## Interop: the Oct-3 cut confirms the moq-dev-rs recovery
+
+The **Oct-3 00:25 nightly** is the first cut to carry runner [#133](https://github.com/englishm/moq-interop-runner/pull/133)/[#134](https://github.com/englishm/moq-interop-runner/pull/134), both merged Oct-2:
+
+- **[2026-10-03 00:25:32 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-03_002532/report.html): 477 cells / 234 pass / 241 fail / 2 skip** (49.1%). The matrix grew **+14 cells** (463 → 477): #133's **libquicr → draft-18** bump added 18 `libquicr`-relay cells in `remote-quic`/`remote-webtransport` modes (against imquic, moq-playa, moq-rs-draft-18, moq5, moqlivemock, moqtopus, moqx, quic-zig, xquic-draft-18) while dropping the four dead moq-rs-draft-14/xquic → libquicr remote cells.
+- **moq-dev-rs recovered +8 pass cells** (31 → 39 pass; 55 → 47 fail): #134's adapter fix for moq-relay 0.15's `--server-bind` → `--listen` rename cleared part of the docker block that had been red since Sep-24, exactly as the prior entry predicted.
+- **Still targets draft-18.** stitcher-moq's client is now on moq-tokio 0.19.20 (moqt-14–22 capable) via #134, but the nightly runs every endpoint at draft-18, so **no moqt-22 cells appear yet**. Runner [#135](https://github.com/englishm/moq-interop-runner/pull/135)/[#136](https://github.com/englishm/moq-interop-runner/pull/136)/[#137](https://github.com/englishm/moq-interop-runner/pull/137) remain open. See [[interop-runner]].
 
 # Activity (Oct 2 evening → Oct 3) — **The MOQT editors post the Seattle issue triage, the interop runner finally gets its moq-dev-rs adapter fix and a moqt-22 endpoint, and moq-dev reworks its branch model.**
 
