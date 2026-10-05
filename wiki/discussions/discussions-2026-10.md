@@ -2,11 +2,35 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-04
+last_updated: 2026-10-05
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 4 → Oct 5) — **A spec-quiet weekend: moq-dev lands a breaking net refactor making a path the sole content identity and a single broadcast; the interop runner's Oct-4 cut sets a new pass high (237). No WG merges, no mailing-list traffic.**
+
+Nothing moved on the spec text or the mailing list over the Oct-4/Oct-5 weekend — the only material activity was in [[moq-dev|moq-dev/moq]], which spent Oct-4 reworking its networking core, and a new interop cut that nudged the pass count to a fresh high. Slack was not checked this run.
+
+## Spec / WG: nothing merged, sources flat
+
+No `moq-wg` merges since draft-22's `#1965` (Oct-1); the two editorial moq-transport PRs from Oct-3 ([#1966](https://github.com/moq-wg/moq-transport/pull/1966) GOAWAY-on-request-stream, [#1967](https://github.com/moq-wg/moq-transport/pull/1967) Fill-Semantics Type 0x00) remain open, and no new issue has opened since [#1964](https://github.com/moq-wg/moq-transport/issues/1964) (Oct-1). The **mailing list** had no message newer than Oct-2 (no new weekly GitHub digest since Sep-13; still no replies to *"Draftification"* ahead of the Oct-13 deadline). The **datatracker** has no new MoQ submission (transport-22 remains newest), and **[[moq-monthly|MoQ Monthly]]** is still at #2 (May-31).
+
+## Implementations: moq-dev reworks its networking core
+
+- **[[moq-dev|moq-dev/moq]]** had a busy Oct-4 — ~30 merges — centred on a **breaking networking refactor** that collapses two long-running design ideas:
+  - [#4761](https://github.com/moq-dev/moq/pull/4761) *"a path is the only content identity"* (+361/−350) makes the broadcast path the single key for content identity, and [#4741](https://github.com/moq-dev/moq/pull/4741) *"fix(net)!: resume route changes by reading the routes' copies; a path is one broadcast"* (**+5,254/−9,003**, API-breaking) is the large follow-through: route changes now resume by reading each route's own copy of the groups, and **a path is treated as exactly one broadcast**. [#4796](https://github.com/moq-dev/moq/pull/4796) then fixes datagram reads to keep a replaced route's still-unread groups (+187/−9), and [#4765](https://github.com/moq-dev/moq/pull/4765) settles the #4761 follow-ups.
+  - [#4798](https://github.com/moq-dev/moq/pull/4798) *"import 22 open issues as quests"* (+539/0) pulls the 22 open moq-transport issues into the repo's internal `quest` tracker — mirroring the WG's pre-Seattle backlog into moq-dev's own task list.
+  - Supporting work: [#4794](https://github.com/moq-dev/moq/pull/4794) (JS close-drain + resampler tail flush), [#4766](https://github.com/moq-dev/moq/pull/4766) (verified Intel QuickSync setup docs), test hardening ([#4756](https://github.com/moq-dev/moq/pull/4756) audio-quality arrival/delay inputs, [#4764](https://github.com/moq-dev/moq/pull/4764) capture-cut throttling, [#4754](https://github.com/moq-dev/moq/pull/4754) drill mutation, [#4734](https://github.com/moq-dev/moq/pull/4734) Go/Dart wrapper samples), a [#4758](https://github.com/moq-dev/moq/pull/4758)/[#4759](https://github.com/moq-dev/moq/pull/4759) `track::Fetching` unwind-safety fix, the [#4755](https://github.com/moq-dev/moq/pull/4755) yanked-`yoke-derive` replacement, and the usual cargo/bun/nix dep bumps. **No new release** — the Oct-3 **0.17.0** train (on [[moq-dev]]) still stands; [#4762](https://github.com/moq-dev/moq/pull/4762)/[#4760](https://github.com/moq-dev/moq/pull/4760) just merge it back into `main`.
+- **[[moqtail]]** merged [#391](https://github.com/moqtail/moqtail/pull/391) *"draft 18 Compatibility"* (+24/−74) — despite the title this is release housekeeping (it consolidates 14 changeset files and touches the README), not a new capability; moqtail has been on draft-18 since the July–August sprint.
+- **Quiet**: [[moq-rs]], [[moq-js]], [[imquic]] (newest Oct-1 v20/21), [[libquicr]] (newest Oct-2), [[quiche-moq|google/quiche]] (newest Oct-1 STOP_SENDING-on-`Reset()`), birneee, [[shaka-player]], [[openmoq|OpenMOQ]], all Eyevinn repos.
+
+## Interop: Oct-4 cut sets a new pass high
+
+The **[Oct-4 01:06 nightly](https://englishm.github.io/moq-interop-runner/results/2026-10-04_010657/report.html)** ran the same 477-cell matrix as Oct-3 with no runner PR in between, so the movement is flake-level — but it netted up:
+
+- **477 cells / 237 pass / 238 fail / 2 timeout (49.7%)** — **+3 pass (234 → 237), a new absolute high**, and **fail drops below 240 for the first time (241 → 238)**. Five cells flipped to pass against two regressions; the **moq-dev-rs relay held its Oct-3 recovery at 39/86 pass** and **stitcher-moq held flat at 30/69**.
+- The nightly still targets **draft-18**; the only moqt-22 cells remain stitcher-moq's two self-interop pairings (both pass). See [[interop-runner]].
 
 # Activity (Oct 3 → Oct 4) — **moq-dev ships the queued 0.17.0 relay train and a day-long media-pipeline merge wave; the interop runner's Oct-3 cut confirms the moq-dev-rs recovery predicted the day before. Spec text quiet.**
 

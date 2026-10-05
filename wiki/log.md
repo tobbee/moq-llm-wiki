@@ -2,11 +2,44 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-04
+last_updated: 2026-10-05
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-05 — moq-dev's "a path is one broadcast" net refactor; runner hits new pass high (237)
+
+**TL;DR**:
+- Spec-quiet weekend: no WG merges since draft-22 (the two Oct-3 editorial PRs #1966/#1967 stay open), no new moq-transport issue since #1964, no mailing-list message newer than Oct-2, datatracker flat, MoQ Monthly still #2. The ecosystem's only real movement was in moq-dev.
+- **Implementations**: moq-dev/moq had a ~30-merge Oct-4 centred on a **breaking networking refactor** — `#4761` *"a path is the only content identity"* (+361/−350) and `#4741` *"fix(net)!: …a path is one broadcast"* (**+5,254/−9,003**), with `#4796` keeping a replaced route's unread groups and `#4798` importing the 22 open WG issues as internal quests. No new release (0.17.0 stands). moqtail `#391` "draft 18 Compatibility" (+24/−74) is just changeset/README housekeeping. moq-rs/js/imquic/libquicr/quiche/birneee/openmoq/Eyevinn all quiet.
+- **Interop**: Oct-4 01:06 cut = **237/238/2 of 477** (49.7%). Same matrix as Oct-3 (no runner PR between), flake-level churn nets **+3 pass → new absolute high (237)**; **fail below 240 for the first time (238)**. moq-dev-rs held its recovery at 39/86; stitcher-moq flat 30/69.
+
+**Operation**: Update (manual; covers 2026-10-04 → 2026-10-05 UTC)
+**Sources**:
+- GitHub `moq-wg`: no merges since transport #1965 (Oct-1). moq-transport #1966/#1967 still open; no new issue since #1964 (Oct-1). msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat since the last sweep.
+- GitHub implementations:
+  - moq-dev/moq: ~30 Oct-4 merges. Headline net refactor: #4761 (05:50, *a path is the only content identity*, +361/−350), #4741 (18:47, *fix(net)!: resume route changes by reading the routes' copies; a path is one broadcast*, +5,254/−9,003, API-breaking), #4796 (19:30, datagram reads keep a replaced route's unread groups, +187/−9), #4765 (settle #4761 follow-ups). #4798 (20:19, import 22 open WG issues as quests, +539/0). Plus #4794 (JS close drain + resampler tail flush), #4766 (Intel QuickSync docs), test work #4756/#4764/#4754/#4734, #4758/#4759 (track::Fetching unwind safety), #4755 (replace yanked yoke-derive 0.8.3), #4762/#4760 (merge 0.17.0 release into main), cargo/bun/nix dep bumps #4790–#4793. No new release (0.17.0 from Oct-3 stands; open #4797/#4763 are release chores).
+  - moqtail: #391 (*draft 18 Compatibility*, +24/−74) merged Oct-4 16:32 — consolidates 14 changeset files + README, not a code/capability change.
+  - google/quiche moqt: no new commit (newest is Oct-1 STOP_SENDING-on-`Reset()`, already logged).
+  - Quiet: cloudflare/moq-rs, video-dev/moq-js, meetecho/imquic (newest Oct-1 #38 v20/21), Quicr/libquicr (newest Oct-2 #978), birneee/quiche_moq, openmoq, shaka-player, all Eyevinn repos (newest Sep-29/30).
+- Interop runner: **new cut 2026-10-04 01:06:57** = 477 / 237 / 238 / 2 (49.7%). Same 477-cell matrix as Oct-3 (same version spread: 364 d18, 48 d14, 43 d16, 16 d20, 4 d19, 2 d22); no runner PR merged between cuts, so the +3 is flake-level churn (5 cells flip to pass, 2 regress). moq-dev-rs 39/86 (held), stitcher-moq 30/69 (flat). Runner PRs #135/#136/#137 still open; no new runner PR.
+- IETF mailing list: no message newer than Oct-2 (Duke "Food Allergies", afrind "List of issues…", Swett's -22 reply — all already logged). No new weekly GitHub digest (last Sep-13); no "Draftification" replies (deadline Oct-13).
+- IETF Datatracker: no MoQ submission since transport-22 (Oct-1); all WG docs flat.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: **new top section** *Activity (Oct 4 → Oct 5)* — the moq-dev net refactor, the moqtail housekeeping clarification, and the Oct-4 interop high.
+- [[interop-runner]]: Current standing — Oct-4 added as **Latest cut** (237/238/2, new high), Oct-3 demoted to Prior cut, Oct-2 to Earlier cut; Oct-4 row added to Daily cuts. Corrected the stale "no moqt-22 cells" claim in two places — the matrix actually carries 2 moqt-22 cells (stitcher-moq self-interop, both pass) since the Oct-3 cut.
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *Nothing durable changed in the spec.* draft-22 stands; the two open editorial PRs are unchanged.
+- *moq-dev's net refactor is incremental architecture, not a shipped capability* — "a path is one broadcast" (#4741) and "a path is the only content identity" (#4761) rework the networking core but ship no release, so they stay in the log/[[discussions-2026-10]], not on the [[moq-dev]] entity page (0.17.0 remains its latest release).
+- *The runner set a new pass high (237) on an unchanged matrix* — pure flake-level improvement, with fail dipping below 240 for the first time; the moq-dev-rs recovery from Oct-3 held.
+- *Accuracy fix:* earlier entries said the nightly had "no moqt-22 cells"; verification of the summary.json shows 2 (stitcher-moq self-interop) have been present and passing since the Oct-3 cut. Corrected on [[interop-runner]].
 
 # 2026-10-04 — moq-dev ships 0.17.0; runner confirms moq-dev-rs recovery
 

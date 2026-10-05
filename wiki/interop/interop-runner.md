@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-10-04
+last_updated: 2026-10-05
 status: current
 ---
 
@@ -60,13 +60,15 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-10-03 00:25:32 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-03_002532/report.html) — 477 cells / 234 pass / 241 fail / 2 skip** (49.1% pass). This is the first cut to carry runner [#133](https://github.com/englishm/moq-interop-runner/pull/133) and [#134](https://github.com/englishm/moq-interop-runner/pull/134) (both merged Oct-2), and two things moved at once:
+**Latest cut: [2026-10-04 01:06:57 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-04_010657/report.html) — 477 cells / 237 pass / 238 fail / 2 timeout** (49.7% pass). The matrix is unchanged from Oct-3 (same 477 cells, same version spread: 364 draft-18, 48 draft-14, 43 draft-16, 16 draft-20, 4 draft-19, 2 draft-22), with no runner PR merged between the two cuts — so the day is flake-level churn that nets **+3 pass (234 → 237), a new absolute high**, while **fail dips below 240 for the first time (241 → 238)** and the pass rate edges toward the 50% line. Five cells flipped to pass (imquic→imquic docker, imquic & moq5 → moq-rs-draft-18 WT, moqlivemock→imquic quic, moq-playa→moqtail WT) against two that regressed (moq-dev-rs self-docker, moq-playa→imquic quic); the **moq-dev-rs relay held its Oct-3 recovery at 39/86 pass** and **stitcher-moq held flat at 30/69**.
+
+**Prior cut: [2026-10-03 00:25:32 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-03_002532/report.html) — 477 cells / 234 pass / 241 fail / 2 skip** (49.1% pass). This is the first cut to carry runner [#133](https://github.com/englishm/moq-interop-runner/pull/133) and [#134](https://github.com/englishm/moq-interop-runner/pull/134) (both merged Oct-2), and two things moved at once:
 - **The matrix grew +14 cells (463 → 477).** #133's **libquicr → draft-18** bump put the `libquicr` relay back in play against draft-18 clients: **+18 cells** in `remote-quic`/`remote-webtransport` mode (imquic, moq-playa, moq-rs-draft-18, moq5, moqlivemock, moqtopus, moqx, quic-zig, xquic-draft-18 as clients), while the four dead `moq-rs-draft-14`/`xquic` → libquicr remote cells dropped (−4).
 - **The moq-dev-rs relay recovered +8 pass cells** (31 → 39 pass; 55 → 47 fail): #134's adapter fix for moq-relay 0.15's `--server-bind` → `--listen` rename cleared part of the docker block that had been red every night since Sep-24. Not all 18 cells flipped — the relay still fails 47 of its 86 — but the regression-induced floor is lifting.
 - **Net +7 pass (227 → 234)** on a 14-cell-larger matrix, so the pass rate is essentially flat (49.0% → 49.1%). Of the Sep-27 high, 234 pass is a new absolute high (previous 230), though on a matrix 2 cells larger.
-- **The nightly still targets draft-18**, so even though #134 moved `stitcher-moq`'s client to moq-tokio 0.19.20 (moqt-14–22 capable), **no moqt-22 cells appear in the matrix yet** — every endpoint is still exercised at draft-18.
+- **The nightly target stays draft-18.** #134 moved `stitcher-moq`'s client to moq-tokio 0.19.20 (moqt-14–22 capable), so from this cut on the matrix carries **two moqt-22 cells** — the `stitcher-moq` client ↔ `stitcher-moq` relay self-interop pairings (remote-quic + remote-webtransport, **both pass**), the only pair whose highest common version is 22. Every other endpoint is still exercised at draft-18.
 
-**Prior cut: [2026-10-02 00:28:39 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-02_002839/report.html) — 463 cells / 227 pass / 235 fail / 1 skip** (49.0% pass; **at-target draft-18 336 · ahead 22 · behind 105**, pass 188 · 14 · 25). 49.0% was the best pass rate of any cut with 50+ cells at the time (next: Sep-6 48.6%, Sep-27 48.4%).
+**Earlier cut: [2026-10-02 00:28:39 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-02_002839/report.html) — 463 cells / 227 pass / 235 fail / 1 skip** (49.0% pass; **at-target draft-18 336 · ahead 22 · behind 105**, pass 188 · 14 · 25). 49.0% was the best pass rate of any cut with 50+ cells at the time (next: Sep-6 48.6%, Sep-27 48.4%).
 
 **Draft-14 starts leaving the matrix (Oct-1, −12 cells).** [Runner #131](https://github.com/englishm/moq-interop-runner/pull/131) *"moqx: drop draft-14 support"* (gmarzot) merged Sep-30 15:27 UTC. The [Oct-1 00:32 cut](https://englishm.github.io/moq-interop-runner/results/2026-10-01_003206/report.html) then dropped the 12 moqx draft-14 pairings with moq-rs-draft-14, libquicr and xquic. All 12 were failing, because moqx itself had dropped d14, so no passes were lost and Oct-1 scored **223** (−1 on flake). The **behind band went 117 → 105**, its first change since the Sep-2 hackathon cut. The companion [#132](https://github.com/englishm/moq-interop-runner/pull/132) (moxygen drops d14) is still a draft PR waiting on upstream moxygen.
 
@@ -74,7 +76,7 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 **A persistent failure: the moq-dev-rs relay in docker — fix merged Oct-2, partly cleared Oct-3.** The docker cells against the `moq-dev-rs` relay had failed every night since Sep-24: the relay exits at startup because [[moq-dev|moq-relay 0.15]] renamed `--server-bind` / `MOQ_SERVER_BIND` to `--listen` / `MOQ_LISTEN`. The adapter fix in [#134](https://github.com/englishm/moq-interop-runner/pull/134) **merged Oct-2 17:13 UTC**, and the **Oct-3 00:25 cut is the first to carry it**: moq-dev-rs went 31 → 39 pass (55 → 47 fail), so ~8 cells recovered. The relay is back up and routing, though not every pairing passes yet.
 
-**Draft-22 reaches the runner's roster (Oct-2), but the nightly still targets draft-18 — so it is not yet exercised.** Two of the three pending PRs merged Oct-2 afternoon, putting a moqt-22-capable client in the roster, but the Oct-3 cut confirms every endpoint is still run at draft-18 (no moqt-22 cells):
+**Draft-22 reaches the runner's roster (Oct-2); the nightly target stays draft-18, and the only moqt-22 cells exercised are stitcher-moq's two self-interop pairings.** Two of the three pending PRs merged Oct-2 afternoon, putting a moqt-22-capable client in the roster. From the Oct-3 cut onward the matrix carries exactly **two moqt-22 cells** — the `stitcher-moq` client ↔ `stitcher-moq` relay pairings (remote-quic + remote-webtransport, **both pass** on Oct-3 and Oct-4), where the Paramount client and relay are the only pair whose highest common version is 22; every other endpoint still runs at draft-18:
 - [#134](https://github.com/englishm/moq-interop-runner/pull/134) ([[steven-riedl|riedlse]], +774/−442) **merged Oct-2 17:13 UTC** — the first PR to declare -21/-22. It moves the `stitcher-moq` client to moq-tokio 0.19.20 (MoQT 14–22, no moq-lite; with the old client every moq-dev relay negotiated moq-lite-05), refreshes the registry, and folds in the moq-dev-rs adapter fix above. The Paramount relay (moq-relay 0.15.8) negotiates moqt-22/-20/-18. The PR also tightens tests 5 and 6 to require evidence that the relay actually routed the SUBSCRIBE; locally, stitcher-moq goes from 13 to 18 of 31 passing.
 - [#133](https://github.com/englishm/moq-interop-runner/pull/133) bumps [[libquicr]] from draft-14 to draft-18 (RichLogan) — **merged Oct-2 17:10 UTC**.
 - Still open: [#135](https://github.com/englishm/moq-interop-runner/pull/135) namespace-lifecycle test (sharmafb, Oct-1); [#136](https://github.com/englishm/moq-interop-runner/pull/136) switching Nokia's remote relay WT URL back to https (Oct-2); [#137](https://github.com/englishm/moq-interop-runner/pull/137) pinning [[aiomoqt]] 0.12.0a1 with a single dual-transport relay adapter and newest-first draft ordering (Oct-3).
@@ -203,6 +205,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-10-04 01:06:57 | 477 | 237 | 238 | 2 | — | — | +3 | **new absolute pass high (237); fail below 240 first time (238); matrix flat at 477; flake-level churn (5 flip pass, 2 regress); moq-dev-rs holds 39, stitcher-moq flat 30** |
 | 2026-10-03 00:25:32 | 477 | 234 | 241 | 2 | — | — | +7 | **matrix +14 → 477 (runner #133 adds libquicr d18 remote cells, −4 dead d14/xquic); moq-dev-rs recovers +8 pass via #134; new absolute pass high (234)** |
 | 2026-10-02 00:28:39 | 463 | 227 | 235 | 1 | 336 | 22 | +4 | **49.0%, best rate on a 50+-cell matrix**; moqtail relay recovers (4 → 7 pass); quic-zig → imquic first pass |
 | 2026-10-01 00:32:06 | 463 | 223 | 238 | 2 | 336 | 22 | −1 | **matrix −12 → 463: runner #131 drops moqx d14 pairings; behind 117 → 105** (all 12 were failing) |
