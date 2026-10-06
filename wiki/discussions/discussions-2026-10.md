@@ -2,11 +2,40 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-05
+last_updated: 2026-10-06
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 5 → Oct 6) — **afrind + Swett post a second, competing timestamp draft; moq-dev cuts a 0.17.1 patch train and a one-line installer; the interop runner suffers a −35-pass flake night. Spec text still frozen at draft-22.**
+
+The headline is a new spec proposal: [[alan-frindell|Alan Frindell]] and [[ian-swett|Ian Swett]] posted **[[moq-timestamp-properties|`draft-frindell-moq-timestamp-00`]]**, a richer rival to [[luke-curley|Luke Curley]]'s existing timestamp extension. [[martin-duke|Duke]] worked Seattle logistics on-list and opened one new transport issue; [[moq-dev|moq-dev/moq]] kept up its high merge rate and shipped a patch release train; and the interop nightly had a bad night. Slack was not checked this run.
+
+## Spec / WG: a new timestamp draft, Seattle logistics, one new issue
+
+- **New individual draft — [[moq-timestamp-properties|`draft-frindell-moq-timestamp-00`]] "Timestamp Properties for MOQT"** ([[alan-frindell|Frindell]]/Meta + [[ian-swett|Swett]]/Google, posted Oct-5, 13 pp, expires 2027-04-08; [datatracker](https://datatracker.ietf.org/doc/draft-frindell-moq-timestamp/), [GitHub](https://github.com/afrind/draft-frindell-moq-timestamp)). Announced on-list the same day (*"Timestamp Draft"*, [permalink](https://mailarchive.ietf.org/arch/msg/moq/kA2TP_PCfKOpKk-jXnaqss875rM/)). It defines a **reusable, property-only** timestamp set — four Track properties (**TIMESCALE** required; **CLOCK_ID**, **TIMESTAMP_ORIGIN**, **TIMESTAMP_MAPPING** optional) and an **OBJECT_TIMESTAMP** object property — with an origin/delta compression scheme and a mapping that can derive object timestamps from object IDs. It deliberately specs the properties, **not** relay behaviour. This now **competes with [[moq-timestamp|`draft-lcurley-moq-timestamp`]]** (the minimal Timescale/Timestamp/Duration triple framed on the LOC-registered properties): two individual timestamp drafts go into the Seattle interim. See [[moq-timestamp-properties]].
+- **Seattle logistics**: [[martin-duke|Duke]]'s *"Seattle Interim updates"* (list, Oct-5, [permalink](https://mailarchive.ietf.org/arch/msg/moq/2EAJbNt5NZXoidGeVM_6BPwkDvA/)) says he refreshed the [wg-materials wiki](https://github.com/moq-wg/wg-materials/wiki) with meeting details, flags that **two would-be attendees aren't subscribed to the list** (so he can't collect the addresses needed to admit them to the **F5** venue), and warns *"attendance will be painful if people aren't checking the list."* See [[interim-meetings]].
+- **New transport issue [#1968](https://github.com/moq-wg/moq-transport/issues/1968)** ([[martin-duke|Duke]], Oct-5) *"REDIRECT and request GOAWAY are conceptually similar but syntactically different"* — a request-level GOAWAY and a `REQUEST_ERROR` redirect both send the requester elsewhere (one before `REQUEST_OK`, one after), yet only the error path carries a Full Track Name and extra error cases. Duke would rather let **GOAWAY begin the response direction of a stream** (timeout = 0 if needed) than make `REQUEST_ERROR` processing more conditional. No new issue since this one.
+- **Otherwise frozen**: no `moq-wg` merges since draft-22's [#1965](https://github.com/moq-wg/moq-transport/pull/1965) (Oct-1); the Oct-3 editorial PRs ([#1966](https://github.com/moq-wg/moq-transport/pull/1966), [#1967](https://github.com/moq-wg/moq-transport/pull/1967)) and [#1960](https://github.com/moq-wg/moq-transport/pull/1960) remain open. The **datatracker's newest MoQ submission is now the frindell timestamp draft (Oct-5)**; [[moq-transport]] stays at -22. **[[moq-monthly|MoQ Monthly]]** still at #2 (May-31); no new weekly GitHub digest (last Sep-13); still no *"Draftification"* replies ahead of the Oct-13 deadline.
+
+## Implementations: moq-dev patch-releases 0.17.1 and ships a one-line installer
+
+- **[[moq-dev|moq-dev/moq]]** merged ~46 PRs across Oct-5 → Oct-6. The durable outcomes:
+  - **A 0.17.1 patch release train** — libmoq v0.6.11 (Oct-5 23:10), moq-cli v0.14.1 (23:13), moq-relay **v0.17.1** (23:22), obs-moq v0.6.11 (Oct-6 00:08), moq-gst v0.4.11 (00:33) — the non-breaking round-up after the Oct-4 "a path is one broadcast" net refactor. It folds in net fixes: a relay resuming mid-group now **asks upstream for the group's head** ([#4829](https://github.com/moq-dev/moq/pull/4829), with test [#4828](https://github.com/moq-dev/moq/pull/4828)), `REQUEST_OK` **accepts `LARGEST_OBJECT`** ([#4872](https://github.com/moq-dev/moq/pull/4872)), **lingering an empty-group broadcast** before unannouncing it ([#4871](https://github.com/moq-dev/moq/pull/4871)/backport [#4882](https://github.com/moq-dev/moq/pull/4882)), transient capture-failure retries within budget ([#4827](https://github.com/moq-dev/moq/pull/4827)), and a JS fix dropping dev mode from net/signals so announced requests share no subscription ([#4876](https://github.com/moq-dev/moq/pull/4876)).
+  - **One-line installer**: `curl -fsSL https://moq.sh | sh` now installs moq ([#4839](https://github.com/moq-dev/moq/pull/4839), +975/−111) — recorded on [[moq-dev]].
+  - Much of the rest is **in-repo planning churn** — a large "quest-tree audit" and follow-up planning docs ([#4845](https://github.com/moq-dev/moq/pull/4845) +1,119/−666, [#4843](https://github.com/moq-dev/moq/pull/4843), [#4835](https://github.com/moq-dev/moq/pull/4835), [#4834](https://github.com/moq-dev/moq/pull/4834)), including quests that mention a **`lite-07`** design cycle (e.g. [#4830](https://github.com/moq-dev/moq/pull/4830)) — design-in-repo, not a shipped wire.
+- **[[libquicr|Quicr/libquicr]]** merged [#984](https://github.com/Quicr/libquicr/pull/984) *"Register handler before REQUEST_OK can come in"* and [#985](https://github.com/Quicr/libquicr/pull/985) *"Improve Pub NS Handler init"* (both Oct-5) — small request-handling ordering fixes.
+- **[[quiche-moq|google/quiche]] moqt** landed a new commit Oct-6: *"Send LARGEST_OBJECT when REQUEST_UPDATE sets Forward=1 or moves the filter end back"* — the same `LARGEST_OBJECT`-on-update theme as moq-dev's #4872.
+- **Quiet**: [[moq-rs]] (newest Sep-29 #236), [[moq-js]], [[moqtail]] (newest Oct-4 #391), [[imquic]] (newest Oct-1), birneee, [[shaka-player]], [[openmoq|OpenMOQ]], all Eyevinn repos (newest Sep-30).
+
+## Interop: a −35-pass flake night
+
+The **[Oct-5 00:29 nightly](https://englishm.github.io/moq-interop-runner/results/2026-10-05_002957/report.html)** ran the same 477-cell matrix (identical version spread) with no runner PR since #134 (Oct-2), yet scored much worse:
+
+- **477 cells / 202 pass / 273 fail / 2 timeout (42.3%)** — **−35 pass (237 → 202)**, erasing the Oct-4 high. Every failure is a normal test exit (exit code 2), not a build/registry break, so nothing structural changed.
+- The drop is **concentrated on a few endpoints having a bad night**: **imquic client** 16 → 3 pass (−13); relays **moqx** 34 → 21 (−13), **stitcher-moq** 16 → 3 (−13), **moqt-nr** 24 → 20 (−4), **moq-rs-draft-14** 8 → 3 (−5); plus a −1/−3 flake smear elsewhere (incl. [[moqlivemock]] client 20 → 16). The **two moqt-22 cells** (stitcher-moq self-interop) also failed, red for the first time since Oct-3.
+- This looks like a **transient environmental run**, not a code regression — watch the Oct-6 nightly to confirm it reverts. See [[interop-runner]].
 
 # Activity (Oct 4 → Oct 5) — **A spec-quiet weekend: moq-dev lands a breaking net refactor making a path the sole content identity and a single broadcast; the interop runner's Oct-4 cut sets a new pass high (237). No WG merges, no mailing-list traffic.**
 

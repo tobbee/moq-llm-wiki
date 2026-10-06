@@ -2,11 +2,47 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-05
+last_updated: 2026-10-06
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-06 — rival timestamp draft; moq-dev 0.17.1; runner flake night
+
+**TL;DR**:
+- **A second, competing timestamp draft lands**: afrind (Meta) + Ian Swett (Google) posted **`draft-frindell-moq-timestamp-00`** ("Timestamp Properties for MOQT", Oct-5, 13 pp) — a richer, property-only rival to Luke Curley's `draft-lcurley-moq-timestamp`, defining TIMESCALE/CLOCK_ID/TIMESTAMP_ORIGIN/TIMESTAMP_MAPPING track props + OBJECT_TIMESTAMP with delta compression. Duke also refreshed the Seattle wiki (F5 venue needs list-subscribed attendees) and opened issue #1968 (REDIRECT vs request-GOAWAY). No WG merges; spec frozen at draft-22.
+- **Implementations**: moq-dev/moq ~46 Oct-5/6 merges → a **0.17.1 patch train** (relay 0.17.1, cli 0.14.1, libmoq 0.6.11, gst 0.4.11, obs 0.6.11) rounding up the "a path is one broadcast" refactor, plus net fixes (`#4829` mid-group head fetch, `#4872` REQUEST_OK accepts LARGEST_OBJECT, `#4871`/`#4882` linger empty-group broadcast) and a **`curl -fsSL https://moq.sh | sh` installer** (`#4839`). libquicr `#984`/`#985` (request-handler ordering); quiche moqt adds LARGEST_OBJECT-on-REQUEST_UPDATE. moq-rs/js/moqtail/imquic/quiche-client/Eyevinn all quiet.
+- **Interop**: Oct-5 00:29 cut = **202/273/2 of 477** (42.3%) — a **−35 pass regression** vs Oct-4's 237 high. Same matrix, no runner PR since #134, all exit-code-2 test fails → **flake/environmental**, concentrated in imquic client (−13), moqx relay (−13), stitcher-moq relay (−13); the 2 moqt-22 self-interop cells also went red.
+
+**Operation**: Update (manual; covers 2026-10-05 00:30 → 2026-10-06 UTC)
+**Sources**:
+- IETF mailing list: two new Oct-5 messages. **afrind *"Timestamp Draft"*** ([permalink](https://mailarchive.ietf.org/arch/msg/moq/kA2TP_PCfKOpKk-jXnaqss875rM/)) announcing `draft-frindell-moq-timestamp-00` (co-authored with Ian Swett; [GitHub](https://github.com/afrind/draft-frindell-moq-timestamp)); and **Duke *"Seattle Interim updates"*** ([permalink](https://mailarchive.ietf.org/arch/msg/moq/2EAJbNt5NZXoidGeVM_6BPwkDvA/)) — wiki refreshed, two attendees unsubscribed so F5 venue admittance blocked, "attendance will be painful if people aren't checking the list." No new weekly GitHub digest (last Sep-13); no "Draftification" replies (deadline Oct-13).
+- IETF Datatracker: **new submission `draft-frindell-moq-timestamp-00` (Oct-5)** — now the newest MoQ document. All WG docs flat (transport-22 stands).
+- GitHub `moq-wg`: no merges. moq-transport **issue #1968** opened (Duke, Oct-5, REDIRECT/request-GOAWAY similarity). Open PRs #1966/#1967/#1960 unchanged (last touched Oct-3). msf (#211 open, last Oct-4), loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: ~46 merges Oct-5 → Oct-6. **0.17.1 patch train**: libmoq v0.6.11 (Oct-5 23:10), moq-cli v0.14.1 (23:13), moq-relay v0.17.1 (23:22), obs-moq v0.6.11 (Oct-6 00:08), moq-gst v0.4.11 (00:33). Net/behaviour fixes: #4829 (relay resuming mid-group asks upstream for the group's head) + test #4828, #4872 (REQUEST_OK accepts LARGEST_OBJECT), #4871/#4882 (linger an empty-group broadcast before unannouncing), #4827 (retry transient capture failures in budget), #4876 (JS: drop dev mode from net/signals; announced requests share no subscription), #4869 (delete noq reassembly cap). #4839 (install via `curl -fsSL https://moq.sh | sh`, +975/−111). Remainder is in-repo quest/planning churn (#4845 quest-tree audit +1,119/−666, #4843/#4835/#4834 planning docs; #4830 mentions a `lite-07` design cycle). No new wire/protocol capability beyond the above.
+  - Quicr/libquicr: #984 (register handler before REQUEST_OK), #985 (improve Pub NS handler init) merged Oct-5.
+  - google/quiche moqt: new commit Oct-6 00:20 — "Send LARGEST_OBJECT when REQUEST_UPDATE sets Forward=1 or moves the filter end back."
+  - Quiet: cloudflare/moq-rs (newest Sep-29 #236), video-dev/moq-js, moqtail (newest Oct-4 #391), meetecho/imquic (newest Oct-1 #38), birneee/quiche_moq, openmoq, shaka-player, all Eyevinn repos (newest Sep-30).
+- Interop runner: **new cut 2026-10-05 00:29:57** = 477 / 202 / 273 / 2 (42.3%). Same 477-cell matrix and identical version spread as Oct-4 (364 d18, 48 d14, 43 d16, 16 d20, 4 d19, 2 d22); no runner PR merged since #134 (Oct-2). Regression is flake/environmental (all fails exit-code 2, `at`/`behind`/`ahead`): imquic client 16→3, moqx relay 34→21, stitcher-moq relay 16→3, moqt-nr 24→20, moq-rs-draft-14 relay 8→3, plus −1/−3 smear (moqlivemock client 20→16). The 2 moqt-22 stitcher-moq self-interop cells failed as `ahead`. Runner PRs #135/#136/#137 still open.
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-timestamp-properties]]: **new draft page** for `draft-frindell-moq-timestamp-00` (authors, property set, competition with [[moq-timestamp]]).
+- [[moq-timestamp]]: top note added — the lcurley draft now coexists with the frindell/Swett rival; cross-linked.
+- [[index]]: new drafts-catalog row for [[moq-timestamp-properties]].
+- [[discussions-2026-10]]: **new top section** *Activity (Oct 5 → Oct 6)* — the frindell timestamp draft, Seattle logistics + issue #1968, moq-dev's 0.17.1 train + installer, libquicr/quiche churn, the Oct-5 interop regression.
+- [[interim-meetings]]: 2026-10-06 note — Duke's Seattle wiki refresh + F5 subscription prerequisite.
+- [[moq-dev]]: Recent Highlights release bullets updated in place — 0.17.1 patch train (Oct-5/6) and the `moq.sh` one-line installer added.
+- [[interop-runner]]: Current standing — Oct-5 added as **Latest cut** (202/273/2, −35 regression), Oct-4 demoted to Prior, Oct-3 to Earlier.
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *The durable spec event is a second timestamp draft.* [[moq-timestamp-properties|`draft-frindell-moq-timestamp`]] (afrind + Swett) is a materially different, richer design than [[moq-timestamp|`draft-lcurley-moq-timestamp`]]; two individual timestamp drafts now enter the Seattle interim, so this gets its own page rather than a log-only mention.
+- *moq-dev's 0.17.1 is the durable impl fact* — a non-breaking patch train after the Oct-4 net refactor, plus a scripted installer; both recorded on [[moq-dev]], while the ~46-merge quest/planning churn stays in the log/[[discussions-2026-10]].
+- *The interop drop is almost certainly flake, not regression* — unchanged matrix, no runner change, all normal test exits, with three endpoints each losing ~13 on one night. Flagged on [[interop-runner]] with a watch on the Oct-6 nightly.
 
 # 2026-10-05 — moq-dev's "a path is one broadcast" net refactor; runner hits new pass high (237)
 

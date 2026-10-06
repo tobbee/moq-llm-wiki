@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-10-02
+last_updated: 2026-10-06
 status: current
 updated: 2026-09-30
 ---
@@ -33,6 +33,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-cluster]] | draft-01 | Individual (**-01 2026-09-21**) | MoQ Cluster Extension — relay-mesh Hop-ID path vector + accumulated route cost (loop detection, lowest-cost routing); implemented over moq-transport in moq-dev PR #2629 ([[luke-curley\|Luke Curley]]) |
 | [[moq-hang]] | draft-03 | Individual (**-03 2026-09-24**) | Media over QUIC - Hang — real-time conferencing profile on moq-lite (rooms/participants/tracks; intended home for recording/DVR) ([[luke-curley\|Luke Curley]]) |
 | [[moq-timestamp]] | draft-01 | Individual (**-01 2026-08-04**) | MoQ Object Timestamp Extension — transport-level Timescale/Timestamp (now framed on the LOC-registered properties) for age-based relay decisions ([[luke-curley\|Luke Curley]]) |
+| [[moq-timestamp-properties]] | draft-00 | Individual (**NEW 2026-10-05**) | Timestamp Properties for MOQT — a richer, property-only timestamp set (TIMESCALE/CLOCK_ID/TIMESTAMP_ORIGIN/TIMESTAMP_MAPPING track props + OBJECT_TIMESTAMP) with origin/delta compression; competes with [[moq-timestamp]] ([[alan-frindell\|Alan Frindell]] + [[ian-swett\|Ian Swett]]) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-01 | Individual (**-01 2026-09-24**) | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) — first revision since -00; note the adjacent new [[moq-mpegts]] |
 | [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**; WG adoption intended — **MPEG liaison sent 2026-09-28, reply due 10-30**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
