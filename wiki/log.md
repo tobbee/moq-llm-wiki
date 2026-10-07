@@ -2,11 +2,51 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-06
+last_updated: 2026-10-07
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-07 — Sharma e2e-timeout draft; timestamp thread turns collaborative
+
+**TL;DR**:
+- **A third timestamp-family draft lands, and the on-list thread reframes "rivals" as "layers."** [[aman-sharma|Aman Sharma]] (Meta) posted **`draft-sharma-moq-end-to-end-delivery-timeout-00`** (Oct-6, 6 pp) — a source-anchored object deadline (END_TO_END_DELIVERY_TIMEOUT setup option + END_TO_END_OBJECT_DELIVERY_TIMEOUT parameter) so total age is bounded across relays instead of resetting each hop, built *on top of* the timestamp drafts. The *"Timestamp Draft"* thread filled with replies (Curley, Sharma, Cullen Jennings, Riedl): [[alan-frindell|afrind]] framed his draft as **factoring timestamps out as a reusable property layer** others (Tempo, Sharma's timeout) build on; [[luke-curley|Curley]] welcomed timestamps broadly and dropped DURATION from his own extension. No WG merges; spec frozen at draft-22.
+- **Implementations**: moq-dev/moq ~60 Oct-6 merges → a **0.17.2 patch train** (relay 0.17.2, cli 0.14.2, libmoq 0.6.12, gst/obs 0.4.12/0.6.12, ffi 0.4.12) + net/mux fixes (`#4883` fMP4 keeps declared tracks, `#4885` catalog-at-first-frame, `#4895` rejoined reader keeps group) and **`#4913` quinn-udp vendored as `moq_sock::udp`** (+4,422); post-release `#4942` "publisher epochs on routes" (breaking) unreleased. **moq-rs woke up** after ~5 weeks: `#254` removes the stale draft-16 Subscribe Options field from SUBSCRIBE_NAMESPACE (draft-18 §10.18 wire fix) → `moq-relay-ietf` **v0.7.28**. quiche moqt +3 (split delivery_timeout; PUBLISH_SKIPPED framer; MessageParameters no longer KV). libquicr `#981`. moq-js/moqtail/imquic/Eyevinn all quiet.
+- **Interop**: Oct-6 00:28 cut = **218/257/2 of 477** (45.7%) — a **+16 pass recovery** from Oct-5's flake night (202), still short of the Oct-4 high (237). Same matrix, no runner PR since #134: stitcher-moq relay +11, moqlivemock client +4, moq-rs-d14 relay +4; the 2 moqt-22 self-interop cells back to green; imquic client (3) & moqx relay (21) not yet reverted. Confirms Oct-5 was transient flake.
+
+**Operation**: Update (manual; covers 2026-10-06 ~02:00 → 2026-10-07 UTC)
+**Sources**:
+- IETF mailing list: the **"Timestamp Draft" thread drew five Oct-6 replies** ([thread](https://mailarchive.ietf.org/arch/msg/moq/kA2TP_PCfKOpKk-jXnaqss875rM/)) — [[aman-sharma|Aman Sharma]] (announcing his new e2e delivery-timeout draft), [[luke-curley|Luke Curley]], [[alan-frindell|afrind]], [[steven-riedl|Steven Riedl]], [[cullen-jennings|Cullen Jennings]]. afrind frames his draft as a property layer Tempo/others build on (will add a Tempo ref in -01); Curley enthusiastic about timestamps, dropped DURATION. No new weekly GitHub digest (last Sep-13); no "Draftification" replies (deadline Oct-13).
+- IETF Datatracker: **new submission `draft-sharma-moq-end-to-end-delivery-timeout-00` (Oct-6)** — now the newest MoQ document, ahead of `draft-frindell-moq-timestamp-00` (Oct-5). All WG docs flat (transport-22 stands).
+- GitHub `moq-wg`: no merges. No new transport issue since #1968 (Oct-5); open PRs #1966/#1967/#1960 unchanged. msf (#211 open, last Oct-4), loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: ~60 merges Oct-6 (#4883 → #4949). **0.17.2 patch train** (libmoq v0.6.12 20:14, moq-relay/moq-cli/obs-moq 20:26, moq-gst v0.4.12 20:33, moq-ffi v0.4.12 20:52). Net/mux fixes #4883 (+997/−278), #4885, #4887, #4895, #4922, #4884, #4892; breaking #4919 (remove Opus DTX), #4889 (signals effect cleanups LIFO); #4913 (import quinn-udp as `moq_sock::udp`, +4,422/−71); #4939 (per-track timedness at runtime). Post-0.17.2: #4942 (feat(net)!: carry publisher epochs on routes, +1,947/−1,118), #4949/#4948 (broadcast-epoch quest + catalog-track-alias→id rename). Remainder quest/planning churn (#4946 +691/−1,594, #4932, #4930, etc.).
+  - cloudflare/moq-rs: woke after Sep-29 #236. #248 (suppress double_must_use), #249 (hyper-serve → axum-server 0.7.3), #250 (moq-api serde-derive feature), #252/#253 (release chores), **#254 (remove SUBSCRIBE_NAMESPACE Subscribe Options field, draft-18 §10.18, +181/−265)**. Release batch Oct-6 23:12–23:14: moq-transport v0.16.4, moq-api v0.2.15, **moq-relay-ietf v0.7.28**, moq-pub v0.9.6, moq-sub v0.4.17, moq-clock-ietf v0.6.23, moq-test-client v0.1.15.
+  - google/quiche moqt: three commits — "Split delivery_timeout into subgroup and object delivery timeouts" (Oct-6 22:37), "Framer/Parser for MOQT PUBLISH_SKIPPED" (Oct-7 00:04), "Moqt MessageParameters are no longer Key-Value Pairs" (Oct-7 00:46).
+  - Quicr/libquicr: #981 ("Stops creating discrete threads for Reply deferral", Oct-6 12:00).
+  - Quiet: video-dev/moq-js (newest Jun-26 #71), moqtail (newest Oct-4 #391), meetecho/imquic (newest Oct-1 #38), birneee/quiche_moq, openmoq, shaka-player, all Eyevinn repos (newest Sep-30).
+- Interop runner: **new cut 2026-10-06 00:28:24** = 477 / 218 / 257 / 2 (45.7%). Same 477-cell matrix and version spread as Oct-5 (364 d18, 48 d14, 43 d16, 16 d20, 4 d19, 2 d22); no runner PR merged since #134 (Oct-2). +16 pass vs Oct-5 flake: stitcher-moq relay 3→14, moqlivemock client 16→20, moq-rs-d14 relay 3→7, moqt-nr relay 20→22, moq-dev-js 12→14, moq-playa 18→20; regressions xquic-d18 client −1, moxygen relay −2. The 2 draft-22 stitcher-moq self-interop cells recovered fail→pass. Runner PRs #135/#136/#137 still open.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-end-to-end-delivery-timeout]]: **new draft page** for `draft-sharma-moq-end-to-end-delivery-timeout-00` (authors, mechanism, relation to the timestamp drafts + quiche's delivery_timeout split).
+- [[moq-timestamp-properties]]: *Relationship to other work* rewritten — the Oct-6 thread reframed it as a **foundational property layer** (afrind) rather than a straight rival; cross-linked [[moq-tempo]], [[moq-end-to-end-delivery-timeout]]. `last_updated` bumped.
+- [[moq-timestamp]]: top 2026-10-06 note refined — the two timestamp drafts now read as layerable; links to the new delivery-timeout draft.
+- [[index]]: new drafts-catalog row for [[moq-end-to-end-delivery-timeout]]; timestamp-properties row reframed.
+- [[discussions-2026-10]]: **new top section** *Activity (Oct 6 → Oct 7)* — the Sharma draft + collaborative timestamp thread, moq-dev 0.17.2, moq-rs wake-up, quiche-moq commits, the Oct-6 interop recovery.
+- [[moq-dev]]: Recent Highlights release bullet updated in place — 0.17.2 patch train + quinn-udp vendoring (#4913); post-release #4942 noted as unreleased.
+- [[moq-rs]]: draft-18 section + Latest release updated (v0.7.28, SUBSCRIBE_NAMESPACE draft-18 wire fix #254); new Recent Highlights bullet for the Oct-6 wake-up.
+- [[interop-runner]]: Current standing — Oct-6 added as **Latest cut** (218/257/2, +16), Oct-5 demoted to Prior, Oct-4 to Earlier; Oct-6 and Oct-5 rows added to Daily cuts (Oct-5 had been missing).
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *The durable spec event is a third timestamp-family draft.* [[moq-end-to-end-delivery-timeout|`draft-sharma-moq-end-to-end-delivery-timeout`]] gets its own page because it's the newest MoQ document and is actively discussed — but the more interesting shift is *framing*: the Oct-6 thread recast afrind's [[moq-timestamp-properties]] as a reusable property layer that Tempo and Sharma's draft build on, softening the Oct-5 "rival drafts" read into "layerable."
+- *moq-dev's 0.17.2 is the durable impl fact* — a non-breaking patch train plus continued in-tree vendoring (quinn-udp after quinn); the post-release publisher-epochs net refactor (#4942) stays in the log/[[discussions-2026-10]], not on [[moq-dev]].
+- *moq-rs's #254 is a real interop fix, not churn* — removing the stale draft-16 Subscribe Options field makes SUBSCRIBE_NAMESPACE match draft-18 §10.18, unblocking two-way interop with conformant peers; recorded on [[moq-rs]] with the v0.7.28 release.
+- *The Oct-5 interop drop was flake, as predicted* — Oct-6 clawed back +16 on an unchanged matrix with the same endpoints recovering, and the 2 moqt-22 cells went green again.
 
 # 2026-10-06 — rival timestamp draft; moq-dev 0.17.1; runner flake night
 

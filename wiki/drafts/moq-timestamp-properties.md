@@ -2,7 +2,7 @@
 title: "Timestamp Properties for MOQT"
 tags: [draft, transport, extension, timestamp, individual]
 date: 2026-10-06
-last_updated: 2026-10-06
+last_updated: 2026-10-07
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-frindell-moq-timestamp/"
@@ -31,7 +31,8 @@ A standards-track [[moq-transport]] extension that defines a **reusable set of t
 
 # Relationship to other work
 
-- **Two competing timestamp drafts now coexist.** This draft overlaps [[moq-timestamp|`draft-lcurley-moq-timestamp`]] ([[luke-curley|Luke Curley]], -01) — both attach presentation time to MoQ objects so relays can reason about age — but they differ in scope: lcurley's is a minimal **Timescale / Timestamp / Duration** triple framed on the [[moq-loc|LOC]]-registered properties, while this draft defines a **richer property set** (clock identity, a delta/origin compression scheme, and a mapping that can derive timestamps from object IDs) and is explicitly **property-only, relay-behaviour-deferred**. Which one (if either) the WG adopts is an open question for the Seattle interim and beyond.
+- **Framed on-list (Oct-6) as a foundational property layer, not a straight rival.** The *"Timestamp Draft"* thread drew replies from [[luke-curley|Luke Curley]], [[aman-sharma|Aman Sharma]], [[cullen-jennings|Cullen Jennings]] and [[steven-riedl|Steven Riedl]] ([permalinks](https://mailarchive.ietf.org/arch/msg/moq/kA2TP_PCfKOpKk-jXnaqss875rM/)). [[alan-frindell|Frindell]] explained the strategy is to **"factor out the mechanism for conveying timestamps as properties,"** so other drafts assign *application semantics* on top — answering Cullen's "how does this compare to [[moq-tempo|Tempo]]?" by saying Tempo can **build on these properties** rather than compete with them (Suhas had pointed him to Tempo; he will add the reference in -01). [[luke-curley|Curley]] was enthusiastic about timestamps generally (a subscriber can just ask for *"anything newer than 3s"*, and a generic relay can make better caching/delivery decisions) and noted he dropped **DURATION** from his own extension in favour of a timestamped empty frame at each video group's end. [[aman-sharma|Sharma]] went further and wrote a new draft — [[moq-end-to-end-delivery-timeout|`draft-sharma-moq-end-to-end-delivery-timeout`]] — *on top of* the timestamp work. So the two drafts now read as **layerable** rather than strictly either/or.
+- **Overlap with lcurley's draft.** This draft still overlaps [[moq-timestamp|`draft-lcurley-moq-timestamp`]] ([[luke-curley|Luke Curley]], -01) — both attach presentation time to MoQ objects so relays can reason about age — but differs in scope: lcurley's is a minimal **Timescale / Timestamp / Duration** triple framed on the [[moq-loc|LOC]]-registered properties, while this draft defines a **richer property set** (clock identity, a delta/origin compression scheme, and a mapping that can derive timestamps from object IDs) and is explicitly **property-only, relay-behaviour-deferred**. Which design (or a merge) the WG adopts is an open question for the Seattle interim and beyond.
 - **Draft-18 property codepoints**: overlaps the existing [[moq-transport]] §15.8 `TIMESTAMP` / `TIMESCALE` property assignments and the LOC property-ID coordination work; codepoint alignment will be a question if this is taken up by the WG.
 - **Delivery timeout / age-based relay decisions**: like the lcurley draft, motivated by giving relays a uniform basis for delivery-timeout and age-drop decisions without parsing the media container.
 
