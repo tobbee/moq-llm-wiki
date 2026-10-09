@@ -2,11 +2,47 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-08
+last_updated: 2026-10-09
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-09 — jennings URI draft rename; moq-dev cluster-auth grind
+
+**TL;DR**:
+- **The URI-resolution carve-out becomes a real document — a backfill the Oct-8 sweep missed.** Cisco's discovery draft was **renamed/consolidated into `draft-jennings-moq-uri-00` "MOQT URI and Discovery"** ([[cullen-jennings|Jennings]] + [[suhas-nandakumar|Nandakumar]], rev-00 Oct-7, 14 pp, Standards Track) — the datatracker marks `draft-jennings-moq-discovery` **Replaced by** it. The successor folds the `moqt` **URI scheme + resolution + X.509 (SAN-only) cert matching** into the DNS/mDNS discovery content, realizing the "separate spec" the WG agreed to carve out of [[moq-transport]] — the external home transport PR #1971 points at. On-list: [[alan-frindell|afrind]] finally **announced** the subscription flow-control draft, and [[martin-duke|Duke]] called **Seattle slides due Oct-8** (interim Oct 12–15). New transport issue #1973 (FETCH error case); no new WG merges.
+- **Implementations**: [[moq-dev|moq-dev/moq]] ~50 merges Oct-8/9 (#5023→#5075), **unreleased** (0.17.2 stands) — cluster/mesh **peer-API auth** (#5050 +230/−27, #5039 `--mtls-peer`/`--mtls-upstream`), demand held across TRACK+SUBSCRIBE (#5053 +1,602/−284), **multi-draft message params** (#5028 +601/−263) + SUBSCRIBE_NAMESPACE options/draft-16+ fill (#5032), clear **FIRST_OBJECT at object 0** (#5027/#5069), in-band CMAF avc3 (#5037), io_uring flow-control windows (#5023). [[moqtail]] #405 setup options; [[libquicr]] #988 E2E TRACK_STATUS + #994. moq-rs/quiche/imquic/js/Eyevinn quiet.
+- **Interop**: Oct-8 00:28 cut = **224/251/2 of 477** (47.0%) — a **−2 pass flake dip** (226 → 224), third night in the 224–226 band, 13 under the Oct-4 high (237). Same matrix, no runner PR since #134; the 2 moqt-22 cells stayed green.
+
+**Operation**: Update (manual; covers 2026-10-08 UTC → 2026-10-09)
+**Sources**:
+- IETF Datatracker: **`draft-jennings-moq-discovery` is now "Replaced by" `draft-jennings-moq-uri`** — **`draft-jennings-moq-uri-00` "MOQT URI and Discovery"** (rev-00 submitted 2026-10-07 by Suhas Nandakumar, 14 pp, Standards Track, Cisco; [datatracker](https://datatracker.ietf.org/doc/draft-jennings-moq-uri/)) consolidates the `moqt` URI scheme + resolution + fragment IDs + dereferencing + normalization + X.509 (SAN-only) cert matching with the DNS/mDNS discovery content. This was the newest MoQ document and was missed by the Oct-8 sweep (which caught the sibling `draft-frindell-moq-subscription-flow-control-00`). All WG docs flat (transport-22 stands).
+- IETF mailing list: two Oct-8 posts — **[[alan-frindell|afrind]] *"[Moq] Subscription Flow Control Extension Draft"*** (the on-list announcement of [[moq-subscription-flow-control|his Oct-7 draft]], which last sweep flagged as missing) and **[[martin-duke|Duke]] *"[Moq] Seattle slides"*** ([permalink](https://mailarchive.ietf.org/arch/msg/moq/NHK9SffDThtZrvpsUGFusy8DiyI/)) — slides for the Oct 12–15 Seattle interim due Oct-8, extensions on request. No new weekly GitHub digest (last Sep-13); no *"Draftification"* replies (deadline Oct-13).
+- GitHub `moq-wg`: no merges. moq-transport **new issue [#1973](https://github.com/moq-wg/moq-transport/issues/1973)** *"FETCH object encoding an unnecessary error case"* (Oct-9); PR [#1971](https://github.com/moq-wg/moq-transport/pull/1971) touched Oct-8. Open PRs #1970/#1966/#1960/#1938 carry over. msf (#213 open, last merge Aug-25), loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: ~50 merges Oct-8 → Oct-9 (#5023 → #5075), **unreleased** (0.17.2 stands). Cluster/mesh auth: [#5050](https://github.com/moq-dev/moq/pull/5050) authenticate peer APIs independently from mesh TLS (+230/−27), [#5039](https://github.com/moq-dev/moq/pull/5039) `moq auth serve --mtls-peer`/`--mtls-upstream` mark certs as cluster links (+205/−34), [#5045](https://github.com/moq-dev/moq/pull/5045) pass epoch to request_broadcast in dial_split_horizon. Demand/lifecycle: [#5053](https://github.com/moq-dev/moq/pull/5053) hold demand across a subscription's TRACK and SUBSCRIBE (+1,602/−284), [#5054](https://github.com/moq-dev/moq/pull/5054) an unread front ends after its linger (+981/−232), [#5025](https://github.com/moq-dev/moq/pull/5025) anonymous dial gets its own hop. Multi-draft wire: [#5028](https://github.com/moq-dev/moq/pull/5028) accept each draft's message parameters (+601/−263), [#5032](https://github.com/moq-dev/moq/pull/5032) honor SUBSCRIBE_NAMESPACE options + fill draft-16+ streams (+648/−158), [#5027](https://github.com/moq-dev/moq/pull/5027)/[#5069](https://github.com/moq-dev/moq/pull/5069) accept a clear FIRST_OBJECT at object 0. Media/IO: [#5037](https://github.com/moq-dev/moq/pull/5037) import avc3 + decode in-band CMAF length-prefixed (+321/−99), [#5051](https://github.com/moq-dev/moq/pull/5051) hang delivers first media group without waiting across gaps, [#5023](https://github.com/moq-dev/moq/pull/5023) io_uring quic flow-control windows. Docs: [#5067](https://github.com/moq-dev/moq/pull/5067) reconcile `moq-hang-03` changelog vs published draft, [#5033](https://github.com/moq-dev/moq/pull/5033) site/docs rewrite (+1,006/−3,425), [#5058](https://github.com/moq-dev/moq/pull/5058) whole-tree audit (+1,956/−2,553); rest quest/planning churn.
+  - moqtail/moqtail: [#405](https://github.com/moqtail/moqtail/pull/405) *"feat: adds new setup options"* (+397/−155, Oct-8 23:52) — follows last week's #401–#404 draft-18 alignment.
+  - Quicr/libquicr: [#988](https://github.com/Quicr/libquicr/pull/988) *"E2E TRACK_STATUS"* (Oct-8 06:45) and [#994](https://github.com/Quicr/libquicr/pull/994) *"Use lock_guard in OnStreamClosed"* (Oct-8 13:40).
+  - Quiet: cloudflare/moq-rs (newest Oct-7 #255; v0.7.28 stands), google/quiche moqt (newest Oct-7 TRACK_NAMESPACE_PREFIX), meetecho/imquic (newest Oct-7 #40), video-dev/moq-js (newest Jun-26 #71), birneee/quiche_moq, shaka-player, openmoq, all Eyevinn repos (moqlivemock/warp-player/moqtransport newest Sep-29/30).
+- Interop runner: **new cut 2026-10-08 00:28:00** = 477 / 224 / 251 / 2 (47.0%). Same 477-cell matrix and version spread as Oct-7 (364 d18, 48 d14, 43 d16, 16 d20, 4 d19, 2 d22); no runner PR merged since #134. −2 pass vs Oct-7 (226 → 224) = ordinary flake-level noise; the 2 moqt-22 self-interop cells stayed green. Open runner PRs: #138 (stitcher-moq drafts 18-22), #135/#136/#137.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-discovery]]: **retitled and reframed** to track `draft-jennings-moq-uri-00` (replaces `draft-jennings-moq-discovery-02`) — new top note on the Oct-7 rename/consolidation; frontmatter (title, tags +cert-matching, draft_version, ietf_url, last_updated); Abstract + Key Ideas extended with the URI scheme + cert-matching content; Status gains a "renamed/consolidated" bullet; External Links point at the new doc. Filename kept to preserve backlinks.
+- [[cullen-jennings]]: discovery-draft contribution rewritten for the `moq-uri` rename + the transport #1971 carve-out; `last_updated` bumped.
+- [[index]]: drafts-catalog row for [[moq-discovery]] updated to the `moq-uri-00` rename + broadened scope.
+- [[interop-runner]]: Current standing — Oct-8 added as **Latest cut** (224/251/2, −2), Oct-7 demoted to Prior, Oct-6 to Earlier (with the Oct-5 flake folded in); `last_updated` bumped.
+- [[discussions-2026-10]]: **new top section** *Activity (Oct 8 → Oct 9)* — the URI-draft rename backfill, the flow-control announcement + Seattle slides reminder + issue #1973, moq-dev's cluster-auth/FIRST_OBJECT/multi-draft grind, moqtail/libquicr, the −2 interop night.
+- [[log]]: this entry. `last_updated` bumped on every edited page.
+
+**Key findings**:
+- *The durable spec event is a draft rename the last run missed.* [[moq-discovery|`draft-jennings-moq-uri`]] (formerly `draft-jennings-moq-discovery`) is now the realized "separate spec for URI resolution + TLS cert matching" the WG agreed to carve out of [[moq-transport]] — it folds the `moqt` URI scheme, dereferencing, normalization, and SAN-only cert matching into the discovery doc, and is the external home transport PR #1971 points at. Handled as an in-place rename of the existing page (filename kept) rather than a new page, since it's the same authors' same work-stream.
+- *The on-list gap from the last entry closed* — afrind's subscription flow-control draft now has its announcement thread; the draft text is unchanged, so no page edit beyond the discussions note.
+- *moq-dev's work stays off the entity page* — ~50 Oct-8/9 merges (cluster peer-API auth, demand lifecycle, multi-draft params, FIRST_OBJECT, in-band CMAF) are all on unreleased code; 0.17.2 remains the latest release, so they live in the log/[[discussions-2026-10]], not on [[moq-dev]].
+- *Interop is boringly stable* — a −2 flake swing on an unchanged matrix keeps the runner in the 224–226 band for a third night, confirming the Oct-5 drop is fully behind us and leaving the Oct-4 high (237) intact as the ceiling.
 
 # 2026-10-08 — subscription flow-control draft; moq-rs fetch+CAT backfill
 

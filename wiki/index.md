@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-10-08
+last_updated: 2026-10-09
 status: current
 updated: 2026-09-30
 ---
@@ -44,7 +44,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-mocha]] | draft-00 (×6) | Individual (**NEW 2026-07-06**) | MOCHA — "MoQ Open Communication & Hosting Architecture": a 6-part RTC suite (chat, meetings, identity, MLS keying, reactions, address book) over MoQT; Cullen Jennings + Suhas Nandakumar (Cisco) |
 | [[moq-tempo]] | draft-00 | Individual (**NEW 2026-07-06**) | TEMPO — synchronized media playout orchestration (publisher/relay timestamps + PlaySyncServer feedback); Suhas Nandakumar + Cullen Jennings (Cisco) |
 | [[moq-conditional-filtering]] | draft-01 | Individual (**-01 2026-09-14**) | Conditional Range Filters for MOQT — `RANGE_FILTER_CONDITION` lets a relay activate/deactivate filter sets autonomously on real-time metrics (no `REQUEST_UPDATE`), plus `PRIOR_SUBGROUP_ID_GAP` to distinguish shedding from loss; [[yu-you\|Yu You]] (Nokia). -01 renamed `draft-yuyou-conditional-filtering` → `draft-yuyou-moq-conditional-filtering` |
-| [[moq-discovery]] | draft-02 | Individual | DNS and mDNS Discovery for MOQT — SVCB/HTTPS records for the `moqt` URI scheme, SRV backup, DNS-SD over mDNS; **now the proposed separate home for URI resolution + TLS cert matching** (Sep-5, transport #1909/#1839); Cullen Jennings + Suhas Nandakumar (Cisco) |
+| [[moq-discovery]] | moq-uri-00 (**renamed 2026-10-07**, was moq-discovery-02) | Individual | **MOQT URI and Discovery** — `draft-jennings-moq-discovery` **replaced by `draft-jennings-moq-uri-00`** (Oct-7, 14 pp, Standards Track): now defines the `moqt` URI scheme + resolution + X.509 (SAN-only) cert matching **alongside** SVCB/HTTPS + SRV + DNS-SD/mDNS discovery — the external home for the URI definition transport #1971 moves out of scope; Cullen Jennings + Suhas Nandakumar (Cisco) |
 | [[moq-overview]] | draft-00 | Individual (**NEW 2026-06-30**) | Media over QUIC Overview — Informational suite survey; co-chair Magnus Westerlund (Ericsson) + Zaheduzzaman Sarker (Nokia) |
 | [[compressed-mp4]] | draft-00 | Individual | Varint compression scheme for ISO BMFF / fMP4 (96 → ~21 bytes per fragment) |
 
