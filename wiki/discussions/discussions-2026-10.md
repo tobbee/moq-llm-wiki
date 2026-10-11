@@ -2,11 +2,41 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-10
+last_updated: 2026-10-11
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 10 → Oct 11) — **quiche posts its first-ever passing interop cells as the runner moves it to draft-18; a new contributor proposes codec-capability negotiation in SETUP (#1976); moq-dev lands TS-export/`--stitch` and announce-lifecycle player-follow in another ~85-merge unreleased day; the Seattle interim opens tomorrow.**
+
+A quiet spec day on the eve of the **[[interim-meetings|Oct 12–15 Seattle hybrid interim]]** — no new drafts, no WG merges — but the interop matrix produced a real first: **[[quiche-moq|google/quiche]]**, moved to the draft-18 target by runner [#139](https://github.com/englishm/moq-interop-runner/pull/139), **passed cells for the first time ever**. Spec-side, the one notable new item is a media-codec proposal: issue [#1976](https://github.com/moq-wg/moq-transport/issues/1976) floats a `CODEC_CAPABILITY` SETUP Option for session-level codec negotiation. [[moq-dev]] kept grinding (unreleased; 0.17.2 stands) with a large TS-export/`--stitch` feature and announce-lifecycle player following. Mailing list quiet since the Oct-8 flow-control/slides pair. Slack was not checked this run.
+
+## Spec / WG: a codec-negotiation proposal; a Track-Alias fix; FORWARD-removal still open
+
+- **New transport issue — [#1976](https://github.com/moq-wg/moq-transport/issues/1976)** *"Proposal: Codec Capability Negotiation in MoQ SETUP"* (yuanchao-chris, Oct-10 13:50). Motivated by **browser codec-support differences** (e.g. a peer publishing H.265 a client can't decode), it proposes a new **`CODEC_CAPABILITY` SETUP Option** so MoQ endpoints exchange supported-codec lists at session setup and publish compatible codecs — **modeled on WebRTC's SDP negotiation** and explicitly tied to the [moq-requirements](https://github.com/moq-wg/moq-requirements/blob/main/draft-ietf-moq-requirements.md#media-negotiation--agility-moq-negotiation) **"Media Negotiation & Agility"** requirement. A lightweight, session-level alternative to per-track negotiation. It's a discussion issue (not a draft or PR), so it stays in the log/discussions for now — but it's squarely in the wiki's media focus area and worth watching into Seattle.
+- **New transport PR — [#1975](https://github.com/moq-wg/moq-transport/pull/1975)** *"Fix PR#1876 Make Track Alias a Parameter returned in SUBSCRIBE_OK"* ([[ian-swett|Ian Swett]], Oct-10 06:16) — a follow-up fix to the open RFC PR [#1876](https://github.com/moq-wg/moq-transport/pull/1876) (whose merge-conflict-resolution PR #1945 was closed Oct-10). [[ian-swett|Swett]]'s **FORWARD-removal PR [#1974](https://github.com/moq-wg/moq-transport/pull/1974)** ("No Objects" Location Filter) from the previous day stays **open/unmerged**.
+- **No WG merges** (newest merge still #1967, Oct-7). Open PRs #1974/#1971/#1970/#1966/#1960/#1938 and issues #1973/#1969/#1968 carry over. msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- **Mailing list quiet.** No new threads since the Oct-8 pair ([[alan-frindell|afrind]]'s flow-control announcement and [[martin-duke|Duke]]'s *"Seattle slides"* reminder). The **[[interim-meetings|Seattle hybrid interim opens tomorrow (Oct 12–15)]]**, so agenda/slide/minutes traffic is expected imminently.
+- **Otherwise frozen**: [[moq-transport]] stays at **draft-22**; no new individual draft since [[moq-discovery|`draft-jennings-moq-uri-00`]] (Oct-7); **[[moq-monthly|MoQ Monthly]]** still #2 (May-31); no new weekly GitHub digest (last Sep-13); still no *"Draftification"* replies ahead of the Oct-13 deadline.
+
+## Implementations: moq-dev's TS-export/`--stitch` + announce-lifecycle day; everyone else quiet
+
+- **[[moq-dev|moq-dev/moq]]** merged **~85 PRs** across Oct-10 → Oct-11 (#5147 → #5296), all **unreleased** (0.17.2 stands). Features landed on `main` but untagged:
+  - **Media/mux**: [#5147](https://github.com/moq-dev/moq/pull/5147) *"TS export lingers within an epoch, `--stitch` switches programs"* (breaking, +2,149/−569) — MPEG-TS export plus program switching via `--stitch`; [#5207](https://github.com/moq-dev/moq/pull/5207) *"(moq-mux) interleave each TS slot so no PID overruns its transport buffer"*; [#5153](https://github.com/moq-dev/moq/pull/5153) *"keep the last good parameter sets when refusing a TS access unit"*.
+  - **Apps/players**: [#5154](https://github.com/moq-dev/moq/pull/5154) *"players follow announce Start, Restart, and End"* (+1,153/−210) — players track the announce lifecycle; [#5191](https://github.com/moq-dev/moq/pull/5191) *"(moq-gst) moqsrc follows a restart on the same pads"* (+1,060/−320); [#5205](https://github.com/moq-dev/moq/pull/5205) `moq play` drops its Update workaround now that follow reports gaps.
+  - **HLS/recording**: [#5209](https://github.com/moq-dev/moq/pull/5209) + backport [#5210](https://github.com/moq-dev/moq/pull/5210) *"(hls) a recorder cursor records a publisher without FETCH"* (+615/−22, +614/−10).
+  - **Net/subscription**: [#5165](https://github.com/moq-dev/moq/pull/5165) *"name the groups a lite-05/06 subscription never got"*, [#5164](https://github.com/moq-dev/moq/pull/5164) follow-ups to #5133 (deferred FIN on drop, reprioritize open group streams), [#5182](https://github.com/moq-dev/moq/pull/5182) *"don't renew a prefix whose winner already restarted"*, [#5163](https://github.com/moq-dev/moq/pull/5163) two handshake-stall fixes under a short idle timeout.
+  - **CI/infra/tests**: [#5179](https://github.com/moq-dev/moq/pull/5179) + backport [#5180](https://github.com/moq-dev/moq/pull/5180) *"remove the automatic release back-merge"*, [#5174](https://github.com/moq-dev/moq/pull/5174) interop fails a round on any idle-out connection. The rest is quest/m0/m1 milestone planning churn. No new release or new release-worthy wire capability beyond the above.
+- **Quiet**: [[quiche-moq|google/quiche]] moqt (newest Oct-9 FETCH batch), [[moq-rs|cloudflare/moq-rs]] (newest Oct-7 #255; v0.7.28 stands), [[moqtail]] (newest Oct-8 #405), [[libquicr|Quicr/libquicr]] (newest Oct-9 #999), [[imquic]] (newest Oct-7 #40), [[moq-js]] (newest Jun-26), birneee, [[shaka-player]], [[openmoq|OpenMOQ]], all Eyevinn repos (newest Sep-30).
+
+## Interop: quiche's first passing cells as it joins the draft-18 cohort
+
+The **[Oct-10 00:29 nightly](https://englishm.github.io/moq-interop-runner/results/2026-10-10_002916/report.html)** is the first to carry runner [#139](https://github.com/englishm/moq-interop-runner/pull/139) (quiche-moq draft-16 → draft-18):
+
+- **487 cells / 228 pass / 257 fail / 2 timeout (46.8%)** — **+8 pass (220 → 228) on a +10-cell matrix (477 → 487)**. Both changes are the quiche move, not flake: version spread shifted **draft-18 364 → 392, draft-16 43 → 25** (others flat), classification **at-target 364 → 392, behind 91 → 73, ahead 22** flat.
+- **quiche-moq passes for the first time ever.** It went from **18 draft-16 cells (all fail)** to **28 draft-18 cells with 3 pass / 25 fail** — aiomoqt, moq-dev-js, and moq5 → quiche-moq, all remote-WebTransport with quiche in the relay role. The Oct-10 entry had flagged the Oct-9 bump as "the first real test of quiche's draft-18 conformance"; this is the result. Recorded on [[quiche-moq]].
+- 228 is the highest pass count since the Oct-4 high (237), edging just above the Oct-6→Oct-9 218–226 flake band; the pass *rate* ticked only 46.1% → 46.8%. Runner PRs #138/#135/#136/#137 remain open. See [[interop-runner]].
 
 # Activity (Oct 9 → Oct 10) — **FORWARD heads for the exit — Swett proposes replacing the `FORWARD` parameter with a "No Objects" Location Filter (type 0x06) to pause/resume subscriptions; quiche turns in a nine-commit draft-18 FETCH day and the runner bumps Google to draft-18; moq-dev aligns to the draft-22 LOCATION_FILTER wire and stages a release backport batch; the runner slips −4 to 220.**
 
