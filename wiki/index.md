@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-10-13
+last_updated: 2026-10-14
 status: current
 updated: 2026-09-30
 ---
@@ -37,6 +37,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-end-to-end-delivery-timeout]] | draft-00 | Individual (**NEW 2026-10-06**) | End-to-End Delivery Timeouts for MOQT — a source-anchored object deadline (setup option + END_TO_END_OBJECT_DELIVERY_TIMEOUT parameter) so total age is bounded across relays instead of resetting each hop; builds on the timestamp drafts ([[aman-sharma\|Aman Sharma]]) |
 | [[moq-subscription-flow-control]] | draft-00 | Individual (**NEW 2026-10-07**) | Subscription Flow Control Extension for MOQT — subscription-level flow control (SUBSCRIPTION_FLOW_CONTROL setup option, MAX_SUB_STREAMS/MAX_SUB_BYTES limits, SUB_FLOW_CONTROL_UPDATE credit grants, SUB_STREAMS_BLOCKED/SUB_BYTES_BLOCKED signals) bounding total streams/bytes per subscription beyond QUIC's per-stream/per-session flow control ([[alan-frindell\|Alan Frindell]] + [[ian-swett\|Ian Swett]]) |
 | [[moq-probing]] | draft-00 | Individual (**NEW 2026-10-12**) | Probe Tracks for Bandwidth Estimation in MoQ — synthetic, session-scoped, non-forwarded **probe tracks** (downlink via `(.session,.probe)` SUBSCRIBE, uplink via `(.session,.sink)`) that measure a single hop's available bandwidth beyond the current media bitrate, with paced/greedy "shapes" encoded in the track name; a building block for [[switch-abr\|ABR]] step-up decisions ([[zafer-gurel\|Zafer Gürel]] + [[ali-begen\|Ali C. Begen]] + Deniz Ugur, [[moqtail]]) |
+| [[moq-fast-switching]] | draft-00 | Individual (**NEW 2026-10-13**) | Subscriber-Side Multi-Variant Fast Track Switching for MOQT — a subscriber switches between tracks at the *same* bitrate but *different* keyframe (GoP) intervals, kept in a per-bitrate "GoP Ladder" inside an `altGroup` "Switch Set" with aligned Group IDs; the subscriber computes the earliest cross-track switch point and executes it via the existing [[switch-abr\|SWITCH_FROM]] parameter — combining long-GoP compression with short-GoP agility (Deniz Ugur + [[zafer-gurel\|Zafer Gürel]] + [[ali-begen\|Ali C. Begen]], [[moqtail]]; the newest MoQ document) |
 | [[moq-nmsf]] | draft-01 | Individual | Neural Video Codec Packaging for MSF |
 | [[moq-msfts]] | draft-01 | Individual (**-01 2026-09-24**) | MPEG-2 Transport Stream Packaging for MSF (`m2ts`) — first revision since -00; note the adjacent new [[moq-mpegts]] |
 | [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**; WG adoption intended — **MPEG liaison sent 2026-09-28, reply due 10-30**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
@@ -85,7 +86,7 @@ See **[[overview|Implementations Overview]]** for the full comparison — langua
 - [[aiomoqt]] - Python async implementation
 - [[xquic-moq]] - Alibaba's XQUIC-based implementation
 - [[moqlivemock]] - Eyevinn's Go transport + JS CMSF player + `mlmrel` relay (draft-18, DRM; tuple namespaces + pull discovery since v0.15.0)
-- [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos ([[zafer-gurel\|Zafer Gürel]]; draft-16 + draft-18, `relay18.moqtail.dev` live since July 23)
+- [[moqtail]] - Publisher, subscriber, and relay with LOC + CMSF demos ([[zafer-gurel\|Zafer Gürel]]; draft-18 → **draft-20/22** FETCH + range-filter wire landed Oct-13, draft-22 relay in the runner; `relay18.moqtail.dev` live since July 23)
 - [[imquic]] - Meetecho's C library, also supports RoQ ([[lorenzo-miniero]]; draft-16 through draft-19, -19 merged to `main` July 19)
 - [[quiche-moq]] - Google's C++ MoQT in Chromium's QUICHE library (draft-16; draft-18 migration on `main` since July)
 - [[shaka-player]] - Google's production browser player on MoQ; **drafts 18 · 20 · 21 on `main`**, CMSF + LOC + **LOCMAF** + m2ts packagings, multi-DRM (experimental build only; released builds still at draft-16)
