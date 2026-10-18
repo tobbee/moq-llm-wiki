@@ -2,11 +2,79 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-16
+last_updated: 2026-10-18
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-18 — draft-23 PR queue fills; Slack backfill; record interop
+
+**TL;DR**:
+- **afrind opened about 17 draft-23 cleanup PRs (#2004–#2022), but nothing merged; draft-22 stays the target "until ~January".** #2015 (count-only FILL_PARAMETERS) and #2017 (varint control length) are "Merge Ready". Swett closed FORWARD-removal #1974 because the room preferred the status quo, and the rename to PAUSED (#2002) has three approvals. Slack, read for the first time since Oct-2, adds: afrind's d22 relay conformance table (moxygen 67/76, Nokia 62/76); the d22 FILL_PARAMETERS length+count settlement; the AUTH design team's Seattle outcome (a separate SETUP auth message); Meta's Instagram Live MoQ ingest blog; and planning for a Feb-2027 European interim.
+- **Implementations**: moq-dev cut v0.17.7 after ~209 merges (+143k/−37k: moq-quic layer #5664, Dart SDK, e2ee, RTSP). moq-rs opened #278/#280 (no merge). moqtail, quiche, moxygen, libquicr and imquic had small fixes.
+- **Interop**: 259/292/22 of 575, a record. That is +17 vs Oct-17 (242, when the matrix grew +62 from runner #155/#156) and +23 vs the Oct-16 236.
+
+**Operation**: Update (manual; covers 2026-10-16 ~08:00 UTC → 2026-10-18, plus a Slack backfill from 2026-10-02)
+**Sources**:
+- IETF Datatracker: **flat**, with no new drafts or revisions since the Oct-14 Blockcast cluster. `draft-ietf-moq-transport-22` stands. New Seattle interim materials: videos for interim-2026-moq-25/26/28/29 (posted Oct-16), Day-2 slides (Interop Report, Auth Design Team Update, Selection Policy, SSTS v2), and bluesheets.
+- GitHub `moq-wg`:
+  - **No merges** in moq-transport; the newest is still #1938/#1970 (Oct-13).
+  - afrind's open PRs: [#2004](https://github.com/moq-wg/moq-transport/pull/2004)–[#2011](https://github.com/moq-wg/moq-transport/pull/2011), #2013, #2015–#2017 (Oct-16) and #2018, #2019, #2021, #2022 (Oct-18). #2012, #2014 and #2020 are gone.
+  - Closed unmerged: [#1974](https://github.com/moq-wg/moq-transport/pull/1974) (Swett, Oct-17).
+  - [#2002](https://github.com/moq-wg/moq-transport/pull/2002) has three approvals.
+  - New issue: [#2003](https://github.com/moq-wg/moq-transport/issues/2003) (Gwendal Simon), Malformed Track with multiple publishers.
+  - On [#2015](https://github.com/moq-wg/moq-transport/pull/2015), Riedl warned that it changes the d22 wire the Seattle stacks converged on.
+  - msf has #122 (zapping). Other WG repos are flat.
+- GitHub implementations:
+  - moq-dev/moq: **moq-relay v0.17.7** (Oct-17 20:27 UTC), with libmoq v0.6.17, moq-ffi/moq-gst v0.4.17, obs-moq v0.6.17 and moq-cli v0.14.7. It follows 209 merges (48 on Oct-16, 128 on Oct-17, 33 on Oct-18):
+    - #5664 makes moq-quic the shared QUIC layer (+10,599/−974).
+    - #5711 adds hierarchical send groups; #5690 adds reliable reset from a checkpoint.
+    - New surfaces: #5839 Dart SDK, #5702 WebRTC data channel, #5818 @moq/e2ee, #5859 RTSP import, #5858 relay ACME certificates.
+    - #5681 / #5706 rework clock timing; #5798 applies draft-14–16 REQUEST_UPDATEs.
+  - cloudflare/moq-rs: [#278](https://github.com/cloudflare/moq-rs/pull/278) forwards Track Properties (+1,982/−164) and [#280](https://github.com/cloudflare/moq-rs/pull/280) adds moq-test-relay (+6,069/−324). Both are open; no release, so v0.7.30 stands.
+  - google/quiche moqt: 0f5b1634, partial-object accounting in MoqtRelayTrackPublisher (martinduke, Oct-16).
+  - moqtail: merged #397 (terminate downstream on a malformed upstream track). #444–#446 and release PR #398 are open.
+  - moxygen: draft-22 PUBLISH_OK parameter restriction (Aman Sharma) and getdeps CI. afrind opened #254–#256.
+  - libquicr: #1013 qclient locking fix. imquic: 4bb9fa44 AnnexB→AVCC fix in the LOC demo.
+  - Quiet: video-dev/moq-js, birneee/quiche_moq, and all Eyevinn repos.
+- Interop runner:
+  - **Oct-17 00:24 cut** = 575 / 242 / 309 / 22. Runner #155 (aiomoqt 0.12.0rc1, d14–22) and #156 (imquic drafts) added 62 cells.
+  - **Oct-18 00:26 cut** = 575 / 259 / 292 / 22 (45.0%; at-target 373, ahead 134, behind 68). The moqx relay went from 19/26 to 29/16 after #160. The moqt-nr relay is at 8/20.
+  - Open runner PRs: #157–#159 and #161–#166.
+- IETF mailing list: **active**.
+  - Martin Duke clarified the draft-19 consensus call and posted the Day-1 video.
+  - The "MOQT redundancy implementation" thread continued with Simon (who opened #2003), Will Law and Jordi Cenzano.
+  - "Draftification" continued with Simon, Vasiliev (doubts Top-N scales) and Suhas (track selection belongs in core).
+  - Weekly GitHub digest (Oct-18): 18 new PRs; #2015 and #2017 are Merge Ready.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: **checked**, backfilling Oct-2 → Oct-18, because entries from Oct-3 to Oct-16 did not read Slack. Searched with `slack_search_public` (`in:#channel after:`) and read the threads with `slack_read_thread`.
+  - `#moq`: very active, about 250 messages, mostly Seattle interop debugging. Key threads:
+    - d22 conformance table (ts 1791955717.237359)
+    - FILL_PARAMETERS spelling, 21 replies (ts 1792169324.728259)
+    - aiomoqt relay 50/50 d22 (ts 1792283738.550019)
+    - Meta Instagram blog (ts 1791838328.717759)
+    - Feb-2027 interim venue (ts 1792096193.210759)
+    - FETCH-before-FETCH_OK debate (ts 1791583926.940679)
+    - Wireshark dissector (ts 1792191055.815339)
+  - `#moq-auth-design-team`: active, covering the Seattle prep and outcome.
+  - `#moq-interop-runner`: moderate (sharding, namespace format, endpoints).
+  - `#moq-rs`: one perf report.
+  - `#moq-js` and `#libquicr`: quiet.
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 16 → Oct 18)*, covering the spec PR queue, implementations, interop, and the Slack backfill.
+- [[moq-transport]]: new Recent Highlights bullet on the post-Seattle state (d22 target until ~January, FILL_PARAMETERS d22/d23 split, #1974 closed, #2002, #2017, draft-19 consensus).
+- [[moq-c4m]]: the AUTH design team's Seattle outcome (separate SETUP auth message, DPoP challenge/proof, owners).
+- [[moq-dev]]: **durable release**, v0.17.7 sub-bullet (moq-quic layer, Dart/e2ee/RTSP/WebRTC/ACME).
+- [[interop-runner]]: Oct-18 is the Latest cut, Oct-17 Prior, Oct-16 Earlier. The Daily cuts table gets the missing Oct-14 → Oct-18 rows.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *Post-interim the WG is writing draft-23, but interop stays on draft-22.* afrind's PR batch is broad but mostly cleanup, and the only flagged wire break is #2015, which deliberately goes into d23. This keeps the d22 interop matrix stable through ~January.
+- *Relays are converging on d22.* moxygen (67/76), Nokia (62/76) and moqtail (56–58/76) pass most of afrind's conformance suite, and aiomoqt passes the non-FETCH sections 50/50. The runner's record 259 passes points the same way.
+- *Production signal:* Meta published its Instagram Live MoQ ingest write-up, the first large-scale production MoQ deployment write-up the wiki has recorded.
 
 # 2026-10-16 — Post-interim spec turns to REDIRECT; moq-dev v0.17.6; interop clears its baseline
 

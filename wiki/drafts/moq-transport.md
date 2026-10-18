@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-10-02
+last_updated: 2026-10-18
 status: current
 draft_version: 22
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -184,6 +184,12 @@ Significant changes from draft-16:
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Post-Seattle (Oct 16–18, 2026): draft-22 stays the interop target, and the draft-23 queue fills.**
+  - [[alan-frindell|afrind]] said on Slack that *"22 is the target until likely ~January."*
+  - The draft-22 `FILL_PARAMETERS` encoding is ambiguous: length, count, or both. Deployed stacks (moq-net, [[moxygen]], [[moqtail]]) converged on **length+count**, so that stays the draft-22 spelling. The WG's **count-only** form ([#2015](https://github.com/moq-wg/moq-transport/pull/2015), digest "Merge Ready") lands in draft-23.
+  - [[ian-swett|Swett]] closed the FORWARD-removal PR [#1974](https://github.com/moq-wg/moq-transport/pull/1974) unmerged: *"people seemed to prefer the status quo."* The rename to `PAUSED` ([#2002](https://github.com/moq-wg/moq-transport/pull/2002)) has three approvals.
+  - afrind opened about 17 cleanup PRs (#2004–#2022). Among them, [#2017](https://github.com/moq-wg/moq-transport/pull/2017) changes the control-message length to a varint plus `MAX_CONTROL_MESSAGE_SIZE`, which answers the PQ-token sizing issue #1998.
+  - [[martin-duke|Martin Duke]] confirmed on-list that the WG has consensus on the whole draft-18→19 diff. Any new objection must rest on implementation or deployment experience.
 - **Fast first-impl turnaround for draft-18**: within ~6 days of the May 12 publication, three distinct codebases had shipped it ([[moq-dev|moq-dev/moq]], [[imquic|meetecho/imquic]], mondain/moqxr) — the fastest spec → first-impl turnaround the wiki has tracked.
 - **London interim (June 11–12, `interim-08`/`interim-10`)** confirmed several directions: keep the object-ID filter; fill-fetch replaces joining-fetch; `SWITCH_FROM` hard mode; remove Request ID from GOAWAY; PUBLISH_DONE precedes FIN on response streams; track properties stay immutable (priority updates via the data plane); **draft-18 is the Vienna interop target**.
 - **DTS/SWITCH consensus (June 11)**: base-spec integration lacked rough consensus, so Dynamic Track Switching is adopted as a separate WG extension, `draft-ietf-moq-dts4moq` ([[will-law|Will Law]]), with the door left open to later merge into MOQT. See [[switch-abr]].

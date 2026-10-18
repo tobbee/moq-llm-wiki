@@ -2,11 +2,91 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-16
+last_updated: 2026-10-18
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 16 → Oct 18) — **afrind opens about 17 draft-23 cleanup PRs, with no merges; draft-22 stays the interop target "until ~January"; moq-dev cuts v0.17.7 after a ~209-merge run; the interop runner sets a record 259 passes; and a Slack backfill (Oct 2 → 18) brings in the Seattle interop and auth-design-team detail.**
+
+The spec repo is still at draft-22, with no merges since Oct-13. The days after the interim did produce a large draft-23 work queue, though. Slack was read for the first time since Oct-2, which fills in what happened around the [[interim-meetings|Seattle interim]]: d22 conformance numbers for live relays, a dispute over how to encode `FILL_PARAMETERS`, the AUTH design team's outcome, and Meta's Instagram Live post.
+
+## Spec / WG: about 17 afrind PRs; FORWARD stays (renamed PAUSED); malformed-track relaxation
+
+- **[[alan-frindell|afrind]]'s cleanup batch** (Oct-16 and Oct-18, all open). The PRs:
+  - [#2004](https://github.com/moq-wg/moq-transport/pull/2004): remove the UNKNOWN_OBJECT_STATUS reset option for FETCH.
+  - [#2005](https://github.com/moq-wg/moq-transport/pull/2005): parse FETCH objects before FETCH_OK. Vasiliev and Swett discussed how Track Properties change the way Object Properties are read.
+  - [#2006](https://github.com/moq-wg/moq-transport/pull/2006): Object ID Delta + 2.
+  - [#2007](https://github.com/moq-wg/moq-transport/pull/2007): `FILL_PARAMETERS` in SUBSCRIBE_TRACKS/PUBLISH.
+  - [#2009](https://github.com/moq-wg/moq-transport/pull/2009): FETCH_OK drops End Location/End Of Track. This closes the loop on Sharma's #1897.
+  - [#2010](https://github.com/moq-wg/moq-transport/pull/2010): structured key-value Error Details in REQUEST_ERROR.
+  - [#2013](https://github.com/moq-wg/moq-transport/pull/2013): mark the end of a complete Group in FETCH.
+  - [#2015](https://github.com/moq-wg/moq-transport/pull/2015): count-only `LOCATION_FILTER`/`FILL_PARAMETERS` encoding.
+  - [#2017](https://github.com/moq-wg/moq-transport/pull/2017): varint control-message length plus a `MAX_CONTROL_MESSAGE_SIZE` setup option (default 65535). This answers the PQ-token issue #1998.
+  - [#2018](https://github.com/moq-wg/moq-transport/pull/2018): allow overlapping namespace subscriptions and drop `PREFIX_OVERLAP`.
+  - [#2019](https://github.com/moq-wg/moq-transport/pull/2019): what updating a namespace-subscription prefix does. This answers #2001; Duke wants narrowing the prefix to close implicitly rather than send "900 NS_DONEs".
+  - [#2021](https://github.com/moq-wg/moq-transport/pull/2021): allow duplicate PUBLISH_NAMESPACE.
+  - [#2022](https://github.com/moq-wg/moq-transport/pull/2022): a new **"lost"** Object state.
+
+  The Oct-18 weekly digest marks #2015 and #2017 as **Merge Ready**.
+- **FORWARD stays, renamed.** [[ian-swett|Swett]] closed [#1974](https://github.com/moq-wg/moq-transport/pull/1974) (FORWARD removal / "No Objects" filter) without merging: *"Discussed in Seattle, people seemed to prefer the status quo."* The rename to `PAUSED` ([#2002](https://github.com/moq-wg/moq-transport/pull/2002)) got approvals from fluffy, suhasHere and afrind on Oct-18. afrind still prefers *Forward* but called the two equivalent.
+- **Malformed Track with multiple publishers — [#2003](https://github.com/moq-wg/moq-transport/issues/2003)** ([[gwendal-simon|Gwendal Simon]], Oct-16). This came out of the on-list **"MOQT redundancy implementation"** thread. With two encoders, conflicting objects that share group/object IDs make a relay declare the track Malformed and terminate every subscriber, so a backup encoder becomes a risk. Simon asks to relax MUST to SHOULD, and afrind is receptive.
+  - On the list, [[will-law|Will Law]] asked how a cache would even detect a payload difference.
+  - [[jordi-cenzano|Jordi Cenzano]] answered that payloads must be identical. For encoder redundancy, he suggests separate tracks with a catalog "redundant" flag, switched by the player as in ABR.
+- **Draftification continues on-list.** Simon wants a merged Top-N/SSTS (from #1982) and SWITCH_FROM in extension drafts, noting the charter still requires rate adaptation. He also asks whether subgroups deserve the same scrutiny: only one company said it implements them. [[victor-vasiliev|Vasiliev]] doubts Top-N scales, because Track Property Filters evaluated before Top-N block relay precomputation. He is also skeptical that global Top-N and per-connection SSTS can be unified. [[suhas-nandakumar|Suhas]] argues that track selection belongs in core.
+- **draft-19 consensus clarified.** [[martin-duke|Martin Duke]] (Oct-16) said the WG has consensus on the whole draft-18→19 diff, except for issues already filed. A future issue against that diff must rest on implementation or deployment experience, or show broad support without using WG meeting time. Duke also posted the Day-1 video; recordings for the Oct-14/15 sessions went up the same night.
+- msf has [#122](https://github.com/moq-wg/msf/pull/122) *"initial text on zapping"*. loc, secure-objects, cmsf, catalog-format and privacy-pass are flat. Datatracker is flat: no new drafts since the Oct-14 Blockcast cluster.
+
+## Implementations: moq-dev v0.17.7; moq-rs Track Properties + test relay (open); moqtail/quiche/moxygen fixes
+
+- **[[moq-dev|moq-dev/moq]] cut moq-relay v0.17.7** (Oct-17, with libmoq v0.6.17, moq-ffi/moq-gst v0.4.17, obs-moq v0.6.17, moq-cli v0.14.7) after a **~209-merge run (+143k/−37k)**, nearly all by kixelated.
+  - `moq-quic` becomes the shared QUIC layer ([#5664](https://github.com/moq-dev/moq/pull/5664), +10.6k, breaking), with hierarchical per-subscription send groups ([#5711](https://github.com/moq-dev/moq/pull/5711)).
+  - New surfaces: a Dart SDK ([#5839](https://github.com/moq-dev/moq/pull/5839)), a WebRTC data channel via str0m ([#5702](https://github.com/moq-dev/moq/pull/5702)), `@moq/e2ee` ([#5818](https://github.com/moq-dev/moq/pull/5818)), `moq import rtsp` ([#5859](https://github.com/moq-dev/moq/pull/5859)) and relay ACME/Let's Encrypt certificates ([#5858](https://github.com/moq-dev/moq/pull/5858)).
+  - IETF compatibility: [#5798](https://github.com/moq-dev/moq/pull/5798) applies draft-14–16 REQUEST_UPDATEs.
+  - A docs change ([#5753](https://github.com/moq-dev/moq/pull/5753)) tells agents to prioritize moq-net/moq-lite over moq-transport.
+- **[[moq-rs|cloudflare/moq-rs]]**: two large PRs by nnazo are open, with no merges or release (v0.7.30 stands).
+  - [#278](https://github.com/cloudflare/moq-rs/pull/278) forwards Track Properties through relays (+1,982); until now moq-relay-ietf dropped them.
+  - [#280](https://github.com/cloudflare/moq-rs/pull/280) adds `moq-test-relay` (+6,069), which checks clients against the runner's proposed test-relay interface.
+- **[[moqtail]]** merged [#397](https://github.com/moqtail/moqtail/pull/397), which terminates downstream subscriptions on a malformed upstream track. **google/quiche** moqt fixed partial-object accounting in `MoqtRelayTrackPublisher` (martinduke). **[[moxygen]]** restricted draft-22 PUBLISH_OK parameters (Aman Sharma), and afrind opened #254–#256. **[[libquicr]]** #1013 fixes qclient locking. **[[imquic]]** fixed AnnexB→AVCC conversion in its LOC demo; this is the bug [[lorenzo-miniero|Miniero]] hit in LOC A/V interop with moq-encoder-player.
+- Quiet: video-dev/moq-js, birneee/quiche_moq, and the Eyevinn repos (moqlivemock v0.16.1, warp-player v0.16.0, moqtransport v0.14.0).
+
+## Interop: a record 259 passes
+
+- **Oct-17 cut: 242/309/22 of 575.** The matrix grew by 62 cells after runner [#155](https://github.com/englishm/moq-interop-runner/pull/155) ([[aiomoqt]] 0.12.0rc1, drafts 14–22, open relay) and [#156](https://github.com/englishm/moq-interop-runner/pull/156) (imquic d20/d22).
+- **Oct-18 cut: 259/292/22 (45.0%).** That is +17 on a flat matrix and the highest pass count yet. Most of the gain is the moqx relay running cleanly after [#160](https://github.com/englishm/moq-interop-runner/pull/160). See [[interop-runner]].
+- [[giovanni-marzot|Marzot]]'s [#164](https://github.com/englishm/moq-interop-runner/pull/164) shards the nightly run, cutting about 113 min to 13 min with identical results. [#163](https://github.com/englishm/moq-interop-runner/pull/163) makes the version badge show the draft actually negotiated.
+- New open PRs: a Shaka Player 5.3.0 browser subscriber ([#158](https://github.com/englishm/moq-interop-runner/pull/158)), a MoQT-proxy mode (#157), TS carriage-integrity tests (#159), and a Nokia relay update (#165).
+
+## Slack backfill (Oct 2 → Oct 18): first read since Oct-2
+
+- **Draft-22 relay conformance, from afrind's table** (Oct-14, `#moq`): [[moxygen]] 67/76, Nokia 62/76, [[moqtail]] 56–58/76, stitcher-moq 1–2/76. On Oct-18 he awarded [[aiomoqt]]'s relay a "Silver Star" for **50/50 on d22 over QUIC and WebTransport** (FETCH sections not run).
+- **The draft-22 `FILL_PARAMETERS` spelling** (Oct-16, 21 replies). The d22 text is ambiguous: length, count, or both.
+  - afrind wanted the target to be "d22 + #2015", which is count-only, possibly through a temporary SETUP option.
+  - [[steven-riedl|Riedl]] pointed out that moq-net, moxygen and moqtail *"all passed 7/7 against each other this week"* with length+count.
+  - [[zafer-gurel|Gurel]] settled it: *"Let's keep it that way and fix it in d23."*
+  - afrind: *"22 is the target until likely ~January."*
+- **The Seattle interop bug hunt** (Oct-12 → 14), led mainly by [[aman-sharma|Aman Sharma]]:
+  - FETCH_OK End Location is inclusive in d22.
+  - The quiche relay strips datagram properties and had a null-deref crash.
+  - Nokia copied the upstream PUBLISH_DONE stream count.
+  - moqtail had descending-FETCH and subgroup races; Gurel deployed fixes within hours.
+
+  Duke and afrind also debated whether a relay may forward FETCH objects before FETCH_OK. afrind: *"We explicitly wanted the case where one could return fetch objects before fetch OK."* That position became [#2005](https://github.com/moq-wg/moq-transport/pull/2005).
+- **New tooling and endpoints:**
+  - [[mondain|Paul Gregoire]]'s **`moq-contribution-interop-runner`** (Oct-2) tests the publish side and covers d18–22 plus moq-lite-06.
+  - [[yu-you|Yu You]]'s Nokia online d18 tool and d22 relay (Oct-8/12).
+  - [[giovanni-marzot|Marzot]]'s **moqarena.marzresearch.net** (Oct-16).
+  - Aman Sharma's **Wireshark MOQT dissector** MR (GitLab !26801, Oct-17).
+  - [[luke-curley|Curley]]'s moq.pro now advertises "14-22 support*".
+- **Meta engineering blog, "Shipping Media over QUIC at Meta scale for Instagram Live ingest"** (shared by afrind, Oct-12). This is a production MoQ ingest deployment at Instagram scale.
+- **The AUTH design team at Seattle** (`#moq-auth-design-team`). It proposed DPoP proofs carried on MoQ actions through an AUTH challenge/proof exchange. The room preferred a **separate auth message for SETUP**: Sharma drafts that, and Manu Gupta takes request-level auth via REQUEST_UPDATE. Details are in [[moq-c4m]].
+- **A February 2027 European interim** is being planned (Oct-15 thread). Duke listed cities with direct flights from Calgary. Venue offers came from [[mike-english|Mike English]] (Cloudflare London), [[will-law|Will Law]] (Akamai London/Paris/Amsterdam/Munich/Zug) and [[ali-begen|Ali Begen]] (Istanbul).
+- Other items:
+  - Jordi Cenzano's dual-relay redundancy demo (Madrid + LA).
+  - afrind's moq-rs 0.7.26 perf test on AWS (`#moq-rs`): capped near 2 Gbps, with multi-second latency, though he suspects his own setup.
+  - Gurel's probing draft drew comparisons with Curley's `lcurley-moq-probe-00` and a "why not at the QUIC layer?" question from Michal Hosna.
+- `#moq-js` and `#libquicr` were quiet.
 
 # Activity (Oct 15 → Oct 16) — **Post-interim, the spec repo turns to REDIRECT: a four-issue relay-redirect/caching cluster (#1997–#2000) plus a prefix-update issue (#2001) and the FORWARD→PAUSED rename (#2002); moq-dev cuts v0.17.6; moq-rs adds a CAT-token minting CLI; the interop runner clears its pre-collapse baseline at 236 (+27) as a moqxr/moqy draft-22 client and a Red5 relay enrol.**
 
