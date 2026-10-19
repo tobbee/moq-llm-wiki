@@ -2,11 +2,47 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-18
+last_updated: 2026-10-19
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-19 — Quiet post-interim day; Subgroup Properties proposal
+
+**TL;DR**:
+- **The only new spec work is Michal Hosna's two-PR Subgroup Properties proposal ([#2023](https://github.com/moq-wg/moq-transport/pull/2023), [#2024](https://github.com/moq-wg/moq-transport/pull/2024), Oct-18, refs #1857).** #2023 carries per-Subgroup properties in `SUBGROUP_HEADER` and a new FETCH Subgroup entry (filterable via `SUBGROUP_PROPERTY_FILTER`), moves the per-Subgroup delivery-timeout overrides and Prior Group ID Gap into them, and renames `TRUNCATED_OBJECT`/`MALFORMED_OBJECT` to `*_STREAM`; #2024 adds a `SKIP_SUBGROUP_PROPERTIES` parameter. No merges — transport stays at draft-22; datatracker and mailing list flat.
+- **Implementations**: all quiet. moq-dev had only routine dependabot bumps (#5896–#5902) after v0.17.7; moq-rs (#278/#280), moqtail (#444–#446), quiche (newest Oct-16) and Eyevinn repos unchanged; no new releases.
+- **Interop**: no new run — latest cut is still Oct-18 00:26 UTC at 259/292/22 of 575; the Oct-19 nightly had not published by ~01:10 UTC.
+
+**Operation**: Update (manual; covers 2026-10-18 ~afternoon UTC → 2026-10-19 ~01:10 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — no new drafts or revisions since the Oct-14 Blockcast cluster. `draft-ietf-moq-transport-22` (2026-10-01) stands; all WG docs unchanged. Newest individual drafts remain draft-ramadan-moq-mmt/-fec/-multicast-00 and draft-gregoire-moq-msfts-02 (all Oct-14).
+- GitHub `moq-wg`:
+  - **No merges** in moq-transport; newest is still #1938/#1970 (Oct-13).
+  - **New**: [#2023](https://github.com/moq-wg/moq-transport/pull/2023) *"Add Subgroup Properties"* (michalhosna, Oct-18 22:04, refs #1857 — marked tentative) and [#2024](https://github.com/moq-wg/moq-transport/pull/2024) *"Add SKIP_SUBGROUP_PROPERTIES parameter"* (michalhosna, Oct-18 23:16, stacked on #2023).
+  - Carry-over open: afrind's #2004–#2022 cleanup batch (#2015 and #2017 Merge Ready), #2002 (FORWARD→PAUSED, three approvals), issue #2003 (Simon, malformed-track relaxation).
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (v0.17.7 of Oct-17 stands). Only routine dependabot bumps merged Oct-18 (#5896–#5902, cargo/gh-actions/gradle/pub/uv/nix groups); the earlier Oct-18 quest/feature merges were already captured in the v0.17.7 writeup.
+  - cloudflare/moq-rs: unchanged — [#278](https://github.com/cloudflare/moq-rs/pull/278) (Track Properties) and [#280](https://github.com/cloudflare/moq-rs/pull/280) (moq-test-relay) still open; v0.7.30 stands.
+  - moqtail: unchanged — #444–#446 open, release PR #398 open.
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Quiet: video-dev/moq-js (newest Jun-26), birneee/quiche_moq, all Eyevinn repos (warp-player saw only dependabot #200–#202).
+- Interop runner: **no new run** — latest is still the [Oct-18 00:26 cut](https://englishm.github.io/moq-interop-runner/results/2026-10-18_002620/report.html) = 575 / 259 / 292 / 22 (45.0%). Probed for an Oct-19 00:2x report; all 404 as of ~01:10 UTC.
+- IETF mailing list: **flat** — nothing new since the Oct-18 weekly GitHub digest (already logged) and the Oct-16 Draftification / draft-19-consensus / MOQT-redundancy threads.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 18 → Oct 19)* — the Subgroup Properties proposal (#2023/#2024) plus an "everything else quiet" roundup; `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *Quiet day; one new design thread.* With the Seattle interim closed and the draft-23 cleanup queue already filed, the only genuinely new item is Hosna's Subgroup Properties proposal. It is an unmerged, explicitly tentative PR cluster, so it lives in the log and [[discussions-2026-10]] — not on [[moq-transport]], which already notes the draft-23 PR-queue state.
+- *No durable impl facts changed.* No new releases, no merged WG PRs, and no new interop run, so no entity page needed a durable edit.
 
 # 2026-10-18 — draft-23 PR queue fills; Slack backfill; record interop
 

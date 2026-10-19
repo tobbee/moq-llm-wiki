@@ -2,11 +2,27 @@
 title: "Discussions - October 2026"
 tags: [discussions, slack, github]
 date: 2026-10-02
-last_updated: 2026-10-18
+last_updated: 2026-10-19
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
+
+# Activity (Oct 18 → Oct 19) — **A quiet post-interim day: the only new spec work is Michal Hosna's Subgroup Properties proposal (#2023/#2024); no merges, no new release, and no new interop run.**
+
+With the Seattle interim closed and afrind's draft-23 cleanup queue already filed, the late hours of Oct-18 and Oct-19 were quiet across the ecosystem. The one new item is a two-PR Subgroup Properties proposal in the transport repo.
+
+## Spec / WG: Subgroup Properties (#2023 / #2024)
+
+- **Michal Hosna opened [#2023](https://github.com/moq-wg/moq-transport/pull/2023) *"Add Subgroup Properties"*** (Oct-18, refs [#1857](https://github.com/moq-wg/moq-transport/issues/1857)). It carries per-Subgroup properties in the `SUBGROUP_HEADER` and in a new FETCH Subgroup entry, filterable with a new `SUBGROUP_PROPERTY_FILTER`. The per-Subgroup `SUBGROUP_DELIVERY_TIMEOUT` / `OBJECT_DELIVERY_TIMEOUT` overrides and the Prior Group ID Gap move into Subgroup Properties, and `TRUNCATED_OBJECT` / `MALFORMED_OBJECT` become `*_STREAM` because they no longer cover only Objects. Hosna flagged it as tentative ("Super not sure about this one").
+- **[#2024](https://github.com/moq-wg/moq-transport/pull/2024) *"Add SKIP_SUBGROUP_PROPERTIES parameter"*** (Oct-18) stacks on #2023: a subscriber that already holds a Subgroup's properties can ask the publisher not to repeat them on every stream and FETCH Subgroup entry.
+- No merges — transport stays at **draft-22** (the interop target "until ~January"), with draft-23 still a work-in-progress PR queue. afrind's Oct-16/18 cleanup batch (#2004–#2022) and the FORWARD→PAUSED rename ([#2002](https://github.com/moq-wg/moq-transport/pull/2002)) are unchanged from the *Oct 16 → Oct 18* section below.
+
+## Everything else quiet
+
+- **Implementations**: [[moq-dev|moq-dev/moq]] saw only routine dependabot bumps (#5896–#5902) after v0.17.7; no new release. [[moq-rs]] (#278/#280 open), [[moqtail]] (#444–#446 open), **google/quiche** moqt (newest the Oct-16 partial-object fix) and the Eyevinn repos are unchanged, and video-dev/moq-js stays dormant.
+- **Interop**: no new runner cut since the Oct-18 00:26 UTC cut (575 / 259 / 292 / 22); the Oct-19 nightly had not published as of ~01:10 UTC. See [[interop-runner]].
+- **Mailing list / datatracker / newsletter**: flat — only the Oct-18 weekly GitHub digest (already logged); `draft-ietf-moq-transport` stays at **-22** (2026-10-01); MoQ Monthly stays at #2 (2026-05-31).
 
 # Activity (Oct 16 → Oct 18) — **afrind opens about 17 draft-23 cleanup PRs, with no merges; draft-22 stays the interop target "until ~January"; moq-dev cuts v0.17.7 after a ~209-merge run; the interop runner sets a record 259 passes; and a Slack backfill (Oct 2 → 18) brings in the Seattle interop and auth-design-team detail.**
 
