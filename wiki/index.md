@@ -2,7 +2,7 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-10-19
+last_updated: 2026-10-20
 status: current
 updated: 2026-09-30
 ---
@@ -135,6 +135,7 @@ Moved to the dedicated **[[overview|Implementations Overview]]** page (language,
 - [[kota-yatagai]] - Keio University, author of Moqtopus (Unreal Engine)
 - [[steven-riedl]] - Pluto TV/Paramount, SSAI operator perspective on interop
 - [[aman-sharma]] - University of Michigan, [[moq-transport]] editor, [[moqtail]] contributor and interop bug-finder
+- [[michal-hosna|Michal Hošna]] - CDN77 (Prague), [[moq-transport]] Properties/Publisher-Priority design, CAT4MOQ auth
 - [[martin-thomson]] - Mozilla, transport/security review
 - [[tobbe-einarsson|Torbjörn Einarsson]] - Eyevinn, co-author of LOCMAF, author of moqlivemock/warp-player, wiki maintainer
 

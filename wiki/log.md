@@ -2,11 +2,50 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-19
+last_updated: 2026-10-20
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-20 — Properties thread grows; first post-interim merge
+
+**TL;DR**:
+- **The transport Properties design thread kept growing while the first WG merge since Oct-13 landed quietly.** [[michal-hosna|Michal Hosna]] extended his Subgroup Properties line to **Publisher Priority** ([#2030](https://github.com/moq-wg/moq-transport/pull/2030), stacked on #2023, +182/−121 — stops treating Publisher Priority as a special header field + immutable default, resolving #1270) and filed three refinement issues against his own design (#2027 duplicates, #2028 out-of-scope use, #2029 grease/Mandatory-range overlap); [[ian-swett|Swett]]'s [#2025](https://github.com/moq-wg/moq-transport/issues/2025) asks how to protect relays from a publisher flooding many overlapping subgroups (floats a Max Simultaneous Subgroups Track Property), and [[aman-sharma|Sharma]]'s [#2026](https://github.com/moq-wg/moq-transport/issues/2026) wants FETCH range indicators delta-encoded. afrind's [#1960](https://github.com/moq-wg/moq-transport/pull/1960) (*Reject relative Location filter in FETCH*) merged Oct-19 15:04 — the **first merge since Oct-13** — but transport stays at **draft-22** (no release bump). Mailing list turned to logistics: Westerlund posted the Seattle interim draft minutes, IETF 127 agenda planning opened, and Duke called for a Feb 8–11 interim venue.
+- **Implementations**: moq-dev churned ~71 more merges (kixelated: m1 quests #5985 SUBSCRIBE_ALL→TRACKS, #5972 lite drops per-request auth, breaking decoder changes #5941/#5942) but **cut no release** — v0.17.7 stands. moq-rs (#276/#278/#280 open, v0.7.30), moqtail (#444–#446 open), quiche moqt (newest Oct-16) and all Eyevinn/birneee/moq-js repos flat.
+- **Interop**: Oct-19 00:26 cut = 256/295/22 of 575 (44.5%) — −3 vs the Oct-18 record (259) on a flat matrix and unchanged classification (373/134/68), i.e. a routine flake; no Oct-20 run yet.
+
+**Operation**: Update (manual; covers 2026-10-19 ~01:10 UTC → 2026-10-20 ~01:00 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — no new drafts or revisions since the Oct-14 Blockcast cluster. `draft-ietf-moq-transport-22` (2026-10-01) stands; all WG docs unchanged. Newest individual drafts remain draft-ramadan-moq-mmt/-fec/-multicast-00 and draft-gregoire-moq-msfts-02 (all Oct-14).
+- GitHub `moq-wg`:
+  - **Merged**: [#1960](https://github.com/moq-wg/moq-transport/pull/1960) *"Reject relative Location filter in FETCH"* (afrind, Oct-19 15:04, fixes #1959) — the first moq-transport merge since #1966/#1970 (Oct-13). Transport stays at draft-22.
+  - **New**: [#2030](https://github.com/moq-wg/moq-transport/pull/2030) *"Mh/publisher priority property"* (michalhosna, Oct-20 00:01, stacked on #2023, +182/−121). Issues [#2025](https://github.com/moq-wg/moq-transport/issues/2025) (Swett — stream/subgroup flood protection), [#2026](https://github.com/moq-wg/moq-transport/issues/2026) (sharmafb — FETCH range delta encoding), and Hosna's Properties follow-ups [#2027](https://github.com/moq-wg/moq-transport/issues/2027)/[#2028](https://github.com/moq-wg/moq-transport/issues/2028)/[#2029](https://github.com/moq-wg/moq-transport/issues/2029) (all Oct-19).
+  - Carry-over open: afrind's #2004–#2022 cleanup batch (#2015/#2017 Merge Ready), #2002 (FORWARD→PAUSED), the #2023/#2024 Subgroup Properties PRs, issue #2003 (Simon, malformed-track relaxation).
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (moq-relay v0.17.7 of Oct-17 stands), despite ~71 more merges (all kixelated) since the last log. Notable: [#5985](https://github.com/moq-dev/moq/pull/5985) replaces `SUBSCRIBE_ALL` with a TRACKS listing; [#5972](https://github.com/moq-dev/moq/pull/5972) drops per-request auth from moq-lite; [#5957](https://github.com/moq-dev/moq/pull/5957)/[#5984](https://github.com/moq-dev/moq/pull/5984) forward SETUP tokens through io_uring auth; breaking [#5942](https://github.com/moq-dev/moq/pull/5942) (`fix(mux)!`) and [#5941](https://github.com/moq-dev/moq/pull/5941) (`feat(json)!`, refuse duplicate keys). Mostly net/mux/test hardening.
+  - cloudflare/moq-rs: unchanged — [#276](https://github.com/cloudflare/moq-rs/pull/276)/[#278](https://github.com/cloudflare/moq-rs/pull/278)/[#280](https://github.com/cloudflare/moq-rs/pull/280) still open; v0.7.30 stands.
+  - moqtail: unchanged — #444–#446 open, no merge since #443 (Oct-15).
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Quiet: video-dev/moq-js (newest Jun-26), birneee/quiche_moq, all Eyevinn repos.
+- Interop runner: **Oct-19 00:26 cut** = 575 / 256 / 295 / 22 (44.5%; at-target 373, ahead 134, behind 68) — −3 pass vs the Oct-18 record on a flat matrix and unchanged classification. No Oct-20 00:2x report had published as of ~01:00 UTC.
+- IETF mailing list: **active (logistics)** — Magnus Westerlund posted the draft minutes for the Oct-14/15 Seattle interim (replies from Duke, Mike English); IETF 127 planning opened (Westerlund *"MOQ WG meetings at IETF 127"*, Duke *"IETF 127 Agenda Requests"*); Duke *"Proposals to host an interim 8-11 February"* and the weekly *"call for agenda items: 10/26"*. The Oct-18 weekly GitHub digest was already logged.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 19 → Oct 20)* — the Properties thread (#2030 + #2025–#2029), the #1960 merge, the mailing-list logistics, moq-dev's no-release churn, and the interop flake; `last_updated` bumped.
+- [[michal-hosna]]: **new people page** — CDN77 (Prague) transport contributor; collects his Properties / Publisher Priority / REDIRECT / scope / CAT4MOQ work.
+- [[interop-runner]]: Oct-19 is the Latest cut, Oct-18 Prior, Oct-17 Earlier; `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *The Properties redesign is becoming a sustained thread, not a one-off.* Hosna's #2023/#2024 proposal now has a Publisher Priority extension (#2030) and three self-filed gap issues (#2027–#2029), and it intersects Swett's stream-flood concern (#2025) and Sharma's FETCH-range encoding (#2026). Still all unmerged and tentative, so it stays in the log + [[discussions-2026-10]], not on [[moq-transport]].
+- *First post-interim merge is editorial.* #1960 is a FETCH Location-filter clarification; it does not move the wire or the draft version, so no entity-page durable edit was warranted beyond noting it.
+- *moq-dev momentum without a cut.* ~71 merges but no new release means no durable fact changed on [[moq-dev]]; the churn is logged only.
 
 # 2026-10-19 — Quiet post-interim day; Subgroup Properties proposal
 
