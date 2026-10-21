@@ -2,11 +2,50 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-20
+last_updated: 2026-10-21
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-21 — Quiet day; EndOfGroup bit questioned; interop misses a 2nd night
+
+**TL;DR**:
+- **A low-key spec day of small, robustness-flavoured changes rather than new design.** [[alan-frindell|afrind]]'s [#1993](https://github.com/moq-wg/moq-transport/pull/1993) *"Do not require duplicate Request ID detection"* merged Oct-20 21:24 (+5/−3, fixes #1952) — the **second small merge in two days**, transport still **draft-22**. [[aman-sharma|Sharma]] turned yesterday's issue into PR [#2031](https://github.com/moq-wg/moq-transport/pull/2031) (*delta-encode FETCH range indicators*, +14/−4, fixes #2026). The one genuinely new design wrinkle: [[martin-duke|Duke]]'s [#2032](https://github.com/moq-wg/moq-transport/issues/2032) (Oct-21 00:45) shows the just-added **End-of-Group bit** (the #1990 fix) encodes the wrong answer when a `REQUEST_UPDATE` filter trims a subgroup's last Object mid-stream — all four recovery options are bad; it pairs with Swett's #1992 (Fill-Fetch vs coalescing REQUEST_UPDATEs) as an emerging filter-vs-group-completion cluster. Mailing list quiet (only Westerlund's Oct-20 interim-minutes reply); datatracker flat.
+- **Implementations**: moq-dev ran ~28 more merges (all kixelated/dependabot) but **cut no release** — v0.17.7 stands; the batch is CI/infra + "quest" planning (NixOS toolchain #6080/#6086, IPv6 loopback #6089, CodeQL ReDoS #6084, security policy #6078, moq-quic/GOAWAY quests #6081/#6083). moq-rs (#276/#278/#280 open, v0.7.30), moqtail (#445 touched, no merge since #443), quiche moqt (newest Oct-16) and all Eyevinn/birneee/moq-js repos flat.
+- **Interop**: no new cut — latest stays Oct-19 00:26 (256/295/22 of 575, 44.5%). The **Oct-20 00:22 nightly run was cancelled** and the **Oct-21 00:22 run stalled/queued** — a second consecutive missed night during a runner-infra refactor (#164). Roster churn merged anyway (#161/#165/#166/#167); #168 (moq-go moqt-22 ALPN) and #158 (**Shaka Player** browser client) open and pending.
+
+**Operation**: Update (manual; covers 2026-10-20 ~01:00 UTC → 2026-10-21 ~01:15 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — `draft-ietf-moq-transport-22` (2026-10-01) stands; no draft revised between Oct-15 and Oct-21. Newest individual drafts remain the Oct-14 Blockcast cluster (draft-ramadan-moq-mmt/-fec/-multicast-00, draft-gregoire-moq-msfts-02).
+- GitHub `moq-wg`:
+  - **Merged**: [#1993](https://github.com/moq-wg/moq-transport/pull/1993) *"Do not require duplicate Request ID detection"* (afrind, Oct-20 21:24, +5/−3, fixes #1952) — second merge in two days; transport stays draft-22, no release bump.
+  - **New**: PR [#2031](https://github.com/moq-wg/moq-transport/pull/2031) *"Use delta encoding for FETCH range indicators"* (sharmafb, Oct-20 19:37, +14/−4, fixes #2026) and issue [#2032](https://github.com/moq-wg/moq-transport/issues/2032) *"EndOfGroup bit is not safe for multi-object streams"* (martinduke, Oct-21 00:45).
+  - Carry-over open: afrind's #2004–#2022 draft-23 cleanup batch (revised Oct-20 — #2009 retitled to *Remove End Location… replace with REQUEST_OK*, #2018/#2019/#2021 updated), Hosna's Properties cluster #2023/#2024/#2030, FORWARD→PAUSED #2002, Swett's #1992 (updated Oct-20).
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (moq-relay v0.17.7 of Oct-17 stands) despite ~28 more merges (all kixelated + dependabot). Batch is CI/infra + planning: NixOS runner toolchain + single Linux gate ([#6080](https://github.com/moq-dev/moq/pull/6080)/[#6086](https://github.com/moq-dev/moq/pull/6086)), IPv6 loopback for the runner VM ([#6089](https://github.com/moq-dev/moq/pull/6089)), CodeQL ReDoS/`workflow_run` fix ([#6084](https://github.com/moq-dev/moq/pull/6084)), security policy ([#6078](https://github.com/moq-dev/moq/pull/6078)), nightly-report listing ([#6079](https://github.com/moq-dev/moq/pull/6079)), IETF provenance as ingress version ([#6072](https://github.com/moq-dev/moq/pull/6072)), moq-quic/GOAWAY/CI-audit quests ([#6081](https://github.com/moq-dev/moq/pull/6081)/[#6083](https://github.com/moq-dev/moq/pull/6083)).
+  - cloudflare/moq-rs: unchanged — #276/#278/#280 open; v0.7.30 stands.
+  - moqtail: unchanged — [#445](https://github.com/moqtail/moqtail/pull/445) *"cancel upstream requests on malformed track"* touched Oct-20 but still open; #444–#446 open, no merge since #443 (Oct-15).
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Quiet: video-dev/moq-js (newest Jun-26), birneee/quiche_moq, all Eyevinn repos (warp-player only dependabot #203/#204).
+- Interop runner: **no new published cut** — latest stays the [Oct-19 00:26 cut](https://englishm.github.io/moq-interop-runner/results/2026-10-19_002651/report.html) = 575 / 256 / 295 / 22 (44.5%). The **Oct-20 00:22 Interop Report run was cancelled** (~2 h) and the **Oct-21 00:22 run stalled/queued** without publishing as of ~01:15 UTC — second consecutive missed night, coinciding with the nightly-infra refactor ([#164](https://github.com/englishm/moq-interop-runner/pull/164)). Merged Oct-20: [#167](https://github.com/englishm/moq-interop-runner/pull/167) (moq.dev clients → moq-tokio 0.19.28 / @moq/net 0.4.4), [#165](https://github.com/englishm/moq-interop-runner/pull/165) (Nokia relay), [#161](https://github.com/englishm/moq-interop-runner/pull/161)/[#166](https://github.com/englishm/moq-interop-runner/pull/166) (aiomoqt one-relay-column). Open/pending: [#168](https://github.com/englishm/moq-interop-runner/pull/168) (moq-go `moqt-22` ALPN) and [#158](https://github.com/englishm/moq-interop-runner/pull/158) (**Shaka Player** browser client — Chromium/Chrome/Firefox/Safari, zshenker; validation awaiting maintainer approval).
+- IETF mailing list: **quiet** — only new post is Magnus Westerlund's Oct-20 reply in the *"Draft minutes for Interim Meeting 14-15 October 2026"* thread. The Oct-19 IETF 127 / February-interim / 10/26-agenda threads were already logged.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 20 → Oct 21)* — the #1993 merge, #2031, Duke's EndOfGroup #2032, moq-dev's no-release CI churn, the second missed interop night + Shaka Player enrollment; `last_updated` bumped.
+- [[interop-runner]]: Current standing gains a *Nightly gap (Oct-20 and Oct-21)* note (both runs failed to publish) plus the Oct-20 roster churn and the pending Shaka Player client; `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *The filter/group-completion interaction is becoming its own problem.* Duke's #2032 shows the End-of-Group bit (merged to fix #1990) is unsound once `REQUEST_UPDATE` filters can trim a subgroup's last Object; it pairs with Swett's #1992. Both are open issues on an in-progress mechanism, so they live in the log + [[discussions-2026-10]], not on [[moq-transport]] (still draft-22, draft-23 queue still being refined).
+- *Two small merges, no wire move.* #1960 (Oct-19) and #1993 (Oct-20) are both editorial/robustness clarifications; neither bumps the draft or the wire, so no entity-page durable edit was warranted.
+- *moq-dev momentum is now pure infra.* ~28 merges but no release and no protocol change — CI hardening and quest planning only — so nothing durable changed on [[moq-dev]]; logged only.
+- *Interop nightly is down two nights.* The missed Oct-20/Oct-21 cuts are an operational fact worth flagging on [[interop-runner]], but the published standing (Oct-19, 256/575) is unchanged.
 
 # 2026-10-20 — Properties thread grows; first post-interim merge
 

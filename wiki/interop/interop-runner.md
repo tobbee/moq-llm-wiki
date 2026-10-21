@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-10-20
+last_updated: 2026-10-21
 status: current
 ---
 
@@ -60,7 +60,9 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-10-19 00:26:51 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-19_002651/report.html) — 575 cells / 256 pass / 295 fail / 22 skip** (44.5% pass; at-target 373 · ahead 134 · behind 68). **−3 pass (259 → 256) on a flat matrix and unchanged classification** — three cells flipped pass→fail with no roster or protocol change, i.e. a routine flake off the Oct-18 record high. No Oct-20 cut had published as of this update.
+**Latest cut: [2026-10-19 00:26:51 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-19_002651/report.html) — 575 cells / 256 pass / 295 fail / 22 skip** (44.5% pass; at-target 373 · ahead 134 · behind 68). **−3 pass (259 → 256) on a flat matrix and unchanged classification** — three cells flipped pass→fail with no roster or protocol change, i.e. a routine flake off the Oct-18 record high.
+
+> **Nightly gap (Oct-20 and Oct-21):** no new cut has published since Oct-19. The **Oct-20 00:22 Interop Report run was cancelled** (after ~2 h) and the **Oct-21 00:22 run stalled/queued** without publishing — two consecutive missed nights, coinciding with an in-flight nightly-infra refactor (open [#164](https://github.com/englishm/moq-interop-runner/pull/164) *"nightly: one test job per relay in parallel, merged before publishing"*). Roster churn merged Oct-20 nonetheless: [#167](https://github.com/englishm/moq-interop-runner/pull/167) (moq.dev clients → moq-tokio 0.19.28 / @moq/net 0.4.4), [#165](https://github.com/englishm/moq-interop-runner/pull/165) (Nokia relay), [#161](https://github.com/englishm/moq-interop-runner/pull/161)/[#166](https://github.com/englishm/moq-interop-runner/pull/166) (aiomoqt one-relay-column, `:latest` 0.12.0, open relay `aiomoqt-relay.marzresearch.net`); [#168](https://github.com/englishm/moq-interop-runner/pull/168) (moq-go `moqt-22` ALPN) and [#158](https://github.com/englishm/moq-interop-runner/pull/158) (**Shaka Player** browser client — Chromium/Chrome/Firefox/Safari, zshenker; registration validation awaiting maintainer approval) are open.
 
 **Prior cut: [2026-10-18 00:26:20 UTC](https://englishm.github.io/moq-interop-runner/results/2026-10-18_002620/report.html) — 575 cells / 259 pass / 292 fail / 22 skip** (45.0% pass; at-target 373 · ahead 134 · behind 68). **+17 pass (242 → 259) on a flat matrix — the highest pass count on record.** The gain is mostly the **moqx relay starting cleanly again (19/26 → 29/16)** after runner [#160](https://github.com/englishm/moq-interop-runner/pull/160) moved its qlog under `/tmp` so it runs as non-root; clients also rose (moq-dev-rs 24/14 → 30/8, aiomoqt 19/24 → 25/18). stitcher-moq (36/2/1) and moq5 (30/3) are the strongest clients. The `moqxr` draft-22 client is still all skips (0/0/18), and the Nokia `moqt-nr` relay slid from 16/12 on Oct-16 to 8/20 (runner [#165](https://github.com/englishm/moq-interop-runner/pull/165) relay update still open).
 
