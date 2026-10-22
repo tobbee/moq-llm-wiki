@@ -2,11 +2,49 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-21
+last_updated: 2026-10-22
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-22 — Quiet spec day; interop nightly recovers after 2-night gap
+
+**TL;DR**:
+- **Another low-key spec day.** The only new moq-transport work is [[ian-swett|Swett]]'s PR [#2033](https://github.com/moq-wg/moq-transport/pull/2033) *"Allow Fill-Fetch to use Subscribe style delivery"* (Oct-21 05:13, +51/−11, fixes [#1358](https://github.com/moq-wg/moq-transport/issues/1358)): when a subscriber joins at the current or a past Group, the Publisher may deliver some/all past Groups with **Subscribe-style delivery** (only when `FILL_PARAMETERS` omits a `LOCATION_FILTER`; it starts at `FIRST_SUBSCRIBE_GROUP`, earlier Groups go on the Fill-Fetch stream) — squarely in the Fill-Fetch ↔ `REQUEST_UPDATE`-filter cluster around Swett's #1992 and Duke's #2032. **No WG merges** (newest still #1993), transport stays **draft-22**; no new issues since #2032. Mailing list quiet bar Felician Németh's Oct-21 reply reviving the *MOQT redundancy implementation* thread; datatracker/newsletter flat; no open wiki issues; Slack not checked (no access this run).
+- **Implementations**: moq-dev ran **73 more merges** (72 kixelated + 1 zshenker) but **cut no release** — v0.17.7 stands. Beyond the usual CI/quest churn the batch adds real net fixes — GOAWAY redirect-loop backoff ([#6162](https://github.com/moq-dev/moq/pull/6162)/[#6115](https://github.com/moq-dev/moq/pull/6115)), a QUIC flow-control guard ([#6146](https://github.com/moq-dev/moq/pull/6146)), lite `SUBSCRIBE_DROP` to readers ([#6143](https://github.com/moq-dev/moq/pull/6143)), breaking `feat(tokio)!` QUIC-driver-without-moq-net ([#6132](https://github.com/moq-dev/moq/pull/6132)) — plus a CI step publishing nightly interop to `git.moq.dev/interop` ([#6180](https://github.com/moq-dev/moq/pull/6180)). moq-rs (#276/#278/#280 open, v0.7.30), moqtail (#445 touched), quiche moqt (newest Oct-16) and all Eyevinn/birneee/moq-js repos flat.
+- **Interop**: **nightly back after two missed nights.** The infra refactor [#164](https://github.com/englishm/moq-interop-runner/pull/164) (*one test job per relay in parallel, merged before publishing*) merged Oct-21 22:07 and the **Oct-22 00:22 cut published** = 238/294/24 of 569 (41.8%; at-target 370 · ahead 134 · behind 65). Not a clean comparison — **−18 pass vs Oct-19 on a −6-cell matrix** after two skipped nights + roster/job-topology churn (#161/#166 aiomoqt one-relay-column, #168 moq-go `moqt-22`, #169 moqxr v0.4.10); watch Oct-23 for the steady state.
+
+**Operation**: Update (manual; covers 2026-10-21 ~01:15 UTC → 2026-10-22 ~01:30 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — `draft-ietf-moq-transport-22` (2026-10-01) stands; no WG doc revised. Newest individual drafts remain the Oct-14 Blockcast cluster (draft-ramadan-moq-mmt/-fec/-multicast-00, draft-gregoire-moq-msfts-02); nothing dated Oct-15 or later.
+- GitHub `moq-wg`:
+  - **No merges** in moq-transport — newest is still [#1993](https://github.com/moq-wg/moq-transport/pull/1993) (afrind, Oct-20 21:24); transport stays draft-22.
+  - **New**: PR [#2033](https://github.com/moq-wg/moq-transport/pull/2033) *"Allow Fill-Fetch to use Subscribe style delivery"* (ianswett, Oct-21 05:13, +51/−11, fixes [#1358](https://github.com/moq-wg/moq-transport/issues/1358)). No new issues since #2032 (Oct-21 00:45, already logged).
+  - Carry-over open: afrind's #2004–#2022 draft-23 cleanup batch (#2018/#2019/#2021 revised Oct-21), Hosna's Properties cluster #2023 (revised Oct-21)/#2024/#2030, FORWARD→PAUSED #2002, Swett's #1992 and Duke's #2032.
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (moq-relay v0.17.7 of Oct-17 stands) despite **73 more merges** (72 kixelated + 1 zshenker). Mostly CI/runner/test/docs/quest, but with real net/transport fixes: GOAWAY redirect-loop backoff ([#6162](https://github.com/moq-dev/moq/pull/6162)/[#6115](https://github.com/moq-dev/moq/pull/6115)), QUIC flow-control guard refusing `STOP_SENDING`/`MAX_STREAM_DATA` above the stream limit ([#6146](https://github.com/moq-dev/moq/pull/6146)), lite readers see `SUBSCRIBE_DROP` ([#6143](https://github.com/moq-dev/moq/pull/6143)), breaking `feat(tokio)!` building the QUIC driver without moq-net ([#6132](https://github.com/moq-dev/moq/pull/6132)), bindings present tokens in band ([#6137](https://github.com/moq-dev/moq/pull/6137)), IETF-extension provenance as ingress version ([#6107](https://github.com/moq-dev/moq/pull/6107)), jitter-estimator weight cap ([#6164](https://github.com/moq-dev/moq/pull/6164)), and a CI step publishing nightly interop to `git.moq.dev/interop` ([#6180](https://github.com/moq-dev/moq/pull/6180)).
+  - cloudflare/moq-rs: unchanged — #276/#278/#280 open; v0.7.30 stands.
+  - moqtail: unchanged — [#445](https://github.com/moqtail/moqtail/pull/445) *"cancel upstream requests on malformed track"* touched Oct-21 but still open; no merge since #443 (Oct-15).
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Quiet: video-dev/moq-js (newest Jun-26), birneee/quiche_moq, all Eyevinn repos (newest activity Sep-29/30).
+- Interop runner: **new cut after a 2-night gap** — [Oct-22 00:22:40](https://englishm.github.io/moq-interop-runner/results/2026-10-22_002240/report.html) = 569 / 238 / 294 / 24 (41.8%; at-target 370 · ahead 134 · behind 65). The refactor [#164](https://github.com/englishm/moq-interop-runner/pull/164) merged Oct-21 22:07 and the Oct-22 nightly published normally — the Oct-20/Oct-21 gap is closed. First post-refactor cut is **−18 pass vs Oct-19 (256) on a −6-cell matrix (575→569)** with roster churn ([#161](https://github.com/englishm/moq-interop-runner/pull/161)/[#166](https://github.com/englishm/moq-interop-runner/pull/166) aiomoqt consolidation, [#168](https://github.com/englishm/moq-interop-runner/pull/168) moq-go `moqt-22`, [#169](https://github.com/englishm/moq-interop-runner/pull/169) moqxr v0.4.10) in between, so not a clean comparison. Open/pending: [#163](https://github.com/englishm/moq-interop-runner/pull/163) (report shows negotiated version), [#162](https://github.com/englishm/moq-interop-runner/pull/162) (docker relay multi-endpoint), [#158](https://github.com/englishm/moq-interop-runner/pull/158) (**Shaka Player** browser client, awaiting approval).
+- IETF mailing list: **quiet** — only new post is Felician Németh's Oct-21 reply in the *"MOQT redundancy implementation"* thread (originated Oct-15 by Jordi Cenzano Ferret). The IETF 127 / February-interim / weekly-call / Seattle-interim-minutes threads from Oct-19/20 are unchanged; no new weekly GitHub digest (next ~Oct-25).
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 21 → Oct 22)* — Swett's #2033, the no-merge spec day, Németh's mailing-list reply, moq-dev's no-release churn, and the interop nightly's return; `last_updated` bumped.
+- [[interop-runner]]: Oct-22 is the new Latest cut; the *Nightly gap* note rewritten as **cleared** (Oct-20/21 missed, #164 merged Oct-21 22:07, Oct-22 recovered); Oct-19 demoted to Prior, Oct-18 to Earlier; `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *The Fill-Fetch ↔ filter interaction now has a design PR, not just issues.* Swett's #2033 proposes a concrete escape hatch (fall back to Subscribe-style delivery when no `LOCATION_FILTER`), complementing the open #1992/#2032 problem statements. It is unmerged and transport stays draft-22, so it lives in the log + [[discussions-2026-10]], not on [[moq-transport]].
+- *moq-dev is doing real transport work again, but still without a cut.* The 73-merge batch includes genuine net/QUIC/lite fixes (not only CI), yet no version was tagged — so nothing durable changed on [[moq-dev]]; #6180 hints moq-dev is standing up its own interop reporting at `git.moq.dev/interop`.
+- *The interop nightly recovered, but the first cut is a weak datapoint.* The −18 pass is measured across a 2-night gap and a roster/topology change, not night-over-night, so the Oct-22 standing (238/569) should be read as a reset baseline rather than a regression; the Oct-23 cut will show the real trend.
 
 # 2026-10-21 — Quiet day; EndOfGroup bit questioned; interop misses a 2nd night
 
