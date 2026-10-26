@@ -8,6 +8,36 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-10-26 (supplemental) — Slack backfill since Oct 18
+
+**TL;DR**:
+- **Slack read for the first time since Oct-18.**
+  - New on the spec side: an MSF spec bug, [msf#215](https://github.com/moq-wg/msf/issues/215). Read literally, MSF-01 §6 maps every Object to a new stream; Will Law filed it from Marzot's report.
+  - The AUTH design team's first text: englishm/moq-transport#12, Sharma's auth messages on the SETUP streams.
+  - Draft-14 is retired in practice: moxygen, moqx and stitcher-moq run only 18 and 22.
+- **Implementations**: imquic↔aiomoqt LOC A/V interop works through Miniero's relay but still fails through moqx; aiomoqt sends VIDEO_CONFIG on every object. Nothing new on GitHub in this pass.
+- **Interop**: no new run (226/581 stands). Slack explains the missed nights: the job hit its 120-min limit, and since sharding (#164) the run takes 15 minutes.
+
+**Operation**: Update (supplemental; Slack-only backfill covering 2026-10-18 → 2026-10-26)
+**Sources**:
+- Slack: **checked**, Oct-18 → Oct-26, using `slack_search_public` (`in:#channel after:2026-10-17`) and `slack_read_thread`.
+  - `#moq`: the LOC A/V interop thread (ts 1792160558.833899; Oct-19 → 21 replies incl. 1792594061.137129) and the msf#215 report (ts 1792600518.810999). One new reply on the FILL_PARAMETERS thread (1792169324.728259). No new replies on the Wireshark (1792191055.815339) or Feb-2027 venue (1792096193.210759) threads.
+  - `#moq-interop-runner`: runtime and timeout diagnosis (1792509771.549749, 1792607778.175849), the 15-min sharded run (1792675002.487299), Curley's git.moq.dev/relays nightly (1792701473.258799), and the draft-14 sunset (1792889342.949869).
+  - `#moq-auth-design-team`: Sharma's englishm/moq-transport#12 (1792543272.331339) and Gupta's reply.
+  - `#moq-rs`, `#moq-js`, `#libquicr`: quiet.
+- GitHub (verification only): [msf#215](https://github.com/moq-wg/msf/issues/215) *"Relax requirement to write each MOQT Object to a new MOQT Stream"* (wilaw, opened 2026-10-21 16:33 UTC, open). [englishm/moq-transport#12](https://github.com/englishm/moq-transport/pull/12) *"Sketch authorization messages on SETUP streams"* (opened 2026-10-21 00:40 UTC, open).
+- All other sources: not re-checked in this pass; see the main 2026-10-26 entry below.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Slack backfill (Oct 18 → Oct 26)*.
+- [[moq-msf]]: Recent Highlights gains msf#215 and the catalog version-string note.
+- [[moq-c4m]]: AUTH design-team bullet on the first concrete text (englishm/moq-transport#12).
+- [[interop-runner]]: new *Runner operations notes* section covering the nightly timeout/sharding fix, the draft-14 retirement, and Curley's git.moq.dev/relays nightly.
+
+**Key findings**:
+- *The Oct-19 → 25 logs said "msf flat", but msf#215 was opened Oct-21.* GitHub sweeps of the msf repo should include issues, not just PRs and merges.
+- *Deployments are converging on two drafts.* Draft-18 for the stable interop baseline and draft-22 for the Seattle target. Draft-14 and drafts 19–21 are being dropped by moxygen/moqx, stitcher-moq and moq-dev.
+
 # 2026-10-26 — Virtual interim convenes; MTP challenge gets replies
 
 **TL;DR**:

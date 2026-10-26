@@ -222,6 +222,17 @@ Day-over-day cell churn (per the gh-pages summaries):
 - **Aug 20→21 (−2)**: moq-rs→moqtail d16 WT recovered; moq-rs-draft-14→moqx d14 (QUIC *and* WT) and →moxygen d14 WT went pass→fail.
 - **Aug 21→22 (flat, 4 up / 4 down)**: aiomoqt→moq-dev-rs d18 WT, imquic→moxygen d18 docker, moq-rs-draft-14→moxygen d14 WT, and moxygen→imquic d18 remote-QUIC all went **fail→pass**; imquic→moq-rs-draft-18 docker, moq-rs→moq-rs d16 docker, moq-rs-draft-14→moxygen d14 QUIC, and moxygen→aiomoqt-relay d18 docker went pass→fail.
 
+## Runner operations notes (Oct 20–25, from Slack)
+
+- **Nightly runtime crisis and fix.** The nightly run grew from about 1h04 (Oct-14) to 1h53 (Oct-19) as the matrix passed 575 cells.
+  - The Oct-20 run hit the 120-minute job limit after hanging for 73 minutes on a single cell (moxygen → moqtail-draft-18, remote-webtransport).
+  - The Oct-21 run timed out at cell 542/575.
+  - [[steven-riedl|Riedl]] diagnosed both. After [[giovanni-marzot|Marzot]]'s sharded runner [#164](https://github.com/englishm/moq-interop-runner/pull/164), the Oct-22 nightly *"completed in 15min … (down from nearly 2hrs)"*.
+  - Marzot self-merged [#163](https://github.com/englishm/moq-interop-runner/pull/163), which shows the negotiated version.
+  - The "Rebuild All Docker Images" workflow is run manually by [[mike-english|Mike English]]. An open issue covers the tradeoffs of running code from other repos, which is why images can lag behind implementation releases.
+- **Draft-14 is effectively retired** (Oct-25). [[alan-frindell|afrind]]: *"We just killed it in moxygen and moqx so it's dead to me."* Riedl's stitcher-moq does *"just 18 and 22"*. Together with moq-dev dropping drafts 19–21, the field is converging on **draft-18 + draft-22**.
+- **A second nightly matrix.** [[luke-curley|Luke Curley]] runs his own nightly publish/subscribe interop against public relays at `git.moq.dev/relays`, discovering publishers via `SUBSCRIBE_NAMESPACE`.
+
 ## Daily cuts
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |

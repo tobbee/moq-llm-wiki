@@ -8,6 +8,30 @@ status: current
 
 Summary of active discussions in the MOQ ecosystem during October 2026. The late-September run-up lives in [[discussions-2026-09]].
 
+# Slack backfill (Oct 18 → Oct 26) — **Slack was read for the first time since Oct-18. It adds an MSF spec bug (msf#215: "one Object = one Stream"), the AUTH design team's first concrete text (Sharma's SETUP-stream auth PR), the retirement of draft-14 in practice, the runner's nightly runtime dropping from ~2 h to 15 min, and imquic↔aiomoqt LOC A/V interop progress.**
+
+None of the window's main GitHub and mailing-list topics came up on Slack: the 10/26 virtual interim, the Mandatory Track Property challenge, the Object-ID thread, the Properties cluster, moq-dev v0.17.8 and moqlivemock v0.17.0. `#moq-rs`, `#moq-js` and `#libquicr` were silent.
+
+- **MSF "one Object = one Stream" — [msf#215](https://github.com/moq-wg/msf/issues/215)** (Oct-21).
+  - While debugging LOC interop, [[giovanni-marzot|Giovanni Marzot]] pointed out that MSF-01 §6 (*"each MOQT Object MUST be mapped to a new MOQT Stream"*) would literally mean one QUIC stream per frame. That contradicts moq-transport, LOC §4 and all implementations.
+  - [[will-law|Will Law]] filed the issue to relax the requirement. He also confirmed that the MSF-01 catalog `version` is a string (`"draft-xx"` until the RFC), not the MSF-00 integer, and Marzot's catalog now sends `"draft-01"`.
+  - This corrects the "msf flat" line in the Oct-21 log. See [[moq-msf]].
+- **imquic ↔ aiomoqt LOC A/V interop** (`#moq`, Oct-19 → 21, thread ts 1792160558.833899).
+  - [[lorenzo-miniero|Miniero]]'s first attempt with Marzot's aiomoqt broadcast demo had the relay close the connection with error 3 on subscribe.
+  - Once his player handled LOC VIDEO_CONFIG only on object 0, he got smooth video. aiomoqt sends VIDEO_CONFIG on every object, which Miniero called *"overkill… it only makes sense with a keyframe"*. The LOC draft gives no guidance on how often to send it.
+  - Still open: subscribing through Marzot's moqx relay fails with RESET_STREAM, and Miniero's encoder to Marzot's player gives black video.
+  - On the older FILL_PARAMETERS thread, Miniero *"didn't see it as ambiguous"*; he had implemented it as a nested parameter list.
+- **AUTH design team: first concrete text** (`#moq-auth-design-team`, Oct-21). [[aman-sharma|Aman Sharma]] opened [englishm/moq-transport#12](https://github.com/englishm/moq-transport/pull/12), *"Sketch authorization messages on SETUP streams"*. It follows the Seattle preference for a separate SETUP auth message. Manu Gupta will build request-level auth on it. See [[moq-c4m]].
+- **Draft-14 sunset** (`#moq-interop-runner`, Oct-25). Marzot asked whether there is a plan.
+  - [[alan-frindell|afrind]]: *"We just killed it in moxygen and moqx so it's dead to me."*
+  - [[steven-riedl|Riedl]]: *"Gone a few weeks ago, I just do 18 and 22."*
+  - With moq-dev dropping drafts 19–21, deployments are converging on draft-18 + draft-22.
+- **Runner operations** (`#moq-interop-runner`, Oct-20 → 23).
+  - Riedl traced the missed nightlies to the 120-minute job limit, including a 73-minute hang on one moxygen → moqtail-d18 WebTransport cell.
+  - After Marzot's sharding ([#164](https://github.com/englishm/moq-interop-runner/pull/164)) the Oct-22 run finished in 15 minutes instead of nearly 2 hours.
+  - [[mike-english|Mike English]] runs the Docker image rebuild manually. [[luke-curley|Curley]] announced his own nightly interop run at `git.moq.dev/relays`, which uses SUBSCRIBE_NAMESPACE discovery.
+  - See [[interop-runner]].
+
 # Activity (Oct 25 → Oct 26) — **A 10/26 virtual interim convenes on a small agenda (PRs #2002/#2022/#2005; issues #1703/#2032/#1999/#2000/#2003), the spec repo is otherwise flat (no merges, no new issues), and the Mandatory Track Property challenge draws its first replies — afrind asks Nandakumar to write the sample draft, Nandakumar argues to keep the feature but offers no concrete use case, so removal stays the default; the overdue weekly GitHub digest resumes; moq-dev runs ~113 more merges (drops moq-transport drafts 19–21, lands a moq-studio/moq-scene component and a big HLS-import hardening batch) but still cuts no release; interop ticks up to 226/581 (38.9%) on a frozen matrix and runner #176/#177 merge just after the cut.**
 
 A low-event day on the wire that nonetheless carries a live WG checkpoint. The spec repo produced **no merges and no new issues** — but [[alan-frindell|afrind]] called a **virtual interim for Oct-26** and posted its agenda, and the **Mandatory Track Property** removal challenge he opened the day before drew its first two replies without producing the worked example he asked for. Implementations were again all churn and no cut (moq-dev ran ~113 more merges, including dropping drafts 19–21 and standing up a new `moq-studio` program), and the interop nightly nudged +4 passes on an otherwise frozen matrix.

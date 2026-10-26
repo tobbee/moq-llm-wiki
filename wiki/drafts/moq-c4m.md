@@ -2,7 +2,7 @@
 title: "Authorization scheme for MOQT using Common Access Tokens (C4M)"
 tags: [draft, security, authentication, wg-document]
 date: 2026-06-19
-last_updated: 2026-10-18
+last_updated: 2026-10-26
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-c4m/"
@@ -44,6 +44,7 @@ Introduction · Token Format · DPoP Integration with CAT for MOQT · Adding a T
 - **[[moq-secure-objects]]** — complementary E2E object encryption (confidentiality), orthogonal to C4M's access control.
 - **DPoP is being folded in (editors' copy, Oct 2026).** [[suhas-nandakumar|Suhas]]'s [CAT-4-MOQT PR #53](https://github.com/moq-wg/CAT-4-MOQT/pull/53) (opened 2026-10-01, +224/−251, not yet reviewed) *"folds generic-dpop-proof into this draft per Security AD guidance, scoping DPoP to MoQ-specific usage."* That would absorb the separate individual draft `draft-nandakumar-moq-generic-dpop-proof` into C4M. Separately, the AUTH design team moved to a dedicated Slack channel (`#moq-auth-design-team`, created 2026-09-30) to draft an **AUTH message** section for MOQT, starting in [[mike-english|Mike English]]'s `englishm/moq-transport` fork. "Chris", presumably co-author Chris Lemmons, offered a matching C4M PR to show how AUTH would be used. The design team has a slot on the Seattle agenda (Oct-15).
 - **Seattle outcome of the AUTH design team (2026-10-15).** The team presented a deck that [[mike-english|Mike English]] built from its markdown draft. It proposed DPoP proofs carried on the MoQ actions themselves, with a challenge/proof exchange (SUBSCRIBE → AUTH challenge → AUTH proof → SUBSCRIBE_OK). The draft PRs behind it are in the `englishm/moq-transport` fork: [[aman-sharma|Aman Sharma]]'s abstract AUTH messages (#6), and Manu Gupta's hop-by-hop evaluation (#7), re-evaluation (#8) and 0-RTT replay protection (#11). [[cullen-jennings|Cullen Jennings]] pushed back beforehand: he wants credentials *bound to the message they authorize*, not a separate AUTH message. Chris Lemmons objected to the claim that relays need not enforce token expiry. **In the room, people preferred a separate auth message for SETUP** over reusing REQUEST_UPDATE. Aman Sharma will draft that PR, and Manu Gupta takes request-level auth via REQUEST_UPDATE. The design-team notes record *"OR semantics for SETUP and REQUEST"* and *"focus on last hop"*. (Source: `#moq-auth-design-team` Slack.)
+- **First concrete AUTH text (2026-10-21).** [[aman-sharma|Aman Sharma]] opened [englishm/moq-transport#12](https://github.com/englishm/moq-transport/pull/12), *"Sketch authorization messages on SETUP streams"*. It carries the authorization messages on the unidirectional SETUP streams, as Seattle preferred. Manu Gupta (Oracle) said he will build his request-level work on top of it.
 
 # Related
 - [[moq-privacy-pass]] - Privacy-preserving authentication via Privacy Pass tokens
