@@ -2,10 +2,12 @@
 title: "Interim Meetings Schedule"
 tags: [meetings, schedule, ietf]
 date: 2026-04-10
-last_updated: 2026-10-06
+last_updated: 2026-10-27
 status: current
 ---
 
+> **2026-10-27 note**: **The Oct-26 virtual interim (interim-30) was held, and the chairs proposed a post-127 virtual-interim cadence.** [[alan-frindell|afrind]]'s agenda (*"MOQT Issues and PRs for 10/26 virtual interim"*) drove the Oct-26 16:30–18:00 UTC session; two queued draft-23 PRs merged during it — [#2002](https://github.com/moq-wg/moq-transport/pull/2002) (FORWARD→PAUSED rename, [[ian-swett|Swett]]) and [#2037](https://github.com/moq-wg/moq-transport/pull/2037) (grease-exclusion, afrind) — though **transport stays draft-22** (see [[moq-transport]], [[discussions-2026-10]]). **Looking past IETF 127**: [[martin-duke|Duke]]'s *"Proposed Virtual Interim dates"* (list, Oct-26, for the chairs) proposes **four biweekly virtual interims between IETF 127 and the February interim — Nov 30, Dec 14, Jan 11, Jan 25** — with concerns due on-list by **Nov 9**. Not yet on the datatracker. The February 2027 hybrid interim (aligned with Mile High Video, Denver/Boulder; Cisco a possible host) remains the next in-person target after San Francisco.
+>
 > **2026-10-06 note**: **Duke refreshed the Seattle interim wiki and flagged a mailing-list prerequisite for venue access.** [[martin-duke|Duke]]'s *"Seattle Interim updates"* (list, Oct-5, [permalink](https://mailarchive.ietf.org/arch/msg/moq/2EAJbNt5NZXoidGeVM_6BPwkDvA/)) points attendees at the updated [wg-materials wiki](https://github.com/moq-wg/wg-materials/wiki) for meeting details. He noted that **two prospective attendees are not subscribed to the list**, so he can't collect the email addresses needed to admit them to the **F5** host venue, and asked the group to help identify them. He also warned that **"attendance will be painful if people aren't checking the list"** — logistics in the run-up to Oct 12–15 are moving over email. No agenda change (rev-04 of Oct-1 still stands).
 >
 > **2026-10-03 note**: **The MOQT editors posted the Seattle issue triage Duke asked for — 23 priority issues, about a third of the open backlog.**

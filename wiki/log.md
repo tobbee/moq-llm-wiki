@@ -2,11 +2,53 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-26
+last_updated: 2026-10-27
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-27 — Virtual interim merges FORWARD→PAUSED; chairs set post-127 cadence
+
+**TL;DR**:
+- **The 10/26 virtual interim converted agenda into merges.** Two queued draft-23 PRs landed during the session: [[ian-swett|Swett]]'s long-approved **FORWARD→PAUSED rename** ([#2002](https://github.com/moq-wg/moq-transport/pull/2002), +17/−17, Oct-26 16:45) and [[alan-frindell|afrind]]'s **grease-exclusion** ([#2037](https://github.com/moq-wg/moq-transport/pull/2037), +1/−0, fixes #2029, Oct-26 18:12) — but **transport stays draft-22** (no release). [[michal-hosna|Hosna]] opened [#2044](https://github.com/moq-wg/moq-transport/pull/2044) *"Define a default for duplicate Properties"* (Oct-27, +21/−7, fixes #2027) explicitly as an **alternative to afrind's #2038**, so the duplicate-Property cleanup now has two competing PRs. The agenda's Gone-Object #2022 and FETCH-parse #2005 did **not** merge. On the list, [[martin-duke|Duke]] (for the chairs) proposed **four biweekly virtual interims between IETF 127 and the February interim — Nov 30 / Dec 14 / Jan 11 / Jan 25** (concerns due Nov 9). No new issues; other moq-wg repos, datatracker and MoQ Monthly all flat; Slack not checked (no access this run); no open wiki issues.
+- **Implementations**: no new releases. [[moq-dev]] ran **74 more merges** (73 kixelated + 1 zshenker #6840) but cut no release (v0.17.8 of Oct-23 stands) — mostly `fix`/`test`/`quest` hardening + CI (moq-transport-22 GOAWAY test #6878, imports WG multi-object-datagram/redundant-switch quest #6887, redacts HLS creds #6868, refuses malformed MSF JSON #6863). [[moqlivemock]] merged two tobbee fixes Oct-26 — [#161](https://github.com/Eyevinn/moqlivemock/pull/161) (mlmrel prefix-namespace routing, +202/−36) + [#162](https://github.com/Eyevinn/moqlivemock/pull/162) (mlmtest withdraw-before-close, +89/−20), no release (v0.17.0 stands). [[moq-rs]] (v0.7.30; new open #284), [[moqtail]] (#451), [[moq-js]] (#73), quiche moqt (Oct-16), warp-player, moqtransport (v0.14.1), birneee all flat.
+- **Interop**: Oct-27 00:24 cut = **226/322/29 of 581 (38.9%)** — pass/fail/skip **bit-identical to Oct-26** (sixth straight published nightly), but the version classification **shifted for the first time since Oct-22**: **355 at-target (+5) · 161 ahead (−15) · 65 behind (+10)** vs the Oct-23→26-stable 350·176·55. A roster version-declaration change (no test outcome moved) as floatdrop runner #176/#177 first take effect.
+
+**Operation**: Update (manual; covers 2026-10-26 ~01:30 UTC → 2026-10-27 ~01:30 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — `draft-ietf-moq-transport-22` (2026-10-01) stands; no WG doc revised. Newest individual drafts remain the Oct-12→14 cluster (draft-gurel-moq-probing-00, draft-ugur-moq-fast-switching-00, draft-ramadan-moq-mmt/-fec/-multicast-00, draft-gregoire-moq-msfts-02); nothing dated Oct-15 or later.
+- GitHub `moq-wg`:
+  - **Merged (2, at the 10/26 virtual interim)** — [#2002](https://github.com/moq-wg/moq-transport/pull/2002) *"Rename FORWARD parameter to PAUSED"* (ianswett, +17/−17, Oct-26 16:45) and [#2037](https://github.com/moq-wg/moq-transport/pull/2037) *"Exclude grease values from the Mandatory Track Property range"* (afrind, +1/−0, fixes #2029, Oct-26 18:12). Both draft-23 material; **transport stays draft-22**, no release.
+  - **New PR**: [#2044](https://github.com/moq-wg/moq-transport/pull/2044) *"Define a default for duplicate Properties"* (michalhosna, Oct-27 00:03, +21/−7, fixes #2027) — explicitly *"Alternative to #2038"*; the duplicate-Property cleanup now has two competing PRs (#2038 afrind vs #2044 Hosna).
+  - **No new issues.** Review churn on the interim queue (Oct-26→27): afrind's #2040/#2041, Duke's #2035/#2036, Hosna's #2023/#2024/#2030, Sharma's #2031, Gone-Object #2022. The agenda's #2022 and #2005 did not merge.
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (moq-relay v0.17.8 of Oct-23 stands) despite **74 more merges** (73 kixelated + 1 zshenker [#6840](https://github.com/moq-dev/moq/pull/6840)). Mostly `fix`/`test`/`quest` hardening + CI: `test(net)` moq-transport-22 GOAWAY coverage ([#6878](https://github.com/moq-dev/moq/pull/6878)); quests importing WG design issues (multi-object datagram + redundant-switch [#6887](https://github.com/moq-dev/moq/pull/6887), time-addressing spike [#6872](https://github.com/moq-dev/moq/pull/6872)); breaking `feat(elements)!` [#6904](https://github.com/moq-dev/moq/pull/6904) and `fix(watch)!` mute/volume [#6895](https://github.com/moq-dev/moq/pull/6895); robustness fixes — redact HLS creds [#6868](https://github.com/moq-dev/moq/pull/6868), refuse malformed MSF JSON [#6863](https://github.com/moq-dev/moq/pull/6863), bound IETF advertisements [#6899](https://github.com/moq-dev/moq/pull/6899). No tag → no durable fact changed on the [[moq-dev]] page.
+  - Eyevinn/moqlivemock: **two merges Oct-26, no release** (v0.17.0 of Oct-23 stands): [#161](https://github.com/Eyevinn/moqlivemock/pull/161) *"route a SUBSCRIBE or FETCH to the publisher of a prefix of its namespace"* (mlmrel, tobbee, +202/−36, Oct-26 10:18) and [#162](https://github.com/Eyevinn/moqlivemock/pull/162) *"withdraw the namespace before closing a publisher session"* (mlmtest, tobbee, +89/−20, Oct-26 14:14).
+  - cloudflare/moq-rs: no merge since #283 (Oct-24); v0.7.30 stands; new open [#284](https://github.com/cloudflare/moq-rs/pull/284) *"bound draft-18 response reason phrases"* (#276/#278/#280 also open).
+  - moqtail: unchanged — [#451](https://github.com/moqtail/moqtail/pull/451) open; no merge since #443 (Oct-15).
+  - video-dev/moq-js: unchanged — [#73](https://github.com/video-dev/moq-js/pull/73) still open.
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Quiet: birneee/quiche_moq (newest Aug-07), Eyevinn/warp-player (dependabot deps only, v0.16.0 stands), Eyevinn/moqtransport (v0.14.1, Oct-22).
+- Interop runner: **new cut** — [Oct-27 00:23:27](https://englishm.github.io/moq-interop-runner/results/2026-10-27_002327/report.html) = 581 / 226 / 322 / 29 (38.9%; at-target 355 · ahead 161 · behind 65). **Pass/fail/skip bit-identical to Oct-26** (sixth straight published nightly), but the **version classification shifted for the first time since Oct-22** — 355·161·65 vs the Oct-23→26-stable 350·176·55 (+5 at-target, −15 ahead, +10 behind). No test outcome moved, so it is a roster version-declaration change; floatdrop runner [#176](https://github.com/englishm/moq-interop-runner/pull/176)/[#177](https://github.com/englishm/moq-interop-runner/pull/177) (merged Oct-26 00:29) first take effect on this nightly, as the Oct-26 note predicted. #175 (Docker pcaps) and #158 (Shaka Player) still pending.
+- IETF mailing list: **light** — one new thread since the Oct-26 log: [[martin-duke|Duke]]'s *"Proposed Virtual Interim dates"* (Oct-26, on behalf of the chairs) — four biweekly virtual interims between [IETF 127](https://www.ietf.org/meeting/127/) and the February interim (**Nov 30, Dec 14, Jan 11, Jan 25**), concerns due Nov 9. The MTP-challenge and Object-ID threads are unchanged since the Oct-25 replies; the weekly GitHub digest's next slot (~Nov-1) is not yet due.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 26 → Oct 27)* — the two interim merges (#2002 FORWARD→PAUSED, #2037 grease exclusion), Hosna's rival #2044, Duke's post-127 interim-cadence thread, moq-dev's no-release churn, the two moqlivemock fixes, and the Oct-27 interop cut with its classification shift; `last_updated` bumped.
+- [[interop-runner]]: Oct-27 is the new Latest cut (581 cells, pass bit-identical to Oct-26, classification shift 350·176·55 → 355·161·65 noted as the first move since Oct-22); Oct-26 demoted to Prior, Oct-25 to Earlier (Oct-24 folded in); `last_updated` bumped.
+- [[interim-meetings]]: new *2026-10-27 note* — interim-30 (Oct-26 virtual) held with its two merges, plus Duke's proposed post-127 virtual-interim cadence (Nov 30 / Dec 14 / Jan 11 / Jan 25, comments due Nov 9); `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *The interim ships terminology, not a release.* Merging FORWARD→PAUSED (#2002) into the editor's draft is a durable, long-pending rename, but it rides the unpublished draft-23 branch — transport stays -22 and the runner stays on -18 — so per the entity-page rule it is logged here and in [[discussions-2026-10]], not written onto the [[moq-transport]] page until draft-23 publishes.
+- *Duplicate-Property handling now has competing designs.* Hosna's #2044 (set a default) vs afrind's #2038 (require each definition to state multiplicity) both fix #2027 — a design fork inside the Properties cleanup that the next interim will have to pick between.
+- *The WG's post-127 rhythm is now on record.* Duke's four-date proposal (Nov 30 → Jan 25) fixes a biweekly virtual-interim cadence carrying draft-23 from San Francisco to the February in-person interim.
+- *Flat passes can still hide a matrix reshuffle.* The Oct-27 cut repeats Oct-26's 226/322/29 pass aggregate exactly, yet ~15 cells moved out of "ahead" — a reminder to read the at-target/ahead/behind split, not just the pass count, when the runner merges roster PRs.
 
 # 2026-10-26 (supplemental) — Slack backfill since Oct 18
 
