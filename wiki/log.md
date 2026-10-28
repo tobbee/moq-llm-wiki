@@ -2,11 +2,49 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-10-27
+last_updated: 2026-10-28
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-10-28 — moq-dev perf/net-hardening churn; interop breaks plateau
+
+**TL;DR**:
+- **A quiet spec week in the lull after the 10/26 interim; the day's motion is all in the implementations and the nightly.** The moq-transport repo is **flat** — nothing merged after [#2037](https://github.com/moq-wg/moq-transport/pull/2037) (Oct-26 18:12), no new issues after [#2043](https://github.com/moq-wg/moq-transport/issues/2043) (Oct-24), and [[michal-hosna|Hosna]]'s [#2044](https://github.com/moq-wg/moq-transport/pull/2044) (duplicate-Property default, rival to afrind's #2038) stands as the newest PR. **Transport stays draft-22.** All other moq-wg repos, datatracker (-22), the IETF mailing list (no new thread since [[martin-duke|Duke]]'s Oct-26 interim-dates proposal) and MoQ Monthly are flat; [[moq-rs|cloudflare/moq-rs]] picked up one new open PR ([#285](https://github.com/cloudflare/moq-rs/pull/285), per-scope connection metrics). Slack not checked (no access this run); no open wiki issues.
+- **Implementations**: no new releases. [[moq-dev]] ran **~42 more merges** after the Oct-27 entry's reach (38 kixelated + 2 michaelstuurman + zshenker #6841 + moq-bot #6879) but **cut no release** (moq-relay v0.17.8 of Oct-23 stands). Theme is a **QUIC perf/loss-tracking push** — ring storage for sent/lost packets ([#6928](https://github.com/moq-dev/moq/pull/6928)), chunked slots ([#6936](https://github.com/moq-dev/moq/pull/6936)), RFC 9002 deviations named ([#6933](https://github.com/moq-dev/moq/pull/6933)) — plus net-layer hardening (bound paths to the namespace limit [#6927](https://github.com/moq-dev/moq/pull/6927), exclude a subtree from an origin consumer [#6932](https://github.com/moq-dev/moq/pull/6932), preserve frame bounds [#6922](https://github.com/moq-dev/moq/pull/6922)) and breaking auth/bindings/e2ee work (aws-lc-rs [#6898](https://github.com/moq-dev/moq/pull/6898), per-connection tokens [#6834](https://github.com/moq-dev/moq/pull/6834), surface media gaps/ends [#6923](https://github.com/moq-dev/moq/pull/6923), e2ee finish/abort [#6920](https://github.com/moq-dev/moq/pull/6920), refuse malformed imports [#6908](https://github.com/moq-dev/moq/pull/6908)). [[moq-rs]] new open [#285](https://github.com/cloudflare/moq-rs/pull/285); [[moqtail]] (#451), [[moq-js]] (#73), quiche moqt (Oct-16), [[moqlivemock]] (v0.17.0), warp-player (dependabot), moqtransport (v0.14.1), birneee all flat.
+- **Interop**: Oct-28 00:18 cut = **232/316/29 of 581 (39.9%)** — **+6 pass vs Oct-27** (226), **breaking the Oct-26/27 226 plateau**. Classification **flat at 355 at-target · 161 ahead · 65 behind** (second day since the Oct-27 reshuffle), so unlike Oct-27 this is a **real outcome move** (+6 cells flipped fail→pass), not a roster version-declaration change.
+
+**Operation**: Update (manual; covers 2026-10-27 ~01:30 UTC → 2026-10-28 ~02:00 UTC)
+**Sources**:
+- IETF Datatracker: **flat** — `draft-ietf-moq-transport-22` (2026-10-01) stands; no WG doc revised. Newest individual drafts remain the Oct-05→14 cluster (frindell-timestamp/-subscription-flow-control, jennings-uri, gregoire-msfts-02, gurel-probing-00, ugur-fast-switching-00, ramadan-mmt/-fec/-multicast-00); nothing dated Oct-15 or later.
+- GitHub `moq-wg`:
+  - **No merges and no new issues in the window.** Last merge is [#2037](https://github.com/moq-wg/moq-transport/pull/2037) (Oct-26 18:12); last new PR [#2044](https://github.com/moq-wg/moq-transport/pull/2044) (Oct-27 00:03, already logged Oct-27); last issue [#2043](https://github.com/moq-wg/moq-transport/issues/2043) (Oct-24). Transport stays **draft-22**, no release. The duplicate-Property fork (#2044 Hosna vs #2038 afrind) is unchanged.
+  - msf, loc, secure-objects, cmsf, catalog-format, privacy-pass all flat.
+- GitHub implementations:
+  - moq-dev/moq: **no new release** (moq-relay v0.17.8 of Oct-23 stands) despite **~42 more merges** after the Oct-27 entry's reach (~Oct-27 07:00 → Oct-28 01:35: 38 kixelated + 2 michaelstuurman + zshenker [#6841](https://github.com/moq-dev/moq/pull/6841) docs + moq-bot [#6879](https://github.com/moq-dev/moq/pull/6879) CI). Durable-but-unreleased themes: a **QUIC congestion/loss-tracking perf push** — `quest(perf)` ring storage for sent/lost packets ([#6928](https://github.com/moq-dev/moq/pull/6928)), `perf(quic)` track sent/lost packets in chunked slots ([#6936](https://github.com/moq-dev/moq/pull/6936)), `quest(perf)` name the accepted RFC 9002 deviations ([#6933](https://github.com/moq-dev/moq/pull/6933)); **net-layer hardening** — `fix(net)!` bound paths to the moq-transport namespace limit ([#6927](https://github.com/moq-dev/moq/pull/6927)), `feat(net)` exclude a subtree from an origin consumer ([#6932](https://github.com/moq-dev/moq/pull/6932)), `fix(net)` preserve transport frame bounds ([#6922](https://github.com/moq-dev/moq/pull/6922)); and a run of **breaking feature work** — `feat(auth)!` replace RSA with aws-lc-rs ([#6898](https://github.com/moq-dev/moq/pull/6898)) + per-connection tokens/grant consumer ([#6834](https://github.com/moq-dev/moq/pull/6834)), `feat(bindings)!` surface encoded media gaps and ends ([#6923](https://github.com/moq-dev/moq/pull/6923)), `feat(e2ee)!` align producer finish/abort/release ([#6920](https://github.com/moq-dev/moq/pull/6920)), `fix(mux)!` refuse malformed container imports ([#6908](https://github.com/moq-dev/moq/pull/6908)). michaelstuurman landed two congestion/jitter fixes — `fix(qmux)` keep app-limited delivery-rate samples from lowering the estimate ([#6925](https://github.com/moq-dev/moq/pull/6925)) and `fix(watch)` round MSF video/audio jitter up ([#6924](https://github.com/moq-dev/moq/pull/6924)). No tag → no durable fact changed on the [[moq-dev]] page.
+  - cloudflare/moq-rs: **new open PR** [#285](https://github.com/cloudflare/moq-rs/pull/285) *"feat(moq-relay-ietf): add opt-in per-scope connection metrics"* (itzmanish, Oct-27 13:44); no merge since #283 (Oct-24), v0.7.30 stands (#278/#280/#284 also open).
+  - moqtail: unchanged — [#451](https://github.com/moqtail/moqtail/pull/451) open; no merge since #443 (Oct-15).
+  - video-dev/moq-js: unchanged — [#73](https://github.com/video-dev/moq-js/pull/73) still open (Oct-23).
+  - google/quiche moqt: unchanged — newest is 0f5b1634 (partial-object accounting, Oct-16).
+  - Eyevinn/moqlivemock: v0.17.0 (Oct-23) stands; #161/#162 (Oct-26) already logged; no new activity.
+  - Quiet: birneee/quiche_moq (newest Aug-07), Eyevinn/warp-player (dependabot #205/#206, v0.16.0 stands), Eyevinn/moqtransport (v0.14.1, Oct-22).
+- Interop runner: **new cut** — [Oct-28 00:18:21](https://englishm.github.io/moq-interop-runner/results/2026-10-28_001821/report.html) = 581 / 232 / 316 / 29 (39.9%; at-target 355 · ahead 161 · behind 65). **+6 pass vs Oct-27** (226), breaking the Oct-26/27 226 plateau; **classification bit-identical to Oct-27** (355·161·65), so this is a genuine fail→pass move of ~6 cells, not a roster reclassification. Runner PRs [#175](https://github.com/englishm/moq-interop-runner/pull/175) (Docker pcaps) and [#158](https://github.com/englishm/moq-interop-runner/pull/158) (Shaka Player) still pending.
+- IETF mailing list: **flat** — no new thread since the Oct-26 messages already logged (Duke's *"Proposed Virtual Interim dates"*, Westerlund's *"Today's Virtual Meeting starting time"*, afrind's *"MOQT Issues and PRs for 10/26 virtual interim"*). The MTP-challenge, Object-ID and IETF-127 threads are unchanged; the weekly GitHub digest's next slot (~Nov-1) is not yet due.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[discussions-2026-10]]: new top section *Activity (Oct 27 → Oct 28)* — the flat spec repo, moq-dev's no-release perf/net-hardening batch, moq-rs's new #285, and the Oct-28 interop cut breaking the 226 plateau; `last_updated` bumped.
+- [[interop-runner]]: Oct-28 is the new Latest cut (581 cells, +6 pass to 232, classification flat at 355·161·65 noted as a real outcome move); Oct-27 demoted to Prior, Oct-26 to Earlier (Oct-25 folded in); `last_updated` bumped.
+- [[log]]: this entry.
+- [[index]]: `last_updated` bumped.
+
+**Key findings**:
+- *A real pass move, not a reshuffle.* Where Oct-27 repeated Oct-26's 226 pass while ~15 cells changed version buckets, Oct-28 does the opposite: the version split holds exactly (355·161·65) and **+6 cells actually flip fail→pass**, lifting the aggregate off the two-day 226 plateau to 232 (39.9%).
+- *moq-dev's unreleased work is turning toward the transport's loss/congestion internals.* The window's headline merges (ring storage for sent/lost packets, chunked-slot tracking, naming the accepted RFC 9002 deviations) are a sustained QUIC perf push rather than the MSF/HLS-import hardening of the prior days — but with no tag cut, it stays in the log, not on the [[moq-dev]] page.
+- *The WG is in its post-interim lull.* With the 10/26 merges landed and the next virtual interim not until Nov-30, the spec repo, datatracker and list all sat still for a full day — the duplicate-Property fork (#2044 vs #2038) is the main open thread awaiting the next session.
 
 # 2026-10-27 — Virtual interim merges FORWARD→PAUSED; chairs set post-127 cadence
 
