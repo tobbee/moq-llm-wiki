@@ -2,15 +2,16 @@
 title: "MoQ Feedback (Multimodal Feedback / MMF)"
 tags: [draft, individual, feedback, congestion-control, ai-agent]
 date: 2026-08-04
-last_updated: 2026-08-04
+last_updated: 2026-11-01
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-liu-moq-feedback/"
 ---
 
+> **2026-10-30**: **Revved to `draft-liu-moq-feedback-01`, now WG-meeting-facing.** Yanmei Liu posted a *"-01: summary of changes since -00"* note to the moq@ietf.org list and separately **requested an IETF 127 agenda slot** to present the draft — the first WG-meeting-facing push for the feedback/quality-signalling category. Still an individual draft, not adopted. See [[discussions-2026-11]].
 > **2026-08-04**: **First-look — a new individual I-D adds a receiver→sender delivery-quality feedback mechanism to MOQT, the first MoQ *feedback/quality-signalling* draft the wiki has tracked.** **`draft-liu-moq-feedback-00`** *"MoQ Feedback"* was submitted **July 31 2026** (41 pages) by **Yanmei Liu** and **Minghui Jiang** (Alibaba Inc.) with **Ronghua Wu** (Ant Group), and **announced to the moq@ietf.org list Aug 3** (04:10 UTC) — drawing an immediate reply from **[[cullen-jennings|Cullen Jennings]]** (16:18 UTC). Individual draft, not adopted; logged as a first-look. See [[discussions-2026-08]].
 
-**draft-liu-moq-feedback-00** | individual submission | submitted 2026-07-31, 41 pages | announced to moq@ietf.org 2026-08-03
+**draft-liu-moq-feedback-01** | individual submission | revised 2026-10-30 (**-00**: submitted 2026-07-31, 41 pages, announced to moq@ietf.org 2026-08-03)
 
 # Authors
 - Yanmei Liu (Alibaba Inc.)
@@ -36,8 +37,8 @@ Defines an MOQT extension that lets **receivers report delivery-quality informat
 
 # Status & Caveats
 
-- **Individual draft at -00** (submitted July 31 2026) — not adopted, no WG call for adoption. First list traffic is the Aug-3 announcement + Cullen Jennings' reply.
-- The wiki tracks individual drafts that are actively discussed or referenced; this is logged as a **first-look** because it opens a new *feedback/quality-signalling* category for MoQ. Watch for WG-list reaction, a follow-on revision, or reference from an implementation.
+- **Individual draft at -01** (revised Oct 30 2026; -00 submitted July 31 2026) — not adopted, no WG call for adoption. First list traffic was the Aug-3 announcement + Cullen Jennings' reply; the **-01** revision came with a *"summary of changes since -00"* note and an **IETF 127 agenda-slot request** (Oct-30), the first time the draft has sought a WG-meeting presentation.
+- The wiki tracks individual drafts that are actively discussed or referenced; this opens a new *feedback/quality-signalling* category for MoQ. Watch for the IETF 127 presentation, WG-list reaction, or reference from an implementation.
 
 # Related
 

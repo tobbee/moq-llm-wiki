@@ -2,7 +2,7 @@
 title: "moqtransport (Go) — mengelbart + Eyevinn fork"
 tags: [implementation, go, library]
 date: 2026-08-22
-last_updated: 2026-09-30
+last_updated: 2026-11-01
 status: current
 ---
 
@@ -23,12 +23,13 @@ This page covers **both** the upstream and the Eyevinn fork, because the wiki's 
 | Created | — | 2025-11-23 |
 | Stars | ~87 | ~5 |
 | Interop runner | **registered** (as `moqtransport`, draft-13) | not registered |
-| Draft support | README draft-11 / runner draft-13 | **draft-18** (v0.11.0, 2026-08-30; v0.11.1, 2026-08-31; v0.12.0, 2026-09-01; **v0.13.0**, 2026-09-02) |
+| Draft support | README draft-11 / runner draft-13 | **draft-22 alongside draft-18** (v0.15.0, 2026-10-30; earlier draft-18: v0.11.0 → v0.14.1) |
 
-The upstream is the registry-registered one and roughly 17× larger by stars; the README still advertises draft-11 while the runner entry says draft-13, so its **draft support is behind the rest of the ecosystem** and it is not a current interop contender. The **Eyevinn fork jumped ahead of the upstream on 2026-08-30**, shipping a full **draft-18 rewrite as v0.11.0** (see Recent activity) — the first time the fork's draft support has diverged materially from `mengelbart/moqtransport`.
+The upstream is the registry-registered one and roughly 17× larger by stars; the README still advertises draft-11 while the runner entry says draft-13, so its **draft support is behind the rest of the ecosystem** and it is not a current interop contender. The **Eyevinn fork jumped ahead of the upstream on 2026-08-30**, shipping a full **draft-18 rewrite as v0.11.0** (see Recent activity), and on **2026-10-30 it added draft-22 alongside draft-18 in one build** (v0.15.0) — widening the divergence from `mengelbart/moqtransport`.
 
 # Recent activity
 
+- **v0.15.0 "draft-22 alongside draft-18"** (tagged 2026-10-30): [PR #29](https://github.com/Eyevinn/moqtransport/pull/29) ([[tobbe-einarsson|tobbee]], **+7,811/−1,435**) makes the Go library speak **both [[moq-transport]] draft-22 and draft-18 in one build**, ALPN-selected per session — so a single process can bridge a draft-18 upstream to a draft-22 downstream. This is the fork's first multi-draft build since the draft-18 rewrite; consumed the next day by [[moqlivemock]] ([#164](https://github.com/Eyevinn/moqlivemock/pull/164)) to bring its whole stack onto draft-22. Ahead of the **IETF 127 hackathon** (early November), whose interop target pair is draft-18 + draft-22.
 - **v0.14.0 "§7.2 stream tiering"** (tagged 2026-09-29): [PR #26](https://github.com/Eyevinn/moqtransport/pull/26) ([[tobbe-einarsson|tobbee]], +177/−57, merged Sep-21) bumps quic-go to **v0.62.0**, whose RFC 9218-style stream priorities make the library's priority mapping live for the first time. It applies **draft-18 §7.2's tiering** as QUIC urgency: control streams 0, bidi request streams 1, Objects 2–5 (by the top two bits of the priority number), 6 spare, 7 padding. It also fixes a real inversion: the control stream had kept quic-go's default urgency 3, so any subscription with priority below 96 overtook it. The practical consequence is that **two priorities must now differ by at least 64** to be separated. Go 1.26 is now required. [[moqlivemock]] v0.16.0 consumes it to schedule catalog/audio/subtitles ahead of video.
 - **v0.13.0 "RENDEZVOUS_TIMEOUT on SUBSCRIBE"** (tagged 2026-09-02) — [PR #25](https://github.com/Eyevinn/moqtransport/pull/25) (+83/−0) exposes the **draft-18 §10.2.6 RENDEZVOUS_TIMEOUT** parameter (wire codepoint `0x04`, a varint of milliseconds) that the wire layer already knew but nothing surfaced: `Parameters.RendezvousTimeout()` / `SubscribeRequest.RendezvousTimeout()` return the wait plus **whether it was present** (absent and zero get different answers from a relay — DOES_NOT_EXIST vs. an expired hold), and `WithRendezvousTimeout(d)` sets it on a SUBSCRIBE. Driven by [[moqlivemock]]'s `mlmrel`, whose blanket hold on every SUBSCRIBE contradicted the section's MUST ([moqlivemock #139](https://github.com/Eyevinn/moqlivemock/pull/139)); also needed by any client wanting the runner's proposed `publish-to-pending-subscription` test ([interop-runner #103](https://github.com/englishm/moq-interop-runner/pull/103), which sends 5000 ms).
 - **v0.12.0 "receive-side fixes for relays"** (tagged 2026-09-01) — [PR #23](https://github.com/Eyevinn/moqtransport/pull/23) *"receive side: complete delivery, surface subgroup ends"* (+488/−59) plus [PR #24](https://github.com/Eyevinn/moqtransport/pull/24) running the session suite under Go's `testing/synctest`. Hardens the library's relay/receive path — the same day [[moqlivemock|Eyevinn/moqlivemock]] added its own `mlmrel` relay component built on this library.

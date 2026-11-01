@@ -2,7 +2,7 @@
 title: "MOQtail"
 tags: [implementation, relay, publisher, subscriber]
 date: 2026-04-10
-last_updated: 2026-10-14
+last_updated: 2026-11-01
 status: current
 ---
 
@@ -40,6 +40,7 @@ MOQ Transport protocol libraries for publisher, subscriber, and relay components
 
 Day-by-day PR/issue history lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **First tagged release train since July** (2026-10-30): `relay@0.16.0` + `moqtail-rs@0.16.0` + `moqtail@0.14.0` finally tag the July→October relay work (the draft-20/22 FETCH + range-filter wire above, the DoS/resilience batches, and the lifecycle fixes) — the relay had been running untagged at `relay@0.14.1` since July. Shipped alongside merge [#451](https://github.com/moqtail/moqtail/pull/451) ([[lorenzo-miniero|lminiero]]: **return the track alias in a subscribe response**). A new open [#452](https://github.com/moqtail/moqtail/pull/452) (kkroo) adds an **MMTP track receiver**, tracking the [[moq-mmt|MMT]]-over-MoQ interest.
 - **Draft-20/22 FETCH + range-filter wire landed during the Seattle interim** (2026-10-13): a concentrated ~15-PR batch ([#422](https://github.com/moqtail/moqtail/pull/422)–[#436](https://github.com/moqtail/moqtail/pull/436), all [[zafer-gurel|Zafer Gürel]]) moved the relay onto the newer filter/FETCH wire — **relay applies range filters** ([#422](https://github.com/moqtail/moqtail/pull/422), +690/−36), **the FETCH range is carried in `LOCATION_FILTER`** ([#424](https://github.com/moqtail/moqtail/pull/424), +626/−326), an **`INCLUDE_PROPERTIES` parameter** ([#425](https://github.com/moqtail/moqtail/pull/425)), **subscription parameters on PUBLISH and SUBSCRIBE_TRACKS** ([#427](https://github.com/moqtail/moqtail/pull/427)), plus a run of relay FETCH-ordering / fill-routing / race fixes ([#429](https://github.com/moqtail/moqtail/pull/429)–[#436](https://github.com/moqtail/moqtail/pull/436)). moqtail then **registered a draft-22 relay** in the [[interop-runner]] ([runner #148](https://github.com/englishm/moq-interop-runner/pull/148), Oct-13), splitting its existing draft-18 relay out as a separate `moqtail-draft-18` endpoint so it keeps the nightly target while exercising draft-22. This batch supersedes the earlier in-flight #414/#415/#417/#418/#419 location-/range-filter PRs.
 - **Legacy `warp` naming retired in favour of CMSF** (2026-09-24) — a single commit, *"rename warp to cmsf and make catalog version string"*, removed the last of the old `warp` naming from the catalog path and changed the **catalog version field from a numeric to a string**. Both are small compatibility breaks for any peer still emitting the previous form; the demo applications now speak [[moq-cmsf|CMSF]] under its own name throughout.
 - **Client-side namespace discovery completed** (2026-09-20): `SUBSCRIBE_NAMESPACE` was added and `SUBSCRIBE_TRACKS` finished on the client ([#390](https://github.com/moqtail/moqtail/pull/390)), alongside correct handling of **empty FETCH** responses ([#385](https://github.com/moqtail/moqtail/pull/385)) — closing the client half of the stream split the Rust/TS stacks landed back in May. No release: `relay@0.14.1` (July) still stands.
