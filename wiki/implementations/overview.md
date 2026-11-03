@@ -2,7 +2,7 @@
 title: "Implementations Overview"
 tags: [implementation, overview, comparison]
 date: 2026-07-09
-last_updated: 2026-10-02
+last_updated: 2026-11-03
 status: current
 ---
 
@@ -15,14 +15,14 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | Implementation | Language | Org / Maintainer | Draft(s) | Roles | Focus / notable |
 |---|---|---|---|---|---|
 | [[moq-dev]] | Rust + TS | [[luke-curley\|Luke Curley]] | moq-lite + IETF 14–22 ¹ | Pub · Sub · Relay · Player | moq-lite + Hang; media gateways (RTMP/SRT/WebRTC/HLS/TS); native HW codecs |
-| [[moq-rs]] | Rust | Cloudflare | 14 (prod) · 16 · 18 | Pub · Sub · Relay | Strict IETF WG compliance; very active |
+| [[moq-rs]] | Rust | Cloudflare | **18** (`main` since 2026-11-02, v0.8.0) · 16 (maintenance branch) · 14 | Pub · Sub · Relay | Strict IETF WG compliance; very active |
 | [[moq-js]] | JS / TS | video-dev | 14 | Pub · Sub · Player | Browser client over WebTransport; `<video-moq>` component; needs a relay |
 | [[moxygen]] | C++ (mvfst) | Meta | 14 · 16 (neg. 15) | Pub · Sub · Relay | Reference relay; [[qmux]]; [[openmoq\|OpenMOQ]] fork |
 | [[libquicr]] | C++ + Go | Cisco (QuicR) | 18 on `main` (runner: 14) | Pub · Sub · Relay | Go bindings; `moq-web` client (18); new session-callback API + logger abstraction Aug 2026; see also [[laps\|LAPS]] |
 | [[aiomoqt]] | Python (asyncio) | [[giovanni-marzot\|Giovanni Marzot]] | 14 · 16 · 18 | Pub · Sub · Relay | aioquic-based; **18/18** vs moqx/moxygen/moq-rs-draft-18 on the Aug-22 cut |
 | [[xquic-moq]] | C (XQUIC) | Alibaba | 14 | Relay | Merged into the interop matrix |
-| [[moqlivemock]] | Go + TS | Eyevinn | **18** | Pub · Sub · Relay · Player | CMSF/LOC/MSF/LOCMAF; DRM; `mlmtest` interop tool |
-| [[moqtail]] | Rust + TS | [[zafer-gurel\|Z. Gürel]] / [[ali-begen\|A. C. Begen]] | 16 · 18 | Pub · Sub · Relay · Player | LOC + CMSF demos; `relay18.moqtail.dev` live since Jul 23; `moqt://` URI scheme |
+| [[moqlivemock]] | Go + TS | Eyevinn | **18 · 22** (v0.18.0, 2026-11-02) | Pub · Sub · Relay · Player | CMSF/LOC/MSF/LOCMAF; DRM; `mlmtest` interop tool |
+| [[moqtail]] | Rust + TS | [[zafer-gurel\|Z. Gürel]] / [[ali-begen\|A. C. Begen]] | 18 · 22 (relay@0.17.0, 2026-11-02) | Pub · Sub · Relay · Player | LOC + CMSF demos; `relay18.moqtail.dev` live since Jul 23; `moqt://` URI scheme |
 | [[imquic]] | C | Meetecho ([[lorenzo-miniero]]) | 16 · 17 · 18 · 19 · 20 · 21 | Pub · Sub · Relay | draft-20/21 merged to `main` Oct 1 (public relay too); also RTP-over-QUIC (RoQ); Janus ecosystem |
 | [[quiche-moq]] | C++ | Google (QUICHE / Chromium) | 16 · 18 (on `main`) | Pub · Sub · Relay | 41/41 conformance; relay/server/chat/simulator tools; object-ACK work Aug 2026 |
 | [[shaka-player]] | JS | Google (shaka-project) | **18 · 20 · 21** (14 · 16 deprecated) | Sub · Player | Production browser player on MoQ; CMSF + LOC + **LOCMAF** + m2ts; multi-DRM; experimental build only ² |
@@ -31,9 +31,9 @@ At-a-glance comparison of the open-source MoQ implementations the wiki tracks. E
 | **Moqtopus** (no page yet) | C++ / MsQuic | [[kota-yatagai\|Kota Yatagai]] | 18 | Client | Unreal Engine client ([kota-yata/Moqtopus](https://github.com/kota-yata/Moqtopus)); at-target in the runner |
 | [[mediamtx\|MediaMTX]] | Go | bluenviron | **16 · 17 · 18 · 19** | Pub · Sub | Multi-protocol production media server; MSF + LOC; not in the runner |
 | [[moq-go]] | Go | V. Strukchinsky (floatdrop) | **19** | Pub · Sub · Relay | Session library + reference relay; the runner's only **ahead-of-target** endpoint |
-| [[moqtransport]] | Go | [[mathis-engelbart\|M. Engelbart]] (+ Eyevinn fork) | 11–13 | Pub · Sub | The principal Go MoQT library; behind the ecosystem on drafts |
+| [[moqtransport]] | Go | [[mathis-engelbart\|M. Engelbart]] (+ Eyevinn fork) | upstream 11–13; **Eyevinn fork 18 · 22** (v0.15.x) | Pub · Sub | The principal Go MoQT library; the Eyevinn fork runs the moqlivemock stack |
 | [[laps\|LAPS]] | C++ | Cisco (QuicR) | via [[libquicr]] | Relay | Relay-**mesh** with Edge/Via/Stub roles; public "MOQT Developer Playground" endpoint |
-| [[warp-player]] | TS | Eyevinn | **18** | Sub · Player | CMSF playback via MSE; companion to [[moqlivemock]] |
+| [[warp-player]] | TS | Eyevinn | **18 · 22** (v0.17.0, 2026-11-02) | Sub · Player | CMSF playback via MSE; companion to [[moqlivemock]] |
 | **MOQ5** (see [[openmoq]]) | C | Red5 Pro | 16 · 18 | Client | Sans-I/O zero-dependency protocol core; simulation-tested; interop-registered |
 | **Playa** (see [[openmoq]]) | TS | Red5 Pro | 18 (21 on `feature/draft-21`) | Sub · Player | npm scope moving to `@openmoq/*` (`@openmoq/playa`, Oct 1; not yet published); WebCodecs with MSE/CMAF fallback; **LOCMAF playback merged** (PR #15) |
 

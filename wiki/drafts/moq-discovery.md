@@ -2,9 +2,9 @@
 title: "MoQ URI and Discovery (draft-jennings-moq-uri; was moq-discovery)"
 tags: [draft, individual, discovery, dns, mdns, uri, cert-matching]
 date: 2026-08-16
-last_updated: 2026-10-09
+last_updated: 2026-11-03
 status: current
-draft_version: "moq-uri-00 (replaces moq-discovery-02)"
+draft_version: "moq-uri-01 (replaces moq-discovery-02)"
 ietf_url: "https://datatracker.ietf.org/doc/draft-jennings-moq-uri/"
 ---
 
@@ -38,6 +38,8 @@ As of the **`draft-jennings-moq-uri-00`** consolidation, the draft specifies **b
 - **Continued Cisco individual-draft investment.** A third Jennings/Nandakumar MoQ individual draft after [[moq-mocha|MOCHA]] (the RTC suite) and [[moq-tempo|TEMPO]] (playout orchestration) — extending the "MoQ as a general real-time substrate" push toward the network-services/discovery layer.
 
 # Status & Caveats
+
+- **moq-uri-01 posted (2026-11-02) with an IETF 127 slot request.** The datatracker abstract now covers the `moqt` URI syntax, fragment identifiers, dereferencing and normalization, **X.509 certificate matching**, **DNS resolution via SVCB and SRV**, and local discovery via mDNS/DNS-SD. [[cullen-jennings|Jennings]] asked for 25 minutes (15 to present, 10 to discuss), citing *"significant open issues"* inherited from text that has been in the base draft for several versions.
 
 - **Renamed to `draft-jennings-moq-uri` and consolidated (2026-10-07).** The datatracker now marks `draft-jennings-moq-discovery` as **Replaced by `draft-jennings-moq-uri`**; **`draft-jennings-moq-uri-00`** (14 pp, Standards Track) was submitted 2026-10-07 and **folds in the URI-scheme + resolution + cert-matching content** that was previously only the *proposed expansion* (see the Sep-5/interim-23 bullets below). So the "separate spec for URI resolution + TLS cert matching" the WG agreed to carve out of [[moq-transport]] now exists as published text, not just a list proposal. Still an **individual draft, not WG-adopted**.
 - **Individual draft** (discovery lineage rev-00 2026-08-14 → rev-02 2026-09-05; `moq-uri` rev-00 2026-10-07) — not adopted, no WG call for adoption.

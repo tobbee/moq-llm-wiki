@@ -2,13 +2,13 @@
 title: "Timestamp Properties for MOQT"
 tags: [draft, transport, extension, timestamp, individual]
 date: 2026-10-06
-last_updated: 2026-10-07
+last_updated: 2026-11-03
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-frindell-moq-timestamp/"
 ---
 
-**draft-frindell-moq-timestamp-00** | Individual submission | **-00 posted 2026-10-05** | 13 pages | expires 2027-04-08 | [Datatracker](https://datatracker.ietf.org/doc/draft-frindell-moq-timestamp/) · [GitHub](https://github.com/afrind/draft-frindell-moq-timestamp)
+**draft-frindell-moq-timestamp-01** | Individual submission | **-01 posted 2026-11-02** (IETF 127 deadline; -00 2026-10-05) | 15 pages | expires 2027-05-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-frindell-moq-timestamp/) · [GitHub](https://github.com/afrind/draft-frindell-moq-timestamp)
 
 # Authors
 - [[alan-frindell|Alan Frindell]] (Meta)
@@ -37,6 +37,9 @@ A standards-track [[moq-transport]] extension that defines a **reusable set of t
 - **Delivery timeout / age-based relay decisions**: like the lcurley draft, motivated by giving relays a uniform basis for delivery-timeout and age-drop decisions without parsing the media container.
 
 # Notes
+
+**-01 (2026-11-02).** It still defines the four Track properties (TIMESCALE, CLOCK_ID, TIMESTAMP_ORIGIN, TIMESTAMP_MAPPING) and OBJECT_TIMESTAMP. It has sections on locating Objects by time, publisher restarts and defining additional timestamps, and creates a **MOQ Clock IDs** IANA registry. Note: LOC-05 registers its own TIMESCALE (0x08) and TIMESTAMP (0x10), so codepoint alignment with [[moq-loc]] remains an open question.
+
 
 Individual submission by Alan Frindell (Meta) and Ian Swett (Google); **not WG-adopted**. Posted 2026-10-05, nine days before the [[interim-meetings|Oct 12–15 Seattle hybrid interim]]. The draft currently specifies the properties and their compression, not how relays act on them. See [[moq-timestamp]], [[moq-transport]], [[discussions-2026-10]].
 

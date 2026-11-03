@@ -2,7 +2,7 @@
 title: "Subscriber-Side Multi-Variant Fast Track Switching for MOQT"
 tags: [draft, transport, abr, switch, media, individual]
 date: 2026-10-14
-last_updated: 2026-10-14
+last_updated: 2026-11-03
 status: current
 draft_version: "00"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ugur-moq-fast-switching/"
@@ -31,6 +31,8 @@ A standards-track [[moq-transport]] technique that lets a subscriber **switch be
 - **A media / ABR building block built on SWITCH_FROM.** It is an explicit client-driven use of the [[switch-abr|SWITCH_FROM soft-mode]] parameter that the WG settled in June 2026, extended to the *keyframe-interval* dimension rather than just the bitrate dimension — squarely in the wiki's media focus area. Where [[moq-probing]] measures *whether* a hop can carry more, this draft governs *how* to move between representations once that decision is made.
 - **Adjacent to the live track-selection debate.** `SWITCH_FROM` is one of the three mechanisms [[cullen-jennings|Cullen Jennings]]'s [#1982](https://github.com/moq-wg/moq-transport/pull/1982) ("selection sets and policy") proposes to unify (alongside Top-N and SSTS; see also [[mo-zanaty|Mo Zanaty]]'s Top-Tracks-Filter [#1981](https://github.com/moq-wg/moq-transport/pull/1981)) — so this draft is a concrete consumer of exactly the primitive that debate is reshaping, posted during the same [[interim-meetings|Seattle interim]].
 - **Authored by the [[moqtail]] / Ozyegin team.** Deniz Ugur, [[zafer-gurel|Zafer Gürel]] and [[ali-begen|Ali C. Begen]] — the second media-focused individual input from this group this week, right after [[moq-probing|`draft-gurel-moq-probing-00`]] (Oct-12). It is now the newest MoQ document on the datatracker (Oct-13).
+
+- **Sender-side companion draft (2026-11-02).** The same group posted [`draft-zengin-moq-ssts-backpressure-00`](https://datatracker.ietf.org/doc/draft-zengin-moq-ssts-backpressure/) (19 pp). It is an alternative **SSTS switching algorithm that uses no bandwidth estimate**. Instead it watches the number of open forwarding streams on the active tier, steps quickly through the ladder during fast start, limits upshifts by bitrate jump and the subscriber's probing-risk tolerance, and reacts to congestion inside a group. [[zafer-gurel|Gürel]] asked for 15-minute IETF 127 slots for this draft, the fast-switching draft and [[moq-probing]].
 
 # Notes
 

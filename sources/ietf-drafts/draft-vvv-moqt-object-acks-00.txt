@@ -1,0 +1,448 @@
+
+
+
+
+Network Working Group                                        V. Vasiliev
+Internet-Draft                                                    Google
+Intended status: Standards Track                         2 November 2026
+Expires: 6 May 2027
+
+
+        Media over QUIC Transport (MOQT) Object Acknowledgements
+                     draft-vvv-moqt-object-acks-00
+
+Abstract
+
+   This document defines an extension to Media over QUIC Transport
+   (MOQT) that allows a subscriber to explicitly acknowledge receiving
+   and processing an incoming object.  The acknowledgement includes a
+   time delta indicating how early or late the object arrived relative
+   to an application-specified deadline; the subscriber also provides
+   the publisher with the reference window size that can be used to
+   interpret the time delta.  A mechanism to negotiate support for the
+   extension, both on the connection and the subscription level, is also
+   defined.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://vasilvv.github.io/object-ack/draft-vvv-moqt-object-acks.html.
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-vvv-moqt-object-acks/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/vasilvv/object-ack.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 1]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   This Internet-Draft will expire on 6 May 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions and Definitions . . . . . . . . . . . . . . . . .   3
+   3.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .   4
+   4.  SUPPORT_OBJECT_ACKS Setup Option  . . . . . . . . . . . . . .   4
+   5.  OBJECT_ACK_WINDOW_SIZE Parameter  . . . . . . . . . . . . . .   4
+   6.  OBJECT_ACK Message  . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   6
+   Appendix A.  Implementation Status  . . . . . . . . . . . . . . .   7
+   Appendix B.  Open Issues  . . . . . . . . . . . . . . . . . . . .   7
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+
+1.  Introduction
+
+   MOQT [MOQT] delivers objects over QUIC streams and datagrams.  While
+   QUIC itself provides an acknowledgement mechanism on the transport
+   level, those acknowledgements are generally not used for application-
+   level logic as they are not available in all APIs; notably, the W3C
+   WebTransport API does not expose them.  Additionally, data being
+   received by the QUIC layer does not necessarily mean the application
+   has read and processed it.  This document defines a message, called
+   OBJECT_ACK, that lets the subscriber acknowledge individual objects.
+
+   The main purpose of object ACKs is to provide a signal for bitrate
+   adaptation on the publisher side.  The object ACK is a hop-by-hop
+   message; the publisher can use it to adjust its bitrate directly on
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 2]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   the encoder (if it is the original publisher encoding the video), or
+   to switch between different pre-existing tracks encoding the same
+   contents (if a scheme such as SSTS is used to select tracks on a
+   relay).
+
+   The design described in this document is minimalist and similar in
+   nature to QUIC ACK frames: for every object the subscriber processes,
+   it sends an OBJECT_ACK on the Request Stream for the subscription in
+   question.  For every object, the subscriber also specifies a time
+   delta from the deadline by which the subscriber expected to receive
+   the object.  A positive time delta indicates that the object arrived
+   early, and a negative time delta indicates that the object arrived
+   late.
+
+   In addition to the time delta from deadline, the subscriber provides
+   the publisher with the ACK Window Size that allows it to interpret
+   the time deltas it receives.  Objects with time deltas greater than
+   or equal to the Window Size are considered to have arrived safely on
+   time.  In a regular video player with a fixed-size playback buffer,
+   Window Size corresponds to the size of the buffer, and the time delta
+   corresponds to the amount of playback time left in the buffer by the
+   time the object is received.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   The terms Subscriber, Publisher, Original Publisher, End Subscriber,
+   Relay, Request Stream, and Subscription-Delivered are used as defined
+   in [MOQT].
+
+   This document discusses subscribers "receiving and processing"
+   objects.  "Receiving" here means receiving all of the bytes in the
+   Object's payload.  "Processing" is application-specific; the
+   applications define what that means, and the effective behavior will
+   vary accordingly.  For instance, if the application includes fully
+   decoding a video frame in the definition of "processing", the
+   mechanism described in this document would result in the publisher
+   reducing the video rate when it is too high for the video decoder to
+   handle.
+
+   All of the time values in this document are expressed in
+   microseconds.
+
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 3]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   Additionally, this document uses a signed variable-length integer
+   encoding called (svi64).  An (svi64) is a sign-magnitude-encoded
+   variable-length integer.  Its encoding is based on the [MOQT] varint
+   encoding, not the [RFC9000] varint encoding.  The lowest bit
+   indicates the sign (1 is negative), and the upper bits indicate the
+   magnitude, meaning that the value is decoded as
+
+   value = (raw & 1) ? -(raw >> 1) : (raw >> 1)
+
+   Senders MUST encode 0 as a positive value (sign bit set to 0), and
+   receivers MUST gracefully process both possible encodings as 0.
+
+   TODO: this is annoying to deal with; design a better encoding.
+
+3.  Protocol Overview
+
+   To use object ACKs, both endpoints have to negotiate the
+   SUPPORT_OBJECT_ACKS SETUP Option.  For each individual subscription,
+   the Subscriber includes OBJECT_ACK_WINDOW_SIZE in the SUBSCRIBE
+   Parameters; if it is non-zero, the subscriber sends OBJECT_ACK for
+   every object it receives and processes.
+
+4.  SUPPORT_OBJECT_ACKS Setup Option
+
+   SUPPORT_OBJECT_ACKS (provisional code point 0xbbf1438) is a varint
+   SETUP Option that can be either 0 or 1; any other value MUST be
+   rejected by closing the session with KEY_VALUE_FORMATTING_ERROR.
+   Duplicate instances of this option are not allowed, and MUST be
+   rejected as a PROTOCOL_VIOLATION.
+
+   The option is assumed to be 0 by default; the extension is considered
+   to be enabled only if both endpoints specify the value of 1.
+
+   The extension is available both over native QUIC and over
+   WebTransport.  This document only defines the extension for MOQT
+   version draft-22.
+
+5.  OBJECT_ACK_WINDOW_SIZE Parameter
+
+   The OBJECT_ACK_WINDOW_SIZE Parameter (provisional code point
+   0xbbf1438) can appear in SUBSCRIBE, in a PUBLISH_OK, and in
+   REQUEST_UPDATE for a subscription.  It MUST NOT appear in any other
+   message.
+
+   TODO: consider how this should work with SUBSCRIBE_TRACKS.
+
+   TODO: since PUBLISH_OK no longer has Parameters other than EXPIRES,
+   should we require the subscriber to send a separate REQUEST_UPDATE?
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 4]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   OBJECT_ACK_WINDOW_SIZE encodes the ACK Window Size (see Section 1 for
+   semantics) in microseconds.  The value of 0 is the default; it means
+   object ACK messages are not used in the subscription.  The Parameter
+   is encoded as a single varint (vi64).  It MUST NOT appear more than
+   once in a single message.
+
+   The Parameter MUST NOT be used unless the support has been explicitly
+   negotiated via SETUP Options; in particular, this means that an
+   endpoint MUST NOT send a request with this Parameter before it has
+   received a SETUP message from the peer.
+
+6.  OBJECT_ACK Message
+
+   OBJECT_ACK Message {
+     Type (vi64) = 0x3184,
+     Length (16),
+     Group ID (vi64),
+     Object ID (vi64),
+     Delta from Deadline (svi64),
+   }
+
+   The OBJECT_ACK message (provisional code point 0x3184) is sent by the
+   subscriber on the Request Stream for a subscription; sending it in
+   any other context is a PROTOCOL_VIOLATION.
+
+   The subscriber MUST send OBJECT_ACK messages for every object it has
+   received and processed if it has sent a non-zero
+   OBJECT_ACK_WINDOW_SIZE, and it MUST NOT send any such messages if it
+   has not done so.  If the subscriber indicates a non-zero
+   OBJECT_ACK_WINDOW_SIZE, but does not send any object ACKs, the
+   publisher will assume it is not receiving any objects.
+
+   Note that MOQT typically allows the subscriber to immediately send
+   FIN for SUBSCRIBE requests or PUBLISH responses if it does not intend
+   to send any updates; a subscriber that has sent a non-zero
+   OBJECT_ACK_WINDOW_SIZE MUST NOT send a FIN until the subscription is
+   over.
+
+   OBJECT_ACK only applies to objects with Normal status; the subscriber
+   MUST NOT send OBJECT_ACK for any other objects, or for objects that
+   do not exist.
+
+   OBJECT_ACK only applies to Subscription-Delivered objects.
+
+   OBJECT_ACK is a unilateral notification, not a request: it does not
+   consume Request IDs, and does not require a REQUEST_OK or a
+   REQUEST_ERROR.
+
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 5]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   This document does not provide any mechanism for coalescing object
+   ACKs, or otherwise reducing the ACK traffic; OBJECT_ACK only
+   acknowledges one individual object.
+
+   Delta from Deadline indicates the duration between when the object
+   was received and processed, and an application-specific deadline (for
+   example, the time at which the video frame would appear on the
+   screen).  Positive values indicate that the object arrived before the
+   deadline; negative values indicate that it arrived after.
+
+7.  Security Considerations
+
+   TODO: discuss.  This should probably cover speculative ACKs at
+   minimum.
+
+8.  IANA Considerations
+
+   TODO: register SETUP Option (0xbbf1438), Message Parameter
+   (0xbbf1438), message type (0x3184).
+
+9.  References
+
+9.1.  Normative References
+
+   [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
+              "Media over QUIC Transport", Work in Progress, Internet-
+              Draft, draft-ietf-moq-transport-22, 1 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              transport-22>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+9.2.  Informative References
+
+   [RFC9000]  Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9000>.
+
+
+
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 6]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+Appendix A.  Implementation Status
+
+   This specification is currently implemented in the Google QUICHE
+   library, where it is used for adjusting the sender's bitrate.
+
+Appendix B.  Open Issues
+
+   *  Do we need OBJECT_ACKs without a pre-defined window size?
+
+   *  Consider whether ACK deltas should be a fraction of window (-1 to
+      +1) instead of a microsecond number.
+
+   *  Discuss missing object detection (both time-based approach and
+      reordering-based).
+
+   *  To locally detect missing objects, the publisher has to know its
+      fixed group structure; discuss that.
+
+   *  MOQT uses milliseconds, this draft uses microseconds, QUIC receive
+      timestamps use scaled microseconds.  Should we unify?
+
+   *  Does the varint format here align with the MOQ Timestamp draft?
+
+   *  Do we need to get rid of +0/-0 encoding in the signed varint?
+
+   *  Add text on relay handling.
+
+   *  Consider allowing ACKs for fill-delivered objects.
+
+   *  Discuss changing OBJECT_ACK_WINDOW_SIZE via REQUEST_UPDATE mid-
+      subscription; the ability to update it implies the publisher MUST
+      ignore OBJECT_ACKs if it doesn't know window size yet.
+
+   *  Add text discussing whether having to ACK every individual object
+      is an issue.
+
+   *  Discuss ACKs for duplicate objects, ACKs for missing objects, etc.
+
+   *  Discuss flow control and HOLB implications of OBJECT_ACKs.
+
+Acknowledgments
+
+   TODO: acknowledge people.
+
+Author's Address
+
+   Victor Vasiliev
+   Google
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 7]
+
+Internet-Draft              MOQT Object ACKs               November 2026
+
+
+   Email: vasilvv@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vasiliev                   Expires 6 May 2027                   [Page 8]

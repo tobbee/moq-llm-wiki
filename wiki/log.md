@@ -2,11 +2,72 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-11-01
+last_updated: 2026-11-03
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-11-03 — moq-transport draft-23 lands at the IETF 127 deadline
+
+**TL;DR**:
+- **[[moq-transport]] draft-23 published Nov-2** (PAUSED, Gone, Error Details); also LOC-05, C4M-02, privacy-pass-04; no MSF -02.
+- About 20 individual drafts at the IETF 127 deadline (Object ACKs, content stitching, test tracks, FEC split); 8 agenda requests.
+- **Implementations**: moq-rs `main` → draft-18 (#176, +41,086/−17,584); moqlivemock v0.18.0 + warp-player v0.17.0 add draft-22.
+- **Interop**: 289/268/32 of 591 (48.9%), +18 pass vs Nov-2; matrix +29, "ahead" 164→201 after runner #182/#162.
+
+**Operation**: Update (manual; covers 2026-11-01 ~15:30 UTC → 2026-11-03 ~12:30 UTC, plus a Slack backfill from Oct-26)
+**Sources**:
+- IETF Datatracker: **WG docs revised**: `draft-ietf-moq-transport-23` (Nov-2 22:33), `draft-ietf-moq-loc-05` (Nov-2 23:28), `draft-ietf-moq-c4m-02` (Nov-2 22:43), `draft-ietf-moq-privacy-pass-auth-04` (Nov-2 07:47). msf (-01), cmsf (-01) and secure-objects (-01) not revised. **Individual drafts**:
+  - New: `draft-vvv-moqt-object-acks-00`, `draft-englishm-moq-content-stitching-00`, `draft-marzot-moq-test-tracks-00`, `draft-nandakumar-moq-lb-00`, `draft-nandakumar-moq-mix-00`, `draft-zengin-moq-ssts-backpressure-00`, and the FEC split `draft-ramadan-moq-fec-{core,block-codes,catalog,multicast}-00`.
+  - Revised: `draft-ramadan-moq-multicast-02`, `draft-ramadan-moq-mmt-02`, `draft-frindell-moq-timestamp-01`, `draft-jennings-moq-uri-01`, `draft-jennings-moq-log-04`, `draft-jennings-moq-metrics-03`, `draft-westerlund-moq-overview-02`, `draft-englishm-moq-relay-dos-02` (Nov-3 00:06), `draft-riedl-moq-ad-creative-signaling-01` and `draft-jennings-agentproto-mcp-over-moqt-01` (both Nov-1).
+  - `draft-cenzano-moq-media-interop-03` is still expired (2026-04-23), not renewed.
+  - Downloaded to `sources/ietf-drafts/`: transport-23, loc-05, c4m-02, privacy-pass-auth-04, object-acks-00, content-stitching-00, test-tracks-00, relay-dos-02, overview-02, timestamp-01, uri-01.
+- GitHub `moq-wg`:
+  - **moq-transport**: Nov-2 merges [#2044](https://github.com/moq-wg/moq-transport/pull/2044) (duplicate Properties; #2038 closed), [#2041](https://github.com/moq-wg/moq-transport/pull/2041) (UNAVAILABLE, no bidi credit), [#2031](https://github.com/moq-wg/moq-transport/pull/2031) (delta FETCH ranges), [#2022](https://github.com/moq-wg/moq-transport/pull/2022) (Gone state), [#2051](https://github.com/moq-wg/moq-transport/pull/2051), [#2036](https://github.com/moq-wg/moq-transport/pull/2036), [#2053](https://github.com/moq-wg/moq-transport/pull/2053) (changelog). New: [#2050](https://github.com/moq-wg/moq-transport/pull/2050) (GOAWAY redirection optional and authorized), issue [#2052](https://github.com/moq-wg/moq-transport/issues/2052) (empty track names vs REDIRECTs).
+  - **msf**: Nov-2 merges #122, #211, #212, #216, #217, #218, #219, closing #109/#110/#200/#139/#203/#213/#205/#204. New open #221. #220 is still open.
+  - **loc**: [#29](https://github.com/moq-wg/loc/pull/29) and [#31](https://github.com/moq-wg/loc/pull/31) (Codec String) merged; new issue [#32](https://github.com/moq-wg/loc/issues/32).
+  - **CAT-4-MOQT**: #47, #48, #52, #53, #55 merged Nov-2.
+  - **privacy-pass**: #26, #27 merged Nov-2.
+  - **moq-secure-objects**: #92 active (agenda request).
+  - cmsf and catalog-format flat.
+- GitHub implementations:
+  - cloudflare/moq-rs: [#176](https://github.com/cloudflare/moq-rs/pull/176) *Support draft-18* merged to `main` (Nov-2 17:32). Final draft-16 release train (#305; moq-pub v0.9.7 / moq-sub v0.4.18), then the draft-18 train (#308; moq-transport v0.17.0, moq-relay-ietf v0.8.0, moq-native-ietf v0.11.0, moq-pub v0.10.0, moq-sub v0.5.0, moq-clock-ietf v0.6.25, moq-test-client v0.2.0) + #309 release fix.
+  - Eyevinn/moqlivemock: **v0.18.0** (#165), with issue [#166](https://github.com/Eyevinn/moqlivemock/issues/166) (avelad: send LOC VIDEO_FRAME_MARKING). Eyevinn/warp-player: #207 merged, then **v0.17.0** (#208). Eyevinn/moqtransport: **v0.15.1** (#31, fixes #30).
+  - moqtail/moqtail: #444 and #459 merged, **relay@0.17.0** / moqtail-rs@0.17.0 / moqtail@0.15.0 / client@0.17.0 / meet@0.3.1.
+  - moq-dev/moq: **moq-relay v0.17.11** (Nov-3 04:18; moq-cli v0.14.11, libmoq v0.6.21, moq-ffi v0.4.21, obs-moq v0.6.21); ~235 merges on `main` Nov-1 15:00 → Nov-3 09:00.
+  - Flat: google/quiche moqt (no commits since Oct-30), video-dev/moq-js, birneee/quiche_moq.
+- Interop runner: [Nov-2 00:17](https://englishm.github.io/moq-interop-runner/results/2026-11-02_001702/report.html) = 562/271/256/29 (48.2%); [Nov-3 00:14](https://englishm.github.io/moq-interop-runner/results/2026-11-03_001450/report.html) = 591/289/268/32 (48.9%; at-target 341 · ahead 201 · behind 49). Runner [#182](https://github.com/englishm/moq-interop-runner/pull/182) (moqlivemock 18+22) and [#162](https://github.com/englishm/moq-interop-runner/pull/162) (multi-endpoint docker relays) merged Nov-2; [#183](https://github.com/englishm/moq-interop-runner/pull/183) (moq-dev draft 20) open.
+- IETF mailing list (Nov-1 20:23 → Nov-3 00:00):
+  - Agenda requests: Riedl (ad-creative), Gurel (×3), Suhas (Cat4MoQT), Jennings (moq-uri, selection sets, secure-objects XOR), English (relay-dos + AUTH status) and Zanaty (LOC).
+  - New-draft announcements: Suhas (MoQ-LB), Westerlund (overview-02 + adoption request), English (content stitching), Vasiliev (Object ACKs), plus Zanaty's loc-05 follow-up.
+  - Interim-30 draft minutes (Westerlund, Nov-2), and I-D Action notices for transport-23, loc-05, c4m-02 and privacy-pass-auth-04.
+  - No consensus call. Duke's Nov-9 interim-dates deadline still stands.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: **checked**, Oct-26 → Nov-3. This backfills the nightly entries of Oct-27 → Nov-1, which had no Slack. Used `slack_search_public` (`in:#channel after:2026-10-25`) and `slack_read_channel`.
+  - `#moq`: PUBLISH_DONE closed-vs-opened thread (ts 1793406721.259039, 7 replies), GOING_AWAY/SESSION_CLOSED (1793384714.340959, 2 replies), moq-test-tracks review (1793642526.170529, 9 replies).
+  - `#moq-auth-design-team`: AUTH_PAYLOAD rename plan → #2047 (Oct-30), and Gupta's request to upstream englishm/moq-transport #7/#8/#11 (Nov-1).
+  - `#moq-interop-runner`, `#moq-rs`, `#moq-js`, `#libquicr`: quiet.
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-transport]]: draft_version 23; new *draft-23* version-history section (session/control plane, data plane, "Not in -23"); Recent Highlights bullet; ALPN list gains `moqt-21/22/23`.
+- [[moq-loc]] (-05, Codec String), [[moq-c4m]] (-02 changes section), [[moq-privacy-pass]] (-04): versions, headers and highlights.
+- [[moq-msf]]: Nov-2 seven-PR merge batch with no -02 submitted.
+- [[moq-multicast]] / [[moq-mmt]] (-02), [[moq-fec]] (split into four drafts), [[moq-timestamp-properties]] (-01), [[moq-discovery]] (moq-uri-01), [[moq-overview]] (-02 + adoption request), [[moq-relay-dos]] (-02), [[moq-fast-switching]] (SSTS backpressure companion).
+- **New pages**: [[moq-object-acks]], [[moq-content-stitching]], [[moq-test-tracks]].
+- [[moq-rs]]: Draft Support → `main` = draft-18, latest release v0.8.0 / moq-transport v0.17.0, new Recent Highlights bullet.
+- [[moqlivemock]] (v0.18.0), [[warp-player]] (draft-18 + draft-22, v0.17.0), [[moqtransport]] (v0.15.1), [[moqtail]] (relay@0.17.0, LOC IDs), [[moq-dev]] (v0.17.11, draft-20 back), [[overview|implementations overview]] (draft-support table).
+- [[interop-runner]]: Nov-3 is the Latest cut, Nov-2 the Prior; moqlivemock row → 18, 22; daily-cuts table gets Oct-28 → Nov-3 rows.
+- [[interim-meetings]]: interim-30 row gets the minutes link and its decisions.
+- [[discussions-2026-11]]: new *Activity (Nov 1 → Nov 3)* section with the deadline wave, the agenda-request table, implementations, interop, and the Slack backfill.
+- [[index]]: new rows (object-acks, content-stitching, test-tracks, relay-dos); updated versions; `last_updated` bumped.
+
+**Key findings**:
+- *The draft deadline pulled the queue through.* draft-23 includes the Seattle and interim-30 decisions (PAUSED, Gone, Error Details), merged as late as 30 minutes before submission. The interop target is still -18/-22, so the hackathon tests older text than the WG will discuss.
+- *MSF lags its own merges.* Seven substantive PRs (fast switching, LOC stream mapping, DVR window, required fields) landed on deadline day, but there is no msf-02, so the published MSF is still June's -01.
+- *A split on which draft to implement.* Cloudflare made draft-18 its mainline (draft-22 ALPN defined but disabled) while Eyevinn, moqtail and moq-dev ship 18 + 22, and moq-dev also 20. The interop "ahead" share jumped to about a third of the matrix.
+- *Media-side individual work keeps growing*: test media (mtt_00), content stitching for ad insertion, per-object ACKs for ABR, and LOC property sprawl (Zanaty's 'how do we handle all properties?').
 
 # 2026-11-01 — draft-23 queue clears; a draft-22 adoption wave
 

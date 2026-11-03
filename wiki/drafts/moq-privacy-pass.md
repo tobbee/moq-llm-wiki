@@ -2,12 +2,13 @@
 title: "Privacy Pass Authentication for MOQ"
 tags: [draft, security, authentication]
 date: 2026-04-10
-last_updated: 2026-07-07
+last_updated: 2026-11-03
 status: current
-draft_version: "03"
+draft_version: "04"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/"
 ---
 
+**draft-ietf-moq-privacy-pass-auth-04** | published 2026-11-02 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/04/) — rebased on the AUTH design team's model and aligned with moq-transport-23
 **draft-ietf-moq-privacy-pass-auth-03** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-privacy-pass-auth/)
 **draft-ietf-moq-privacy-pass-auth-02** | 31 pages
 
@@ -31,6 +32,11 @@ Integrates Privacy Pass tokens with [[moq-transport]] to enable privacy-preservi
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **draft-04 published (2026-11-02), rebuilt on the AUTH design team's model.** [[thibault-meunier|Meunier]]'s [#26](https://github.com/moq-wg/privacy-pass/pull/26) and [[suhas-nandakumar|Suhas]]'s transport-alignment [#27](https://github.com/moq-wg/privacy-pass/pull/27) both merged Nov-2, and -04 was submitted at 07:47 UTC. The changelog:
+  - **Reverse-flow issuance** moves to `AUTH REQUEST`/`AUTH RESPONSE` parameters, and a client can **acquire tokens over an established connection via REQUEST_UPDATE**.
+  - The `TokenChallenge` travels in an **`AUTH CHALLENGE`** parameter instead of reason phrases, bound to REQUEST_ERROR **Error Details** (transport #2010). The PrivateTokenAuth structures and the auth-scheme registry are removed.
+  - It aligns with **moq-transport-23** (a single SETUP message), adds a `SUBSCRIBE_TRACKS` action, and **requires `USE_VALUE`, treating alias reuse as replay**.
+  - It reuses MoQT's `MALFORMED_AUTH_TOKEN`/`EXPIRED_AUTH_TOKEN` codes and registers a Privacy Pass codepoint in the MOQT Auth Token Type registry.
 - **`-03` published (2026-07-06)** — a major rebuild of the MoQT integration, converting the July-1 triage and [[thibault-meunier|Thibault Meunier]]'s merged "Key considerations" text (PR #20) into published spec.
 
 - Privacy-pass is the privacy-preserving half of a **two-track WG auth workstream**; [[moq-c4m|C4M]] (Common Access Tokens) is the signed-bearer-token counterpart, coordinated through [[martin-duke|Martin Duke]]'s "AUTH design team" mailing-list thread.

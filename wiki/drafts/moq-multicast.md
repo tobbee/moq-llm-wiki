@@ -2,13 +2,13 @@
 title: "Multicast Delivery and Endpoint Discovery for Media over QUIC"
 tags: [draft, multicast, broadcast, discovery, security, individual]
 date: 2026-10-15
-last_updated: 2026-10-15
+last_updated: 2026-11-03
 status: current
-draft_version: "00"
+draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ramadan-moq-multicast/"
 ---
 
-**draft-ramadan-moq-multicast-00** | Individual submission | **-00 posted 2026-10-14** | 27 pages | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ramadan-moq-multicast/)
+**draft-ramadan-moq-multicast-02** | Individual submission | **-02 posted 2026-11-02** (-01 2026-10-28; -00 2026-10-14) | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ramadan-moq-multicast/)
 
 # Authors
 - **Omar Ramadan** (Blockcast)
@@ -36,7 +36,7 @@ Unicast QUIC does not scale to broadcast-sized audiences; native IP multicast do
 
 # Status
 
-**Individual submission** — not adopted by the MOQ working group. Posted 2026-10-14; no mailing-list announcement at submission time. See [[moq-mmt]], [[moq-fec]], [[moq-discovery]], [[moq-transport]], [[catalog-format]], [[discussions-2026-10]].
+**Individual submission** — not adopted by the MOQ working group. Posted 2026-10-14 and revised twice: -01 on 2026-10-28 and -02 on 2026-11-02, at the IETF 127 deadline. The -01 cluster went to the list on Oct-29 (*"New drafts: multicast, FEC and MMT packaging for MoQ"*, Omar Ramadan, which also asked three WG-scoping questions and noted the SQUAD BoF overlap). At -02 the FEC companion was split into four drafts; the multicast-specific FEC part is now [[moq-fec|`draft-ramadan-moq-fec-multicast`]]. See [[moq-mmt]], [[moq-fec]], [[moq-discovery]], [[moq-transport]], [[catalog-format]], [[discussions-2026-10]].
 
 # Links
 

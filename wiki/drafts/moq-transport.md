@@ -2,13 +2,14 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-10-18
+last_updated: 2026-11-03
 status: current
-draft_version: 22
+draft_version: 23
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
 ---
 
-**draft-ietf-moq-transport-22** | published 2026-10-01 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/22/) — the current revision (165 pages; tag 21:33 UTC, datatracker 21:36 UTC). **Named the Seattle interop target, alongside draft-18**, at [[interim-meetings|interim-2026-moq-24]] (Sep-21). It makes **one wire change** to the draft-20/21 format: `LOCATION_FILTER` now carries an explicit **Location Filter Type** ([#1953](https://github.com/moq-wg/moq-transport/pull/1953)). So [[martin-duke|Duke]]'s Sep-21 *"-22 is functionally identical to -20 except the ALPN"* holds everywhere except that one parameter.
+**draft-ietf-moq-transport-23** | published 2026-11-02 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/23/) — the current revision, cut at the IETF 127 I-D deadline (expires 2027-05-06). It carries the October interim backlog: about 40 changelog items, including the `FORWARD`→`PAUSED` rename, a **Gone** Object state, count-encoded `FILL_PARAMETERS`, a varint control-message length and REQUEST_ERROR Error Details. **Not an interop target**: draft-18 + draft-22 remain the targets. See *draft-23* below.
+**draft-ietf-moq-transport-22** | published 2026-10-01 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/22/) — the interop target alongside draft-18 (165 pages; tag 21:33 UTC, datatracker 21:36 UTC). **Named the Seattle interop target, alongside draft-18**, at [[interim-meetings|interim-2026-moq-24]] (Sep-21). It makes **one wire change** to the draft-20/21 format: `LOCATION_FILTER` now carries an explicit **Location Filter Type** ([#1953](https://github.com/moq-wg/moq-transport/pull/1953)). So [[martin-duke|Duke]]'s Sep-21 *"-22 is functionally identical to -20 except the ALPN"* holds everywhere except that one parameter.
 **draft-ietf-moq-transport-21** | published 2026-09-08 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/21/) — 159 pages; a pure **restructuring** cut the day of interim-2026-moq-23, **"100% wire and semantically equivalent to draft-20"** per the editors (15 sentences removed, 31 added, 20 modified, almost all navigational)
 **draft-ietf-moq-transport-20** | published 2026-08-31 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/20/) — 158 pages; carries the full July 6 → Aug 31 delta, incl. the Joining-FETCH removal (not purely editorial)
 **draft-ietf-moq-transport-19** | published 2026-07-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-transport/19/)
@@ -35,6 +36,32 @@ MOQT is a publish/subscribe protocol that runs over QUIC and WebTransport. It le
 - **URI Scheme**: `moqt://` URI scheme with fragment identifier support (PR #1571)
 
 # Version history
+
+## draft-23 (published 2026-11-02) — the IETF 127 cut
+
+**Published Nov-2 at 22:33 UTC**, at the IETF 127 Internet-Draft deadline, half an hour after a final batch of merges. Release notes are [PR #2053](https://github.com/moq-wg/moq-transport/pull/2053) ([[alan-frindell|afrind]]). The text expires 2027-05-06. Raw text: `sources/ietf-drafts/draft-ietf-moq-transport-23.txt`. Most of the content was agreed at the Seattle interim (Oct 12–15) and the [[interim-meetings|Oct-26 virtual interim (interim-30)]], then merged Oct-16 → Nov-2. **draft-22 stays the interop target**: afrind said on Slack that *"22 is the target until likely ~January"*. So draft-23 is the text the WG discusses at IETF 127, not the wire format the hackathon tests.
+
+### Session and control plane (Appendix A.1)
+- **Encoding changes**: `FILL_PARAMETERS` is encoded as a **count** of Parameters instead of a length ([#2015](https://github.com/moq-wg/moq-transport/pull/2015)). This settles the draft-22 ambiguity; deployed draft-22 stacks send length+count. The control-message **Length becomes a varint**, bounded by a new **`MAX_CONTROL_MESSAGE_SIZE`** Setup Option ([#2017](https://github.com/moq-wg/moq-transport/pull/2017)).
+- **FETCH**: `FETCH_OK` loses End Location and End Of Track and becomes a plain `REQUEST_OK` ([#2009](https://github.com/moq-wg/moq-transport/pull/2009)). A relative Location filter in FETCH is an `INVALID_RANGE` error ([#1960](https://github.com/moq-wg/moq-transport/pull/1960)).
+- **`FORWARD` → `PAUSED`**: the parameter gets a new ID and inverted semantics, so 0 now means unpaused, the default ([#2002](https://github.com/moq-wg/moq-transport/pull/2002), decided at interim-30).
+- **REQUEST_UPDATE**: updates are processed and answered in order ([#1938](https://github.com/moq-wg/moq-transport/pull/1938)). Updates that carry `FILL_PARAMETERS` must not be coalesced ([#2042](https://github.com/moq-wg/moq-transport/pull/2042)).
+- **Namespace subscriptions**: overlapping prefixes are now **allowed**, and the new **`SUBSCRIBE_TRACKS_ID`** parameter lets each resulting PUBLISH name its SUBSCRIBE_TRACKS ([#2018](https://github.com/moq-wg/moq-transport/pull/2018)). The draft defines what updating a prefix does ([#2019](https://github.com/moq-wg/moq-transport/pull/2019)) and restricts SUBSCRIBE_TRACKS to an explicit parameter list ([#1995](https://github.com/moq-wg/moq-transport/pull/1995)). Duplicate `PUBLISH_NAMESPACE` for the same prefix is allowed ([#2021](https://github.com/moq-wg/moq-transport/pull/2021)), and `NAMESPACE` gains Parameters ([#1858](https://github.com/moq-wg/moq-transport/pull/1858)).
+- **Parameters**: `FILL_PARAMETERS` is allowed in SUBSCRIBE_TRACKS and PUBLISH ([#2007](https://github.com/moq-wg/moq-transport/pull/2007)), and `EXPIRES` in every OK message ([#1994](https://github.com/moq-wg/moq-transport/pull/1994)). A relay's `LARGEST_OBJECT` for downstream requests is computed differently ([#1978](https://github.com/moq-wg/moq-transport/pull/1978)), with an exception clarified by [[martin-duke|Duke]] ([#2036](https://github.com/moq-wg/moq-transport/pull/2036)).
+- **Errors**: `PROTOCOL_VIOLATION` is replaced by specific session error codes ([#1773](https://github.com/moq-wg/moq-transport/pull/1773)). **REQUEST_ERROR gains Error Details**, including **REDIRECT** ([#2010](https://github.com/moq-wg/moq-transport/pull/2010)); the AUTH design team builds its challenge text on this. Other additions: an **`UNSUPPORTED_PROPERTY`** Error Detail ([#2011](https://github.com/moq-wg/moq-transport/pull/2011)), handling of unknown Mandatory Track Properties in TRACK_STATUS_OK ([#2016](https://github.com/moq-wg/moq-transport/pull/2016)), an **`EXPIRED_AUTH_TOKEN`** PUBLISH_DONE code ([#1970](https://github.com/moq-wg/moq-transport/pull/1970)), and an **`UNAVAILABLE`** request error for a relay that has no bidirectional stream credit to forward a request ([#2041](https://github.com/moq-wg/moq-transport/pull/2041), closing Duke's #1637).
+- **Smaller rules**: only the receiver of a request may send GOAWAY on its request stream ([#1966](https://github.com/moq-wg/moq-transport/pull/1966)). Receivers need not detect every duplicate Request ID ([#1993](https://github.com/moq-wg/moq-transport/pull/1993)). **Track Names MUST NOT be empty** ([#1954](https://github.com/moq-wg/moq-transport/pull/1954)); [[victor-vasiliev|Vasiliev]]'s last-minute [#2051](https://github.com/moq-wg/moq-transport/pull/2051) removed the empty track name from `.session`, and his issue [#2052](https://github.com/moq-wg/moq-transport/issues/2052) notes the rule still conflicts with empty names in REDIRECTs and namespace-scoped requests. `NEW_GROUP_REQUEST` may be sent before `DYNAMIC_GROUPS` is known ([#2008](https://github.com/moq-wg/moq-transport/pull/2008)).
+
+### Data plane wire format and handling
+- **A fourth Object state, *Gone*, plus an End of Gone Range marker** ([#2022](https://github.com/moq-wg/moq-transport/pull/2022), closing #1376/#1704). *Gone* is a persistent "unknown", for example after a publisher restart. Unlike the transient *Unknown*, it is cacheable up to the maximum cache duration, and out-of-order signals about it do not make the Track malformed.
+- **FETCH stream encoding**: End-of-Range indicators are **delta-encoded** ([#2031](https://github.com/moq-wg/moq-transport/pull/2031), [[aman-sharma|sharmafb]]). The Object ID Delta adds 2 for objects within a Group ([#2006](https://github.com/moq-wg/moq-transport/pull/2006)). A complete Group is marked with an **End of Group** flag ([#2013](https://github.com/moq-wg/moq-transport/pull/2013)).
+- **Properties**: a supported Property outside its scope makes the Track malformed ([#2039](https://github.com/moq-wg/moq-transport/pull/2039)). Whether a Property may repeat now has a default ([#2044](https://github.com/moq-wg/moq-transport/pull/2044), [[michal-hosna|Hošna]]); afrind's alternative [#2038](https://github.com/moq-wg/moq-transport/pull/2038) was closed. The SUBGROUP_HEADER PROPERTIES bit is set if any later Object might carry Properties ([#1915](https://github.com/moq-wg/moq-transport/pull/1915)). Grease values are not Mandatory Track Properties ([#2037](https://github.com/moq-wg/moq-transport/pull/2037)).
+- `UNKNOWN_OBJECT_STATUS` is removed as a stream reset code ([#2004](https://github.com/moq-wg/moq-transport/pull/2004)).
+
+### Not in -23
+- **End-of-Group bit on multi-object subgroups** ([#2032](https://github.com/moq-wg/moq-transport/issues/2032)): interim-30 chose *Option C* (keep the header bit only for single-object subgroups and use an explicit status object otherwise), but the PR text has not landed.
+- **Fill-Fetch redesign** ([#2033](https://github.com/moq-wg/moq-transport/pull/2033) subscribe-style delivery; issues #2034, #2043, #2048) is still open.
+- Also still open: the **AUTH_PAYLOAD rename** ([#2047](https://github.com/moq-wg/moq-transport/pull/2047)), the **Selection Sets** sketch ([#1982](https://github.com/moq-wg/moq-transport/pull/1982), which [[cullen-jennings|Jennings]] has asked for a 60-minute IETF 127 slot to discuss), Setup Options in 0-RTT ([#2045](https://github.com/moq-wg/moq-transport/pull/2045)), and making GOAWAY redirection optional with authorized destinations ([#2050](https://github.com/moq-wg/moq-transport/pull/2050), from the [[moq-relay-dos|relay-DoS]] work).
+- The fate of **Mandatory Track Properties** is still open. At interim-30 afrind proposed removing them unless a concrete user appears by IETF 127.
 
 ## draft-22 (published 2026-10-01) — the Seattle interop target
 
@@ -184,6 +211,7 @@ Significant changes from draft-16:
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **draft-23 published at the IETF 127 deadline (2026-11-02).** It folds in the Seattle and Oct-26 interim decisions: `PAUSED`, the Gone state, count-encoded `FILL_PARAMETERS`, a varint control-message length, overlapping namespace subscriptions and REQUEST_ERROR Error Details with REDIRECT. **draft-18 + draft-22 stay the interop targets**, likely until about January. See *draft-23* above.
 - **Post-Seattle (Oct 16–18, 2026): draft-22 stays the interop target, and the draft-23 queue fills.**
   - [[alan-frindell|afrind]] said on Slack that *"22 is the target until likely ~January."*
   - The draft-22 `FILL_PARAMETERS` encoding is ambiguous: length, count, or both. Deployed stacks (moq-net, [[moxygen]], [[moqtail]]) converged on **length+count**, so that stays the draft-22 spelling. The WG's **count-only** form ([#2015](https://github.com/moq-wg/moq-transport/pull/2015), digest "Merge Ready") lands in draft-23.
@@ -259,9 +287,12 @@ MOQT negotiates the draft revision **entirely via the QUIC ALPN** ([RFC7301]) an
 
 The QUIC-multiplexed ([[qmux]]) transport prefixes the same token as `qmux-00.moqt-NN`; that composition is defined in the qmux draft, not in moq-transport.
 
-- `moqt-20` — draft-20, the current published revision
+- `moqt-23` — draft-23, the current published revision (2026-11-02)
+- `moqt-22` — draft-22; the interop target alongside draft-18
+- `moqt-21` — draft-21
+- `moqt-20` — draft-20
 - `moqt-19` — draft-19
-- `moqt-18` — draft-18; the Vienna interop target and the current automated interop-runner target
+- `moqt-18` — draft-18; the Vienna interop target, still an interop target alongside draft-22, and the label the automated interop runner reports against
 - `moqt-17` — draft-17
 - `moqt-16` — draft-16
 - `moq-00` — draft-14 and earlier (legacy, numeric SETUP version negotiation); the bare `qmux-00` token (no suffix) likewise implies draft-14

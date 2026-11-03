@@ -2,13 +2,13 @@
 title: "MPEG Media Transport (MMT) Packaging for Media over QUIC"
 tags: [draft, media, mmt, packaging, broadcast, individual]
 date: 2026-10-15
-last_updated: 2026-10-15
+last_updated: 2026-11-03
 status: current
-draft_version: "00"
+draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ramadan-moq-mmt/"
 ---
 
-**draft-ramadan-moq-mmt-00** | Individual submission | **-00 posted 2026-10-14** | 49 pages | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ramadan-moq-mmt/)
+**draft-ramadan-moq-mmt-02** | Individual submission | **-02 posted 2026-11-02** (-01 2026-10-28; -00 2026-10-14) | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ramadan-moq-mmt/)
 
 # Authors
 - **Omar Ramadan** (Blockcast, omar@blockcast.network)
@@ -35,7 +35,7 @@ MMT is the packaging used by next-generation broadcast (ATSC 3.0 in North Americ
 
 # Status
 
-**Individual submission** — not adopted by the MOQ working group. Posted 2026-10-14; no mailing-list announcement at submission time. See [[moq-fec]], [[moq-multicast]], [[moq-transport]], [[moq-msf]], [[catalog-format]], [[discussions-2026-10]].
+**Individual submission** — not adopted by the MOQ working group. Posted 2026-10-14 and revised to -01 (2026-10-28) and -02 (2026-11-02, the IETF 127 deadline). The -01 cluster went to the list on Oct-29 (*"New drafts: multicast, FEC and MMT packaging for MoQ"*, Omar Ramadan, which also asked three WG-scoping questions and noted the SQUAD BoF overlap). An implementation signal: [[moqtail]] has an open MMTP track-receiver PR ([#452](https://github.com/moqtail/moqtail/pull/452), Oct-30). See [[moq-fec]], [[moq-multicast]], [[moq-transport]], [[moq-msf]], [[catalog-format]], [[discussions-2026-10]].
 
 # Links
 

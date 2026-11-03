@@ -2,15 +2,16 @@
 title: "Authorization scheme for MOQT using Common Access Tokens (C4M)"
 tags: [draft, security, authentication, wg-document]
 date: 2026-06-19
-last_updated: 2026-10-26
+last_updated: 2026-11-03
 status: current
-draft_version: "01"
+draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-c4m/"
 ---
 
 > **2026-06-19**: **C4M lands its first WG revision — `draft-ietf-moq-c4m-01` published June 18, the first new moq-wg draft revision the wiki has tracked since transport-18 (May 12).** [[will-law|Will Law]] (Akamai), Chris Lemmons (Comcast), [[gwendal-simon|Gwendal Simon]] (Synamedia), and [[suhas-nandakumar|Suhas Nandakumar]] (Cisco) publish **-01** (expires 2026-12-20), the first revision since the document was adopted as a WG item (**c4m-00**, 2025-09-19) from the individual `draft-law-moq-cat4moqt`. C4M is the **Common Access Token (CAT)** authorization scheme for [[moq-transport|MOQT]] — the **complementary/alternative auth track to [[moq-privacy-pass|Privacy Pass]]**: where Privacy Pass is privacy-preserving (the relay learns minimal information about the subscriber), C4M is a **signed-bearer-token** scheme where the token itself carries the authorized action scopes and the relay enforces them at session setup and per-operation. The -01 revision lands while [[martin-duke|Martin Duke]]'s **AUTH design team** mailing-list thread (open since June 12) is actively coordinating the WG's auth workstream across C4M, Privacy Pass, and the generic-AUTH-challenge gap. WG milestone targets **requesting publication December 2026**. See [[moq-privacy-pass]], [[moq-transport]], [[discussions-2026-06]].
 
-**draft-ietf-moq-c4m-01** | Expires 2026-12-20 | adopted from `draft-law-moq-cat4moqt`
+**draft-ietf-moq-c4m-02** | published 2026-11-02 | expires 2027-05-06 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-c4m/02/) — the first revision since June: DPoP folded in, claim versioning, connection-scoped replay (see *-02 changes*)
+**draft-ietf-moq-c4m-01** | published 2026-06-18 | adopted from `draft-law-moq-cat4moqt`
 
 # Authors
 - [[will-law|Will Law]] (Akamai)
@@ -32,6 +33,16 @@ C4M defines how a **Common Access Token (CAT)** — the CTA WAVE **CTA-5007-B** 
 - **DPoP integration**: optional proof-of-possession binding — a `cnf` confirmation claim carrying a **JWK thumbprint** plus `catdpop` processing settings, so a stolen bearer token can't be replayed by an unbound client.
 - **Presentation points**: clients provide the token at **connection establishment** and with subsequent MOQT actions; tokens may be **Base64-encoded when added to a URL**.
 - **Relay enforcement**: validate the signature, check expiration and claims, match each requested action against the authorized scopes, and — when DPoP is present — verify the proof-of-possession signature and key binding.
+
+# -02 changes (2026-11-02)
+
+[[suhas-nandakumar|Suhas]] merged four long-open PRs into the [CAT-4-MOQT](https://github.com/moq-wg/CAT-4-MOQT) repo on deadline day and submitted -02 at 22:43 UTC:
+- **DPoP folded into C4M** ([#53](https://github.com/moq-wg/CAT-4-MOQT/pull/53), open since Oct-1). The separate generic-dpop-proof dependency is dropped, at the Security AD's request. The DPoP section was rewritten around a native CBOR `actx` and a `kccs` key header with one validation list. Tokens bind to the key with **`ckt` (RFC 9679)**, and `jkt` stays optional.
+- **`moqt` claim versioning** ([#48](https://github.com/moq-wg/CAT-4-MOQT/pull/48)): the claim becomes a map (`{0: scopes}`), and **unknown map keys make the claim set unacceptable**. Test vectors were regenerated with the corrected HMAC algorithm ID and COSE binary format ([#47](https://github.com/moq-wg/CAT-4-MOQT/pull/47)).
+- **Connection-scoped replay semantics for non-DPoP tokens** ([#52](https://github.com/moq-wg/CAT-4-MOQT/pull/52)): `catreplay` binds on first use by `cti`. A relay **MUST NOT reject a token solely because it was used before** in the same connection, and must keep replay state through the `exp` leeway.
+- References were updated to moq-transport-22 and composite-claims-03 ([#55](https://github.com/moq-wg/CAT-4-MOQT/pull/55)).
+
+Suhas, Lemmons and Law have asked for 30 minutes at IETF 127 (20 to present, 10 to discuss).
 
 # Section structure (-01)
 

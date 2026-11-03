@@ -1,0 +1,1456 @@
+
+
+
+
+moq                                                        M. Westerlund
+Internet-Draft                                                  Ericsson
+Intended status: Informational                                 Z. Sarker
+Expires: 6 May 2027                                                Nokia
+                                                         2 November 2026
+
+
+                        Media over QUIC Overview
+                    draft-westerlund-moq-overview-02
+
+Abstract
+
+   This document provides a high-level overview of the Media over QUIC
+   (MoQ) protocol suite.  It describes the architecture, data model,
+   transport protocol, streaming formats, and security mechanisms that
+   together enable scalable low-latency media delivery over the
+   Internet.  The document explains how these components relate to each
+   other and how they are composed to create interoperable media
+   applications.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-westerlund-moq-overview/.
+
+   Discussion of this document takes place on the Media over QUIC (MOQ)
+   Working Group mailing list (mailto:moq@ietf.org), which is archived
+   at https://mailarchive.ietf.org/arch/browse/moq/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/moq/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/https://github.com/gloinul/draft-westerlund-moq-
+   overview.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 1]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 6 May 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Motivation  . . . . . . . . . . . . . . . . . . . . . . .   4
+     1.2.  Document Scope  . . . . . . . . . . . . . . . . . . . . .   4
+     1.3.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   5
+   2.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     2.1.  Live Streaming Media Delivery . . . . . . . . . . . . . .   6
+     2.2.  Real-Time Conferencing  . . . . . . . . . . . . . . . . .   7
+     2.3.  Content Contribution and Primary Distribution . . . . . .   8
+   3.  Architecture and Nodes  . . . . . . . . . . . . . . . . . . .   8
+     3.1.  Roles . . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.2.  Relays  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.3.  Deployment Topologies . . . . . . . . . . . . . . . . . .  10
+   4.  Data Model  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     4.1.  Hierarchy . . . . . . . . . . . . . . . . . . . . . . . .  11
+     4.2.  Track Naming  . . . . . . . . . . . . . . . . . . . . . .  11
+     4.3.  Properties  . . . . . . . . . . . . . . . . . . . . . . .  12
+     4.4.  Object Immutability and Cacheability  . . . . . . . . . .  12
+   5.  MOQT: The Transport Protocol  . . . . . . . . . . . . . . . .  13
+     5.1.  Session Establishment . . . . . . . . . . . . . . . . . .  13
+     5.2.  Publishing and Subscribing  . . . . . . . . . . . . . . .  14
+     5.3.  Priorities and Delivery . . . . . . . . . . . . . . . . .  14
+     5.4.  Extensibility and Session Management  . . . . . . . . . .  15
+   6.  Streaming Formats . . . . . . . . . . . . . . . . . . . . . .  16
+     6.1.  Role of a Streaming Format  . . . . . . . . . . . . . . .  16
+     6.2.  MSF: MOQT Streaming Format  . . . . . . . . . . . . . . .  17
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 2]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+     6.3.  CMSF: CMAF-Compliant Streaming Format . . . . . . . . . .  17
+     6.4.  Layering  . . . . . . . . . . . . . . . . . . . . . . . .  18
+   7.  Security Architecture . . . . . . . . . . . . . . . . . . . .  18
+     7.1.  Hop-by-Hop Security . . . . . . . . . . . . . . . . . . .  18
+     7.2.  End-to-End Object Encryption  . . . . . . . . . . . . . .  19
+     7.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  19
+     7.4.  Privacy Considerations  . . . . . . . . . . . . . . . . .  20
+   8.  Defining a MoQ Application  . . . . . . . . . . . . . . . . .  21
+     8.1.  Application Design Choices  . . . . . . . . . . . . . . .  21
+     8.2.  Existing Application Definitions  . . . . . . . . . . . .  22
+     8.3.  Reading Guide . . . . . . . . . . . . . . . . . . . . . .  22
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  23
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
+   11. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  24
+   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
+   13. Informative References  . . . . . . . . . . . . . . . . . . .  24
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  26
+
+1.  Introduction
+
+   Media over QUIC (MoQ) is an IETF working group that produces a suite
+   of protocol specifications for scalable, low-latency delivery over
+   the Internet.  The central specification is the MoQ Transport
+   protocol (MOQT), a publish/subscribe protocol built on QUIC [RFC9000]
+   that uses intermediate relays to achieve distribution at scale.
+   Additional specifications build on MOQT to define streaming formats,
+   media containers, and end-to-end security mechanisms.
+
+   This document provides a high-level overview of these component
+   protocols, how they relate to each other, and how they are composed
+   to create interoperable applications.  It is intended as an entry
+   point for implementers, reviewers, and protocol designers who want to
+   understand the overall system before reading the individual normative
+   specifications.
+
+   Although the primary motivation of MoQ is media delivery, MOQT itself
+   is content-agnostic — it transports opaque objects without knowledge
+   of their payload.  Media-specific logic (codecs, containers, adaptive
+   bitrate switching) is defined in separate streaming format
+   specifications that layer on top of the transport.  This separation
+   means the protocol can serve other applications that benefit from the
+   same publish/subscribe, relay-based delivery model.
+
+
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 3]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+1.1.  Motivation
+
+   Today's media delivery landscape uses separate protocols for
+   different stages of the pipeline.  Content is typically ingested
+   using protocols like RTMP, then repackaged at origin servers for
+   distribution via HTTP-based protocols such as HLS or DASH.  This
+   separation introduces repackaging overhead, limits end-to-end
+   latency, and creates complexity at the boundaries between protocol
+   domains.
+
+   MoQ addresses this by providing a single protocol that can carry
+   media from original publisher to end subscriber, including through
+   intermediate relay nodes.  The design is driven by four goals:
+
+   Latency:  TCP-based protocols suffer from head-of-line blocking and
+      are slow to respond to congestion.  MoQ leverages QUIC's
+      multiplexed streams and partial reliability to minimise queuing
+      latency and react quickly to changing network conditions.
+
+   Leveraging QUIC:  QUIC provides parallel streams with independent
+      loss recovery, unreliable datagrams, stream priorities, and flow
+      control.  MoQ maps its data model onto these features to achieve
+      flexible trade-offs between latency and reliability.
+
+   Convergence:  A single protocol from contribution through
+      distribution eliminates the need for intermediate repackaging.
+      The same MoQ objects produced by an encoder can be delivered to
+      end subscribers without transformation at relay nodes.
+
+   Relays:  Scalable media delivery requires intermediaries that can
+      cache and fan out content.  MoQ treats relays as first-class
+      protocol participants: object metadata is structured so that
+      relays can route, prioritise, and cache content without accessing
+      the media payload itself.
+
+   The resulting protocol is a general-purpose pub/sub delivery layer.
+   The media-specific aspects — how audio and video samples are
+   packaged, how tracks are described in a catalog, how adaptive bitrate
+   switching works — are defined by separate streaming format
+   specifications that build on MOQT.  Applications outside media
+   delivery can use MOQT directly with their own object formats, without
+   adopting any of the media-specific layers.
+
+1.2.  Document Scope
+
+   This document is informational.  It does not define protocol
+   behaviour or create new requirements.  Its purpose is to:
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 4]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Orient readers to the MoQ architecture and its components.
+
+   *  Explain how the components relate to each other.
+
+   *  Point readers to the relevant normative specification for each
+      topic.
+
+   The covered specifications are:
+
+   *  MOQT (Media over QUIC Transport) [I-D.ietf-moq-transport] — the
+      publish/subscribe transport protocol.
+
+   *  MSF (MOQT Streaming Format) [I-D.ietf-moq-msf] — a streaming
+      format defining media packaging, catalog, and timeline.
+
+   *  CMSF (CMAF-compliant MSF) [I-D.ietf-moq-cmsf] — an extension of
+      MSF for CMAF/ISO-BMFF packaged media.
+
+   *  MoQ Secure Objects [I-D.ietf-moq-secure-objects] — end-to-end
+      authenticated encryption for content objects.
+
+   *  Privacy Pass Authentication [I-D.ietf-moq-privacy-pass-auth] —
+      privacy-preserving token-based authorization.
+
+   *  Common Access Tokens for MoQ (C4M) [I-D.ietf-moq-c4m] — bearer
+      token authorization scheme.
+
+   *  LOC (Low Overhead Container) [I-D.ietf-moq-loc] — a minimal media
+      container format.
+
+1.3.  Terminology
+
+   This document uses the following terms.  Definitions attempt to be
+   consistent with [I-D.ietf-moq-transport] but in case of discrepancy
+   rely on the MOQT specification.
+
+   Client:  The party initiating a Transport Session.
+
+   Server:  The party accepting an incoming Transport Session.
+
+   Publisher:  An endpoint that handles subscriptions by sending objects
+      from a track.
+
+   Subscriber:  An endpoint that subscribes to and receives tracks.
+
+   Original Publisher:  The initial publisher of a given track — the
+      entity that creates the media content.
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 5]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   End Subscriber:  A subscriber that consumes the content and does not
+      forward it to other subscribers.
+
+   Relay:  An entity that is both a publisher and a subscriber,
+      forwarding content between other endpoints.  Relays are neither
+      the original publisher nor the end subscriber.
+
+   Track:  A time-ordered sequence of groups, identified by a Full Track
+      Name.  A track is the unit of subscription.
+
+   Group:  A collection of objects within a track that forms a join
+      point.  Groups are independently useful — objects within a group
+      should not depend on objects in other groups.
+
+   Object:  The smallest addressable data unit in MoQ.  An object is an
+      immutable sequence of bytes identified by its track, group ID, and
+      object ID.
+
+   Subgroup:  A sequence of objects within a group that share a QUIC
+      stream.  Objects in a subgroup have consistent priority and
+      dependency relationships.
+
+   Transport Session:  A QUIC connection or WebTransport session over
+      which MOQT operates.
+
+2.  Use Cases
+
+   As noted in Section 1, MOQT is a content-agnostic publish/subscribe
+   protocol.  It can carry any data that fits the track/group/object
+   model — media is simply the use case that motivated its design.
+   Other potential applications include IoT telemetry distribution,
+   collaborative document state synchronisation, real-time game state
+   replication, and financial market data feeds.
+
+   This section describes the primary media use cases that have driven
+   the protocol design.  They illustrate the requirements that shaped
+   the architecture, but do not represent an exhaustive list of what
+   MOQT can be used for.
+
+2.1.  Live Streaming Media Delivery
+
+   In live streaming, an original publisher encodes and publishes media
+   content that is delivered through one or more relays to a potentially
+   large number of end subscribers.
+
+    Original                                            End
+    Publisher --> Relay --> Relay --> ... --> Relay --> Subscribers
+                                                        (many)
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 6]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   Key characteristics:
+
+   *  One-to-many distribution, typically through a tree of relays.
+
+   *  Target end-to-end latency ranges from under one second to several
+      seconds, depending on the application.
+
+   *  Subscribers may join at any time and must be able to start
+      playback from a recent group boundary.
+
+   *  Adaptive bitrate (ABR) switching between alternate encodings of
+      the same content allows subscribers to adapt to varying network
+      conditions.
+
+   *  The original publisher produces a catalog describing available
+      tracks (resolutions, bitrates, codecs) so subscribers can make
+      informed selections.
+
+2.2.  Real-Time Conferencing
+
+   In conferencing, multiple participants each act as both original
+   publisher and end subscriber.  Each participant publishes their own
+   audio and video tracks and subscribes to tracks from other
+   participants.
+
+    Participant A ---+            +--- Participant C
+                     |            |
+                     v            v
+                 +-------+    +-------+
+                 | Relay |<-->| Relay |
+                 +-------+    +-------+
+                     ^            ^
+                     |            |
+    Participant B ---+            +--- Participant D
+
+   Key characteristics:
+
+   *  Many-to-many communication with low participant counts (tens to
+      hundreds).
+
+   *  Target latency is interactive: below 500 milliseconds end-to-end.
+
+   *  Each participant subscribes to a subset of available tracks (e.g.,
+      active speakers only).
+
+   *  Scalable video coding (SVC) or simulcast may be used, with the
+      relay or subscriber selecting appropriate layers.
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 7]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  End-to-end encryption is particularly important since relays
+      should not have access to media content.
+
+2.3.  Content Contribution and Primary Distribution
+
+   In content contribution (ingest), a professional encoder at a
+   production site publishes high-quality media to a relay operated by a
+   distribution service (e.g., a CDN).
+
+    Encoder/       CDN Ingress      CDN Edge
+    Producer  -->  Relay       -->  Relay(s)  -->  Subscribers
+
+   Key characteristics:
+
+   *  The ingress relay receives the contributed content and may
+      transcode it into multiple representations (resolutions,
+      bitrates).
+
+   *  After transcoding, the distribution service becomes the original
+      publisher of the new representations — the transcoded tracks are
+      distinct from the contributed track.
+
+   *  Reliability is prioritised over latency for the contribution link.
+
+   *  The same MOQT protocol is used for both the contribution link
+      (encoder to ingress) and the distribution links (edge relays to
+      subscribers), achieving the convergence goal.
+
+3.  Architecture and Nodes
+
+3.1.  Roles
+
+   A MOQT deployment involves endpoints in the following roles:
+
+   Publisher:  Sends objects belonging to one or more tracks.  A
+      publisher responds to subscriptions and delivers matching objects
+      to subscribers.
+
+   Subscriber:  Requests tracks and receives objects.  A subscriber
+      issues SUBSCRIBE or FETCH requests to obtain content.
+
+   Original Publisher:  The endpoint that creates and first publishes a
+      track's content.  The original publisher is responsible for the
+      media encoding, object payload, and track properties.
+
+   End Subscriber:  The final consumer of a track's content.  An end
+      subscriber decodes and renders the media.
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 8]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   A single endpoint may act in multiple roles simultaneously.  In
+   conferencing, each participant is both an original publisher (for
+   their own media) and an end subscriber (for other participants'
+   media).
+
+3.2.  Relays
+
+   Relays are intermediary nodes that are both publishers (to downstream
+   subscribers) and subscribers (to upstream publishers).  They
+   terminate MOQT sessions on each side independently — a relay is not a
+   transparent proxy.
+
+   Relays provide:
+
+   *  Fan-out: A single upstream subscription serves multiple downstream
+      subscribers requesting the same track.
+
+   *  Caching: Objects can be stored and served to subscribers that join
+      later, without fetching from the original publisher again.
+
+   *  Geographic distribution: Relays can be deployed close to
+      subscribers to reduce latency.
+
+   Relays are content-agnostic: they forward object payloads without
+   interpreting or modifying them.  This enables end-to-end encryption
+   where relays cannot access media content, while still performing
+   their routing and caching functions based on object metadata (track
+   names, group IDs, priorities, properties).
+
+   Relays are enforcement points for access and authorization.  In many
+   deployments that have any restriction on access of the content the
+   relay is expected to be the node that receives proof of authorization
+   and will be responsible to verify and periodically re-verify this
+   proof before delivering content.
+
+   Relays are also not necessarily application-agnostic when it comes to
+   deployment and operation.  The configuration of relay topologies,
+   authorization policies, caching strategies, and resource limits are
+   application-specific concerns.  A relay serving a live streaming
+   platform operates differently from one supporting a conferencing
+   service, even though the protocol mechanics are identical.  Moreover,
+   even though relays need not parse media payload formats in order to
+   forward content, they may still apply application-aware policy based
+   on visible metadata, naming conventions, and authorization state.
+
+   For further discussion of relay operational considerations, including
+   denial-of-service resilience, see [I-D.englishm-moq-relay-dos].
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                   [Page 9]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+3.3.  Deployment Topologies
+
+   MOQT supports several deployment topologies:
+
+   Point-to-point:  A publisher connects directly to a subscriber with
+      no intermediate relay.  Suitable for contribution ingest, AI
+      produced dissemination, or testing.
+
+    Publisher <--> Subscriber
+
+   Single relay:  A publisher connects to a relay, which serves one or
+      more subscribers.  The relay provides fan-out and caching.
+
+    Publisher <--> Relay <--> Subscriber(s)
+
+   Relay tree:  A publisher connects to an origin relay, which fans out
+      to edge relays closer to subscribers.  This is the typical CDN
+      deployment model.
+
+    Publisher <--> Origin Relay <--> Edge Relay(s) <--> Subscriber(s)
+
+   Relay mesh:  Relays interconnect with multiple peers, subscribing and
+      publishing bidirectionally between each other.  Each relay both
+      receives content from and forwards content to its neighbouring
+      relays.  This topology suits conferencing and multi-publisher
+      scenarios where content flows in multiple directions
+      simultaneously and there is no single origin.
+
+    Publisher A <--> Relay 1 <----> Relay 2 <--> Subscriber C
+                      ^    ^       ^    ^
+                      |     \     /     |
+                      |      v   v      |
+                      |     Relay 3     |
+                      |       ^         |
+                      v       |         v
+            Subscriber B  Publisher D  Subscriber E
+
+   In all topologies, each hop is an independent MOQT session.  Relays
+   manage subscriptions on each session independently and can aggregate
+   multiple downstream subscriptions into a single upstream
+   subscription.
+
+   MOQT supports graceful session migration: a relay that needs to shut
+   down sends a GOAWAY message directing its peers to reconnect to a
+   different server.  The peers then establish new sessions and re-issue
+   their subscriptions, allowing relay maintenance or replacement, but
+   continuity depends on object availability, timing, and application/
+   session policy.
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 10]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+4.  Data Model
+
+   MOQT defines a hierarchical data model for organising media content.
+   Understanding this model is essential to working with any part of the
+   MoQ protocol suite.  The data model is defined in Section 2 of
+   [I-D.ietf-moq-transport] and summarised below for convenience.
+
+4.1.  Hierarchy
+
+   The data model has four levels:
+
+    Track
+      └── Group (join point)
+            └── Subgroup (stream-mapped unit)
+                  └── Object (smallest addressable payload)
+
+   Track:  A named, time-ordered sequence of groups.  Tracks are the
+      unit of subscription — a subscriber requests a track by its Full
+      Track Name and receives objects from that track.
+
+   Group:  A temporal collection of objects within a track.  A group
+      represents a join point: a subscriber can begin receiving content
+      at any group boundary without needing prior groups.  For video, a
+      group typically corresponds to a Group of Pictures (GOP) starting
+      with a random access point.
+
+   Subgroup:  A sequence of objects within a group that are sent on a
+      single QUIC stream.  Objects in a subgroup share priority and have
+      dependency relationships consistent with in-order delivery.
+      Subgroups enable the priority mechanism to favour certain objects
+      (e.g., base-layer frames) over others within the same group.
+
+   Object:  The basic data element — an addressable, immutable sequence
+      of bytes.  Each object is uniquely identified by its Full Track
+      Name, group ID, and object ID.  Objects within a group are ordered
+      by object ID.
+
+4.2.  Track Naming
+
+   Every track is identified by a Full Track Name consisting of two
+   parts:
+
+   Track Namespace:  An ordered tuple of zero to 32 fields (e.g.,
+      "example.com", "meeting123", "alice").  The namespace provides
+      hierarchical structure that relays use for prefix-based routing
+      and subscription matching.
+
+   Track Name:  A byte sequence identifying a specific track within the
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 11]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+      namespace (e.g., "video-hd", "audio", "catalog").
+
+   The combination of namespace and track name is unique within a given
+   scope.  A scope is defined by the server or set of servers that a
+   client connects to — specifically, those sharing the same host and
+   path in the connection URI.  Within a scope, no two distinct tracks
+   can have the same Full Track Name, which means it can serve as a
+   cache key at relays.
+
+4.3.  Properties
+
+   Tracks and objects can carry additional metadata called Properties.
+   Properties are visible to relays and can influence how content is
+   distributed.  There are two scopes of properties — track-wide and
+   per-object — and within either scope, individual properties can
+   optionally be marked as immutable to support end-to-end
+   authentication.
+
+   Track Properties:  Metadata associated with an entire track.
+      Examples include default publisher priority, group order
+      preference, maximum cache duration, and delivery timeouts.  Track
+      Properties are communicated in control messages (PUBLISH,
+      SUBSCRIBE_OK, FETCH_OK).
+
+   Object Properties:  Per-object metadata carried in object headers.
+      MOQT defines the framework for object properties, including gap
+      indicators (Prior Group ID Gap, Prior Object ID Gap).  Media-
+      specific properties such as timestamps and frame markings are
+      defined by LOC and MSF for use with encoded audio/video samples.
+
+   Immutable Properties:  Either track or object properties may be
+      placed inside an Immutable Properties container.  Once set by the
+      original publisher, these cannot be modified or removed by relays.
+      This enables end-to-end authentication: subscribers can verify
+      that immutable values have not been altered in transit.
+
+   Properties are registered in IANA registries and use a Key-Value-Pair
+   encoding.  Relays that do not understand a property must forward it
+   unchanged.
+
+4.4.  Object Immutability and Cacheability
+
+   A fundamental property of MOQT objects is immutability: once an
+   object is published, its payload must never change.  Two received
+   objects with the same Full Track Name, group ID, and object ID must
+   contain identical bytes.
+
+   This guarantee enables:
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 12]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Caching at relays without cache-invalidation complexity.
+
+   *  Deduplication when the same object arrives from multiple upstream
+      sources.
+
+   *  End-to-end integrity verification — a subscriber can detect if an
+      object has been tampered with.
+
+   An object can transition from "exists" to "does not exist" (e.g.,
+   cache expiry), but its contents cannot be modified.  The protocol
+   signals object status (normal, end-of-group, end-of-track) to
+   communicate lifecycle information.
+
+5.  MOQT: The Transport Protocol
+
+   Media over QUIC Transport (MOQT) [I-D.ietf-moq-transport] is the
+   publish/subscribe protocol that carries objects between publishers
+   and subscribers.  MOQT treats all object payloads as opaque byte
+   sequences — it provides delivery, prioritisation, and caching without
+   any knowledge of the content being carried.  This section provides an
+   overview of its key mechanisms.
+
+5.1.  Session Establishment
+
+   MOQT runs over either native QUIC or WebTransport:
+
+   *  Native QUIC: The client connects using the TLS Application-Layer
+      Protocol Negotiation (ALPN) identifier "moqt" and identifies the
+      server using a "moqt://" URI.  The authority and path are
+      communicated via Setup Options.
+
+   *  WebTransport: The client establishes a WebTransport session over
+      HTTP/3, using an HTTPS URI derived from the moqt:// URI.
+
+   Both provide stream multiplexing and secure transport, though the
+   deployment model differs — particularly in browser-based environments
+   where only WebTransport is available.  Applications should treat them
+   as functionally similar substrates with some environment-specific
+   constraints.
+
+   After the transport connection is established, each endpoint opens a
+   unidirectional control stream and sends a SETUP message.  The SETUP
+   exchange negotiates the protocol version and extensions (Setup
+   Options) before any other messages are exchanged.
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 13]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+5.2.  Publishing and Subscribing
+
+   MOQT provides several mechanisms for publishers and subscribers to
+   exchange content:
+
+   SUBSCRIBE:  A subscriber requests newly published objects for a
+      track.  The publisher responds with SUBSCRIBE_OK and begins
+      forwarding matching objects as they are produced.  A Location
+      Filter selects which objects are delivered by specifying a start
+      (and optionally end) Location, expressed either absolutely or
+      relative to the current largest object — for example, starting at
+      the next object, the next group, or an absolute range.  Range
+      Filters can further restrict delivery based on object header
+      fields and properties.
+
+   PUBLISH:  A publisher initiates a subscription by pushing content to
+      a subscriber.  This inverts the usual direction — the publisher
+      offers a track rather than waiting for a subscription request.
+
+   FETCH:  A subscriber requests a specific range of previously
+      published objects.  Unlike SUBSCRIBE, which delivers objects as
+      they are produced going forward, FETCH retrieves objects that
+      already exist.  A subscriber that joins a track mid-stream can
+      combine both behaviours in a single SUBSCRIBE: it receives new
+      objects going forward, and by including the FILL_PARAMETERS
+      parameter it also asks the publisher to deliver a "fill range" of
+      recent objects on a separate fill fetch stream — for example, the
+      beginning of the current video group of pictures needed to start
+      decoding.  A standalone FETCH remains available for retrieving an
+      arbitrary range of already-published objects.
+
+   Namespace Discovery:  Publishers advertise available namespaces via
+      PUBLISH_NAMESPACE.  Subscribers discover content by sending
+      SUBSCRIBE_NAMESPACE (to learn about matching namespaces) or
+      SUBSCRIBE_TRACKS (to receive PUBLISH messages for tracks within
+      matching namespaces).  Relays use namespace prefix matching to
+      route subscriptions to the appropriate upstream publishers.
+
+   All subscription interactions follow a state machine: Idle → Pending
+   → Established → Terminated.  Either endpoint can terminate a
+   subscription — the subscriber via cancellation, the publisher via
+   PUBLISH_DONE.
+
+5.3.  Priorities and Delivery
+
+   When network capacity is insufficient to deliver all subscribed
+   content, MOQT's priority system determines what gets delivered first:
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 14]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Subscriber Priority: Set per-subscription by the subscriber to
+      express relative importance among its own subscriptions.
+
+   *  Publisher Priority: Set per-object by the publisher to express
+      relative importance within a track (e.g., base layer vs.
+      enhancement layer).
+
+   *  Group Order: Ascending (oldest first) or descending (newest first)
+      delivery of groups within a subscription.
+
+   Under congestion, lower-priority content may be delayed or dropped
+   entirely.  Two timeout mechanisms support controlled data loss:
+
+   *  Object Delivery Timeout: Measured from when the last byte of the
+      object header was received or produced.  If the object cannot be
+      sent within this duration, its subgroup stream is reset (or, for
+      datagrams, the datagram is dropped).
+
+   *  Subgroup Delivery Timeout: If a completed subgroup's data is not
+      fully acknowledged within this duration, the stream is reset —
+      meaning any undelivered data on that stream is abandoned and will
+      not be retransmitted.
+
+   Objects can be sent on QUIC streams (reliable, in-order within the
+   stream) or as QUIC datagrams (unreliable, low-latency).  The choice
+   is the object's Delivery Mode, established by the original publisher
+   by how it first transmits the object.
+
+   Client side Adaptive Bitrate (ABR) is possible by either ending a
+   subscription and replace it with another track that is another
+   represenation at another bit-rate than the previous one.  Steering
+   these changes to be done at the next group boundary.
+
+   The WG is working on sender side ABR where the publisher uses its
+   understanding of the congestion situation to select the set of tracks
+   to be published to the subscriber.
+
+5.4.  Extensibility and Session Management
+
+   MOQT is designed for evolution without breaking existing
+   implementations:
+
+   Setup Options:  Negotiated per-session in the SETUP exchange.
+      Unknown options are ignored, allowing new features to be
+      introduced without breaking older endpoints.
+
+   Message Parameters:  Per-message metadata included in control
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 15]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+      messages.  Parameters are peer-to-peer and are not forwarded by
+      relays.
+
+   Properties:  Per-track and per-object metadata that is forwarded and
+      cached by relays, unlike Message Parameters.  Properties use IANA-
+      registered type codes.  Unknown properties must be forwarded
+      unchanged.
+
+   GREASE (Generate Random Extensions And Sustain Extensibility):  Reserved
+      code points that implementations may send to exercise their peers'
+      handling of unknown values.  This ensures that deployed software
+      does not break when new extensions are introduced.
+
+   GOAWAY supports graceful session migration and can reduce disruption
+   during relay maintenance or replacement, but continuity depends on
+   object availability, timing, and application/session policy.
+
+6.  Streaming Formats
+
+   MOQT is content-agnostic — it transports opaque object payloads
+   without interpreting them.  A streaming format defines how media
+   content is packaged into MOQT objects and how subscribers discover
+   and select tracks.  Streaming formats bridge the gap between raw
+   media encodings and the MOQT data model.
+
+6.1.  Role of a Streaming Format
+
+   A streaming format specifies:
+
+   *  How encoded media samples are mapped to MOQT objects and groups.
+
+   *  A catalog format describing available tracks and their properties.
+
+   *  Rules for time-alignment and ABR switching between tracks.
+
+   *  Timeline information mapping MOQT group/object IDs to media
+      presentation time.
+
+   *  Any additional metadata tracks (events, logs, metrics).
+
+   Without a streaming format, a subscriber receiving objects would have
+   no way to discover what content is available, how to decode it, or
+   how to synchronise multiple tracks.
+
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 16]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+6.2.  MSF: MOQT Streaming Format
+
+   The MOQT Streaming Format (MSF) [I-D.ietf-moq-msf] is the primary
+   streaming format defined for MoQ.  It uses LOC (Low Overhead
+   Container) [I-D.ietf-moq-loc] packaging, where each encoded media
+   sample (audio frame or video frame) is placed in a separate MOQT
+   object.  This one-sample-per-object mapping allows the transport to
+   make independent delivery decisions for each frame — for example,
+   prioritising base-layer video frames over enhancement layers, or
+   dropping an expired frame without affecting the delivery of
+   subsequent frames.
+
+   MSF defines:
+
+   Catalog:  A JSON track named "catalog" that describes all available
+      tracks in a namespace.  The catalog includes codec information,
+      bitrates, resolutions, language, and relationships between tracks
+      (render groups for synchronised playback, alternate groups for ABR
+      switching).  Delta updates allow efficient signalling of track
+      additions and removals.
+
+   Media Timeline:  An optional track that maps MOQT group/object IDs to
+      media presentation timestamps and wallclock times.  This enables
+      seeking and synchronisation.  A template mechanism supports
+      regular patterns without requiring an explicit timeline track.
+
+   Event Timelines:  Optional metadata tracks carrying time-synchronised
+      application data (e.g., sports scores, ad insertion markers, GPS
+      coordinates).
+
+   Publish Tracks:  Tracks defined in the catalog to which the
+      subscriber can publish data back (e.g., QoE metrics, logs).
+
+   MSF supports content with target latencies ranging from real-time
+   (under 500ms) to standard live (several seconds) to video-on-demand.
+
+6.3.  CMSF: CMAF-Compliant Streaming Format
+
+   CMSF [I-D.ietf-moq-cmsf] extends MSF to support CMAF (Common Media
+   Application Format) packaged media.  It is designed for workflows
+   that use ISO-BMFF containers and existing DRM systems.
+
+   Key differences from base MSF:
+
+   *  Objects contain CMAF Chunks rather than raw codec samples.  A CMAF
+      Chunk is the elementary media segment structure used by ISO-BMFF-
+      based streaming (the container format behind DASH and HLS fMP4),
+      consisting of metadata and media data boxes.
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 17]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Initialization segments (CMAF Headers) are carried in the catalog
+      as base64-encoded inline data.
+
+   *  Content protection uses Common Encryption (CENC) with commercial
+      DRM systems (Widevine, PlayReady, FairPlay) rather than the
+      application-layer encryption defined by MoQ Secure Objects.
+
+   *  SAP-type event timelines signal stream access points for seeking.
+
+   CMSF targets deployments that need interoperability with existing
+   DASH/HLS ecosystems and hardware-based content decryption modules.
+
+6.4.  Layering
+
+   The relationship between the components is:
+
+    +------------------+
+    | Application      |
+    +------------------+
+    | Streaming Format |  <-- MSF or CMSF
+    | (catalog, rules) |
+    +------------------+
+    | Media Container  |  <-- LOC or CMAF
+    +------------------+
+    | MOQT             |  <-- transport protocol
+    +------------------+
+    | QUIC / WebTrans  |
+    +------------------+
+    | UDP / IP         |
+    +------------------+
+
+   The streaming format layer defines the media semantics.  The
+   container layer defines how individual samples are serialised.  MOQT
+   provides the delivery machinery.  Applications select the appropriate
+   combination for their needs.
+
+7.  Security Architecture
+
+   MoQ employs a layered security model.  Each layer addresses different
+   threats and operates at a different scope.
+
+7.1.  Hop-by-Hop Security
+
+   MOQT runs over QUIC or WebTransport, both of which use TLS 1.3 for
+   the underlying connection.  This provides:
+
+   *  Confidentiality and integrity of all data on each hop.
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 18]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Server authentication (and optionally mutual authentication).
+
+   *  Protection against on-path attackers between adjacent nodes.
+
+   However, hop-by-hop security does not protect content from relays.  A
+   relay terminates the TLS session and has access to all MOQT message
+   contents, including object payloads, unless additional end-to-end
+   protection is applied.
+
+7.2.  End-to-End Object Encryption
+
+   MoQ Secure Objects [I-D.ietf-moq-secure-objects] provides end-to-end
+   authenticated encryption of media object payloads.  It is based on
+   the SFrame mechanism ([RFC9605]).
+
+   The scheme:
+
+   *  Encrypts the object payload and optional encrypted properties.
+
+   *  Authenticates the group ID, object ID, Full Track Name, and
+      immutable properties.
+
+   *  Derives per-track keys from a shared base key using HKDF (a
+      standard key derivation function that deterministically produces
+      cryptographic keys from input material).
+
+   *  Forms a unique nonce (a value used exactly once) for each object
+      from the group ID and object ID, ensuring that no two objects are
+      encrypted with the same parameters.
+
+   Relays can still route and cache objects based on unencrypted
+   metadata (track names, group IDs, priorities, object properties) but
+   cannot access the media content.  The architecture separates metadata
+   required for routing/caching from metadata that can be authenticated
+   or encrypted end-to-end.  The exact protected elements depend on the
+   object security scheme and application profile.
+
+   Key distribution is out of scope for the MoQ specifications —
+   applications use external key management systems (e.g., MLS-based key
+   distribution for conferencing [RFC9750],[RFC9420], or out-of-band
+   provisioning for streaming).
+
+7.3.  Authorization
+
+   In general, MOQT defines where authorization material can be carried
+   in protocol exchanges, while the semantic interpretation and
+   verification procedure depend on the selected authorization scheme
+   and the relay or publisher’s local policy.
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 19]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   MOQT provides a generic AUTHORIZATION TOKEN parameter that can be
+   included in control messages (SUBSCRIBE, FETCH, PUBLISH,
+   PUBLISH_NAMESPACE, and others).  Both publishers and subscribers use
+   this single mechanism to present credentials; relays verify the token
+   before forwarding content or establishing upstream subscriptions.
+   Tokens can be registered with session-scoped aliases to avoid
+   retransmitting large values on every message.
+
+   The working group has defined two authorization schemes that operate
+   over this mechanism:
+
+   *  Privacy Pass Authentication [I-D.ietf-moq-privacy-pass-auth] —
+      provides privacy-preserving, unlinkable authorization using
+      Privacy Pass tokens.  It supports fine-grained access control
+      through namespace and track name matching rules, and defines
+      mechanisms for continuous re-authorization over long-lived
+      sessions — either by obtaining multiple tokens in advance (batched
+      issuance) or by exchanging a validated token for fresh ones
+      directly with the relay (reverse issuance flow).
+
+   *  Common Access Tokens (C4M) [I-D.ietf-moq-c4m] — provides a bearer
+      token scheme using structured tokens with claims that express
+      authorization scope.  C4M follows a model familiar from HTTP-based
+      systems.
+
+   The choice between schemes depends on application requirements:
+   Privacy Pass prioritises subscriber anonymity, while C4M offers
+   simpler integration for deployments with existing identity
+   infrastructure.
+
+   The streaming format catalog can signal authorization requirements
+   per-track (via the authInfo field in MSF), allowing subscribers to
+   discover what credentials they need before attempting to subscribe.
+
+7.4.  Privacy Considerations
+
+   MoQ's relay-based architecture means that intermediaries necessarily
+   observe certain metadata in the course of routing and caching
+   content.  Key privacy considerations include:
+
+   *  Relay visibility of metadata: Track namespaces, track names, group
+      IDs, and object properties are visible to every relay in the
+      delivery path.  This metadata can reveal information about content
+      and participants even when payloads are end-to-end encrypted.
+
+   *  Traffic analysis: Object sizes, timing patterns, and subscription
+      behaviour can allow relays or on-path observers to infer what
+      content is being consumed or who is communicating.
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 20]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   *  Subscriber unlinkability: Without privacy-preserving authorization
+      (such as Privacy Pass), relays can correlate a subscriber's
+      identity across multiple sessions or subscriptions.
+
+   MOQT provides mechanisms that applications can use to mitigate these
+   risks, including padding (to obscure traffic patterns) and token
+   schemes that support unlinkable authentication.  However, achieving
+   strong privacy requires deliberate application design — for example,
+   using generic namespace structures and consistent object sizes.
+
+8.  Defining a MoQ Application
+
+   MOQT, streaming formats, container formats, and security mechanisms
+   are composable building blocks.  A complete MoQ application is
+   defined by specifying which components to use and how they are
+   configured.  This set of choices is also what creates an
+   interoperability point: two implementations that make the same
+   choices can exchange content without additional negotiation.
+
+8.1.  Application Design Choices
+
+   Defining a MoQ application requires decisions in each of the
+   following areas:
+
+   Transport version:  Which MOQT version the application requires, as
+      identified by the protocol's ALPN string (the identifier used
+      during TLS connection setup to select the application protocol).
+      This determines the available protocol features.
+
+   Streaming format and catalog:  How media or data is packaged into
+      MOQT objects, and how available tracks are described to
+      subscribers.  An application may adopt an existing format (MSF,
+      CMSF) or define a new one.
+
+   Container and codecs:  What container format wraps the encoded
+      samples (e.g., LOC, CMAF) and which codecs are supported.
+
+   Security:  Whether end-to-end encryption is required (and which
+      scheme), and which authorization scheme(s) are used to control
+      access.
+
+   Relay deployment model:  How relays are deployed and operated — tree,
+      mesh, or hybrid — and what trust and authorization policies apply
+      between nodes.
+
+   Extensions:  Any mandatory MOQT extensions (Properties, Setup
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 21]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+      Options) that endpoints must support.  Applications that need
+      relay-visible metadata beyond what MOQT defines can register new
+      Properties or use the application-reserved type ranges.
+
+   If existing components do not cover an application's needs, the MoQ
+   framework supports extension without modifying the base protocol: new
+   streaming formats can define their own catalog structures and
+   packaging rules, new Properties can be registered via IANA, and new
+   event timeline types can be defined for synchronised metadata.
+
+8.2.  Existing Application Definitions
+
+   The MoQ working group has defined two complete application
+   specifications that illustrate the design choices above:
+
+   MSF (MOQT Streaming Format):  Uses MOQT + LOC packaging + a JSON
+      catalog.  Targets real-time and live streaming with LOC's minimal
+      per-sample overhead.  Supports ABR switching via time-aligned
+      alternate groups, media timelines, event timelines, and publish
+      tracks for subscriber-to-platform communication.  Defined in
+      [I-D.ietf-moq-msf].
+
+   CMSF (CMAF-compliant Streaming Format):  Extends MSF with CMAF/ISO-
+      BMFF packaging and Common Encryption (CENC) for DRM integration.
+      Targets deployments that interoperate with existing DASH/HLS
+      ecosystems and hardware content decryption.  Defined in
+      [I-D.ietf-moq-cmsf].
+
+   Both specifications make concrete choices for every area listed in
+   Section 8.1, producing fully interoperable application definitions.
+
+8.3.  Reading Guide
+
+   The following table maps common goals to the relevant specifications:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 22]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+    +==============================+==================================+
+    | Goal                         | Specification                    |
+    +==============================+==================================+
+    | Understand the wire protocol | [I-D.ietf-moq-transport]         |
+    | and session mechanics        |                                  |
+    +------------------------------+----------------------------------+
+    | Build a live streaming or    | [I-D.ietf-moq-msf]               |
+    | conferencing application     |                                  |
+    | using LOC                    |                                  |
+    +------------------------------+----------------------------------+
+    | Use CMAF packaging with DRM  | [I-D.ietf-moq-cmsf]              |
+    +------------------------------+----------------------------------+
+    | Add end-to-end encryption    | [I-D.ietf-moq-secure-objects]    |
+    +------------------------------+----------------------------------+
+    | Implement privacy-preserving | [I-D.ietf-moq-privacy-pass-auth] |
+    | authorization                |                                  |
+    +------------------------------+----------------------------------+
+    | Implement bearer-token       | [I-D.ietf-moq-c4m]               |
+    | authorization                |                                  |
+    +------------------------------+----------------------------------+
+    | Understand the LOC container | [I-D.ietf-moq-loc]               |
+    | format                       |                                  |
+    +------------------------------+----------------------------------+
+    | Operate relays and           | [I-D.englishm-moq-relay-dos]     |
+    | understand DoS resilience    |                                  |
+    +------------------------------+----------------------------------+
+
+                                  Table 1
+
+9.  Security Considerations
+
+   The MoQ security model is described in Section 7.  The key residual
+   risks are:
+
+   Relay Trust:  Relays see all MOQT metadata and, without E2E
+      encryption, all object payloads.  Deployments must carefully
+      consider which entities operate relays and what authorization they
+      require.
+
+   Cache Poisoning:  If a relay accepts objects from an unauthorized
+      publisher, it may serve corrupted content to subscribers.  Relay
+      implementations must verify publisher identity and authorization
+      before caching.
+
+   Traffic Analysis:  Even with E2E encryption, object sizes, timing
+      patterns, and track names can reveal content characteristics.
+      Padding and generic naming mitigate but do not eliminate this
+      risk.
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 23]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   Authorization Token Replay:  Token replay protection is delegated to
+      the specific token scheme.  Implementations must select schemes
+      with appropriate replay resistance for their threat model.
+
+   Amplification:  A single SUBSCRIBE can trigger unbounded data flow
+      from a publisher or relay.  Rate limiting, per-session resource
+      caps, and the EXCESSIVE_LOAD error code provide defences.  See
+      [I-D.englishm-moq-relay-dos] for detailed analysis.
+
+10.  IANA Considerations
+
+   This document has no IANA actions.
+
+11.  Contributors
+
+   The following persons have contributed to this document:
+
+   *  Gwendal Simon
+
+12.  Acknowledgments
+
+   This document has been prepared using AI tools.
+
+13.  Informative References
+
+   [RFC9000]  Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
+              <https://www.rfc-editor.org/info/rfc9000>.
+
+   [RFC9605]  Omara, E., Uberti, J., Murillo, S. G., Barnes, R., Ed.,
+              and Y. Fablet, "Secure Frame (SFrame): Lightweight
+              Authenticated Encryption for Real-Time Media", RFC 9605,
+              DOI 10.17487/RFC9605, August 2024,
+              <https://www.rfc-editor.org/info/rfc9605>.
+
+   [RFC9420]  Barnes, R., Beurdouche, B., Robert, R., Millican, J.,
+              Omara, E., and K. Cohn-Gordon, "The Messaging Layer
+              Security (MLS) Protocol", RFC 9420, DOI 10.17487/RFC9420,
+              July 2023, <https://www.rfc-editor.org/info/rfc9420>.
+
+   [RFC9750]  Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., and
+              A. Duric, "The Messaging Layer Security (MLS)
+              Architecture", RFC 9750, DOI 10.17487/RFC9750, April 2025,
+              <https://www.rfc-editor.org/info/rfc9750>.
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 24]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   [I-D.ietf-moq-transport]
+              Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
+              "Media over QUIC Transport", Work in Progress, Internet-
+              Draft, draft-ietf-moq-transport-22, 1 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              transport-22>.
+
+   [I-D.ietf-moq-msf]
+              Law, W. and S. Nandakumar, "MOQT Streaming Format", Work
+              in Progress, Internet-Draft, draft-ietf-moq-msf-01, 2 June
+              2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              moq-msf-01>.
+
+   [I-D.ietf-moq-cmsf]
+              Law, W., "CMSF- a CMAF compliant implementation of MOQT
+              Streaming Format", Work in Progress, Internet-Draft,
+              draft-ietf-moq-cmsf-01, 3 June 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              cmsf-01>.
+
+   [I-D.ietf-moq-secure-objects]
+              Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
+              End Secure Objects for Media over QUIC Transport", Work in
+              Progress, Internet-Draft, draft-ietf-moq-secure-objects-
+              01, 6 July 2026, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-moq-secure-objects-01>.
+
+   [I-D.ietf-moq-privacy-pass-auth]
+              Nandakumar, S., Jennings, C., and T. Meunier, "Privacy
+              Pass Authentication for Media over QUIC (MoQ)", Work in
+              Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
+              auth-04, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              privacy-pass-auth-04>.
+
+   [I-D.ietf-moq-c4m]
+              Law, W., Lemmons, C., Simon, G., and S. Nandakumar,
+              "Authorization scheme for MOQT using Common Access
+              Tokens", Work in Progress, Internet-Draft, draft-ietf-moq-
+              c4m-01, 18 June 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-
+              01>.
+
+
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 25]
+
+Internet-Draft                MoQ Overview                 November 2026
+
+
+   [I-D.ietf-moq-loc]
+              Zanaty, M., Nandakumar, S., and P. Thatcher, "Low Overhead
+              Media Container", Work in Progress, Internet-Draft, draft-
+              ietf-moq-loc-04, 20 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-loc-
+              04>.
+
+   [I-D.ietf-webtrans-overview]
+              Kinnear, E. and V. Vasiliev, "The WebTransport Protocol
+              Framework", Work in Progress, Internet-Draft, draft-ietf-
+              webtrans-overview-13, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-
+              webtrans-overview-13>.
+
+   [I-D.englishm-moq-relay-dos]
+              English, M., Pardue, L., Sharma, A., and I. Swett,
+              "Denial-of-Service Considerations for Media over QUIC
+              Relay Deployments", Work in Progress, Internet-Draft,
+              draft-englishm-moq-relay-dos-01, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-englishm-moq-
+              relay-dos-01>.
+
+Authors' Addresses
+
+   Magnus Westerlund
+   Ericsson
+   Email: magnus.westerlund@ericsson.com
+
+
+   Zaheduzzaman Sarker
+   Nokia
+   Email: zaheduzzaman.sarker@nokia.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Westerlund & Sarker        Expires 6 May 2027                  [Page 26]

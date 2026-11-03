@@ -2,13 +2,13 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-10-29
+last_updated: 2026-11-03
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
 ---
 
-**draft-ietf-moq-msf-01** | Submitted 2026-06-02 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-msf/)
+**draft-ietf-moq-msf-01** | Submitted 2026-06-02 | still the published text: **no -02 was submitted at the IETF 127 deadline** despite the Nov-2 merge batch (see Recent Highlights) | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-msf/)
 **draft-ietf-moq-msf-00** | 34 pages | Submitted 2026-01-19 | Expires 2026-07-23
 
 # Authors
@@ -55,6 +55,15 @@ The draft-00 marks several sections as ToDo:
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **Seven-PR merge batch into the editor's copy on deadline day (2026-11-02), with no -02 submitted.** [[will-law|Will Law]] merged a set of long-open PRs that closed eight issues:
+  - **Multi-Variant Fast Track Switching**, the renamed "zapping" section ([#122](https://github.com/moq-wg/msf/pull/122), [[suhas-nandakumar|Suhas]], open since Feb; closes #109/#110).
+  - A **LOC → MOQT stream mapping via `packagingMetadata`** ([#211](https://github.com/moq-wg/msf/pull/211), closes #200).
+  - **Required track fields per (packaging, role)** ([#212](https://github.com/moq-wg/msf/pull/212), closes [[luke-curley|kixelated]]'s #139).
+  - Wallclock-reference and `depends` updates ([#216](https://github.com/moq-wg/msf/pull/216), closes #203).
+  - Media-timeline catalog requirement fix ([#217](https://github.com/moq-wg/msf/pull/217), closes #213).
+  - **`accessibleWindowTime`**, the DVR answer ([#218](https://github.com/moq-wg/msf/pull/218), closes #205).
+  - Media-timeline generation/modification clarifications ([#219](https://github.com/moq-wg/msf/pull/219), closes #204).
+  - Still open: [#220](https://github.com/moq-wg/msf/pull/220) (track role → track type, drop `mimeType`; the merge of #212 explicitly undid a role→type rename) and [#221](https://github.com/moq-wg/msf/pull/221) (namespace syntax, related to #208). The published text stays **msf-01**.
 - **Catalog track namespace/name moved to JSON arrays with a defined byte-mapping — [PR #210](https://github.com/moq-wg/msf/pull/210) (merged 2026-10-28, +178/−35).** [[will-law|Will Law]]'s refactor changes catalog **track namespace and name from strings to JSON arrays**, states their uniqueness and inheritance rules, and — the durable fix — **defines how the namespace/name fields map to byte sequences** on the wire (all catalog examples updated). It **closes [issue #209](https://github.com/moq-wg/msf/issues/209)** (JSON name/namespace → bytes was unspecified) and **[catalog-format#45](https://github.com/moq-wg/catalog-format/issues/45)** (should the catalog constrain namespace/name grammar). Together with #169 below, these are the first substantive MSF-repo merges since the July-28 IANA-cleanup batch.
 - **"One Object = one Stream" contradiction — resolved [msf#215](https://github.com/moq-wg/msf/issues/215) (filed 2026-10-21, closed 2026-10-28).** MSF-01 §6 said *"each MOQT Object MUST be mapped to a new MOQT Stream"*. Read literally, that meant one QUIC stream per frame or CMAF chunk, which contradicted moq-transport, [[moq-loc|LOC]] §4 and every implementation. [[giovanni-marzot|Giovanni Marzot]] raised it on Slack during imquic↔aiomoqt LOC interop, and [[will-law|Will Law]] filed the issue. It was **fixed by [PR #169](https://github.com/moq-wg/msf/pull/169) *"Update MOQT mapping details in media transmission section"*** (the long-open May-26 PR, finally merged 2026-10-28), which relaxes the mapping text so an Object need not open a new Stream. In the original thread Law also confirmed the catalog `version` changed from an integer (MSF-00) to a string (-01), with `"draft-xx"` recommended until the RFC.
 - **MSF draft-01 published** — the first revision since -00, authored by [[will-law|Will Law]] (Akamai) and [[suhas-nandakumar|Suhas Nandakumar]] (Cisco); it absorbed Will Law's large May 2026 editorial sprint. MSF's revision cadence runs at roughly four months, consistent with it being a packaging-format rather than a wire-protocol spec.

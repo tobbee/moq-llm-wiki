@@ -2,15 +2,15 @@
 title: "Media over QUIC Overview"
 tags: [draft, individual, overview, informational]
 date: 2026-07-01
-last_updated: 2026-07-01
+last_updated: 2026-11-03
 status: current
-draft_version: "00"
+draft_version: "02"
 ietf_url: "https://datatracker.ietf.org/doc/draft-westerlund-moq-overview/"
 ---
 
 > **2026-07-01**: **First-look — a new individual I-D provides a top-down overview of the whole MoQ protocol suite, and it is authored by a WG co-chair.** **`draft-westerlund-moq-overview-00`** *"Media over QUIC Overview"* was published on the Datatracker **June 30 2026** by **Magnus Westerlund (Ericsson)** — a MoQ WG **co-chair** — and **Zaheduzzaman Sarker (Nokia)**. Magnus announced it to the moq@ietf.org list the same day (*"FW: I-D Action: draft-westerlund-moq-overview-00.txt"*). It is an **Informational** document that ties the MoQ deliverables together: architecture, the [[subgroups-and-objects|data model]], the [[moq-transport|transport]], the streaming-format layers ([[moq-msf|MSF]] / [[moq-cmsf|CMSF]] / [[moq-loc|LOC]]), and security. Brand new and not yet discussed; logged here as a first-look.
 
-**draft-westerlund-moq-overview-00** | individual submission | published 2026-06-30 | Informational
+**draft-westerlund-moq-overview-02** | individual submission | **-02 published 2026-11-02** (-00 2026-06-30) | Informational | 26 pages
 
 # Authors
 - Magnus Westerlund (Ericsson) — MoQ WG co-chair
@@ -27,6 +27,8 @@ An **Informational overview** of the Media over QUIC (MoQ) protocol suite. Rathe
 - Complements — does not compete with — the normative drafts: it adds no transport change, mirroring the "keep the core lean" posture the WG has held approaching WGLC on transport-18.
 
 # Status & Caveats
+
+- **-02 and an adoption request (2026-11-02).** [[magnus-westerlund|Westerlund]] (posting as an individual) called -02 *"a small update"* that reflects the changes, mainly in MOQT, since the last revision and switches the figures to AASVG. **The authors asked the WG to consider adopting it as an Informational RFC** that can be *"a starting point for what to read"*. This is the first adoption request for the document.
 
 - **Individual draft, -00, just published (June 30 2026)** — not adopted, not yet discussed on the moq@ietf.org list beyond the announcement as of this writing.
 - Detailed section contents not yet mirrored here; this is a **first-look** page. Watch for WG-list reaction, a potential call for adoption as a WG informational/architecture document, and follow-on revisions.

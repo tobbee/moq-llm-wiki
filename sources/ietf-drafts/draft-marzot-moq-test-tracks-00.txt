@@ -1,0 +1,1008 @@
+
+
+
+
+Media Over QUIC                                                G. Marzot
+Internet-Draft                                                    Oracle
+Intended status: Informational                           2 November 2026
+Expires: 6 May 2027
+
+
+                         MOQT Media Test Tracks
+                    draft-marzot-moq-test-tracks-00
+
+Abstract
+
+   This document specifies moq-test-tracks, a protocol for testing Media
+   over QUIC (MOQ) media implementations.  Like moq-test, it carries its
+   parameters to the publisher in the Track Namespace.  The parameters
+   describe a set of media tracks, including the catalog, packaging,
+   codecs and delivery, so that any publisher that implements the
+   protocol can generate media of the requested shape.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://gmarzot.github.io/draft-marzot-moq-test-tracks/draft-marzot-
+   moq-test-tracks.html.  Status information for this document may be
+   found at https://datatracker.ietf.org/doc/draft-marzot-moq-test-
+   tracks/.
+
+   Discussion of this document takes place on the Media Over QUIC
+   Working Group mailing list (mailto:moq@ietf.org), which is archived
+   at https://mailarchive.ietf.org/arch/browse/moq/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/moq/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/gmarzot/draft-marzot-moq-test-tracks.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 1]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 6 May 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Track Namespace Parameters  . . . . . . . . . . . . . . . . .   3
+     2.1.  Tuple Field 0: "mtt_00" . . . . . . . . . . . . . . . . .   4
+     2.2.  Tuple Field 1: Content  . . . . . . . . . . . . . . . . .   4
+     2.3.  Tuple Field 2: Packaging  . . . . . . . . . . . . . . . .   5
+     2.4.  Tuple Field 3: Video Codec  . . . . . . . . . . . . . . .   5
+     2.5.  Tuple Field 4: Video Height . . . . . . . . . . . . . . .   5
+     2.6.  Tuple Field 5: Frame Rate . . . . . . . . . . . . . . . .   6
+     2.7.  Tuple Field 6: Audio Codec  . . . . . . . . . . . . . . .   6
+     2.8.  Tuple Field 7: Audio Channels . . . . . . . . . . . . . .   6
+     2.9.  Tuple Field 8: Catalog  . . . . . . . . . . . . . . . . .   6
+     2.10. Tuple Field 9: Init Data  . . . . . . . . . . . . . . . .   7
+     2.11. Tuple Field 10: Group Duration  . . . . . . . . . . . . .   7
+     2.12. Tuple Field 11: Audio Delivery  . . . . . . . . . . . . .   7
+     2.13. Tuple Field 12: Duration  . . . . . . . . . . . . . . . .   8
+     2.14. Tuple Field 13: Video Tracks  . . . . . . . . . . . . . .   8
+   3.  Tracks  . . . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.1.  Bitrates  . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.2.  Several Video Tracks  . . . . . . . . . . . . . . . . . .  10
+     3.3.  Timing  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+   4.  Publisher Behavior  . . . . . . . . . . . . . . . . . . . . .  12
+   5.  Conventions and Definitions . . . . . . . . . . . . . . . . .  15
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 2]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  16
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  17
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
+
+1.  Introduction
+
+   moq-test [MoQTest] provides a testing framework for MOQT [MOQT],
+   using objects with synthetic payloads. moq-test-tracks extends the
+   same approach to media.  It lets testers request a set of tracks with
+   encoded video and audio, a catalog, and a specific packaging.
+   Catalog parsers, packagers, players and relays can then be tested
+   against media of a known shape.
+
+   In the Track Namespace, testers specify the content, packaging,
+   codecs, resolution, frame rate, catalog format, placement of
+   initialization data, group duration, audio delivery, duration and
+   number of video tracks.  Any publisher that implements the protocol
+   can produce the requested tracks without out-of-band coordination.
+   Each set of parameters has one shortest Track Namespace, which
+   publishers use to name it.  Subscribers that request the same media
+   therefore share one set of tracks, and results from different
+   publishers can be compared.
+
+2.  Track Namespace Parameters
+
+   The moq-test-tracks protocol uses the Track Namespace to convey the
+   parameters of a set of media tracks to the publisher.  The Track
+   Namespace tuple fields are defined as follows.  Appendix A shows
+   complete Track Namespaces.
+
+   *  A Track Namespace can begin with a prefix: zero or more fields
+      chosen by the deployment, which this document does not interpret.
+      The tuple fields defined here follow the prefix and are numbered
+      from 0.
+
+   *  Tuple fields 0 through 7 are required.  Tuple fields 8 through 13
+      are optional: the Track Namespace can end after any tuple field
+      from 7 onward, and each omitted tuple field takes the value given
+      in its section.
+
+   *  MOQT does not permit empty Track Namespace fields [MOQT], so every
+      tuple field that is present carries an explicit value.
+
+   *  A field that does not apply to the set of tracks MUST be _. For
+      example, the audio fields are _ when there is no audio.  A field
+      that does not apply takes the value _ when omitted.
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 3]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   *  Tuple field values use only the characters a-z, 0-9 and _, which
+      the MOQT name representation renders verbatim (Section 8.8 of
+      [MOQT]).  Numeric fields are decimal integers without leading
+      zeros.
+
+   Track Namespaces that differ only in trailing tuple fields, which one
+   omits and the other spells out with the values they take when
+   omitted, describe the same set of tracks.  A publisher that names a
+   set of tracks itself, for example in PUBLISH_NAMESPACE or PUBLISH,
+   MUST omit every trailing tuple field whose value equals the value it
+   takes when omitted.
+
+   Future versions will use a different value for tuple field 0 and may
+   define a different set of parameters.
+
+2.1.  Tuple Field 0: "mtt_00"
+
+   This field identifies the moq-test-tracks protocol and this version
+   of its parameters.  Its value is mtt_00.
+
+2.2.  Tuple Field 1: Content
+
+   This field specifies the picture and sound.  The content determines
+   how much the media compresses, and so the size of the objects.  The
+   following values are defined:
+
+   *  clock := A moving picture with a 440 Hz tone.  The picture shows
+      the capture time of each frame and a frame counter, and SHOULD
+      show the group and object IDs.  At each whole second of capture
+      time, a 1 kHz beep plays for 100 ms and the picture shows a marker
+      for one frame, so that audio/video sync can be checked.
+
+   *  bars := Static color bars with a 1 kHz tone.  The media compresses
+      to near the encoder's minimum.
+
+   *  noise := Random noise in picture and sound.  The encoder runs at
+      the target bitrate (Section 3.1).
+
+   *  Any other value := A clip: content chosen by the deployment, such
+      as a film or a recorded broadcast, encoded to the parameters of
+      the namespace.  The value is the clip's identifier.  This document
+      does not specify any clip.  Each deployment chooses the clips it
+      serves and their identifiers, and may add to them.  A Track
+      Namespace that asks for a track the clip does not have, such as a
+      view or audio, describes tracks the publisher does not support
+      (Section 4).  When a clip's license requires attribution, the
+      picture SHOULD show it.
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 4]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   clock, bars and noise name classes of content by what they let a
+   subscriber measure, not specific media.  The values black, motion,
+   zoneplate, ramp, sweep, silence, sync, scroll, clip, none, any, all,
+   default, test, live and random are reserved for later revisions of
+   this document.  A clip identifier MUST NOT be a defined or reserved
+   value.
+
+2.3.  Tuple Field 2: Packaging
+
+   This field specifies the packaging of the media tracks.  The
+   following values are defined:
+
+   *  loc := LOC [LOC]
+
+   *  cmaf := CMAF, as specified by [CMSF]
+
+   *  locmaf := LOCMAF [LOCMAF]
+
+2.4.  Tuple Field 3: Video Codec
+
+   This field specifies the video codec.  The following values are
+   defined:
+
+   *  h264 := H.264 High
+
+   *  h264cb := H.264 Constrained Baseline
+
+   *  h265 := H.265 Main
+
+   *  av1 := AV1 Main
+
+   *  none := No video track
+
+   Video is encoded without B-frames, so decode order is presentation
+   order.  The level is the lowest that fits the height, frame rate and
+   bitrate.  When the value is none, tuple fields 4, 5, 10 and 13 MUST
+   be _.
+
+2.5.  Tuple Field 4: Video Height
+
+   This field specifies the video height in pixels.  The following
+   values are defined: 180, 360, 480, 540, 720, 1080, 1440 and 2160.
+
+   The width is the height multiplied by 16/9, rounded to the nearest
+   even number (854 for a height of 480).
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 5]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+2.6.  Tuple Field 5: Frame Rate
+
+   This field specifies the video frame rate in frames per second, as an
+   integer from 1 to 120.  The values 23_976, 29_97 and 59_94 specify
+   24000/1001, 30000/1001 and 60000/1001.
+
+2.7.  Tuple Field 6: Audio Codec
+
+   This field specifies the audio codec.  The following values are
+   defined:
+
+   *  aac := AAC-LC
+
+   *  opus := Opus with 20 ms frames
+
+   *  none := No audio track
+
+   Audio is sampled at 48000 Hz.  When the value is none, tuple fields 7
+   and 11 MUST be _.
+
+2.8.  Tuple Field 7: Audio Channels
+
+   This field specifies the number of audio channels.  The following
+   values are defined:
+
+   *  1 := Mono
+
+   *  2 := Stereo
+
+2.9.  Tuple Field 8: Catalog
+
+   This field specifies the catalog format published on the "catalog"
+   track.  The following values are defined:
+
+   *  msf := MSF catalog [MSF], using the CMSF extensions [CMSF] for
+      tracks with cmaf or locmaf packaging
+
+   *  none := No catalog track
+
+   When the value is none, tuple field 2 MUST be loc, and the subscriber
+   learns the media configuration from the Track Namespace and from the
+   media itself (Section 3).
+
+   When omitted, the value is msf.
+
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 6]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+2.10.  Tuple Field 9: Init Data
+
+   This field specifies where the decoder initialization data of the
+   media tracks is carried.  Each value corresponds to an entry type in
+   the catalog's Initialization Data List [MSF].  The following values
+   are defined:
+
+   *  catalog := In the catalog (type inline)
+
+   *  track := In the VIDEO_CONFIG or AUDIO_CONFIG Track Property (type
+      track-property)
+
+   *  object := In the VIDEO_CONFIG or AUDIO_CONFIG Object Property on
+      the first object of each group (type object-property)
+
+   With cmaf and locmaf packaging, the value MUST be catalog, as CMSF
+   requires for CMAF headers [CMSF].  When tuple field 8 is none, the
+   value MUST be _, and the initialization data is carried in the media
+   itself (Section 3).
+
+   When omitted, the value is catalog.
+
+2.11.  Tuple Field 10: Group Duration
+
+   This field specifies the interval between video key frames in
+   milliseconds, from 100 to 10000, and so the duration of each video
+   group (Section 3).  The interval MUST be a whole number of frames,
+   for example 2000 at 30 frames per second.  At 23_976, 29_97 and
+   59_94, this makes it a multiple of 1001, for example 2002.
+
+   When omitted, the value is 2000, or 2002 when tuple field 5 is
+   23_976, 29_97 or 59_94.
+
+2.12.  Tuple Field 11: Audio Delivery
+
+   This field specifies how audio frames are grouped and delivered.  The
+   following values are defined:
+
+   *  An integer from 1 to 100 := That many audio frames in each audio
+      group, with each group on one stream (Section 3)
+
+   *  dgram := Each audio frame is its own group and is sent in a
+      datagram [MOQT]
+
+   With dgram, tuple field 2 MUST be loc or cmaf.
+
+   When omitted, the value is 1.
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 7]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+2.13.  Tuple Field 12: Duration
+
+   This field specifies the duration of the tracks in seconds, from 0 to
+   86400.  The value 0 means the tracks continue until unsubscribed.
+
+   When omitted, the value is 0.
+
+2.14.  Tuple Field 13: Video Tracks
+
+   This field specifies how many video tracks the set contains, and how
+   they relate.  The following values are defined:
+
+   *  1 := One video track
+
+   *  altN, where N is from 2 to 7 := A ladder of N renditions of the
+      same picture, for adaptive bitrate switching
+
+   *  viewN, where N is from 2 to 16 := N views, each a different
+      picture with the height and frame rate of tuple fields 4 and 5
+
+   When omitted, the value is 1.
+
+   In a ladder, the first rendition has the height of tuple field 4.
+   Each following rendition has the largest height defined for tuple
+   field 4 that is at most three quarters of the height of the rendition
+   before it.  N MUST NOT exceed the number of renditions this yields
+   from the height of tuple field 4.  For example, alt4 at a height of
+   1080 yields 1080, 720, 540 and 360.  The longest ladder, from a
+   height of 2160, has seven renditions: 2160, 1440, 1080, 720, 540, 360
+   and 180.  Every rendition has the frame rate of tuple field 5 and the
+   bitrate of its own height (Section 3.1).
+
+   With clock, bars or noise content, the views are distinct pictures of
+   that content.  With a clip, the views are the clip's synchronized
+   views, if it has them (Section 2.2).
+
+   With values other than 1, tuple field 8 MUST be msf.
+
+3.  Tracks
+
+   Under the Track Namespace, the publisher publishes tracks with the
+   following Track Names:
+
+   *  "catalog", unless tuple field 8 is none.  This is the Track Name
+      MSF reserves for the catalog [MSF].
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 8]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   *  "video", unless tuple field 3 is none.  With more than one video
+      track (Section 2.14), the others are "video_1", "video_2" and so
+      on, in ladder or view order.
+
+   *  "audio", unless tuple field 6 is none.
+
+   The "video", "video_N" and "audio" Track Names are defined by this
+   document.
+
+   The catalog describes the video and audio tracks with the parameters
+   of the namespace.  This includes the codec string [RFC6381] for the
+   exact profile and level, and the bitrate (Section 3.1).  Each track
+   in the catalog is live (isLive true) and has a targetLatency of 250
+   milliseconds [MSF].  No tuple field changes the target latency.
+
+   Each video group begins with a key frame and contains the frames up
+   to the next key frame.  Each video frame is one object, and so is
+   each audio frame.  With cmaf packaging, each object is one CMAF chunk
+   ([CMSF]).  Each group is sent on one stream, as subgroup 0 [MSF],
+   except audio sent in datagrams (tuple field 11).
+
+   When tuple field 8 is none:
+
+   *  Video carries its decoder configuration in the payload ([LOC]):
+      the parameter sets with H.264 and H.265, the sequence header with
+      AV1.
+
+   *  With aac, the first object of each audio group carries the Audio
+      Config property ([LOC]).
+
+   *  With opus, no decoder configuration is sent.  The subscriber
+      configures its decoder for 48000 Hz and the channel count of tuple
+      field 7.
+
+3.1.  Bitrates
+
+   The target bitrate of each video track follows from its height:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                   [Page 9]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+                          +========+============+
+                          | Height | Video kbps |
+                          +========+============+
+                          |    180 |        200 |
+                          +--------+------------+
+                          |    360 |        600 |
+                          +--------+------------+
+                          |    480 |       1000 |
+                          +--------+------------+
+                          |    540 |       1500 |
+                          +--------+------------+
+                          |    720 |       2500 |
+                          +--------+------------+
+                          |   1080 |       4500 |
+                          +--------+------------+
+                          |   1440 |       9000 |
+                          +--------+------------+
+                          |   2160 |      16000 |
+                          +--------+------------+
+
+                                  Table 1
+
+   At frame rates above 30, the video bitrate is 1.5 times the value in
+   the table.
+
+   The target bitrate of the audio track follows from its codec and
+   channels:
+
+                    +=======+===========+=============+
+                    | Codec | Mono kbps | Stereo kbps |
+                    +=======+===========+=============+
+                    | aac   |        64 |         128 |
+                    +-------+-----------+-------------+
+                    | opus  |        32 |          64 |
+                    +-------+-----------+-------------+
+
+                                  Table 2
+
+3.2.  Several Video Tracks
+
+   When tuple field 13 specifies more than one video track:
+
+   *  All video tracks share the frame rate and group duration.  Frames
+      captured at the same time have the same Group ID and Object ID in
+      every video track, so a subscriber can switch between the tracks
+      at any group boundary.
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 10]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   *  The catalog gives every video track a label.  In a ladder, the
+      label is the height followed by "p", for example "720p".  The
+      views are numbered from 1 in Track Name order, and the label of a
+      view is "view" followed by a space and its number, for example
+      "view 2".
+
+   *  With clock, bars or noise content, the picture of every video
+      track shows its label, so that a switch between tracks is visible.
+
+   *  In a ladder, the catalog gives all video tracks the same altGroup.
+      Each view has an altGroup of its own.
+
+   *  The set has one audio track, which has no altGroup.
+
+3.3.  Timing
+
+   The capture time of a media object is the wall-clock time at which
+   its frame is captured, before it is encoded.  The publisher captures
+   frames on a fixed schedule anchored at the Unix epoch, so the capture
+   time of each object follows from its Group ID and Object ID alone.  A
+   publisher that encodes ahead of time and sends recorded media uses
+   each frame's scheduled time as its capture time.
+
+   Each media track carries the TIMESCALE and TIMESTAMP_MAPPING Track
+   Properties [MoQTimestamp], without CLOCK_ID, so that timestamps are
+   wall-clock time:
+
+   *  For video, the timescale is 1000 times the frame rate, or 24000,
+      30000 and 60000 for 23_976, 29_97 and 59_94.  The Object
+      Multiplier is 1000, or 1001 for those three frame rates.
+
+   *  For audio, the timescale is 48000.  The Object Multiplier is the
+      number of samples per frame.
+
+   *  The Group Multiplier is the number of objects per group multiplied
+      by the Object Multiplier.
+
+   *  The Base Group and the Base Timestamp are 0.  The Group ID of a
+      group is the capture time of its first object, in ticks of the
+      timescale since the Unix epoch, divided by the Group Multiplier.
+
+   The Track Properties therefore follow from the Track Namespace alone,
+   so every publisher of a track sends the same values, including after
+   a restart (Section 7 of [MoQTimestamp]).  A publisher starts each
+   track at its next group boundary.
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 11]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   With cmaf and locmaf packaging, the media timescale of each track in
+   its CMAF header [CMSF] is the timescale above, so the media
+   timestamps count the same ticks as the mapping.
+
+   Capture times are in whole ticks.  An object whose capture time
+   differs from its mapped timestamp carries OBJECT_TIMESTAMP with the
+   correction.  A publisher that keeps to the schedule sends no per-
+   object timing.
+
+   In addition:
+
+   *  With loc packaging, the Timestamp property ([LOC]) carries the
+      capture time in microseconds since the Unix epoch, rounded to the
+      nearest microsecond, and the LOC Timescale property is not sent.
+
+   *  With cmaf and locmaf packaging, the first object of each group
+      contains a ProducerReferenceTimeBox (prft) with the capture time.
+
+   These times agree with the mapped timestamp to within one tick, as
+   microseconds and ticks do not divide evenly.
+
+   Latency is the time at which an object is received minus its capture
+   time.  It includes encoding only when the publisher encodes live, so
+   a latency result needs to state whether the publisher encoded the
+   media live or ahead of time.  Measuring latency requires the
+   subscriber's clock to agree with the publisher's, for example by
+   running the subscriber on the publisher's host, or by synchronizing
+   both to a common time source.
+
+4.  Publisher Behavior
+
+   If any namespace tuple field is not valid as defined in this
+   document, or describes tracks that the publisher does not support,
+   the publisher MUST respond with REQUEST_ERROR with error code
+   DOES_NOT_EXIST.  The reason phrase SHOULD identify the tuple field.
+   If producing the tracks would exceed the publisher's limits, the
+   publisher MUST respond with REQUEST_ERROR with error code
+   EXCESSIVE_LOAD.
+
+   A publisher delivers a set of tracks in one of two ways:
+
+   *  It sends PUBLISH_NAMESPACE for the Track Namespace and then
+      PUBLISH for each track, so that relays receive the tracks before
+      any subscriber asks for them.
+
+   *  It sends PUBLISH_NAMESPACE for the Track Namespace only, and
+      relays forward each SUBSCRIBE for a track in the namespace to it.
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 12]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   Upon receiving a valid SUBSCRIBE or FETCH for a moq-test-tracks
+   track, the publisher MUST publish objects according to the parameters
+   of the namespace.
+
+   Upon receiving a SUBSCRIBE_TRACKS whose Track Namespace Prefix is a
+   moq-test-tracks Track Namespace, the publisher MUST use PUBLISH to
+   send each track in the namespace.  If a PUBLISH is rejected, the
+   publisher MUST stop sending objects for that track immediately.  A
+   Track Namespace Prefix that ends before tuple field 7 names no set of
+   tracks.  For such a prefix, the publisher sends PUBLISH only for the
+   tracks of sets it is already producing under the prefix, and starts
+   no new set.
+
+   A publisher MAY serve moq-test-tracks on demand.  To do so, it sends
+   PUBLISH_NAMESPACE for a prefix that ends with mtt_00, or with mtt_00
+   and a value of tuple field 1 to serve only that content, such as one
+   clip.  Relays route any SUBSCRIBE whose Track Namespace matches this
+   prefix to the publisher (Section 2.4.2 of [MOQT]).
+
+   *  The prefix is the only Track Namespace the publisher announces for
+      the sets of tracks it can produce.  The parameters allow far too
+      many sets to enumerate, and no set exists until a request names
+      its Track Namespace.
+
+   *  The publisher begins producing a set of tracks upon the first
+      request for its Track Namespace.  While it produces the set, it
+      MAY send PUBLISH_NAMESPACE for the set's Track Namespace.  If it
+      does, it sends PUBLISH_NAMESPACE_DONE when it stops producing the
+      set.
+
+   *  It serves later requests for the same Track Namespace from the
+      same media.  It MAY also serve a Track Namespace that describes
+      the same set of tracks from the same media.
+
+   *  It MAY stop producing the tracks when no subscriptions remain.
+
+   A subscriber discovers what a deployment serves by sending
+   SUBSCRIBE_NAMESPACE for the deployment's prefix followed by mtt_00
+   [MOQT].  It receives the prefixes that on-demand publishers announce,
+   and the Track Namespaces of the sets that publishers announce while
+   producing them.  An on-demand publisher that announces one prefix for
+   each value of tuple field 1 it serves thereby lists its content,
+   including its clips.  The subscriber does not learn which other
+   parameters a publisher supports.  It writes out the Track Namespace
+   it wants, and a publisher that does not support that set of tracks
+   responds with DOES_NOT_EXIST.
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 13]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   A Track Namespace that omits trailing tuple fields is a tuple prefix
+   of the Track Namespaces that spell them out.  A relay that routes by
+   Track Namespace prefix can therefore forward a request for a longer
+   Track Namespace to the publisher of a shorter one, which returns
+   DOES_NOT_EXIST unless it serves the requested set of tracks.
+   Likewise, a SUBSCRIBE_NAMESPACE for a moq-test-tracks Track Namespace
+   also matches the longer Track Namespaces that extend it.  Publishers
+   that share a relay SHOULD have distinct prefixes, for example by
+   including a field that identifies the publisher.  Otherwise a relay
+   can route a request to a publisher that does not serve it, such as a
+   request that an on-demand publisher would serve to a publisher of
+   fixed sets of tracks.
+
+   Ending a set of tracks is not an error.  When the duration in tuple
+   field 12 elapses, or when the publisher ends the tracks earlier, for
+   example at a limit of its own, the publisher MUST end each track
+   gracefully [MOQT]:
+
+   *  It marks the end of the track with the End of Track object status.
+
+   *  It sends PUBLISH_DONE with status code TRACK_ENDED for each
+      subscription to the track.
+
+   *  If it sent PUBLISH_NAMESPACE for the Track Namespace of the set,
+      it then sends PUBLISH_NAMESPACE_DONE.
+
+   The End of Track status takes the Location one past the last object
+   of the last group.  It is sent on that group's stream before the
+   stream ends.  When that stream has already ended, as is usual for the
+   catalog track, the status instead takes the first Location of the
+   next group, on a new stream.  With dgram audio, the status is sent in
+   a datagram and can be lost, so subscribers rely on PUBLISH_DONE.
+
+   The publisher MUST NOT use GOAWAY to end tracks; GOAWAY asks peers to
+   move to a new session.
+
+   When audio is sent in datagrams, some combinations of codec and
+   channels produce objects larger than the maximum datagram size.  If
+   the publisher detects this when handling the request, it MUST respond
+   with REQUEST_ERROR with error code DOES_NOT_EXIST.  If it detects
+   this when publishing an object, it MUST send PUBLISH_DONE with status
+   code INTERNAL_ERROR.  The publisher MUST NOT send such objects on a
+   stream instead.
+
+
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 14]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   Media encoders are not deterministic, so object payloads differ
+   between publishers for the same Track Namespace.  A subscriber that
+   validates moq-test-tracks media checks the parameters of the
+   namespace rather than payload bytes.  These parameters are the codec
+   configuration, frame rate, group duration, objects per group, audio
+   delivery and the video tracks of the set.
+
+5.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+6.  Security Considerations
+
+   A subscriber can make a publisher do far more work than the request
+   costs, and encoding media makes the imbalance larger than for moq-
+   test.  Publishers SHOULD set limits on values such as height, frame
+   rate, duration, the number of video tracks and the number of
+   concurrent sets of tracks, to prevent resource exhaustion attacks.
+   Publishers SHOULD serve all subscriptions to one Track Namespace from
+   a single set of tracks.
+
+   A publisher serving on demand SHOULD do so only through relays that
+   authorize subscribers for its prefix, for example with Common Access
+   Tokens [C4M].
+
+7.  IANA Considerations
+
+   This document has no IANA actions.
+
+8.  References
+
+8.1.  Normative References
+
+   [CMSF]     Law, W., "CMSF- a CMAF compliant implementation of MOQT
+              Streaming Format", Work in Progress, Internet-Draft,
+              draft-ietf-moq-cmsf-01, 3 June 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              cmsf-01>.
+
+   [LOC]      Zanaty, M., Nandakumar, S., and P. Thatcher, "Low Overhead
+              Media Container", Work in Progress, Internet-Draft, draft-
+              ietf-moq-loc-04, 20 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-loc-
+              04>.
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 15]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
+              "Media over QUIC Transport", Work in Progress, Internet-
+              Draft, draft-ietf-moq-transport-22, 1 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              transport-22>.
+
+   [MoQTimestamp]
+              Frindell, A. and I. Swett, "Timestamp Properties for
+              MOQT", Work in Progress, Internet-Draft, draft-frindell-
+              moq-timestamp-00, 5 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-frindell-moq-
+              timestamp-00>.
+
+   [MSF]      Law, W. and S. Nandakumar, "MOQT Streaming Format", Work
+              in Progress, Internet-Draft, draft-ietf-moq-msf-01, 2 June
+              2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              moq-msf-01>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+8.2.  Informative References
+
+   [C4M]      Law, W., Lemmons, C., Simon, G., and S. Nandakumar,
+              "Authorization scheme for MOQT using Common Access
+              Tokens", Work in Progress, Internet-Draft, draft-ietf-moq-
+              c4m-01, 18 June 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-
+              01>.
+
+   [LOCMAF]   Einarsson, T., "Low Overhead CMAF for Media over QUIC
+              (LOCMAF)", Work in Progress, Internet-Draft, draft-
+              einarsson-moq-locmaf-01, 5 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-einarsson-
+              moq-locmaf-01>.
+
+   [MoQTest]  Frindell, A., "MoQT Test", Work in Progress, Internet-
+              Draft, draft-afrind-moq-test-01, 7 July 2025,
+              <https://datatracker.ietf.org/doc/html/draft-afrind-moq-
+              test-01>.
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 16]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   [RFC6381]  Gellens, R., Singer, D., and P. Frojdh, "The 'Codecs' and
+              'Profiles' Parameters for "Bucket" Media Types", RFC 6381,
+              DOI 10.17487/RFC6381, August 2011,
+              <https://www.rfc-editor.org/rfc/rfc6381>.
+
+Appendix A.  Examples
+
+   The examples write the Track Namespace with its tuple fields
+   separated by "/", and wrap it after tuple field 0.  The prefix is
+   "example".
+
+   720p30 H.264 with stereo AAC, LOC packaging, MSF catalog with the
+   initialization data in it:
+
+   example/mtt_00/
+     clock/loc/h264/720/30/aac/2
+
+   The same set of tracks with every optional tuple field spelled out.
+   A publisher names it with the shorter form above:
+
+   example/mtt_00/
+     clock/loc/h264/720/30/aac/2/msf/catalog/2000/1/0/1
+
+   The "video" track of the first example, in the MOQT name
+   representation (Section 8.8 of [MOQT]):
+
+   example-mtt_00-clock-loc-h264-720-30-aac-2--video
+
+   1080p60 AV1 with Opus audio on datagrams, initialization data in
+   Track Properties:
+
+   example/mtt_00/
+     clock/loc/av1/1080/60/opus/2/msf/track/2000/dgram
+
+   360p30 H.264 Constrained Baseline, initialization data on the first
+   object of each group:
+
+   example/mtt_00/
+     clock/loc/h264cb/360/30/aac/2/msf/object
+
+   720p at 29.97 frames per second, CMAF packaging, no audio, for 10
+   minutes:
+
+   example/mtt_00/
+     clock/cmaf/h264/720/29_97/none/_/msf/catalog/2002/_/600
+
+   Opus mono audio only, 10 frames per group, no catalog:
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 17]
+
+Internet-Draft               moq-test-tracks               November 2026
+
+
+   example/mtt_00/
+     clock/loc/none/_/_/opus/1/none/_/_/10
+
+   A clip that the deployment identifies as "clip_a", as 1080p30 H.264
+   with CMAF packaging:
+
+   example/mtt_00/
+     clip_a/cmaf/h264/1080/30/aac/2
+
+   A three-rendition ladder from 1080p30 H.264.  The video tracks are
+   "video" (1080p, 4500 kbps), "video_1" (720p, 2500 kbps) and "video_2"
+   (540p, 1500 kbps), all in one altGroup:
+
+   example/mtt_00/
+     clock/loc/h264/1080/30/aac/2/msf/catalog/2000/1/0/alt3
+
+   Four views of 720p30 H.264, as the tracks "video" ("view 1") through
+   "video_3" ("view 4"), each in its own altGroup:
+
+   example/mtt_00/
+     clock/loc/h264/720/30/aac/2/msf/catalog/2000/1/0/view4
+
+Acknowledgments
+
+   This document builds on moq-test [MoQTest] by Alan Frindell, who also
+   reviewed it.  Thanks to the OpenMOQ team for implementations and test
+   deployments, and to members of the Media over QUIC working group for
+   discussion and review.
+
+Author's Address
+
+   Giovanni Marzot
+   Oracle
+   Email: gmarzot@marzresearch.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Marzot                     Expires 6 May 2027                  [Page 18]

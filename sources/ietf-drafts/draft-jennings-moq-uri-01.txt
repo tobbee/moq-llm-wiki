@@ -1,0 +1,840 @@
+
+
+
+
+Media Over QUIC                                              C. Jennings
+Internet-Draft                                             S. Nandakumar
+Intended status: Standards Track                                   Cisco
+Expires: 5 May 2027                                      1 November 2026
+
+
+                         MOQT URI and Discovery
+                       draft-jennings-moq-uri-01
+
+Abstract
+
+   This document defines the moqt URI scheme, URI resolution mechanisms,
+   and discovery methods for the Media over QUIC Transport (MOQT)
+   protocol.  It specifies the URI syntax, fragment identifiers,
+   dereferencing procedures, normalization rules, and X.509 certificate
+   matching for moqt URIs.  It also defines DNS-based resolution using
+   SVCB and SRV records, as well as local network discovery via mDNS and
+   DNS-SD.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-jennings-moq-uri/.
+
+   Discussion of this document takes place on the Media Over QUIC
+   Working Group mailing list (mailto:moq@ietf.org), which is archived
+   at https://mailarchive.ietf.org/arch/browse/moq/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/moq/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/suhasHere/draft-jennings-moq-uri.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 1]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   This Internet-Draft will expire on 5 May 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Conventions and Definitions . . . . . . . . . . . . . . . . .   4
+   3.  MOQT URI Scheme . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  Fragment Identifiers  . . . . . . . . . . . . . . . . . .   4
+     3.2.  Dereferencing a MOQT URI  . . . . . . . . . . . . . . . .   5
+   4.  URI Normalization . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  X.509 Certificate Matching  . . . . . . . . . . . . . . . . .   6
+     5.1.  WebTransport Certificate Validation . . . . . . . . . . .   7
+     5.2.  SVCB and SRV Indirection  . . . . . . . . . . . . . . . .   7
+   6.  SVCB Records for MOQT . . . . . . . . . . . . . . . . . . . .   7
+     6.1.  SVCB Record Name  . . . . . . . . . . . . . . . . . . . .   7
+     6.2.  Default ALPN Identifiers  . . . . . . . . . . . . . . . .   8
+     6.3.  Automatically Mandatory SvcParamKeys  . . . . . . . . . .   8
+     6.4.  Relevant SvcParamKeys . . . . . . . . . . . . . . . . . .   8
+       6.4.1.  alpn and no-default-alpn  . . . . . . . . . . . . . .   8
+       6.4.2.  port  . . . . . . . . . . . . . . . . . . . . . . . .   8
+       6.4.3.  ech . . . . . . . . . . . . . . . . . . . . . . . . .   9
+       6.4.4.  ipv4hint and ipv6hint . . . . . . . . . . . . . . . .   9
+     6.5.  ALPN Selection  . . . . . . . . . . . . . . . . . . . . .   9
+   7.  SRV Records for MOQT  . . . . . . . . . . . . . . . . . . . .   9
+     7.1.  SRV Record Names  . . . . . . . . . . . . . . . . . . . .   9
+     7.2.  Using SRV Target and Port . . . . . . . . . . . . . . . .   9
+     7.3.  Interaction with SVCB . . . . . . . . . . . . . . . . . .  10
+   8.  mDNS and DNS-SD Discovery for MOQT  . . . . . . . . . . . . .  10
+     8.1.  DNS-SD Service Names  . . . . . . . . . . . . . . . . . .  10
+     8.2.  TXT Record Parameters . . . . . . . . . . . . . . . . . .  10
+     8.3.  Interaction with SVCB . . . . . . . . . . . . . . . . . .  10
+   9.  Operational Considerations  . . . . . . . . . . . . . . . . .  11
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 2]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+     11.1.  Service Name Registration  . . . . . . . . . . . . . . .  11
+     11.2.  URI Scheme Registrations . . . . . . . . . . . . . . . .  12
+       11.2.1.  "moqt" URI Scheme Registration . . . . . . . . . . .  12
+     11.3.  ALPN Registration  . . . . . . . . . . . . . . . . . . .  12
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+
+1.  Introduction
+
+   The Media over QUIC Transport (MOQT) protocol [moq-transport]
+   identifies servers using the moqt URI scheme.  Clients establish MOQT
+   sessions over native QUIC or over WebTransport ([moq-transport],
+   Section 3).
+
+   This document consolidates the URI definition, resolution, and
+   discovery aspects of MOQT into a single specification.  It is
+   organized as follows:
+
+   MOQT URI Scheme (Section 3):  Defines the moqt URI syntax, fragment
+      identifiers, and dereferencing procedures.
+
+   URI Normalization (Section 4):  Specifies canonical forms for
+      comparison and certificate matching.
+
+   X.509 Certificate Matching (Section 5):  Rules for validating server
+      certificates against moqt URIs.
+
+   SVCB Records (Section 6):  Unicast DNS records that carry connection
+      parameters — including supported ALPNs — alongside address records
+      for native QUIC endpoints.  Section 2.4 of [RFC9460] requires a
+      mapping document for each URI scheme using SVCB; this document
+      fulfills that requirement for moqt.  For WebTransport, standard
+      HTTPS resource record processing applies to the derived https URI.
+
+   SRV Records (Section 7):  Unicast DNS records that provide port and
+      target information for load balancing and failover.
+
+   mDNS and DNS-SD (Section 8):  Multicast DNS [RFC6762] and DNS Service
+      Discovery [RFC6763] for local network discovery without a central
+      DNS server.
+
+   Discovering a relay on the local network is particularly useful when
+   multiple MOQT endpoints on that network subscribe to the same
+   content, for example, several TVs in a building streaming the same
+   sports event, or many participants on a campus joining the same video
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 3]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   conference.  A local relay can aggregate these subscriptions into a
+   single upstream subscription and fan the content out locally, so each
+   object crosses the WAN link once rather than once per endpoint.
+   Because the WAN link is commonly the congestion bottleneck, this can
+   also improve media quality for all endpoints served by the local
+   relay.
+
+2.  Conventions and Definitions
+
+   This specification uses the terminology from [RFC3986], [RFC5280],
+   and [RFC9525].
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  MOQT URI Scheme
+
+   An MOQT server is identified using a URI with the "moqt" scheme.  The
+   "moqt" URI scheme is defined as follows, using definitions from
+   [RFC3986]:
+
+   moqt-URI = "moqt" "://" authority path-abempty [ "?" query ]
+
+   The authority portion MUST NOT contain an empty host portion.  The
+   moqt URI scheme supports the /.well-known/ path prefix defined in
+   [RFC8615].
+
+   The moqt URI scheme follows the generic URI syntax of [RFC3986] for
+   the authority, path-abempty, and query components, including the use
+   of reserved characters and percent-encoding defined therein.  A moqt
+   URI can be converted to an https URI by replacing the scheme (see
+   [moq-transport], Section 6.2.1), so the path-abempty and query
+   components use the same syntax as https URIs.
+
+3.1.  Fragment Identifiers
+
+   The media type for resources identified by moqt URIs is application/
+   moqt.
+
+   Fragment identifiers MAY be used with moqt URIs.  The fragment is not
+   transmitted to the server; it is processed locally by the client
+   after establishing the MOQT session.
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 4]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   A moqt URI fragment MUST begin with a registered fragment type
+   identifier, followed by a colon (:), followed by a type-specific
+   value:
+
+   moqt://example.com/app#<type>:<value>
+
+   Fragment type identifiers MUST consist of ASCII lowercase letters,
+   digits, and hyphens (a-z, 0-9, -).  The semantics of the value after
+   the colon are defined by the specification that registers the
+   fragment type.
+
+3.2.  Dereferencing a MOQT URI
+
+   The default operation for dereferencing a moqt URI is to establish a
+   MOQT session to the identified server.  See Section 10 for the
+   security implications of dereferencing a moqt URI.
+
+   A moqt URI can be dereferenced over two distinct transports
+   ([moq-transport], Section 3):
+
+   *  Native QUIC, where the client opens a QUIC connection directly to
+      the authority of the moqt URI and negotiates a moqt/moqt-N ALPN.
+
+   *  WebTransport, where the moqt URI is first mapped to an https URI
+      ([moq-transport], Section 6.2.1) and the client establishes a
+      WebTransport session over HTTP/3 (ALPN h3) or HTTP/2 (ALPN h2) to
+      that https origin.
+
+   The two transports use different DNS resolution and certificate
+   validation procedures, summarized below.
+
+   For the native QUIC transport, when moqt-specific SVCB records are
+   published for the authority (Section 6), the client MAY use them to
+   learn the server's endpoints and moqt/moqt-N ALPNs before connecting.
+   When those records are not available, the client falls back to SRV
+   records (Section 7) or, on a local link, uses mDNS and DNS-SD
+   (Section 8).  Otherwise the client resolves the host subcomponent of
+   the authority to one or more network addresses using DNS A [RFC1035]
+   and AAAA [RFC3596] records.  If the port is omitted in the URI, a
+   default port of 443 is used.  The server's X.509 certificate MUST be
+   validated against the original moqt URI authority as described in
+   Section 5, and the URI MUST be normalized as specified in Section 4
+   before certificate comparison.
+
+
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 5]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   For the WebTransport transport, the client applies standard https
+   processing to the derived https URI: HTTPS resource records
+   ([RFC9460]) are resolved as for any https origin, and the server's
+   X.509 certificate matching following the same procedures as defined
+   for native QUIC.  No moqt-specific DNS records are consulted on this
+   path.
+
+4.  URI Normalization
+
+   For comparison purposes, the URI, or part of the URI, is put in a
+   canonical form and then bitwise compared to the data from the X.509
+   certificate after putting it into canonical form.  This section
+   defines how to create the canonical form.
+
+   The URI MUST be normalized using Case Normalization and Percent-
+   Encoding Normalization as specified in Sections 6.2.2.1 and 6.2.2.2
+   of [RFC3986].
+
+   The "." and ".." sequences have no special meaning in MOQT URIs and
+   are not changed during normalization.
+
+   If the port is missing, it MUST be replaced with the default port
+   (443).
+
+   If the URI reg-name ends in a ".", that MUST be removed.
+
+   Internationalized Domain Names in the reg-name MUST be converted to
+   IDNA format as defined in [RFC5890].
+
+   Open Issue: Decide if wildcard certificates are allowed and add text
+   to describe how to handle them.
+
+5.  X.509 Certificate Matching
+
+   The fields referenced in this section are defined in [RFC5280] and
+   [RFC4985].
+
+   The CN-ID field as defined in [RFC9525] MUST NOT be used.
+
+   Clients MUST implement dNSName, uniformResourceIdentifier and
+   iPAddress matching.
+
+   If any one of the following identifiers in the subjectAltName of the
+   certificate matches the URI, then the certificate is valid for that
+   URI.
+
+   *  dNSName: The canonicalized dNSName from the certificate matches
+      the host part of the authority from the canonicalized URI.
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 6]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   *  iPAddress: The host part of the authority from the canonicalized
+      URI, parsed as an IP address, matches the iPAddress value from the
+      certificate.
+
+   *  uniformResourceIdentifier: The canonicalized
+      uniformResourceIdentifier MUST match the canonicalized URI with
+      the query and fragment removed.
+
+5.1.  WebTransport Certificate Validation
+
+   When connecting via WebTransport, the TLS handshake terminates at an
+   https origin derived from the moqt URI ([moq-transport],
+   Section 6.2.1).  In this case, the client validates the server
+   certificate against that https URI using standard Web PKI procedures;
+   the moqt-specific matching rules above do not apply.  The TLS SNI
+   extension MUST contain the host from the derived https URI.
+
+   The moqt-specific certificate matching defined in this section
+   applies only to native QUIC connections where the client connects
+   directly to the authority of the moqt URI.  On such connections the
+   TLS SNI extension MUST contain the host from the original moqt URI.
+
+5.2.  SVCB and SRV Indirection
+
+   When a client is redirected to a different target host via SVCB or
+   SRV, certificate matching MUST be performed against the authority
+   from the original moqt URI, not the resolved target name.  The TLS
+   SNI extension likewise MUST contain the original authority's host.
+   This is consistent with the requirements in [RFC9460], Section 2.3
+   and with the SRV rules in Section 7 of this document.
+
+6.  SVCB Records for MOQT
+
+   MOQT defines SVCB records [RFC9460] for native QUIC endpoints.  For
+   WebTransport, a moqt URI maps to an https URI ([moq-transport],
+   Section 6.2.1); the client resolves that https URI using HTTPS
+   resource records following standard https processing rules
+   ([RFC9460], Section 9.1).
+
+6.1.  SVCB Record Name
+
+   For a moqt URI with host H and port P, the SVCB owner name is:
+
+   *  _moqt.H when P is 443 or omitted (defaulting to 443).
+
+   *  _P._moqt.H when P is any other value.
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 7]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+6.2.  Default ALPN Identifiers
+
+   Unlike https (which implies h2/h3), the moqt URI scheme has no
+   implicit default ALPN.  Every ServiceMode record MUST include an
+   explicit alpn SvcParamKey listing all supported protocols.
+
+   The following ALPN identifiers are defined for MOQT:
+
+   moqt:  Connected with raw QUIC, published MOQT specification.
+
+   moqt-N (where N is a non-negative integer):  Connect with raw QUIC
+      using draft version N (e.g., moqt-15) of the MOQT Transport draft.
+
+   Note to RFC Editor: Remove this bullet point in RFC
+
+   A client MUST treat a record whose alpn contains none of its
+   supported identifiers as unusable and proceed as if no record were
+   present.
+
+   TODO: Define ALPN identifier and record-placement rules for qmux once
+   the qmux specification matures.
+
+6.3.  Automatically Mandatory SvcParamKeys
+
+   The moqt scheme introduces no additional automatically mandatory
+   SvcParamKeys; standard [RFC9460] processing rules apply.  Omitting
+   alpn is equivalent to publishing a record with no supported protocols
+   (Section 6.2), which clients will treat as unusable.
+
+6.4.  Relevant SvcParamKeys
+
+6.4.1.  alpn and no-default-alpn
+
+   The alpn SvcParamKey MUST be present in every ServiceMode record (see
+   Section 6.2).  The no-default-alpn SvcParamKey MUST NOT appear; with
+   no default ALPNs defined, it has no effect and would be misleading.
+
+6.4.2.  port
+
+   When present, port specifies the UDP port for the native QUIC
+   endpoint.  When absent, the port from the moqt URI is used,
+   defaulting to 443.
+
+   Open Issue: Magnus raises the issue that we should reconsider our
+   previous decision to sit on the HTTP port for moq over raw quic.
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 8]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+6.4.3.  ech
+
+   ECH [RFC9580] MAY appear in SVCB records.  Clients that support ECH
+   SHOULD use it; without it, the moqt URI authority is exposed in the
+   TLS SNI extension ([moq-transport]).
+
+6.4.4.  ipv4hint and ipv6hint
+
+   MAY be used to provide address hints that reduce DNS round trips.
+   Hints are advisory and do not replace A/AAAA resolution.
+
+6.5.  ALPN Selection
+
+   A client uses the alpn SvcParamKey to determine which connection
+   modes the server supports and connects using any ALPN identifier from
+   the record that it supports.  Selection among multiple supported
+   ALPNs is a matter of local client policy and is out of scope for this
+   document.
+
+7.  SRV Records for MOQT
+
+   SRV records [RFC2782] provide port and target for load balancing and
+   failover but carry no ALPN or connection parameters.  SRV support is
+   retained because it is required by DNS-SD (Section 8) and provides a
+   transitional fallback for the native QUIC path in deployments where
+   SVCB infrastructure is not yet available.
+
+7.1.  SRV Record Names
+
+   For a moqt URI with host H, SRV queries are performed at:
+
+   *  _moqt._udp.H
+
+7.2.  Using SRV Target and Port
+
+   When SRV records are found:
+
+   *  The target hostname and port from the SRV record MUST be used as
+      the connection endpoint.
+
+   *  The original moqt URI's host component MUST be used as the TLS SNI
+      value and for certificate validation; it MUST NOT be replaced by
+      the SRV target hostname.
+
+   *  SRV targets with a port of 0 and a dot (.) target indicate that
+      the service is not available at this name and MUST be treated as
+      indicating no service.
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                   [Page 9]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+7.3.  Interaction with SVCB
+
+   When SVCB records are available and usable for a moqt authority,
+   clients SHOULD prefer them over SRV records and MAY skip the SRV
+   query entirely.
+
+   Operators SHOULD publish SVCB records rather than (or in addition to)
+   SRV records for new deployments.
+
+8.  mDNS and DNS-SD Discovery for MOQT
+
+   mDNS [RFC6762] and DNS-SD [RFC6763] enable MOQT discovery on local
+   links without a central DNS server.
+
+8.1.  DNS-SD Service Names
+
+   MOQT uses the following DNS-SD service types, which are also
+   registered for SRV use (Section 11.1):
+
+   _moqt._udp:  Advertises MOQT endpoints (native QUIC and WebTransport
+      over HTTP/3).
+
+   A MOQT relay on the local network announces itself by publishing PTR,
+   SRV, and TXT records under the appropriate service type in the
+   .local. domain, as specified in [RFC6763].
+
+8.2.  TXT Record Parameters
+
+   The TXT record for a MOQT DNS-SD instance MUST contain the following
+   key-value pair:
+
+   alpn:  The ALPN identifier for the transport mode advertised by this
+      instance (e.g., moqt, moqt-15, h3).
+
+   A client MUST treat an instance whose TXT record does not contain a
+   recognized alpn value as unusable.
+
+8.3.  Interaction with SVCB
+
+   This document does not define SVCB-based service parameter delivery
+   for MOQT DNS-SD instances; the TXT record (Section 8.2) is the sole
+   mechanism for conveying ALPN information in DNS-SD.
+
+
+
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 10]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+9.  Operational Considerations
+
+   For larger deployments, operators are encouraged to publish SVCB
+   records for moqt authorities rather than relying on A or AAAA
+   records.  SVCB records allow clients to learn the server's supported
+   ALPNs and connection parameters as well as make it easier to load
+   balance and provide high availability for the service.
+
+10.  Security Considerations
+
+   The overall security goals for this specification is, given a moqt
+   UIR, ensure that the client connects to a MoQ server that is trusted
+   to handle the content.  The relays are considered to be trusted if
+   they can prove that they have an appropriate PKI certificate for the
+   moqt URI or, in the case where MDNS is enabled, the applications
+   explicitly trusts relays on the local network.
+
+   The preferred way to authorize a local relay in the enterprise case
+   that is using device management systems, is to push a policy list of
+   trusted relays.  For non managed devices, the application needs to
+   explicitly ask permission to use the relay on the local network.
+
+   Dereferencing a moqt URI exposes the following information to on-path
+   observers and intermediaries:
+
+   *  The authority component is sent in the TLS SNI extension during
+      connection establishment, exposing the target server identity to
+      on-path observers.  Encrypted Client Hello (ECH) [RFC9580] can
+      mitigate this exposure.
+
+   *  The path-abempty and query components are visible to the relay
+      that terminates the client's connection.
+
+   TODO: Expand this section with additional considerations.
+
+   Use of self-signed certificates is out of scope for this
+   specification but can be allowed in other separate specifications.
+
+11.  IANA Considerations
+
+11.1.  Service Name Registration
+
+   IANA is requested to register the following entry in the "Service
+   Name and Transport Protocol Port Number Registry":
+
+   *  Service Name: moqt
+
+   *  Transport Protocol(s): udp
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 11]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   *  Assignee: IETF
+
+   *  Contact: moq@ietf.org
+
+   *  Description: Media over QUIC Transport
+
+   *  Reference: This document and [moq-transport]
+
+   *  Port Number: 443
+
+   This registration covers use of the _moqt._udp service label in SRV
+   records ([RFC2782]) and DNS-SD ([RFC6763]).
+
+11.2.  URI Scheme Registrations
+
+   This document requests the registration of the following URI schemes
+   in the "Uniform Resource Identifier (URI) Schemes" registry, per
+   [RFC7595]:
+
+11.2.1.  "moqt" URI Scheme Registration
+
+   Scheme name: moqt
+
+   Status: Permanent
+
+   Applications/protocols that use this scheme name: Media over QUIC
+   Transport (MOQT) over native QUIC or WebTransport, as defined in this
+   document.
+
+   Contact: IETF MoQ Working Group (moq@ietf.org)
+
+   Change controller: IETF
+
+   References: This document
+
+11.3.  ALPN Registration
+
+   TODO
+
+12.  References
+
+12.1.  Normative References
+
+
+
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 12]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   [moq-transport]
+              Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
+              "Media over QUIC Transport", Work in Progress, Internet-
+              Draft, draft-ietf-moq-transport-22, 1 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              transport-22>.
+
+   [RFC1035]  Mockapetris, P., "Domain names - implementation and
+              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
+              November 1987, <https://www.rfc-editor.org/rfc/rfc1035>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
+              specifying the location of services (DNS SRV)", RFC 2782,
+              DOI 10.17487/RFC2782, February 2000,
+              <https://www.rfc-editor.org/rfc/rfc2782>.
+
+   [RFC3596]  Thomson, S., Huitema, C., Ksinant, V., and M. Souissi,
+              "DNS Extensions to Support IP Version 6", STD 88,
+              RFC 3596, DOI 10.17487/RFC3596, October 2003,
+              <https://www.rfc-editor.org/rfc/rfc3596>.
+
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
+
+   [RFC4985]  Santesson, S., "Internet X.509 Public Key Infrastructure
+              Subject Alternative Name for Expression of Service Name",
+              RFC 4985, DOI 10.17487/RFC4985, August 2007,
+              <https://www.rfc-editor.org/rfc/rfc4985>.
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/rfc/rfc5280>.
+
+   [RFC5890]  Klensin, J., "Internationalized Domain Names for
+              Applications (IDNA): Definitions and Document Framework",
+              RFC 5890, DOI 10.17487/RFC5890, August 2010,
+              <https://www.rfc-editor.org/rfc/rfc5890>.
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 13]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
+              DOI 10.17487/RFC6762, February 2013,
+              <https://www.rfc-editor.org/rfc/rfc6762>.
+
+   [RFC6763]  Cheshire, S. and M. Krochmal, "DNS-Based Service
+              Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
+              <https://www.rfc-editor.org/rfc/rfc6763>.
+
+   [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
+              "Transport Layer Security (TLS) Application-Layer Protocol
+              Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
+              July 2014, <https://www.rfc-editor.org/rfc/rfc7301>.
+
+   [RFC7595]  Thaler, D., Ed., Hansen, T., and T. Hardie, "Guidelines
+              and Registration Procedures for URI Schemes", BCP 35,
+              RFC 7595, DOI 10.17487/RFC7595, June 2015,
+              <https://www.rfc-editor.org/rfc/rfc7595>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8615]  Nottingham, M., "Well-Known Uniform Resource Identifiers
+              (URIs)", RFC 8615, DOI 10.17487/RFC8615, May 2019,
+              <https://www.rfc-editor.org/rfc/rfc8615>.
+
+   [RFC9460]  Schwartz, B., Bishop, M., and E. Nygren, "Service Binding
+              and Parameter Specification via the DNS (SVCB and HTTPS
+              Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
+              November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
+
+   [RFC9525]  Saint-Andre, P. and R. Salz, "Service Identity in TLS",
+              RFC 9525, DOI 10.17487/RFC9525, November 2023,
+              <https://www.rfc-editor.org/rfc/rfc9525>.
+
+12.2.  Informative References
+
+   [RFC6943]  Thaler, D., Ed., "Issues in Identifier Comparison for
+              Security Purposes", RFC 6943, DOI 10.17487/RFC6943, May
+              2013, <https://www.rfc-editor.org/rfc/rfc6943>.
+
+   [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
+              Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
+              April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
+
+   [RFC8499]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
+              Terminology", RFC 8499, DOI 10.17487/RFC8499, January
+              2019, <https://www.rfc-editor.org/rfc/rfc8499>.
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 14]
+
+Internet-Draft                   moq-uri                   November 2026
+
+
+   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [RFC9580]  Wouters, P., Ed., Huigens, D., Winter, J., and Y. Niibe,
+              "OpenPGP", RFC 9580, DOI 10.17487/RFC9580, July 2024,
+              <https://www.rfc-editor.org/rfc/rfc9580>.
+
+   [WebTransport]
+              Frindell, A., Kinnear, E., and V. Vasiliev, "WebTransport
+              over HTTP/3", Work in Progress, Internet-Draft, draft-
+              ietf-webtrans-http3-16, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-
+              webtrans-http3-16>.
+
+Acknowledgments
+
+   Huge thanks to high quality review from Benjamin Schwartz.
+
+Authors' Addresses
+
+   Cullen Jennings
+   Cisco
+   Email: fluffy@iii.ca
+
+
+   Suhas Nandakumar
+   Cisco
+   Email: snandaku@cisco.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jennings & Nandakumar      Expires 5 May 2027                  [Page 15]

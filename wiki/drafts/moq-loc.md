@@ -2,12 +2,13 @@
 title: "Low Overhead Media Container (LOC)"
 tags: [draft, media, container]
 date: 2026-04-10
-last_updated: 2026-08-27
+last_updated: 2026-11-03
 status: current
-draft_version: "04"
+draft_version: "05"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-loc/"
 ---
 
+**draft-ietf-moq-loc-05** | published 2026-11-02 | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/05/) — adds a **Codec String** property (see Recent Highlights)
 **draft-ietf-moq-loc-04** | published 2026-07-20 | 20 pages | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-loc/)
 **draft-ietf-moq-loc-03** | published 2026-07-06
 
@@ -40,6 +41,7 @@ LOC uses numbered extensions in the object header:
 
 Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only durable milestones.
 
+- **draft-05 published (2026-11-02), adding a Codec String property.** **`CODEC_STRING` (0x11)** is a Track and Object property that carries the WebCodecs Codec Registry string ([loc #29](https://github.com/moq-wg/loc/pull/29), [[jordi-cenzano|Cenzano]], open since July; IANA row added in [#31](https://github.com/moq-wg/loc/pull/31)). [[mo-zanaty|Zanaty]] chose **UTF-8/ASCII to match MP4**, rather than the UTF-16 DOMString that WebCodecs uses. The registered LOC property IDs are now TIMESCALE 0x08, VIDEO_FRAME_MARKING 0x09, AUDIO_LEVEL 0x0C, VIDEO_CONFIG 0x0D, AUDIO_CONFIG 0x0F, TIMESTAMP 0x10 and CODEC_STRING 0x11. Zanaty raised two follow-ups on the list. A string property cannot be used in MOQT filters ([loc #32](https://github.com/moq-wg/loc/issues/32)). And the WG should decide how to handle the many RTP and WebCodecs fields implementations want to carry, instead of adding properties one interop request at a time; he asked for an IETF 127 slot on this.
 - **draft-04 published (2026-07-20)** — the first revision after IANA's July-16 early review of loc-03. It **fixes the MoQ Properties IANA registry** ([loc #28](https://github.com/moq-wg/loc/pull/28), Mo Zanaty, +15/−17), coordinated with the twin [[moq-transport|moq-transport #1818]] *"Fix IANA Properties for LOC/SecureObjects"* fix — the six LOC properties are now registered at **IDs 0x08 / 0x09 / 0x0C / 0x0D / 0x0F / 0x10**, moving TIMESTAMP off the 0x06 value that collided with MoQ `SUBGROUP_DELIVERY_TIMEOUT` (building on [loc #27](https://github.com/moq-wg/loc/pull/27)'s July-19 TIMESTAMP-value bump). Resolves the registry name/reference mismatches IANA flagged (see [loc #26](https://github.com/moq-wg/loc/issues/26)). Landed the morning of the IETF-126 Monday session.
 - **draft-03 published (2026-07-06)** — the first LOC revision since -02; adds an audio-configuration structure and revises all audio config (PR #24), resolving the June audio-config gap.
 
