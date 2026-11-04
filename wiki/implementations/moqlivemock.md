@@ -2,7 +2,7 @@
 title: "moqlivemock (Eyevinn)"
 tags: [implementation, go, javascript, eyevinn, cmsf, loc, msf, drm, locmaf]
 date: 2026-04-12
-last_updated: 2026-11-03
+last_updated: 2026-11-04
 status: current
 ---
 
@@ -46,6 +46,7 @@ Supports both **FETCH** and **SUBSCRIBE** for retrieving the MSF catalog. Each `
 - **Audio**: AAC, Opus, AC-3
 - **Subtitles**: wvtt, stpp (dynamically generated with timestamps and group numbers); since **v0.16.0** also experimental **paint-model** tracks `subs_stpc_{lang}` / `subs_wvtc_{lang}` ([Eyevinn/paint-model-subtitles](https://github.com/Eyevinn/paint-model-subtitles), off by default), a **`_locmaf` variant** of every subtitle track, and a measured catalog `bitrate` for each. Subtitle groups now carry one CMAF chunk per video object instead of one per second, and each format has its own altGroup. [[warp-player]] v0.16.0 renders all of them.
 - **Closed captions**: **CTA-608** — auto-generated in-band caption SEI messages injected by `mlmpub` across the CMAF/LOCMAF/LOC/moq-mi serve paths and all three video codecs (AVC/HEVC/AV1), advertised in the catalog as an accessibility descriptor with cross-packaging decode round-trip verified (July 2026); a **`-cc608mode`** flag selects **paint-on** (default) / pop-on / roll-up presentation (Aug 2026). Player-side rendering is complete for AVC/HEVC; **AV1 caption rendering is pending common-media-library support**.
+- **LOC frame marking**: `mlmpub` emits a **LOC Video Frame Marking** property on video objects (on `main`, post-v0.18.0 — [#168](https://github.com/Eyevinn/moqlivemock/pull/168), merged Nov-3, resolving [#166](https://github.com/Eyevinn/moqlivemock/issues/166) from Álvaro Velad Galván), so subscribers can tell key/delta/discardable frames apart without parsing the bitstream.
 - **Sync**: Wall-clock synchronized — group X starts at second X, video clock aligned with UTC modulo 10s, audio beeps on seconds
 - **Format**: [[moq-cmsf|CMSF]] (CMAF chunks over MOQT)
 

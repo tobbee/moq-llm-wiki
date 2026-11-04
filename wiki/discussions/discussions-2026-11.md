@@ -2,11 +2,20 @@
 title: "Discussions - November 2026"
 tags: [discussions, slack, github]
 date: 2026-11-01
-last_updated: 2026-11-03
+last_updated: 2026-11-04
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during November 2026. The late-October run-up lives in [[discussions-2026-10]].
+
+# Activity (Nov 4): a quiet overnight; MSF heads toward a -02
+
+A low-volume window (the IETF 127 deadline is past and the meeting is still two weeks out). The visible work is **post-deadline PR queueing rather than publishing**, and no WG document was revised — [[moq-transport]] stays **-23**, [[moq-msf|MSF]] stays **-01**.
+
+- **[[moq-transport]]: four new afrind cleanup PRs, all open.** After the Nov-3 issue-triage sweep, [[alan-frindell|afrind]] opened [#2055](https://github.com/moq-wg/moq-transport/pull/2055) (make MAX_CONTROL_MESSAGE_SIZE an **even** Setup Option type — the fix for the Nov-3 nit [#2054](https://github.com/moq-wg/moq-transport/issues/2054)), [#2056](https://github.com/moq-wg/moq-transport/pull/2056) (handle reserved namespaces in NAMESPACE messages), [#2057](https://github.com/moq-wg/moq-transport/pull/2057) (replace cached Properties wholesale on update — the interim-30 decision), and [#2058](https://github.com/moq-wg/moq-transport/pull/2058) (limit the **END_OF_GROUP** bit to single-Object subgroups, addressing issue [#2032](https://github.com/moq-wg/moq-transport/issues/2032)). These are the first of the post-23 (draft-24-track) queue; none merged.
+- **[[moq-msf|MSF]] prepares a draft release.** [[will-law|Will Law]] opened [#222](https://github.com/moq-wg/msf/pull/222) *"Multiple bug & logic fixes ahead of draft release"* (+255/−229) — an editorial pass cleaning up the logic/spelling/referencing errors introduced by the eight Nov-2 merges (flagged by a Claude scan, each editor-reviewed) — and [#223](https://github.com/moq-wg/msf/pull/223) *"Adds a Security Considerations section"* (+159/−2), filling a former TODO with normative publisher/subscriber guidance. The "ahead of draft release" framing signals an **msf-02 is coming** (the published text has been June's -01 through all the recent merges). Both still open.
+- **Implementations**: [[moqlivemock]] landed **LOC Video Frame Marking** in `mlmpub` ([#168](https://github.com/Eyevinn/moqlivemock/pull/168), Nov-3, resolving [#166](https://github.com/Eyevinn/moqlivemock/issues/166) from Álvaro Velad Galván) plus the [[moqtransport]] v0.15.1 bump ([#167](https://github.com/Eyevinn/moqlivemock/pull/167)) — both on `main`, no new tag after v0.18.0. [[moq-dev]] kept its usual pace (~50 merges Nov-3→Nov-4: a 34-crate cargo bump, MTU probes only on a validated path, a `capture="release"` mode that closes capture devices while muted/invisible, plus CARLA/quest planning) but **cut no new tag** — v0.17.12 stands. All other tracked repos (moq-rs v0.8.0, moqtail relay@0.17.0, warp-player v0.17.0, Eyevinn/moqtransport v0.15.1, quiche moqt, moq-js, birneee) were flat.
+- **Interop**: the **Nov-4 00:15 nightly is flat — 591 / 290 / 267 / 32 (49.1%)**, +1 pass over Nov-3 with the classification bit-identical (at-target 341 · ahead 201 · behind 49). [runner #183](https://github.com/englishm/moq-interop-runner/pull/183) (moq-dev draft-20, merged Nov-3) saw its first nightly but did not visibly move the roster. Mailing list had no new Nov-4 messages; Slack not checked (no access this run).
 
 # Activity (Nov 3, afternoon → evening): IETF 127 preliminary agenda; moq-dev v0.17.12
 

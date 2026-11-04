@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-11-03
+last_updated: 2026-11-04
 status: current
 ---
 
@@ -60,9 +60,11 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-11-03 00:14:50 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-03_001450/report.html) — 591 cells / 289 pass / 268 fail / 32 skip** (48.9% pass; at-target 341 · ahead 201 · behind 49). **The matrix grew 29 cells (562 → 591) and "ahead" jumped 164 → 201**, while the endpoint roster (20 clients × 21 relays) is unchanged. This is the first nightly after two Nov-2 runner merges. [#182](https://github.com/englishm/moq-interop-runner/pull/182) ([[tobbe-einarsson|tobbee]]) re-declares `moqlivemock` as **draft-18 + draft-22**. Its PR notes that `mlmrel` had already been negotiating `moqt-22` with six clients on Nov-2, with moqx and moxygen going fail → pass between Oct-31 and Nov-2. [#162](https://github.com/englishm/moq-interop-runner/pull/162) ([[giovanni-marzot|gmarzot]]) lets a docker relay **declare several endpoints, one run each**, so a relay serving raw QUIC and WebTransport on one port can be tested over both. Pass rose **+18** (271 → 289), but because the matrix grew, the rate moved only 48.2% → 48.9%. "Ahead" cells (draft-20/22 pairs above the draft-18 label) are now about a third of the matrix. **Open**: [#183](https://github.com/englishm/moq-interop-runner/pull/183) (kixelated, Nov-3) registers **moq-dev draft 20** for `moq-dev-rs`/`moq-dev-js`, since draft-20 is back in the v0.17.11 relay and the published clients. #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player) are still pending.
+**Latest cut: [2026-11-04 00:15:45 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-04_001545/report.html) — 591 cells / 290 pass / 267 fail / 32 skip** (49.1% pass; at-target 341 · ahead 201 · behind 49). **A flat night: +1 pass, −1 fail, matrix unchanged at 591, and the classification bit-identical to Nov-3 (341·201·49).** [#183](https://github.com/englishm/moq-interop-runner/pull/183) (kixelated, *"register moq-dev draft 20"* for `moq-dev-rs`/`moq-dev-js`) had merged Nov-3 13:25, so this is its first nightly — but it did **not** visibly move the roster (no new "ahead" cells, no matrix growth), so moq-dev's endpoints were already negotiating at the same versions. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
 
-**Prior cut: [2026-11-02 00:17:02 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-02_001702/report.html) — 562 cells / 271 pass / 256 fail / 29 skip** (48.2% pass; at-target 352 · ahead 164 · behind 46). Flat (−1 vs Nov-1), the fifth straight night at 562 cells.
+**Prior cut: [2026-11-03 00:14:50 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-03_001450/report.html) — 591 cells / 289 pass / 268 fail / 32 skip** (48.9% pass; at-target 341 · ahead 201 · behind 49). **The matrix grew 29 cells (562 → 591) and "ahead" jumped 164 → 201**, while the endpoint roster (20 clients × 21 relays) is unchanged. First nightly after two Nov-2 runner merges: [#182](https://github.com/englishm/moq-interop-runner/pull/182) ([[tobbe-einarsson|tobbee]]) re-declares `moqlivemock` as **draft-18 + draft-22** (its PR notes `mlmrel` had already been negotiating `moqt-22` with six clients on Nov-2, with moqx and moxygen going fail → pass between Oct-31 and Nov-2), and [#162](https://github.com/englishm/moq-interop-runner/pull/162) ([[giovanni-marzot|gmarzot]]) lets a docker relay **declare several endpoints, one run each**. Pass rose **+18** (271 → 289), but because the matrix grew, the rate moved only 48.2% → 48.9%. "Ahead" cells (draft-20/22 pairs above the draft-18 label) are now about a third of the matrix.
+
+**Earlier: [2026-11-02 00:17:02 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-02_001702/report.html) — 562 cells / 271 pass / 256 fail / 29 skip** (48.2% pass; at-target 352 · ahead 164 · behind 46). Flat (−1 vs Nov-1), the fifth straight night at 562 cells.
 
 **Earlier: [2026-11-01 00:19:10 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-01_001910/report.html) — 562 cells / 272 pass / 255 fail / 29 skip** (48.4% pass; at-target 352 · ahead 164 · behind 46). The **matrix has held at 562 cells four straight nights** (Oct-29 → Nov-1) while the pass count settled off the Oct-29 49.5% spike into a **47–48% band — 278 → 266 → 268 → 272** (Nov-1 is +4 vs Oct-31). The one steady drift is **"ahead" creeping 161 → 164** (at-target 355 → 352, behind flat at 46) as endpoints begin declaring **draft-22** against the draft-18 nightly target — the implementation-side draft-22 adoption wave ([[moqtransport|Eyevinn]], [[moqtail]], [[moq-rs]], [[moq-dev]] all lit up draft-22 in the window) starting to show in the roster ahead of the IETF 127 hackathon. **New open runner PRs** (neither merged): [#180](https://github.com/englishm/moq-interop-runner/pull/180) (riedlse — a CMSF test area with a `cmsf-live-join` case and a `stitcher-moq-media` client, Oct-30) and [#181](https://github.com/englishm/moq-interop-runner/pull/181) (OJII3 — registering **`moq-mbt`**, a MoonBit draft-18 client, Oct-31). #175 (Docker pcaps) and #158 (Shaka Player) still pending.
 
@@ -243,6 +245,7 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-11-04 00:15:45 | 591 | 290 | 267 | 32 | 341 | 201 | +1 | flat; classification unchanged (341·201·49) though runner #183 (moq-dev draft-20) merged Nov-3 |
 | 2026-11-03 00:14:50 | 591 | 289 | 268 | 32 | 341 | 201 | +18 | **matrix +29, ahead +37: moqlivemock declared draft-18 + draft-22 (runner #182) and multi-endpoint docker relays (#162)** |
 | 2026-11-02 00:17:02 | 562 | 271 | 256 | 29 | 352 | 164 | −1 | flat, fifth night at 562 |
 | 2026-11-01 00:19:10 | 562 | 272 | 255 | 29 | 352 | 164 | +4 | 47–48% band (see Current standing) |
