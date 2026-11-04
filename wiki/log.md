@@ -8,6 +8,38 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-11-03 (evening) — IETF 127 preliminary agenda; moq-dev v0.17.12
+
+**TL;DR**:
+- **After deadline day, Nov-3 turned to planning and triage.** [[martin-duke|Martin Duke]] posted the **IETF 127 MOQ Preliminary Agenda** (early replies from [[ali-begen|Begen]], Duke) and a separate **"February 2026 Interim Location Survey"**; a couple more agenda requests arrived (Eisenbacher CMSF capability preflight; [[alan-frindell|afrind]] replied on Selection Sets). [[moq-transport]] ran an **issue-triage sweep** ahead of IETF 127 — new issue [#2054](https://github.com/moq-wg/moq-transport/issues/2054) (MAX_CONTROL_MESSAGE_SIZE Setup-Option-type nit) — and **closed [#1860](https://github.com/moq-wg/moq-transport/issues/1860) + [#1907](https://github.com/moq-wg/moq-transport/issues/1907) as completed** (now the [[aman-sharma|Sharma]] atomic-subscription-bundles / cache-signaling individual drafts). No WG merge or revision after the Nov-2 wave (transport stays **-23**). Slack not checked this (later) run; no open wiki issues.
+- **Implementations**: [[moq-dev]] cut a **second tagged train the same day — v0.17.12** (~20:50 UTC; libmoq v0.6.22, moq-cli v0.14.12, moq-ffi v0.4.22, obs-moq v0.6.22): a security-hardening backport that **redacts credential diagnostics in release logs** (web-transport-proto, moq-uring CONNECT `Debug`, granted-permission diagnostics) + a `session_fanout_threads` bench. No other tracked repo moved (moq-rs v0.8.0, moqtail relay@0.17.0, moqlivemock v0.18.0, warp-player v0.17.0, Eyevinn/moqtransport v0.15.1, quiche moqt Oct-30, moq-js, birneee all flat).
+- **Interop**: **no new run** — the Nov-3 00:14 cut (**591 / 289 / 268 / 32, 48.9%**) still stands; next nightly ~Nov-4 00:14, when [runner #183](https://github.com/englishm/moq-interop-runner/pull/183) (moq-dev draft-20, merged Nov-3) first appears.
+
+**Operation**: Update (manual; incremental supplement after the comprehensive Nov-1→Nov-3 run, covering ~Nov-3 12:30 UTC → ~Nov-3 23:30 UTC)
+**Sources**:
+- IETF Datatracker: **no WG or individual draft dated 2026-11-03/04** (confirmed against the documents page) — the Nov-2 deadline flood (transport-23, loc-05, c4m-02, privacy-pass-04; the Ramadan FEC 4-way split; mmt-02/multicast-02; new object-acks/content-stitching/test-tracks/mix/lb/ssts-backpressure; revs timestamp-01/uri-01/log-04/metrics-03/overview-02/relay-dos-02) is logged in the prior entry.
+- GitHub `moq-wg`:
+  - **moq-transport: no merge** after the Nov-2 -23 cut; stays **draft-23**. New issue [#2054](https://github.com/moq-wg/moq-transport/issues/2054) (afrind, Nov-3 16:16). Nov-3 issue-triage sweep (milestoning/labeling ~a dozen open issues ahead of IETF 127); [#1860](https://github.com/moq-wg/moq-transport/issues/1860) + [#1907](https://github.com/moq-wg/moq-transport/issues/1907) **closed as completed** (Nov-3 17:48; superseded by the draft-sharma atomic-subscription-bundles / cache-signaling individual drafts).
+  - msf, loc, privacy-pass, CAT-4-MOQT, cmsf, secure-objects, catalog-format: flat after the Nov-2 wave.
+- GitHub implementations:
+  - moq-dev/moq: **v0.17.12** (moq-relay v0.17.12 Nov-3 20:50; libmoq v0.6.22, moq-cli v0.14.12, moq-ffi v0.4.22, obs-moq v0.6.22) — 10-commit backport train over v0.17.11: redact credential diagnostics on release (web-transport-proto, moq-uring CONNECT `Debug`, granted-permission diagnostics) + `session_fanout_threads` bench backport.
+  - cloudflare/moq-rs (v0.8.0), moqtail/moqtail (relay@0.17.0), Eyevinn/moqlivemock (v0.18.0), Eyevinn/warp-player (v0.17.0), Eyevinn/moqtransport (v0.15.1), google/quiche moqt (cc6c73f82, Oct-30), video-dev/moq-js (#73 open), birneee/quiche_moq — all flat this window.
+- Interop runner: **no new run** since [Nov-3 00:14:50](https://englishm.github.io/moq-interop-runner/results/2026-11-03_001450/report.html) = 591 / 289 / 268 / 32 (48.9%; 341 at-target · 201 ahead · 49 behind). Next nightly ~Nov-4 00:14; [#183](https://github.com/englishm/moq-interop-runner/pull/183) (moq-dev draft-20) merged Nov-3 13:25, first effective Nov-4. #180/#181/#175/#158 still open.
+- IETF mailing list: 8 new Nov-3 messages — Duke *"IETF 127 MOQ Preliminary Agenda"* + replies (Begen, Duke); Duke *"February 2026 Interim Location Survey"*; afrind *"Re: Agenda request: MoQ Extensibility for Selection Sets ( Top-N, SSTS & Switch)"*; Eisenbacher *"Agenda request: CMSF capability preflight"*; Jennings *"Agenda request secure object XOR object ID"*; Zanaty *"Agenda request for LOC"*. No new weekly GitHub digest; Duke's interim-dates Nov-9 concerns deadline stands.
+- MoQ Monthly: still #2 (2026-05-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-dev]]: v0.17.11 release bullet extended with **v0.17.12** (credential-log redaction); #183 noted merged.
+- [[discussions-2026-11]]: new top section *Activity (Nov 3, afternoon → evening)* — IETF 127 preliminary agenda + interim survey, the moq-transport issue-triage sweep (#2054, #1860/#1907 closed), moq-dev v0.17.12, and the no-new-interop-run status.
+- [[log]]: this entry.
+
+**Key findings**:
+- *The WG shifted from publishing to planning within a day.* With -23 and the three sibling drafts out at the Nov-2 deadline, Nov-3's WG activity is **IETF 127 logistics** (the preliminary agenda, an interim-location survey, trailing agenda requests) plus issue triage — including retiring #1860/#1907 now that they live as the draft-sharma individual drafts. No new wire changes.
+- *moq-dev's release tempo stays high even mid-freeze.* Two tagged trains in one day (v0.17.11 morning, v0.17.12 evening), the second a focused **secret-redaction hardening** of release-build logs.
+- *This is an incremental supplement.* The earlier comprehensive Nov-1→Nov-3 run (ending ~12:30 UTC) already covered the deadline-day draft flood and the day's releases; this entry adds only the Nov-3 afternoon/evening delta the earlier run could not have seen.
+
 # 2026-11-03 — moq-transport draft-23 lands at the IETF 127 deadline
 
 **TL;DR**:
