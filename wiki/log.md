@@ -8,6 +8,41 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-11-05 — MPEG Systems replies on LOCMAF; quiet otherwise
+
+**TL;DR**:
+- **The LOCMAF adoption-call gate's awaited response arrived.** [[tobbe-einarsson|Einarsson]]'s [[moq-locmaf|LOCMAF]] draft has had its WG adoption call parked since Sep-28 pending a reply to [liaison 2285](https://datatracker.ietf.org/liaison/2285/); on **Nov-4 14:02 UTC** liaison officer **Stephan Wenger** posted **MPEG Systems' reply liaison** (ISO/IEC JTC1/SC29/WG3 output doc **N1956**, *"Liaison to IETF MOQ WG on LOCMAF"*, approved Oct-23 at Hangzhou) to the list ([msg](https://mailarchive.ietf.org/arch/msg/moq/uJYkXAr3QkI_xPw9TUgsq9llTUc/)). MPEG **welcomes** LOCMAF but **asks the WG to weigh its considerations before a formal adoption call**: it has begun studying low-overhead CMAF profiles, invites LOCMAF contributors into a **joint MPEG Ad hoc Group**, floats defining the work in an **MPEG core spec** MOQ could reference, and flags a signaling concern (LOCMAF bytes used outside MOQ). Not an objection — but it reframes the question as *IETF draft vs. MPEG spec vs. joint artifact*, a WG decision likely at IETF 127. Otherwise quiet: no WG doc revised ([[moq-transport]] **-23**, [[moq-msf|MSF]] **-01**), no new datatracker draft; afrind filed transport issue [#2059](https://github.com/moq-wg/moq-transport/issues/2059) and kept iterating the open post-23 PRs (none merged). Slack not checked; no open wiki issues.
+- **Implementations**: [[moq-dev]] ran ~40 merges Nov-4→5 (lite-07 Range IDs/SUBSCRIBE_STARTED #7872, one priority stream-open entry point #7894, qmux limits → 10,000/way #7893, native crypto/Ed25519 → `rind` #7873/#7870, moq-mux catalog warmup #7864) but **cut no tag** — v0.17.12 stands. [[moqlivemock]] flat after Nov-3's #168 (v0.18.0 holds). moq-rs v0.8.0, moqtail relay@0.17.0, warp-player v0.17.0, moqtransport v0.15.1, quiche moqt (Oct-30), moq-js, birneee all flat.
+- **Interop**: [Nov-5 00:15](https://englishm.github.io/moq-interop-runner/results/2026-11-05_001531/report.html) = **591 / 288 / 269 / 32 (48.7%)**, −2 pass vs Nov-4; classification bit-identical (at-target 341 · ahead 201 · behind 49) — a second flat night, a 2-cell fail↔pass flake with no runner PR before the cut.
+
+**Operation**: Update (manual; incremental supplement covering ~Nov-4 02:40 UTC → Nov-5 ~02:00 UTC)
+**Sources**:
+- IETF Datatracker: **no WG or individual draft dated 2026-11-03/04/05** (confirmed against the documents page; newest revisions are all Nov-1/Nov-2). [[moq-transport]] stays **-23**, [[moq-msf|MSF]] **-01**. (Datatracker lists the page date for privacy-pass-auth-04 as Nov-1 and relay-dos-02 as Nov-2; immaterial to this window.)
+- GitHub `moq-wg`:
+  - **moq-transport: no merge** after the Nov-2 -23 cut. New issue [#2059](https://github.com/moq-wg/moq-transport/issues/2059) (afrind, Nov-4 13:43, *"How does INCLUDE_PROPERTIES interact with Mandatory Track Properties?"*). The post-23 cleanup PRs [#2056](https://github.com/moq-wg/moq-transport/pull/2056)/[#2057](https://github.com/moq-wg/moq-transport/pull/2057)/[#2058](https://github.com/moq-wg/moq-transport/pull/2058) were iterated Nov-4 (still open); [#2055](https://github.com/moq-wg/moq-transport/pull/2055) open since Nov-3.
+  - **msf**: Will Law's pre-release pair [#222](https://github.com/moq-wg/msf/pull/222)/[#223](https://github.com/moq-wg/msf/pull/223) still open; **no msf-02 submitted** → [[moq-msf]] unchanged.
+  - **cmsf**: [#27](https://github.com/moq-wg/cmsf/pull/27) (*register `locmaf` packaging referencing draft-einarsson-moq-locmaf*) touched Nov-4 13:15, still open; [#29](https://github.com/moq-wg/cmsf/pull/29) (capability preflight) open.
+  - loc, secure-objects, catalog-format, privacy-pass: flat.
+- GitHub implementations:
+  - moq-dev/moq: **~40 merges Nov-4 02:30 → Nov-5 01:25, no new release** (v0.17.12 stands): lite-07 Range IDs/SUBSCRIBE_STARTED/range fills [#7872](https://github.com/moq-dev/moq/pull/7872), priority stream-open entry point [#7894](https://github.com/moq-dev/moq/pull/7894), qmux stream limits → 10,000/way [#7893](https://github.com/moq-dev/moq/pull/7893), native crypto → `rind` [#7873](https://github.com/moq-dev/moq/pull/7873), moq-crypto Ed25519 on `rind` [#7870](https://github.com/moq-dev/moq/pull/7870), moq-mux one-Playout catalog warmup [#7864](https://github.com/moq-dev/moq/pull/7864), fail dials behind older moq-lite hop [#7888](https://github.com/moq-dev/moq/pull/7888), draft-18 cached-group resume test [#7879](https://github.com/moq-dev/moq/pull/7879), plus quest/CI/deps churn.
+  - Eyevinn/moqlivemock: flat (top merge #168, Nov-3; v0.18.0 latest tag). cloudflare/moq-rs (v0.8.0), moqtail/moqtail (relay@0.17.0), Eyevinn/warp-player (v0.17.0), Eyevinn/moqtransport (v0.15.1), google/quiche moqt (cc6c73f82, Oct-30), video-dev/moq-js, birneee/quiche_moq — all flat.
+- Interop runner: [Nov-5 00:15:31](https://englishm.github.io/moq-interop-runner/results/2026-11-05_001531/report.html) = **591 / 288 / 269 / 32 (48.7%; at-target 341 · ahead 201 · behind 49)** — −2 pass / +2 fail vs the [Nov-4 00:15](https://englishm.github.io/moq-interop-runner/results/2026-11-04_001545/report.html) cut (591/290/267/32, 49.1%), matrix and classification unchanged. No runner PR merged before the cut; roster (20×21) unchanged a fourth night. #180/#181/#175/#158 still open.
+- IETF mailing list: **two Nov-4 messages** — Stephan Wenger *"Reply liaison from MPEG Systems"* (new thread, attaches WG03 N1956 LOCMAF reply liaison; CC MPEG's Youngkwon Lim) and an [[ali-begen|Ali C. Begen]] reply on the IETF 127 Preliminary Agenda. **No Nov-5 messages.** No new weekly GitHub digest (still Nov-1). No consensus/adoption call.
+- MoQ Monthly: still #2 (2026-05-31) — archive confirmed (#0 Mar-3, #1 Apr-30, #2 May-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-locmaf]]: **major status update** — MPEG Systems reply liaison (N1956) added to the header line, the Status section (full substance), and a new top Recent Highlights milestone; `last_updated` bumped.
+- [[interop-runner]]: Nov-5 is the new Latest cut, Nov-4 → Prior, Nov-3 → Earlier; daily-cuts table gets the Nov-5 row.
+- [[discussions-2026-11]]: new top section *Activity (Nov 5)* — the MPEG LOCMAF liaison, the quiet spec/WG state (transport #2059, open post-23 PRs, MSF/CMSF open PRs), the moq-dev churn, and the flat interop nightly.
+- [[index]]: LOCMAF row updated (MPEG reply received, WG to decide before an adoption call); `last_updated`/`updated` bumped.
+- [[log]]: this entry.
+
+**Key findings**:
+- *The LOCMAF story moved from "waiting on MPEG" to "a jurisdiction choice for the WG."* The reply is cordial and non-blocking (Expected action: None), but it actively invites the low-overhead-CMAF work into MPEG — via a joint Ad hoc Group and a possible MPEG core-spec home — and asks the WG to decide before the adoption call. That is a durable change to the draft's standing, so it belongs on [[moq-locmaf]] (not just the log), per the entity-page rule.
+- *Everything else is the same quiet post-deadline holding pattern as Nov-3/Nov-4*: unmerged PR queueing on transport/MSF/CMSF, a high-tempo-but-untagged moq-dev day, and a flake-level interop nightly. The next real spec inflection points are an MSF -02 (Will Law's pre-release PRs) and IETF 127 itself.
+
 # 2026-11-04 — quiet overnight; MSF heads toward a -02
 
 **TL;DR**:

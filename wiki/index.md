@@ -2,9 +2,9 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-11-04
+last_updated: 2026-11-05
 status: current
-updated: 2026-11-04
+updated: 2026-11-05
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -47,7 +47,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | [[moq-mmt]] | draft-02 | Individual (**-02 2026-11-02**) | MPEG Media Transport (MMT) Packaging for Media over QUIC — maps MMTP packets → MoQ Objects, MPU boundaries → Groups, with S-TSID↔catalog conversion to bridge ATSC 3.0 / ARIB STD-B60 broadcast without transcoding (Omar Ramadan, Blockcast) |
 | [[moq-fec]] | draft-01 → split | Individual (**split 2026-11-02** into fec-core / fec-block-codes / fec-catalog / fec-multicast -00) | Forward Error Correction for Media over QUIC — catalog-signaled repair tracks + repair-object formats; **RaptorQ (RFC 6330)** MTI with an algorithm registry, ISO/IEC 23008-1 (MMT) block profile, ATSC 3.0 / ARIB STD-B60 compatible (Omar Ramadan, Blockcast) |
 | [[moq-multicast]] | draft-02 | Individual (**-02 2026-11-02**) | Multicast Delivery and Endpoint Discovery for MoQ — MMTP packets uniformly over native SSM / AMT / broadcast, catalog-based endpoint discovery, `bc-provenance` per-group signed-digest auth securing an integrity-unprotected UDP multicast channel (Omar Ramadan, Blockcast) |
-| [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**; WG adoption intended — **MPEG liaison sent 2026-09-28, reply due 10-30**) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
+| [[moq-locmaf]] | draft-01 | Individual (**-01 2026-07-05**; WG adoption intended — **MPEG Systems reply liaison received 2026-11-04**, WG to decide IETF-vs-MPEG-vs-joint before an adoption call) | Low Overhead CMAF for Media over QUIC — [[tobbe-einarsson|Torbjörn Einarsson]] + Hugo Björs; major rewrite (canonical, no IANA), [Eyevinn/locmaf](https://github.com/Eyevinn/locmaf) ref impl |
 | [[moq-live-agent-interaction]] | draft-02 | Individual (**-02 2026-09-28**) | Live Agent Interaction over MoQ — real-time AI-agent/voice profile (turns→Groups, tokens→Objects; -02 adds per-action tool authorization); Yanmei Liu + Dapeng Liu (Alibaba) |
 | [[moq-feedback]] | draft-00 | Individual (**NEW 2026-07-31**) | MoQ Feedback — receiver→sender delivery-quality reports via a per-Object "Feedback Track" (Multimodal Feedback/MMF); Yanmei Liu + Minghui Jiang (Alibaba) + Ronghua Wu (Ant Group) |
 | [[moq-mocha]] | draft-00 (×6) | Individual (**NEW 2026-07-06**) | MOCHA — "MoQ Open Communication & Hosting Architecture": a 6-part RTC suite (chat, meetings, identity, MLS keying, reactions, address book) over MoQT; Cullen Jennings + Suhas Nandakumar (Cisco) |
