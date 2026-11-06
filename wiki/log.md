@@ -2,11 +2,49 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-11-04
+last_updated: 2026-11-06
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-11-06 — two fresh release tags; MSF builds toward -02
+
+**TL;DR**:
+- **A static-on-the-wire day; the movement is in code and editor's copies.** No WG document was revised ([[moq-transport]] stays **-23**, [[moq-msf|MSF]] **-01**), no new datatracker draft, and the mailing list produced just one message (a [[cullen-jennings|Cullen Jennings]] Nov-5 reply in the *Selection Sets* agenda thread). What actually moved: **two tracked repos cut fresh tags** (see Implementations), and [[will-law|Will Law]] kept assembling the **MSF -02** — two more editor's-copy PRs Nov-5, [#224](https://github.com/moq-wg/msf/pull/224) (*"Improve and update the Introduction"*) and [#226](https://github.com/moq-wg/msf/pull/226) (*"Fix escape and gap-signal terminology"*), plus issue [#225](https://github.com/moq-wg/msf/issues/225) explicitly tagged **`[-02]`** (clarify `depends` for `L`/`M`-indexed tracks in the Event Timeline). None merged; published MSF is still June's -01. On [[moq-transport]], afrind kept iterating the open post-23 PRs (none merged); no new issue since [#2059](https://github.com/moq-wg/moq-transport/issues/2059). Slack not checked; no open wiki issues.
+- **Implementations**: [[moq-dev]] **tagged v0.17.13** (~Nov-6 00:20 UTC; moq-cli v0.14.13, libmoq v0.6.23, moq-ffi v0.4.23, obs-moq v0.6.23) after ~67 Nov-5→6 merges — a release backport batch (relay HTTP/ops-listener hardening #7920, withdraw IETF ads without send credit #7922, joined-head FETCH race fix #7680) atop breaking `main` work (auth per-cert-chain scoping #7953, shared MSF init data #7949, pre-encoded simulcast rate control #7947, hang catalog includes on root timeline #7943, lite-07 route-key proof in SETUP #7937). [[moqlivemock]] **tagged v0.19.0** (Nov-5): ships LOC Video Frame Marking (#168) + one-Track-Alias-per-subscription on [[moqtransport]] v0.15.1. [[moqtail]] merged #445 and [[warp-player]] #211 (no new tag). moq-rs v0.8.0, Eyevinn/moqtransport v0.15.1, quiche moqt (Oct-30), moq-js, birneee flat.
+- **Interop**: [Nov-6 00:16](https://englishm.github.io/moq-interop-runner/results/2026-11-06_001606/report.html) = **591 / 280 / 276 / 32 (47.4%)**, −8 pass vs Nov-5; classification bit-identical a third straight night (at-target 341 · ahead 201 · behind 49) — an ~8-cell fail↔pass flake, deeper than the ±2 of Nov-4/Nov-5, with no runner PR before the cut.
+
+**Operation**: Update (manual; incremental supplement covering ~Nov-5 02:00 UTC → Nov-6 ~02:00 UTC)
+**Sources**:
+- IETF Datatracker: **no WG or individual draft dated 2026-11-04/05/06** (full documents page re-checked; newest Date anywhere is 2026-11-02). [[moq-transport]] stays **-23**, [[moq-msf|MSF]] **-01** (2026-06-02, not revised to -02 despite the editor's-copy PRs).
+- GitHub `moq-wg`:
+  - **moq-transport: no merge** after the Nov-2 -23 cut. afrind iterated the open post-23 PRs ([#2055](https://github.com/moq-wg/moq-transport/pull/2055)/[#2056](https://github.com/moq-wg/moq-transport/pull/2056)/[#2057](https://github.com/moq-wg/moq-transport/pull/2057)/[#2058](https://github.com/moq-wg/moq-transport/pull/2058), plus older [#2047](https://github.com/moq-wg/moq-transport/pull/2047) AUTH_PAYLOAD rename, [#2049](https://github.com/moq-wg/moq-transport/pull/2049) default FILL_PARAMETERS group order, [#2005](https://github.com/moq-wg/moq-transport/pull/2005) parse FETCH Objects before FETCH_OK) all touched Nov-5 ~19:xx; none merged. No new issue since [#2059](https://github.com/moq-wg/moq-transport/issues/2059).
+  - **msf**: two new open wilaw PRs Nov-5 — [#224](https://github.com/moq-wg/msf/pull/224) (Introduction) and [#226](https://github.com/moq-wg/msf/pull/226) (escape/gap-signal terminology) — on top of [#222](https://github.com/moq-wg/msf/pull/222)/[#223](https://github.com/moq-wg/msf/pull/223); new issue [#225](https://github.com/moq-wg/msf/issues/225) tagged `[-02]`. **No msf merge since #219 (Nov-2); no msf-02 submitted.**
+  - loc, secure-objects ([#92](https://github.com/moq-wg/moq-secure-objects/pull/92)), cmsf ([#27](https://github.com/moq-wg/cmsf/pull/27)/[#29](https://github.com/moq-wg/cmsf/pull/29)), catalog-format: flat.
+- GitHub implementations:
+  - moq-dev/moq: **v0.17.13** (moq-relay v0.17.13 Nov-6 00:20; moq-cli v0.14.13, libmoq v0.6.23, moq-ffi v0.4.23, obs-moq v0.6.23) — release-branch backports [#7842](https://github.com/moq-dev/moq/pull/7842)/[#7920](https://github.com/moq-dev/moq/pull/7920)/[#7922](https://github.com/moq-dev/moq/pull/7922)/[#7680](https://github.com/moq-dev/moq/pull/7680). ~67 merges on `main` Nov-5 01:00 → Nov-6 01:30 including breaking [#7953](https://github.com/moq-dev/moq/pull/7953)/[#7949](https://github.com/moq-dev/moq/pull/7949)/[#7947](https://github.com/moq-dev/moq/pull/7947)/[#7943](https://github.com/moq-dev/moq/pull/7943)/[#7937](https://github.com/moq-dev/moq/pull/7937), BBR3 loss-bound [#7952](https://github.com/moq-dev/moq/pull/7952), plus quest/CI/fuzz churn.
+  - Eyevinn/moqlivemock: **v0.19.0** (Nov-5 14:49; [#170](https://github.com/Eyevinn/moqlivemock/pull/170) release prep, [#169](https://github.com/Eyevinn/moqlivemock/pull/169) deps + LOC-05 citations) — ships the Nov-3 LOC Video Frame Marking ([#168](https://github.com/Eyevinn/moqlivemock/pull/168)) and a one-Track-Alias-per-subscription fix (moqtransport v0.15.1).
+  - moqtail/moqtail: [#445](https://github.com/moqtail/moqtail/pull/445) *"cancel upstream requests on malformed track"* (Nov-5) on `main`, no new tag (relay@0.17.0 stands). Eyevinn/warp-player: [#211](https://github.com/Eyevinn/warp-player/pull/211) *"take imsc 2.0.0, reading TTML through the browser's DOMParser"* (Nov-5) on `main`, no new tag (v0.17.0 stands).
+  - cloudflare/moq-rs (v0.8.0), Eyevinn/moqtransport (v0.15.1), google/quiche **moqt dir** (cc6c73f82, Oct-30), video-dev/moq-js, birneee/quiche_moq — all flat.
+- Interop runner: [Nov-6 00:16:06](https://englishm.github.io/moq-interop-runner/results/2026-11-06_001606/report.html) = **591 / 280 / 276 / 32 (47.4%; at-target 341 · ahead 201 · behind 49)** — −8 pass / +7 fail vs the [Nov-5 00:15](https://englishm.github.io/moq-interop-runner/results/2026-11-05_001531/report.html) cut (591/288/269/32, 48.7%), matrix and classification unchanged. No runner PR merged before the cut; roster unchanged a fifth night. #180/#181/#175/#158 still open.
+- IETF mailing list: **one new message** — [[cullen-jennings|Cullen Jennings]] Nov-5 reply in the *"Agenda request: MoQ Extensibility for Selection Sets (Top-N, SSTS & Switch)"* thread (third post: Jennings Nov-2 → afrind Nov-3 → this). No new I-D Action, consensus/adoption call, interim scheduling, or liaison; weekly GitHub digest still Nov-1 (next ~Nov-8).
+- MoQ Monthly: still #2 (2026-05-31) — archive confirmed (#0 Mar-3, #1 Apr-30, #2 May-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[moq-dev]]: version-history bullet extended with **v0.17.13** (backport batch + breaking `main` work); `last_updated` bumped.
+- [[moqlivemock]]: **Latest release → v0.19.0** (metadata block + component line), LOC-frame-marking bullet updated from "on `main`" to "shipped in v0.19.0", and a new top Recent Highlights milestone; `last_updated` bumped.
+- [[interop-runner]]: Nov-6 is the new Latest cut, Nov-5 → Prior, Nov-4 → Earlier; `last_updated` bumped.
+- [[discussions-2026-11]]: new top section *Activity (Nov 6)* — the two release tags, the MSF -02 PR/issue build-up, the quiet transport/WG state, the moqtail/warp-player merges, and the −8 interop nightly.
+- [[index]]: `last_updated`/`updated` bumped.
+- [[log]]: this entry.
+
+**Key findings**:
+- *The next spec inflection is MSF -02, not transport.* draft-23 is frozen pending IETF 127, so the transport PRs are draft-24-track queueing; the live editing is on [[moq-msf|MSF]], where issue [#225](https://github.com/moq-wg/msf/issues/225)'s `[-02]` tag and four open "ahead of draft release" PRs mark a first MSF revision since June's -01 as imminent.
+- *Release tempo continues under the freeze.* moq-dev (v0.17.13, its third tag in four days) and moqlivemock (v0.19.0) both shipped — moqlivemock's release finally *tags* the LOC Video Frame Marking + per-subscription-Track-Alias work that had sat on `main` since Nov-3 — so these are durable entity-page facts, not just log churn.
+- *Interop's −8 is flake, not regression.* Total runs (591) and the full classification (341·201·49) are bit-identical for a third straight night, so the pass dip is an at-target fail↔pass oscillation with no roster or version change behind it.
 
 # 2026-11-05 — MPEG Systems replies on LOCMAF; quiet otherwise
 

@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-11-05
+last_updated: 2026-11-06
 status: current
 ---
 
@@ -60,9 +60,11 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-11-05 00:15:31 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-05_001531/report.html) — 591 cells / 288 pass / 269 fail / 32 skip** (48.7% pass; at-target 341 · ahead 201 · behind 49). **A second flat night: −2 pass, +2 fail, matrix unchanged at 591, and the classification bit-identical to Nov-3/Nov-4 (341·201·49)** — so the shift is entirely a fail↔pass flip of two cells inside the at-target group, ordinary nightly flake. No runner PR merged before the cut; the roster (20 clients × 21 relays) is unchanged for a fourth straight night. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
+**Latest cut: [2026-11-06 00:16:06 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-06_001606/report.html) — 591 cells / 280 pass / 276 fail / 32 skip** (47.4% pass; at-target 341 · ahead 201 · behind 49). **A third straight flat-classification night, but the pass count slid −8 (288 → 280, fail +7): matrix unchanged at 591 and the classification bit-identical to Nov-3/Nov-4/Nov-5 (341·201·49)** — so the move is entirely an ~8-cell fail↔pass flip inside the at-target group, ordinary nightly flake though deeper than the ±2 of the prior two nights. No runner PR merged before the cut; the roster is unchanged a fifth straight night. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
 
-**Prior cut: [2026-11-04 00:15:45 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-04_001545/report.html) — 591 cells / 290 pass / 267 fail / 32 skip** (49.1% pass; at-target 341 · ahead 201 · behind 49). **A flat night: +1 pass, −1 fail, matrix unchanged at 591, and the classification bit-identical to Nov-3 (341·201·49).** [#183](https://github.com/englishm/moq-interop-runner/pull/183) (kixelated, *"register moq-dev draft 20"* for `moq-dev-rs`/`moq-dev-js`) had merged Nov-3 13:25, so this is its first nightly — but it did **not** visibly move the roster (no new "ahead" cells, no matrix growth), so moq-dev's endpoints were already negotiating at the same versions.
+**Prior cut: [2026-11-05 00:15:31 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-05_001531/report.html) — 591 cells / 288 pass / 269 fail / 32 skip** (48.7% pass; at-target 341 · ahead 201 · behind 49). A second flat night: −2 pass, +2 fail, matrix unchanged at 591, and the classification bit-identical to Nov-3/Nov-4 (341·201·49) — a fail↔pass flip of two cells inside the at-target group.
+
+**Earlier: [2026-11-04 00:15:45 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-04_001545/report.html) — 591 cells / 290 pass / 267 fail / 32 skip** (49.1% pass; at-target 341 · ahead 201 · behind 49). **A flat night: +1 pass, −1 fail, matrix unchanged at 591, and the classification bit-identical to Nov-3 (341·201·49).** [#183](https://github.com/englishm/moq-interop-runner/pull/183) (kixelated, *"register moq-dev draft 20"* for `moq-dev-rs`/`moq-dev-js`) had merged Nov-3 13:25, so this is its first nightly — but it did **not** visibly move the roster (no new "ahead" cells, no matrix growth), so moq-dev's endpoints were already negotiating at the same versions.
 
 **Earlier: [2026-11-03 00:14:50 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-03_001450/report.html) — 591 cells / 289 pass / 268 fail / 32 skip** (48.9% pass; at-target 341 · ahead 201 · behind 49). **The matrix grew 29 cells (562 → 591) and "ahead" jumped 164 → 201**, while the endpoint roster (20 clients × 21 relays) is unchanged. First nightly after two Nov-2 runner merges: [#182](https://github.com/englishm/moq-interop-runner/pull/182) ([[tobbe-einarsson|tobbee]]) re-declares `moqlivemock` as **draft-18 + draft-22** (its PR notes `mlmrel` had already been negotiating `moqt-22` with six clients on Nov-2, with moqx and moxygen going fail → pass between Oct-31 and Nov-2), and [#162](https://github.com/englishm/moq-interop-runner/pull/162) ([[giovanni-marzot|gmarzot]]) lets a docker relay **declare several endpoints, one run each**. Pass rose **+18** (271 → 289), but because the matrix grew, the rate moved only 48.2% → 48.9%. "Ahead" cells (draft-20/22 pairs above the draft-18 label) are now about a third of the matrix.
 
