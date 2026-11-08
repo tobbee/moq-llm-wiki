@@ -2,11 +2,20 @@
 title: "Discussions - November 2026"
 tags: [discussions, slack, github]
 date: 2026-11-01
-last_updated: 2026-11-07
+last_updated: 2026-11-08
 status: current
 ---
 
 Summary of active discussions in the MOQ ecosystem during November 2026. The late-October run-up lives in [[discussions-2026-10]].
+
+# Activity (Nov 8): moq-dev vendors WebRTC + VAAPI in-tree; a KV-cache-over-MOQT draft appears
+
+A quiet day on the wire: no WG document was revised (transport stays **-23**, [[moq-msf|MSF]] stays **-01**, nothing new on the datatracker) and the moq-wg repos were flat. The two things worth recording are a **mailing-list pair** and a **moq-dev pre-release push**.
+
+- **Two new list threads (both Nov-7).** [[lucas-pardue|Lucas Pardue]] posted *"IETF 127 Draft Meeting agenda for Scalable QUIC assisted-delivery (SQUAD) BoF is up"* ([message](https://mailarchive.ietf.org/arch/msg/moq/nSQDjM3XSHulEVS38Col-kerYP0/)) — a BoF adjacent to MOQ at IETF 127, not WG work but of ecosystem interest. Separately, **Li Zhiqiang** solicited feedback on *"draft-li-kvcache-efficient-transmission-00 — KV cache streaming over MOQT"* ([message](https://mailarchive.ietf.org/arch/msg/moq/511dbiCQtgMHkRZPSzmPEpW_A2k/)) — a **new individual draft applying MOQT to LLM/AI KV-cache transport**, not yet indexed on the datatracker. It joins `draft-liu-moq-live-agent-interaction` as a sign the community is probing AI/agent use cases on MoQ.
+- **[[moq-dev]]'s ~117-merge day is a pre-release self-containment push, not wire change.** The two biggest merges **vendor whole external stacks in-tree**: the **WebRTC stack** ([#8163](https://github.com/moq-dev/moq/pull/8163), +133k) and **moq-dev/vaapi** with unused codecs trimmed ([#8235](https://github.com/moq-dev/moq/pull/8235), +63k, breaking) — continuing the quinn→`moq-quic` / quinn-udp→`moq_sock` pattern. Alongside: a **final pre-release API audit narrowing public surfaces** ([#8088](https://github.com/moq-dev/moq/pull/8088), breaking), a **`moq-rtc`→`moq-webrtc` rename** ([#8122](https://github.com/moq-dev/moq/pull/8122)), moq-mux's own bounded **H.265 SPS parser** ([#8140](https://github.com/moq-dev/moq/pull/8140)), net socket endpoints split into servers/clients ([#8115](https://github.com/moq-dev/moq/pull/8115)), and a large **mocked-clock test sweep**. The only new tag was **moq-gst v0.4.24** (Nov-7 06:21, the GStreamer plugin); moq-relay/moq-cli hold at v0.17.14/v0.14.14.
+- **Spec/WG flat.** No [[moq-transport]] merge after the Nov-2 -23 cut; only PRs [#2058](https://github.com/moq-wg/moq-transport/pull/2058)/[#2057](https://github.com/moq-wg/moq-transport/pull/2057) were iterated (Nov-7 02:23), and there was no new issue after [#2063](https://github.com/moq-wg/moq-transport/issues/2063). [[moq-msf|MSF]] had no new activity after the Nov-6 issue burst (#227–#233); its pre-release PRs [#222](https://github.com/moq-wg/msf/pull/222)/[#223](https://github.com/moq-wg/msf/pull/223)/[#224](https://github.com/moq-wg/msf/pull/224) stay open and published text is still **-01**. loc, secure-objects, cmsf and catalog-format flat. All other tracked impls — moq-rs (Nov-2 draft-18), [[moqtail]] (relay@0.17.0), [[moqlivemock]] (v0.19.0), [[warp-player]] (v0.17.0), Eyevinn/moqtransport (v0.15.1), quiche moqt (Oct-30), moq-js, birneee — were flat.
+- **Interop**: the **Nov-8 00:17 nightly reads 623 / 309 / 276 / 34 (49.6%)**, −4 pass vs Nov-7 with the matrix (19×22) and classification **bit-identical** (at-target 359 · ahead 218 · behind 46) — a 4-cell fail↔pass flake that nudges the rate just back under 50%; no runner PR after #185 (Nov-6), so the moq-ng-enrolled roster holds a second night. MoQ Monthly still #2 (May-31). Slack not checked (no access this run); no open wiki issues.
 
 # Activity (Nov 7): interop crosses 50% as a new relay enrolls; MSF scopes -02 and -03
 
