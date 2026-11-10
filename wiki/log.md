@@ -2,11 +2,47 @@
 title: Wiki Log
 tags: [log, maintenance]
 date: 2026-04-14
-last_updated: 2026-11-09
+last_updated: 2026-11-10
 status: current
 ---
 
 Chronological record of all ingestions, queries, and maintenance operations.
+
+# 2026-11-10 — quiche moqt and moqtail-ts stir; interop bit-identical
+
+**TL;DR**:
+- **A quiet-on-the-wire day; the only movement is in implementation repos.** No WG document was revised ([[moq-transport]] stays **-23**, [[moq-msf|MSF]] stays **-01**), no new datatracker draft, and the moq-wg repos were flat — [[moq-transport]] saw no merge (only [[cullen-jennings|fluffy]]'s selection-sets PR [#1982](https://github.com/moq-wg/moq-transport/pull/1982) is the newest-touched item, Nov-9 11:49, still open), and [[moq-msf|MSF]] had nothing new after the Nov-9 #222 merge (Security/Introduction/namespace/track-type PRs stay open; **no msf-02 submitted**). The mailing list produced **nothing new** since the Nov-9 [[lucas-pardue|Lucas Pardue]] SQUAD-agenda follow-up — no I-D Action, consensus/adoption call, interim scheduling, or liaison. Slack not checked; no open wiki issues.
+- **Implementations**: [[moq-dev]] ran **~59 merges Nov-9→10, no new tag** (v0.17.15 stands) — a time-type refactor (`Instant`/`Duration` → `Clock` types in Rust kio [#8220](https://github.com/moq-dev/moq/pull/8220) +2077/−1550 and JS [#8295](https://github.com/moq-dev/moq/pull/8295) +5657/−4765), the **net route stream going public** ([#8369](https://github.com/moq-dev/moq/pull/8369), +1303/−462), **lite-07 loop prevention** (declare own Node ID in SETUP, [#8325](https://github.com/moq-dev/moq/pull/8325)), video codecs split submit/receive ([#8372](https://github.com/moq-dev/moq/pull/8372), +2107/−1313). Two previously-flat repos stirred: **google/quiche moqt** landed its first commit since Oct-30 (`deliver_partial_object` → `max_undelivered_object` session param, Nov-9 21:46), and **moqtail-ts** added **ABR controller plumbing** + Safari/WebKit playback fixes (no new tag; relay@0.17.0 stands). moq-rs (Nov-2), moqlivemock (v0.19.0), warp-player (v0.17.0), moqtransport (v0.15.1), moq-js, birneee all flat.
+- **Interop**: [Nov-10 00:14](https://englishm.github.io/moq-interop-runner/results/2026-11-10_001438/report.html) = **623 / 318 / 268 / 34 (51.0%)**, **bit-identical to Nov-9** (zero delta; at-target 359 · ahead 218 · behind 46) — a fourth flat night on the moq-ng roster, matrix 19×22, no runner PR after #185 (Nov-6).
+
+**Operation**: Update (manual; incremental supplement covering ~Nov-9 13:00 UTC → Nov-10 ~03:00 UTC)
+**Sources**:
+- IETF Datatracker: **no WG or individual draft dated 2026-11-03 or later** (documents page re-checked; newest Date anywhere is 2026-11-02). [[moq-transport]] stays **-23**, [[moq-msf|MSF]] **-01** (2026-06-02, short name now `draft-ietf-moq-msf`), [[moq-loc|loc]] **-05**. `draft-li-kvcache-efficient-transmission-00` (announced on-list Nov-7) is still **not indexed**.
+- GitHub `moq-wg`:
+  - **moq-transport: no merge** after the Nov-2 -23 cut. Newest-touched is [#1982](https://github.com/moq-wg/moq-transport/pull/1982) (*add selection sets and policy*, +663/−16, Nov-9 11:49 — no new commit since Oct-14); it stays open, as do the post-23 PRs ([#2060](https://github.com/moq-wg/moq-transport/pull/2060)/[#2058](https://github.com/moq-wg/moq-transport/pull/2058)/[#2057](https://github.com/moq-wg/moq-transport/pull/2057)/[#2056](https://github.com/moq-wg/moq-transport/pull/2056)/[#2055](https://github.com/moq-wg/moq-transport/pull/2055)/[#2050](https://github.com/moq-wg/moq-transport/pull/2050)/[#2049](https://github.com/moq-wg/moq-transport/pull/2049)). **No new issue** since [#2063](https://github.com/moq-wg/moq-transport/issues/2063) (Nov-7).
+  - **msf**: flat after the Nov-9 #222 merge. Open: [#224](https://github.com/moq-wg/msf/pull/224) (Introduction), [#223](https://github.com/moq-wg/msf/pull/223) (Security Considerations), [#221](https://github.com/moq-wg/msf/pull/221) (namespace syntax), [#220](https://github.com/moq-wg/msf/pull/220) (rename track role → track type). **No msf-02 submitted; published MSF stays -01.**
+  - loc, secure-objects ([#92](https://github.com/moq-wg/moq-secure-objects/pull/92), Nov-3), cmsf ([#27](https://github.com/moq-wg/cmsf/pull/27), Nov-6), catalog-format: flat (no merge since Nov-9).
+- GitHub implementations:
+  - moq-dev/moq: **~59 merges Nov-9 ~10:00 → Nov-10 02:41, no new release tag** (moq-relay v0.17.15 / moq-cli v0.14.15 / libmoq v0.6.24 stand from Nov-8). Themes: time-type refactor ([#8220](https://github.com/moq-dev/moq/pull/8220) kio `Instant`/`Duration`→`Clock`, +2077/−1550; [#8295](https://github.com/moq-dev/moq/pull/8295) JS durations/instants as Clock types, +5657/−4765; [#8339](https://github.com/moq-dev/moq/pull/8339) AbortSignal timing out on the installed clock), net route stream public ([#8369](https://github.com/moq-dev/moq/pull/8369), RouteEvent = kind + announce, +1303/−462), track/group finish returns a Finished handle ([#8276](https://github.com/moq-dev/moq/pull/8276), +986/−644), lite-07 self-session refusal ([#8325](https://github.com/moq-dev/moq/pull/8325)) + withdrawn-claim-ends-across-mixed-lite-06/07 ([#8358](https://github.com/moq-dev/moq/pull/8358)), video codecs split submit/receive ([#8372](https://github.com/moq-dev/moq/pull/8372), +2107/−1313), track-drop-set billing/bounding ([#8294](https://github.com/moq-dev/moq/pull/8294), +1733/−437), FFI/tokio connection-state refactors ([#8363](https://github.com/moq-dev/moq/pull/8363)/[#8370](https://github.com/moq-dev/moq/pull/8370)), GOAWAY-loopback-refusal backport to release ([#8344](https://github.com/moq-dev/moq/pull/8344)), plus wide quest/test/CI churn.
+  - **google/quiche moqt dir**: first commit since Oct-30 — `5f46f03` *"Replace MoqtSessionParameters::deliver_partial_object with max_undelivered_object"* (Nov-9 21:46) — swaps the boolean partial-object delivery flag for an integer bound on outstanding undelivered Objects.
+  - **moqtail/moqtail**: `moqtail-ts` client on `main` (no new tag; relay@0.17.0 stands) — `feat(moqtail-ts): add ABR controller plumbing` (Nov-10 00:28) plus Safari/WebKit fixes *"stop Safari re-seeking to the start of the buffer"* and *"hold live latency with jumps on WebKit"* (Nov-9).
+  - cloudflare/moq-rs (last Nov-2 draft-18; crate tags Nov-2), Eyevinn/moqlivemock (v0.19.0, last Nov-5), Eyevinn/warp-player (v0.17.0, last Nov-2/5), Eyevinn/moqtransport (v0.15.1, last Nov-3), video-dev/moq-js (June), birneee/quiche_moq (Aug) — all flat.
+- Interop runner: [Nov-10 00:14:38](https://englishm.github.io/moq-interop-runner/results/2026-11-10_001438/report.html) = **623 / 318 / 268 / 34 (51.0%; at-target 359 · ahead 218 · behind 46)** — **bit-identical** to the [Nov-9 00:16](https://englishm.github.io/moq-interop-runner/results/2026-11-09_001657/report.html) cut (623/318/268/34), every count and the full classification matching exactly (zero delta). Matrix 19×22. No runner PR merged after #185 (Nov-6); roster unchanged a fourth night (moq-ng still enrolled). #180/#181/#175/#158 still open.
+- IETF mailing list: **no new messages** since the Nov-9 [[lucas-pardue|Lucas Pardue]] *"Re: IETF 127 Draft Meeting agenda for SQUAD BoF"* ([Nov-9](https://mailarchive.ietf.org/arch/msg/moq/MDORZStflO8loojJUrhPLlUKfEE/)); the Nov-8 weekly GitHub digest is still the latest bot post. No new I-D Action, consensus/adoption call, interim scheduling, or liaison.
+- MoQ Monthly: still #2 (2026-05-31) — archive re-confirmed (#0 Mar-3, #1 Apr-30, #2 May-31).
+- Slack: not checked (no Slack access in this run).
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[interop-runner]]: Nov-10 is the new Latest cut (bit-identical, zero delta), Nov-9 → Prior, Nov-8 → Earlier; `last_updated` bumped.
+- [[discussions-2026-11]]: new top section *Activity (Nov 10)* — the quiche moqt and moqtail-ts stirrings, the moq-dev time-type/net wave, the flat transport/WG state, and the bit-identical interop cut.
+- [[index]]: `last_updated`/`updated` bumped.
+- [[log]]: this entry.
+
+**Key findings**:
+- *Two long-flat impls came back to life, both with internal (not wire) changes.* quiche moqt's first commit in ~11 days is a session-parameter rename (`deliver_partial_object` → `max_undelivered_object`), and moqtail-ts's ABR plumbing + Safari/WebKit fixes are browser-pipeline work — neither shifts draft-version support, but both end stretches of "Oct-30"/"relay@0.17.0" quiet worth tracking.
+- *moq-dev's churn is a clock/time-type migration, not protocol change.* The two biggest merges ([#8220](https://github.com/moq-dev/moq/pull/8220), [#8295](https://github.com/moq-dev/moq/pull/8295)) move Rust and JS off raw numeric instants/durations onto `Clock` types — foundational refactoring between release trains, consistent with the no-new-tag day.
+- *Interop is genuinely frozen, not merely flat.* The Nov-10 cut is bit-identical to Nov-9 down to every cell count — even the usual ±few-cell nightly flake did not register — so the moq-ng-enrolled matrix is a stable 51.0% pending the next roster change.
 
 # 2026-11-09 — moq-dev ships v0.17.15; MSF merges pre-release cleanup
 
