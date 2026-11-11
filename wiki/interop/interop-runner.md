@@ -2,7 +2,7 @@
 title: "MOQ Interop Runner"
 tags: [interop, testing, tooling]
 date: 2026-04-14
-last_updated: 2026-11-10
+last_updated: 2026-11-11
 status: current
 ---
 
@@ -60,9 +60,11 @@ This draft-18→draft-20 pivot is already visible in implementations: on Slack (
 
 # Current standing
 
-**Latest cut: [2026-11-10 00:14:38 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-10_001438/report.html) — 623 cells / 318 pass / 268 fail / 34 skip** (51.0% pass; at-target 359 · ahead 218 · behind 46). **A bit-identical night: every summary count (623 / 318 / 268 / 34) and the full classification (359·218·46) match the Nov-9 cut exactly — a zero-delta fourth flat night on the `moq-ng` roster** (matrix still 19 clients × 22 relays). No runner PR merged after #185 (Nov-6), so the roster is unchanged; even the usual ±few-cell fail↔pass flake did not register this night, leaving the rate steady at 51.0%, the high of the daily-cuts window. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
+**Latest cut: [2026-11-11 00:15:12 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-11_001512/report.html) — 623 cells / 311 pass / 275 fail / 34 skip** (49.92% pass; at-target 350 · ahead 227 · behind 46). **Back under 50%: −7 pass / +7 fail vs Nov-10 on an unchanged 19 clients × 22 relays matrix — but, for the first time since the Nov-7 `moq-ng` enrollment, the version classification shifted: 9 cells moved at-target → ahead (at-target 359 → 350, ahead 218 → 227, behind flat at 46).** So some pairs negotiated above draft-18 this night rather than this being pure fail↔pass flake; no runner PR merged after #185 (Nov-6), so no roster/registration change drove it. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
 
-**Prior cut: [2026-11-09 00:16:57 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-09_001657/report.html) — 623 cells / 318 pass / 268 fail / 34 skip** (51.0% pass; at-target 359 · ahead 218 · behind 46). **A third flat night on the `moq-ng` roster: +9 pass / −8 fail vs Nov-8, with the matrix (19 clients × 22 relays) and the full classification bit-identical (359·218·46).** No runner PR merged after #185 (Nov-6), so the roster is unchanged and the move is an ordinary ~9-cell fail↔pass flake inside the at-target group — enough to lift the rate back over 50% (49.6% → 51.0%), the high of the daily-cuts window. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
+**Prior cut: [2026-11-10 00:14:38 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-10_001438/report.html) — 623 cells / 318 pass / 268 fail / 34 skip** (51.0% pass; at-target 359 · ahead 218 · behind 46). **A bit-identical night: every summary count (623 / 318 / 268 / 34) and the full classification (359·218·46) match the Nov-9 cut exactly — a zero-delta fourth flat night on the `moq-ng` roster** (matrix still 19 clients × 22 relays). No runner PR merged after #185 (Nov-6), so the roster is unchanged; even the usual ±few-cell fail↔pass flake did not register this night, leaving the rate steady at 51.0%, the high of the daily-cuts window. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
+
+**Earlier: [2026-11-09 00:16:57 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-09_001657/report.html) — 623 cells / 318 pass / 268 fail / 34 skip** (51.0% pass; at-target 359 · ahead 218 · behind 46). **A third flat night on the `moq-ng` roster: +9 pass / −8 fail vs Nov-8, with the matrix (19 clients × 22 relays) and the full classification bit-identical (359·218·46).** No runner PR merged after #185 (Nov-6), so the roster is unchanged and the move is an ordinary ~9-cell fail↔pass flake inside the at-target group — enough to lift the rate back over 50% (49.6% → 51.0%), the high of the daily-cuts window. Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
 
 **Earlier: [2026-11-08 00:17:17 UTC](https://englishm.github.io/moq-interop-runner/results/2026-11-08_001717/report.html) — 623 cells / 309 pass / 276 fail / 34 skip** (49.6% pass; at-target 359 · ahead 218 · behind 46). **A flat second night after the `moq-ng` enrollment: −4 pass / +3 fail vs Nov-7, with the matrix (19 clients × 22 relays) and the full classification bit-identical (359·218·46).** No runner PR merged after #185 (Nov-6), so the roster is unchanged and the move is an ordinary ~4-cell fail↔pass flake inside the at-target group — enough to nudge the rate back just under 50% (50.2% → 49.6%). Still open: #180 (CMSF test area), #181 (`moq-mbt`), #175 (Docker pcaps) and #158 (Shaka Player).
 
@@ -257,6 +259,8 @@ Day-over-day cell churn (per the gh-pages summaries):
 
 | Cut (UTC) | Cells | Pass | Fail | Skip | At-target | Ahead | Δ pass | Note |
 |---|---|---|---|---|---|---|---|---|
+| 2026-11-11 00:15:12 | 623 | 311 | 275 | 34 | 350 | 227 | −7 | **back under 50% (49.9%); first classification shift since moq-ng — 9 cells at-target → ahead (behind flat 46), no runner PR after #185** |
+| 2026-11-10 00:14:38 | 623 | 318 | 268 | 34 | 359 | 218 | 0 | bit-identical to Nov-9 (zero delta); fourth flat night on moq-ng roster, no runner PR after #185 (51.0%) |
 | 2026-11-09 00:16:57 | 623 | 318 | 268 | 34 | 359 | 218 | +9 | third flat night on moq-ng roster; classification bit-identical (359·218·46), no runner PR after #185 — a ~9-cell fail↔pass flake back over 50% (51.0%) |
 | 2026-11-08 00:17:17 | 623 | 309 | 276 | 34 | 359 | 218 | −4 | flat second night after moq-ng; classification bit-identical (359·218·46), no runner PR after #185 — a ~4-cell fail↔pass flake (49.6%) |
 | 2026-11-07 00:13:56 | 623 | 313 | 273 | 34 | 359 | 218 | +33 | **matrix +32: Cloudflare `moq-ng` relay enrolled (runner #184, drafts 18+22); pass back above 50% (50.2%), fail −3 on top of the new column** |
