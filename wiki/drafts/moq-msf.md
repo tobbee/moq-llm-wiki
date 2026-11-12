@@ -2,13 +2,13 @@
 title: "MOQT Streaming Format (MSF)"
 tags: [draft, media, streaming-format]
 date: 2026-04-10
-last_updated: 2026-11-03
+last_updated: 2026-11-12
 status: current
 draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-msf/"
 ---
 
-**draft-ietf-moq-msf-01** | Submitted 2026-06-02 | still the published text: **no -02 was submitted at the IETF 127 deadline** despite the Nov-2 merge batch (see Recent Highlights) | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-msf/)
+**draft-ietf-moq-msf-01** | Submitted 2026-06-02 | still the published text: **no -02 was submitted at the IETF 127 deadline** despite the Nov-2 + Nov-9→12 editor's-copy merge batches (see Recent Highlights) | [Datatracker](https://datatracker.ietf.org/doc/draft-ietf-moq-msf/)
 **draft-ietf-moq-msf-00** | 34 pages | Submitted 2026-01-19 | Expires 2026-07-23
 
 # Authors
@@ -49,7 +49,7 @@ MSF defines how media is organized into MOQT tracks:
 
 The draft-00 marks several sections as ToDo:
 - Content protection details
-- Security considerations
+- Security considerations — **now drafted in the editor's copy** via [PR #223](https://github.com/moq-wg/msf/pull/223) (merged Nov-11), pending an msf-02 submission
 
 # Recent Highlights
 
@@ -63,7 +63,7 @@ Day-by-day WG/PR activity lives in [[log|the wiki log]]; this section keeps only
   - Media-timeline catalog requirement fix ([#217](https://github.com/moq-wg/msf/pull/217), closes #213).
   - **`accessibleWindowTime`**, the DVR answer ([#218](https://github.com/moq-wg/msf/pull/218), closes #205).
   - Media-timeline generation/modification clarifications ([#219](https://github.com/moq-wg/msf/pull/219), closes #204).
-  - Still open: [#220](https://github.com/moq-wg/msf/pull/220) (track role → track type, drop `mimeType`; the merge of #212 explicitly undid a role→type rename) and [#221](https://github.com/moq-wg/msf/pull/221) (namespace syntax, related to #208). The published text stays **msf-01**.
+  - **The pre-release cleanup then nearly finished in a Nov-9→12 merge run**, draining the open-PR queue: [#222](https://github.com/moq-wg/msf/pull/222) *"Multiple bug & logic fixes ahead of draft release"* (+281/−243, merged Nov-9), **[#223](https://github.com/moq-wg/msf/pull/223) adding a Security Considerations section** (+163/−5, merged Nov-11 — filling a long-standing draft-00 ToDo), [#224](https://github.com/moq-wg/msf/pull/224) *"Improve and update the Introduction"* (+42/−12, merged Nov-11), and [#221](https://github.com/moq-wg/msf/pull/221) (namespace-syntax clarification, +7/−1, merged Nov-12). **Only [#220](https://github.com/moq-wg/msf/pull/220) (track role → track type, drop `mimeType`; the merge of #212 explicitly undid a role→type rename) remains open.** The editor's copy is now substantially the -02 content, but **no msf-02 I-D has been submitted** — the published text stays **msf-01** (datatracker rev-01, 2026-06-02).
 - **Catalog track namespace/name moved to JSON arrays with a defined byte-mapping — [PR #210](https://github.com/moq-wg/msf/pull/210) (merged 2026-10-28, +178/−35).** [[will-law|Will Law]]'s refactor changes catalog **track namespace and name from strings to JSON arrays**, states their uniqueness and inheritance rules, and — the durable fix — **defines how the namespace/name fields map to byte sequences** on the wire (all catalog examples updated). It **closes [issue #209](https://github.com/moq-wg/msf/issues/209)** (JSON name/namespace → bytes was unspecified) and **[catalog-format#45](https://github.com/moq-wg/catalog-format/issues/45)** (should the catalog constrain namespace/name grammar). Together with #169 below, these are the first substantive MSF-repo merges since the July-28 IANA-cleanup batch.
 - **"One Object = one Stream" contradiction — resolved [msf#215](https://github.com/moq-wg/msf/issues/215) (filed 2026-10-21, closed 2026-10-28).** MSF-01 §6 said *"each MOQT Object MUST be mapped to a new MOQT Stream"*. Read literally, that meant one QUIC stream per frame or CMAF chunk, which contradicted moq-transport, [[moq-loc|LOC]] §4 and every implementation. [[giovanni-marzot|Giovanni Marzot]] raised it on Slack during imquic↔aiomoqt LOC interop, and [[will-law|Will Law]] filed the issue. It was **fixed by [PR #169](https://github.com/moq-wg/msf/pull/169) *"Update MOQT mapping details in media transmission section"*** (the long-open May-26 PR, finally merged 2026-10-28), which relaxes the mapping text so an Object need not open a new Stream. In the original thread Law also confirmed the catalog `version` changed from an integer (MSF-00) to a string (-01), with `"draft-xx"` recommended until the RFC.
 - **MSF draft-01 published** — the first revision since -00, authored by [[will-law|Will Law]] (Akamai) and [[suhas-nandakumar|Suhas Nandakumar]] (Cisco); it absorbed Will Law's large May 2026 editorial sprint. MSF's revision cadence runs at roughly four months, consistent with it being a packaging-format rather than a wire-protocol spec.
