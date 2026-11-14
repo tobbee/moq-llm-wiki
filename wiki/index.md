@@ -2,9 +2,9 @@
 title: "MOQ Wiki Index"
 tags: [index, navigation]
 date: 2026-04-14
-last_updated: 2026-11-13
+last_updated: 2026-11-14
 status: current
-updated: 2026-11-13
+updated: 2026-11-14
 ---
 
 A living knowledge base tracking the **Media over QUIC** protocol ecosystem.
@@ -17,7 +17,7 @@ Updated daily by an LLM from Slack, GitHub, IETF mailing list, and datatracker.
 | Draft | Version | Status | Summary |
 |-------|---------|--------|---------|
 | [[moq-transport]] | draft-23 | Active (**-23 2026-11-02**) | Core publish/subscribe transport protocol over QUIC/WebTransport. **-23 published 2026-11-02 at the IETF 127 deadline** (PAUSED, Gone state, count-encoded FILL_PARAMETERS, Error Details/REDIRECT); draft-18 + draft-22 remain the interop targets. Earlier: (-22 published 2026-10-01 — the Seattle interop target with -18; one wire change vs -20/21: Location Filter Type) |
-| [[moq-msf]] | draft-01 | Active (no -02 at the IETF 127 deadline; 7 PRs merged to the editor's copy Nov-2) | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
+| [[moq-msf]] | draft-01 | Active (editor's copy is substantially -02; **msf-02 not yet posted** — Will Law targets ~Nov-15, only PR #220 still open) | MOQT Streaming Format - media delivery over MOQT (-01 published 2026-06-02) |
 | [[moq-loc]] | draft-05 | Active (**-05 2026-11-02**) | Adds a `CODEC_STRING` property (0x11). Low Overhead Media Container for interactive streaming (adds audio config; -04 fixes the shared IANA registry values) |
 | [[moq-secure-objects]] | draft-01 | Active (**-01 2026-07-06**) | End-to-end authenticated encryption for MOQT objects (adds test vectors) |
 | [[moq-privacy-pass]] | draft-04 | Active (**-04 2026-11-02**) | Rebuilt on the AUTH design team model (AUTH CHALLENGE/REQUEST/RESPONSE, transport-23 alignment). Privacy-preserving authentication via Privacy Pass tokens (major MoQT-integration rebuild) |
