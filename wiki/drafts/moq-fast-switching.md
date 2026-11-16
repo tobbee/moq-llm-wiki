@@ -2,13 +2,15 @@
 title: "Subscriber-Side Multi-Variant Fast Track Switching for MOQT"
 tags: [draft, transport, abr, switch, media, individual]
 date: 2026-10-14
-last_updated: 2026-11-03
+last_updated: 2026-11-16
 status: current
-draft_version: "00"
+draft_version: "01"
 ietf_url: "https://datatracker.ietf.org/doc/draft-ugur-moq-fast-switching/"
 ---
 
-**draft-ugur-moq-fast-switching-00** | Individual submission | **-00 posted 2026-10-13** | 13 pages | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ugur-moq-fast-switching/)
+**draft-ugur-moq-fast-switching-01** | Individual submission | **-01 posted 2026-11-15** (was -00 2026-10-13) | Standards Track | [Datatracker](https://datatracker.ietf.org/doc/draft-ugur-moq-fast-switching/)
+
+> **-01 revision (2026-11-15).** Posted the day the WG's [[moq-msf|MSF -02]] went to the datatracker, and tightly coupled to it: -01 packages each bitrate as a **"GoP Ladder"** of tracks distinguished only by keyframe interval, numbers their Group IDs on a **shared alignment** so positions line up across tracks, and advertises each track's keyframe interval in an MSF catalog via the existing **`keyframeSpacing`** and **`altGroup`** fields. The subscriber computes the nearest valid switch point and switches with the **`SWITCH_FROM` soft-mode** parameter (pre-subscribing with `FORWARD=0`). The draft is now framed as the **subscriber-side consumer of MSF-02's Multi-Variant Fast Track Switching**, intended to supersede the earlier narrower MSF "zapping" proposal. It introduces no IANA actions.
 
 # Authors
 - Deniz Ugur (Ozyegin University)
@@ -28,7 +30,7 @@ A standards-track [[moq-transport]] technique that lets a subscriber **switch be
 
 # Relationship to other work
 
-- **A media / ABR building block built on SWITCH_FROM.** It is an explicit client-driven use of the [[switch-abr|SWITCH_FROM soft-mode]] parameter that the WG settled in June 2026, extended to the *keyframe-interval* dimension rather than just the bitrate dimension — squarely in the wiki's media focus area. Where [[moq-probing]] measures *whether* a hop can carry more, this draft governs *how* to move between representations once that decision is made.
+- **A media / ABR building block built on SWITCH_FROM.** It is an explicit client-driven use of the [[switch-abr|SWITCH_FROM soft-mode]] parameter that the WG settled in June 2026, extended to the *keyframe-interval* dimension rather than just the bitrate dimension — squarely in the wiki's media focus area. Where [[moq-probing]] measures *whether* a hop can carry more, this draft governs *how* to move between representations once that decision is made. The transport-side primitive it needs is being refined in parallel: [[moq-transport]] open PR [#2070](https://github.com/moq-wg/moq-transport/pull/2070) *"Best-effort SWITCH_FROM for aligned tracks"* (Nov-15) addresses exactly the aligned-track switch this draft performs.
 - **Adjacent to the live track-selection debate.** `SWITCH_FROM` is one of the three mechanisms [[cullen-jennings|Cullen Jennings]]'s [#1982](https://github.com/moq-wg/moq-transport/pull/1982) ("selection sets and policy") proposes to unify (alongside Top-N and SSTS; see also [[mo-zanaty|Mo Zanaty]]'s Top-Tracks-Filter [#1981](https://github.com/moq-wg/moq-transport/pull/1981)) — so this draft is a concrete consumer of exactly the primitive that debate is reshaping, posted during the same [[interim-meetings|Seattle interim]].
 - **Authored by the [[moqtail]] / Ozyegin team.** Deniz Ugur, [[zafer-gurel|Zafer Gürel]] and [[ali-begen|Ali C. Begen]] — the second media-focused individual input from this group this week, right after [[moq-probing|`draft-gurel-moq-probing-00`]] (Oct-12). It is now the newest MoQ document on the datatracker (Oct-13).
 
