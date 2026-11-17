@@ -8,6 +8,44 @@ status: current
 
 Chronological record of all ingestions, queries, and maintenance operations.
 
+# 2026-11-17 (supplemental) — Slack backfill; IETF 127 hackathon interop
+
+**TL;DR**:
+- **First Slack read since Nov-3, covering the IETF 127 hackathon (Nov 14–15).** afrind's suite gave 76/76 on draft-22 to moq-ng + moqtail. The moq-web e2e matrix launched, with XQUIC gold on d22. A draft-22 FILL_PARAMETERS ambiguity surfaced. afrind gave an MTI Track Properties ultimatum.
+- **Correction:** the runner did *not* freeze after #186. It merged #187–#200 Nov-13→16, adding d22 for xquic, moqx and quiche-moq.
+- **Implementations**: moq-dev ~30 more merges, no tag: multicast route rule (#8901, +6.1k) + Agda proof (#8904); Dart bindings. moqlivemock #178.
+- **Interop**: no new run; Nov-17 cut stands at 684/356/277/47 (52.0%). The "ahead" growth is partly roster-driven (#199/#200).
+
+**Operation**: Update (manual supplemental; GitHub/list/datatracker Nov-17 02:00 → ~10:00 UTC; Slack backfill Nov-3 → Nov-17 10:00 UTC)
+**Sources**:
+- Slack: **checked**, Nov-3 → Nov-17 (backfilling the nightly entries Nov-4 → Nov-17, which had no Slack). Used `slack_read_channel` on all six channels (from Nov-3 00:00 UTC) plus `slack_search_public` (`in:#moq is:thread after:2026-11-02`, and the `FILL_PARAMETERS` keyword).
+  - `#moq`: IETF 127 hackathon logistics and relay roll-call (Nov-14). English's note to use the runner and the [ad-hoc interop wiki](https://github.com/moq-wg/moq-transport/wiki/ad-hoc-interop-reports#2026-11-ietf-127-san-francisco). afrind's FILL_PARAMETERS question and the Quokka Gold Stars (moq-ng + moqtail, 76/76 d22 QUIC+WT). Suhas's moq-web e2e reports (Nov-14, Nov-16; XQUIC all-pass d22). Duke adds d22 to quichemoq.dev (Nov-16). WT-16 `reset_stream_at` threads (moxygen, XQUIC). Aman Sharma's relay bug reports and mLog visualizer (Nov-13). afrind's MTI Track Properties ultimatum, with Gwendal Simon promising an example on #2059 (Nov-16). FETCH_OK LARGEST_OBJECT thread (Nov-5/6). Lorenzo Miniero's d23 relay (Nov-9). Will Law / Pardue on the SQUAD BoF (Nov-9). Zafer Gürel's DOGtail game (Nov-11). Nokia d22/d23 relays redeployed (Nov-15/16).
+  - `#moq-interop-runner`: Steven Riedl's #192 (stitcher-moq client → moq-relay 0.17.15, 21/25 → 23/25), merged by English. XQUIC rebuild request. English rebuilt all Docker images Nov-16 00:06 UTC.
+  - `#moq-auth-design-team`: English's draft slides for the team's 5-minute IETF 127 update (Nov-17 06:34 UTC).
+  - `#moq-rs`, `#moq-js`, `#libquicr`: quiet.
+- GitHub `englishm/moq-interop-runner` (re-checked): merged [#187](https://github.com/englishm/moq-interop-runner/pull/187), #188, #189 (Nov-13), #191, #192 (Nov-14), #194, #195, #196, #198, #199 (Nov-15) and [#200](https://github.com/englishm/moq-interop-runner/pull/200) (Nov-16 00:27). The Nov-12→17 entries' "no runner PR after #186" was wrong. Nothing merged after #200.
+- GitHub `moq-wg`: no new PR, merge or issue since 02:00 UTC. New comments from afrind on [#2034](https://github.com/moq-wg/moq-transport/issues/2034) (Fill-Fetch vs Objects that no longer exist) and [#1982](https://github.com/moq-wg/moq-transport/pull/1982) (selection sets: SELECTED=0/1 in PSN).
+- GitHub implementations:
+  - **moq-dev/moq**: ~30 merges 02:00 → 10:00 UTC, no new tag (moq-relay v0.17.17 stands). Highlights: [#8901](https://github.com/moq-dev/moq/pull/8901) multicast route rule as a sans-IO router (+6,081/−252); [#8904](https://github.com/moq-dev/moq/pull/8904) Agda proof that it converges (+3,688/−177); [#8903](https://github.com/moq-dev/moq/pull/8903) three warm-copy lookups measured (+3,775/−147); [#8925](https://github.com/moq-dev/moq/pull/8925) Dart bindings, experimental (+82/−27,206); [#8977](https://github.com/moq-dev/moq/pull/8977) hang catalog flat `sync` section; [#8933](https://github.com/moq-dev/moq/pull/8933) auth refuses grants it doesn't fully understand; [#8962](https://github.com/moq-dev/moq/pull/8962) escaped slashes in paths; [#8910](https://github.com/moq-dev/moq/pull/8910) ordered tracks report abandoned groups; [#8957](https://github.com/moq-dev/moq/pull/8957) transport crates trim exports (−1.5k). Open: [#8987](https://github.com/moq-dev/moq/pull/8987) (lite-07 runs the new route rule) and #8986.
+  - **Eyevinn/moqlivemock**: [#178](https://github.com/Eyevinn/moqlivemock/pull/178) *"mlmrel: cap the bytes a subscriber's queue holds"* (+129/−29); still v0.19.1.
+  - moqtail (release PR #470 updated, not merged), google/quiche moqt (still `00f72ed`), moq-rs, moq-js, birneee, warp-player, moqtransport: flat.
+- IETF Datatracker: no document dated 2026-11-17. Mailing list: newest message still Nov-16. Interop runner: no cut after 2026-11-17_001531. MoQ Monthly: still #2.
+- tobbee/moq-llm-wiki: no open issues.
+
+**Pages updated**:
+- [[interop-runner]]: Latest-cut paragraph corrects the runner-PR history (#187–#200); new section *Live interop (IETF 127 San Francisco Hackathon)*.
+- [[xquic-moq]]: rewritten from its April state. New public relay `moq.xquic.org`, draft-22 client+relay, moq-web all-pass, hackathon fixes. `last_updated` bumped.
+- [[quiche-moq]]: quichemoq.dev gains draft-22 (runner #200); the stale "endpoint still draft-18" claim fixed; `last_updated` bumped.
+- [[moq-dev]]: top Recent-Highlights bullet notes the multicast route rule + Agda proof, Dart bindings, and the hang `sync` section.
+- [[moq-transport]]: open questions note afrind's MTI Track Properties ultimatum (#2059) and the FILL_PARAMETERS ambiguity (#2069, #2034).
+- [[discussions-2026-11]]: new top section *Activity (Nov 17, supplemental)*.
+- [[index]]: `last_updated` bumped. [[log]]: this entry.
+
+**Key findings**:
+- *Two weeks of unread Slack hid the most important interop signal of the month.* The hackathon showed draft-22 working end to end. Two independent suites (afrind's 76-case conformance suite and Suhas's ~101-case moq-web e2e) both gave full passes to several relays (moq-ng, moqtail, XQUIC). The draft-18 nightly's ~52% does not capture this.
+- *The runner was not idle. The wiki was misreading it.* Daily "no runner PR after #186" was asserted from an incomplete check while eleven PRs landed. The Nov-16/17 "ahead" surge is partly moqx, quiche-moq and xquic registering draft-22, not only implementations changing their defaults. Future runs should list merged runner PRs explicitly (`gh pr list --state merged`) rather than infer.
+- *Hackathon testing is finding spec bugs, not just implementation bugs.* The FILL_PARAMETERS length/count split is a genuine draft-22 ambiguity. It feeds directly into the open #2069 cleanup for -24.
+
 # 2026-11-17 — quiet spec day; moq-dev un-vendors WebRTC; interop eases
 
 **TL;DR**:

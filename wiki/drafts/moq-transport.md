@@ -2,7 +2,7 @@
 title: "Media over QUIC Transport (MOQT)"
 tags: [draft, transport, core]
 date: 2026-04-13
-last_updated: 2026-11-03
+last_updated: 2026-11-17
 status: current
 draft_version: 23
 ietf_url: "https://datatracker.ietf.org/doc/draft-ietf-moq-transport/"
@@ -61,7 +61,8 @@ MOQT is a publish/subscribe protocol that runs over QUIC and WebTransport. It le
 - **End-of-Group bit on multi-object subgroups** ([#2032](https://github.com/moq-wg/moq-transport/issues/2032)): interim-30 chose *Option C* (keep the header bit only for single-object subgroups and use an explicit status object otherwise), but the PR text has not landed.
 - **Fill-Fetch redesign** ([#2033](https://github.com/moq-wg/moq-transport/pull/2033) subscribe-style delivery; issues #2034, #2043, #2048) is still open.
 - Also still open: the **AUTH_PAYLOAD rename** ([#2047](https://github.com/moq-wg/moq-transport/pull/2047)), the **Selection Sets** sketch ([#1982](https://github.com/moq-wg/moq-transport/pull/1982), which [[cullen-jennings|Jennings]] has asked for a 60-minute IETF 127 slot to discuss), Setup Options in 0-RTT ([#2045](https://github.com/moq-wg/moq-transport/pull/2045)), and making GOAWAY redirection optional with authorized destinations ([#2050](https://github.com/moq-wg/moq-transport/pull/2050), from the [[moq-relay-dos|relay-DoS]] work).
-- The fate of **Mandatory Track Properties** is still open. At interim-30 afrind proposed removing them unless a concrete user appears by IETF 127.
+- The fate of **Mandatory Track Properties** is still open. At interim-30 afrind proposed removing them unless a concrete user appears by IETF 127. On Slack (Nov-16) he repeated the deadline: without a written MTI Track Property example *"this week"*, he will push for removal. [[gwendal-simon|Gwendal Simon]] promised one in [#2059](https://github.com/moq-wg/moq-transport/issues/2059) (INCLUDE_PROPERTIES × Mandatory Track Properties).
+- **FILL_PARAMETERS encoding (draft-22) is ambiguous in practice.** At the IETF 127 hackathon, implementations split between length, count, and length + count. Open PR [#2069](https://github.com/moq-wg/moq-transport/pull/2069) simplifies it. On [#2034](https://github.com/moq-wg/moq-transport/issues/2034) (Fill-Fetch vs Objects that no longer exist), afrind (Nov-17) concluded that publishers can handle Objects past the initial Largest Object gracefully, so FETCH need not express every subscription state.
 
 ## draft-22 (published 2026-10-01) — the Seattle interop target
 
